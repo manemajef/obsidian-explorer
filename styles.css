@@ -122,7 +122,7 @@ body.theme-light .explorer-folder-card {
 /* ===== List View ===== */
 .explorer-list {
 	padding: 0.25em 0.25em;
-	list-style: disc;
+	list-style: none;
 	margin-inline-start: 1em;
 }
 
@@ -384,4 +384,24 @@ body.theme-light .explorer-folder-card {
 	transition: opacity var(--anim-duration-fast) ease-in-out;
 	height: auto;
 	font-size: 0.9em;
+}
+
+/* .clickable-icon,
+.clickable-icon * {
+	cursor: default;
+}
+
+.explorer-folder-card,
+.explorer-folder-card * {
+	cursor: default;
+}
+
+.explorer-card,
+.explorer-card * {
+	cursor: default;
+} */
+
+.explorer-container a,
+.explorer-container a * {
+	cursor: pointer;
 }

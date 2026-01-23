@@ -17,6 +17,7 @@ export function ListView(props: {
           key={fileInfo.file.path}
           className={`explorer-list ${fileInfo.isPinned || fileInfo.isFav ? "pinned" : ""}`}
         >
+          <span className="list-bullet" />
           <InternalLink
             app={app}
             sourcePath={sourcePath}
