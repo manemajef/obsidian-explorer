@@ -1,0 +1,9 @@
+{
+	"id": "explorer",
+	"name": "Explorer",
+	"version": "1.0.0",
+	"minAppVersion": "1.0.0",
+	"description": "A file explorer view with card, list, and tree views. Displays folder contents with sorting, pagination, and search.",
+	"author": "Rotem Semah",
+	"isDesktopOnly": false
+}

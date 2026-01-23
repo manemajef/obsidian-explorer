@@ -1,0 +1,387 @@
+/* ===== Grid Layouts ===== */
+.explorer-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 0.5em;
+}
+
+.explorer-folders-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+	margin-bottom: 1.5em;
+}
+
+.explorer-notes-grid {
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.is-mobile .explorer-notes-grid {
+	grid-template-columns: 1fr 1fr !important;
+}
+
+/* ===== Folder Cards (buttons) ===== */
+.explorer-folder-card {
+	box-sizing: border-box;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--interactive-normal);
+	box-shadow: var(--input-shadow);
+	padding: 1.5em 2em;
+	border-radius: 0.8em;
+	font-size: 0.9em;
+	border: none;
+}
+
+.explorer-folder-card:hover {
+	background-color: var(--interactive-hover);
+}
+
+.is-mobile .explorer-folder-card {
+	padding: 1.2em 1em !important;
+	box-shadow: var(--input-shadow) !important;
+	border: 1px solid var(--background-modifier-border);
+}
+
+body.theme-light .explorer-folder-card {
+	background-color: var(--background-primary) !important;
+}
+
+/* ===== Note Cards ===== */
+.explorer-card {
+	padding: 0.5em;
+	border: 1px solid var(--background-modifier-border);
+	box-shadow: 0 0 6px rgba(0,0,0,0.01);
+	border-radius: 6px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.explorer-card:hover {
+	border: 1px solid var(--background-modifier-border-hover);
+}
+
+.explorer-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 1em;
+}
+
+.explorer-card-exts {
+	opacity: 0.4;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.25em;
+}
+
+.explorer-card-exts:hover {
+	opacity: 0.9 !important;
+}
+
+.explorer-card-exts svg {
+	max-height: 0.9em;
+	max-width: 0.9em;
+}
+
+.ext-tag {
+	font-size: 0.7em;
+	margin-top: 0;
+	padding: .1em .5em !important;
+	border: none;
+	border-radius: 6px;
+}
+
+.explorer-card-footer {
+	opacity: 0.5;
+	font-size: 0.7em;
+	margin-bottom: 0 !important;
+}
+
+.explorer-card-footer:hover {
+	opacity: 0.9 !important;
+}
+
+.explorer-card-footer a {
+	color: var(--text-normal) !important;
+}
+
+.explorer-card-footer:hover a {
+	color: var(--text-accent) !important;
+}
+
+.prop-tag svg {
+	color: var(--color-red) !important;
+}
+
+/* ===== List View ===== */
+.explorer-list {
+	padding: 0.25em 0.25em;
+	list-style: disc;
+	margin-inline-start: 1em;
+}
+
+.is-mobile .explorer-list {
+	margin-inline-start: 1em;
+}
+
+.explorer-list:hover {
+	background-color: var(--background-primary-alt);
+	border-radius: 4px;
+}
+
+.explorer-list.pinned a {
+	color: var(--color-red) !important;
+}
+
+/* ===== Tree View ===== */
+.explorer-ul,
+.explorer-li {
+	list-style: none;
+}
+
+.explorer-li-item {
+	position: relative;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	border: 1px solid rgba(0, 0, 0, 0);
+	gap: 0.5em;
+	margin-inline-start: var(--content-margin, 1em);
+	padding-inline-end: 0.6em;
+	border-radius: 6px;
+}
+
+.explorer-li-item:hover .explorer-li-collapse {
+	opacity: 1 !important;
+}
+
+.explorer-li-icons {
+	position: absolute;
+	inset-inline-start: -2.5em;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	padding-inline-end: 0.1em !important;
+}
+
+.explorer-li-collapse {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1em;
+	height: 1em;
+	cursor: pointer;
+	margin-top: 0.1em;
+}
+
+.explorer-li-bullet {
+	display: flex;
+	align-items: center;
+	width: 0.3em;
+	height: 0.3em;
+	border-radius: 50%;
+	background-color: var(--list-marker-color);
+	margin-top: 0.1em;
+	opacity: 0.9;
+	margin-inline-end: 0.2em;
+}
+
+.explorer-nested-li .explorer-li-icons:hover .explorer-li-bullet {
+	box-shadow: 0 0 0 3px var(--background-modifier-hover);
+}
+
+.explorer-li-collapsed .explorer-li-bullet {
+	background-color: var(--list-marker-color-collapsed);
+}
+
+.explorer-nested-li.explorer-li-collapsed .explorer-li-item .explorer-li-bullet {
+	box-shadow: 0 0 0 3px var(--background-modifier-hover);
+}
+
+.explorer-li-collapse-icon-close {
+	color: var(--text-accent);
+	opacity: 0.8;
+}
+
+.explorer-li-collapse-icon-open {
+	transition: 0.5s;
+	opacity: 0;
+}
+
+.explorer-li-item:hover .explorer-li-collapse-icon-open {
+	opacity: 0.6 !important;
+}
+
+.explorer-ul.is-collapsed {
+	display: none;
+}
+
+.is-pinned {
+	color: var(--color-red) !important;
+}
+
+/* ===== Search ===== */
+.search-bar-container {
+	display: flex;
+	gap: 0.5em;
+	min-width: 90%;
+	align-items: center;
+}
+
+.explorer-search-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1 1 auto;
+	width: 80%;
+}
+
+.explorer-search-bar input {
+	padding: 1em !important;
+	background-color: var(--background-primary);
+	min-width: 90% !important;
+	border: 1px solid var(--background-modifier-border-hover);
+	border-radius: 3em;
+	color: var(--text-muted);
+}
+
+/* ===== Pagination ===== */
+.paging-controll {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	padding: .25em .5em;
+	border-radius: 6px;
+	box-shadow: 0 0 2px rgba(0,0,0,0.1);
+}
+
+.paging-label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: .6;
+	padding: .25em .75em;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.paging-label:hover {
+	background-color: var(--background-primary-alt);
+}
+
+.paging-label.paging-dots {
+	padding: 0 !important;
+	cursor: default;
+}
+
+.paging-icon {
+	margin: 0 .5em;
+	font-size: 1.2em;
+	color: var(--text-accent);
+	padding: .2em .25em;
+	opacity: 1;
+}
+
+.paging-label.active-page {
+	border: 1px solid var(--background-modifier-border-hover);
+	opacity: 1;
+	color: var(--text-accent);
+}
+
+.paging-controll-nums {
+	gap: .2em;
+	display: flex;
+	justify-content: space-around;
+}
+
+/* ===== Navigation Bars ===== */
+.folder-nav,
+.pages-nav {
+	padding-bottom: 0.5em;
+}
+
+.folder-nav {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 1em;
+}
+
+/* ===== Breadcrumbs ===== */
+.explorer-breadcrumbs {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.explorer-breadcrumb-home {
+	display: flex;
+	align-items: center;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.explorer-breadcrumb-home:hover {
+	color: var(--text-normal);
+}
+
+.explorer-breadcrumb-sep {
+	display: flex;
+	align-items: center;
+	color: var(--text-faint);
+}
+
+.explorer-breadcrumb-link {
+	color: var(--text-muted);
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.explorer-breadcrumb-link:hover {
+	color: var(--text-normal);
+	text-decoration: underline;
+}
+
+/* ===== Links ===== */
+.explorer-container a {
+	text-decoration: none !important;
+}
+
+.explorer-container a:hover {
+	text-decoration: underline !important;
+}
+
+/* ===== Mobile Adjustments ===== */
+.is-mobile .modal {
+	padding-bottom: 2em;
+	max-height: 80vh;
+}
+
+.is-mobile .explorer-folder-grid {
+	grid-template-columns: 1fr 1fr !important;
+}
+
+/* ===== Clickable Icons ===== */
+.clickable-muted {
+	color: var(--text-muted) !important;
+	background-color: var(--background-primary);
+	display: flex;
+	align-items: center;
+	padding: var(--size-2-2) var(--size-2-3);
+	cursor: var(--cursor);
+	border-radius: var(--clickable-icon-radius);
+	opacity: var(--icon-opacity);
+	transition: opacity var(--anim-duration-fast) ease-in-out;
+	height: auto;
+	font-size: 0.9em;
+}
