@@ -14,6 +14,20 @@ Add an `explorer` code block to any note:
 
 This will display the contents of the current folder with default settings.
 
+## Example
+
+### Card View
+
+![](/assets/card-view.png)
+
+### List View
+
+![](/assets/list-view.png)
+
+### Settings
+
+![](/assets/settings.png)
+
 ### Configuration
 
 You can customize the view by adding settings to the code block:
@@ -107,20 +121,6 @@ npm run build
 ```bash
 npm run dev
 ```
-
-## Example
-
-### Card View
-
-![](/assets/card-view.png)
-
-### List View
-
-![](/assets/list-view.png)
-
-### Settings
-
-![](/assets/settings.png)
 
 ## Architecture
 
