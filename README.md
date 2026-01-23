@@ -27,20 +27,40 @@ pageSize: 12
 ```
 ````
 
+### Download
+
+**clone repo**
+for mac or linux:
+
+```bash
+git clone https://github.com/manemajef/obsidian-explorer "/path/to/your/vault/.obsidian/plugins/obsidian-explorer"
+```
+
+for windows:
+
+```PowerShell
+git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\.obsidian\plugins\obsidian-explorer"
+```
+
+**Activate plugins**
+
+- Open Obsidian → Settings → Community plugins
+- Turn on “Explorer”
+
 ### Available Settings
 
-| Setting | Values | Default | Description |
-|---------|--------|---------|-------------|
-| `sortBy` | `newest`, `oldest`, `edited`, `name` | `newest` | How to sort files |
-| `sortDir` | `asc`, `desc` | `desc` | Sort direction |
-| `view` | `cards`, `list`, `tree` | `cards` | Display mode |
-| `depth` | `0-10` | `0` | Subfolder depth (0 = direct children only) |
-| `pageSize` | `6-100` | `12` | Items per page |
-| `onlyNotes` | `true`, `false` | `true` | Show only .md and .pdf files |
-| `showFolders` | `true`, `false` | `true` | Show folder buttons |
-| `searchEnabled` | `true`, `false` | `true` | Show search bar |
-| `cardExt` | `folder`, `ctime`, `mtime`, `desc`, `none` | `ctime` | Card footer info |
-| `autoCollapseTree` | `true`, `false` | `false` | Start tree view collapsed |
+| Setting            | Values                                     | Default  | Description                                |
+| ------------------ | ------------------------------------------ | -------- | ------------------------------------------ |
+| `sortBy`           | `newest`, `oldest`, `edited`, `name`       | `newest` | How to sort files                          |
+| `sortDir`          | `asc`, `desc`                              | `desc`   | Sort direction                             |
+| `view`             | `cards`, `list`,                           | `list`   | Display mode                               |
+| `depth`            | `0-10`                                     | `0`      | Subfolder depth (0 = direct children only) |
+| `pageSize`         | `6-100`                                    | `12`     | Items per page                             |
+| `onlyNotes`        | `true`, `false`                            | `true`   | Show only .md and .pdf files               |
+| `showFolders`      | `true`, `false`                            | `true`   | Show folder buttons                        |
+| `searchEnabled`    | `true`, `false`                            | `true`   | Show search bar                            |
+| `cardExt`          | `folder`, `ctime`, `mtime`, `desc`, `none` | `ctime`  | Card footer info                           |
+| `autoCollapseTree` | `true`, `false`                            | `false`  | Start tree view collapsed                  |
 
 ## Features
 
@@ -48,11 +68,11 @@ pageSize: 12
 
 - **Cards**: Grid of cards showing file name, extension, and metadata
 - **List**: Simple bulleted list of files
-- **Tree**: Hierarchical view with collapsible folders
 
 ### Search
 
 The search bar supports special prefixes:
+
 - Normal text: Search by filename
 - `#tag`: Search by tags in frontmatter
 - `@name`: Search only folder notes
@@ -60,6 +80,7 @@ The search bar supports special prefixes:
 ### Folder Notes
 
 The plugin recognizes folder notes (files named `foldername/foldername.md`) and:
+
 - Uses them for folder navigation
 - Shows them in breadcrumbs
 - Filters them correctly from file listings
@@ -87,6 +108,20 @@ npm run build
 npm run dev
 ```
 
+## Example
+
+### Card View
+
+![](/assets/card-view.png)
+
+### List View
+
+![](/assets/list-view.png)
+
+### Settings
+
+![](/assets/settings.png)
+
 ## Architecture
 
 The plugin uses a single TypeScript file (`main.ts`) that includes:
@@ -100,13 +135,13 @@ Settings are stored directly in the code block, making them portable and per-not
 
 ## Differences from Original (datacore version)
 
-| Aspect | Original | New Plugin |
-|--------|----------|------------|
-| React | Uses datacore for React integration | Native Obsidian DOM manipulation |
-| State Storage | JSON cache file | Stored in code block |
-| Dependencies | Requires datacore plugin | Standalone |
-| Settings | Global cache | Per-block settings |
-| Performance | Queries via datacore | Direct vault API |
+| Aspect        | Original                            | New Plugin                       |
+| ------------- | ----------------------------------- | -------------------------------- |
+| React         | Uses datacore for React integration | Native Obsidian DOM manipulation |
+| State Storage | JSON cache file                     | Stored in code block             |
+| Dependencies  | Requires datacore plugin            | Standalone                       |
+| Settings      | Global cache                        | Per-block settings               |
+| Performance   | Queries via datacore                | Direct vault API                 |
 
 ## License
 

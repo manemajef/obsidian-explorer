@@ -7,7 +7,7 @@ This plugin renders a custom explorer UI inside an Obsidian markdown code block:
 ... optional per-block overrides ...
 ````
 
-```
+
 
 It uses a React UI, but keeps data/Obsidian operations inside a view class.
 
@@ -123,4 +123,4 @@ The per-block modal updates the source markdown block via `ExplorerView.updateSo
 - React owns the container; don’t call `container.createEl` from elsewhere.
 - `InternalLink` is required for proper Obsidian link behavior and context menus.
 - `search` button visibility is controlled in `SearchBar` by `childrenSize` and view mode.
-```
+
