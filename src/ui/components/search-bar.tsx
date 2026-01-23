@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "./shared";
+import { App } from "obsidian";
 
 export function SearchBar(props: {
   searchMode: boolean;
@@ -7,6 +8,7 @@ export function SearchBar(props: {
   allowSearch: boolean;
   childrenSize: number;
   onSearchToggle: () => void;
+  app: App;
   onSearchInput: (query: string) => void;
 }): JSX.Element {
   const {
@@ -16,6 +18,7 @@ export function SearchBar(props: {
     childrenSize,
     onSearchToggle,
     onSearchInput,
+    app,
   } = props;
 
   const [value, setValue] = useState(searchQuery);
@@ -47,14 +50,18 @@ export function SearchBar(props: {
       {searchMode ? (
         <div className="search-bar-container">
           <button className="clickable-icon" onClick={onSearchToggle}>
-            <Icon name="undo-2" />
-            <span style={{ width: ".25em" }}> exit</span>
+            <span style={{ display: "flex", gap: ".5em", alignItems: "center" }}>
+              <Icon name="undo-2" />
+              <span style={{}}> exit</span>
+            </span>
           </button>
           <div className="explorer-search-bar">
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search... use '#' for tags and '@' for folders"
+              placeholder={
+                app.isMobile ? "search" : "use '#' for tags and '@' for folders"
+              }
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />

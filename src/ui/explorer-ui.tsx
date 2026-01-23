@@ -72,15 +72,30 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
           folderNotes={folderNotes}
         />
       ) : null}
-
-      <SearchBar
-        searchMode={searchMode}
-        searchQuery={searchQuery}
-        allowSearch={settings.allowSearch}
-        childrenSize={visibleCount}
-        onSearchToggle={onSearchToggle}
-        onSearchInput={onSearchInput}
-      />
+      <div
+        style={{
+          // border: "solid 1px red",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ flex: "1" }}>
+          <SearchBar
+            searchMode={searchMode}
+            searchQuery={searchQuery}
+            allowSearch={settings.allowSearch}
+            childrenSize={visibleCount}
+            onSearchToggle={onSearchToggle}
+            onSearchInput={onSearchInput}
+            app={app}
+          />
+        </div>
+        <div style={{ display: "flex" }}>
+          <button className="clickable-icon" onClick={onNewNote}>
+            <Icon name="plus" />
+          </button>
+        </div>
+      </div>
 
       {settings.showNotes ? (
         <div className="explorer-files-container">
@@ -117,6 +132,13 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
   );
 }
 
+// function NotesAction(props: {
+//   onNewNote: () => void;
+
+// }): JSX.Element {
+
+// }
+
 function FolderActions(props: {
   onOpenSettings: () => void;
   onNewFolder: () => void;
@@ -126,14 +148,21 @@ function FolderActions(props: {
 
   return (
     <div className="folder-nav">
-      <div
+      {/* <div
         className="explorer-actions-left"
-        style={{ display: "flex", alignItems: "center", gap: "1em" }}
-      >
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "1em",
+        }}
+      > */}
+      <div>
         <button className="clickable-icon" onClick={onOpenSettings}>
-          <Icon name="settings" />
+          <Icon name="settings-2" />
         </button>
-
+      </div>
+      <div>
         <div
           className="explorer-actions-wrap"
           style={{
@@ -151,6 +180,7 @@ function FolderActions(props: {
           </button>
         </div>
       </div>
+      {/* </div> */}
     </div>
   );
 }

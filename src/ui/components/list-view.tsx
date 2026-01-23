@@ -18,15 +18,29 @@ export function ListView(props: {
           className={`explorer-list ${fileInfo.isPinned || fileInfo.isFav ? "pinned" : ""}`}
         >
           <span className="list-bullet" />
-          <InternalLink
-            app={app}
-            sourcePath={sourcePath}
-            path={fileInfo.file.path}
-            text={fileInfo.file.basename}
-          />
-          {fileInfo.file.extension !== "md" ? (
-            <span className="ext-tag"> .{fileInfo.file.extension}</span>
-          ) : null}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <InternalLink
+              app={app}
+              sourcePath={sourcePath}
+              path={fileInfo.file.path}
+              text={
+                fileInfo.file.extension === "md"
+                  ? fileInfo.file.basename
+                  : `${fileInfo.file.basename}.${fileInfo.file.extension}`
+              }
+            />
+            {fileInfo.file.extension !== "md" ? (
+              <span className="ext-tag ext-tag-bg">
+                {fileInfo.file.extension}
+              </span>
+            ) : null}
+          </div>
         </li>
       ))}
     </>
