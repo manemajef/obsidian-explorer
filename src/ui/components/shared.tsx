@@ -2,48 +2,57 @@ import React, { useEffect, useRef } from "react";
 import { App, setIcon } from "obsidian";
 
 export function InternalLink(props: {
-	app: App;
-	sourcePath: string;
-	path: string;
-	text?: string;
-	className?: string;
-	additionalClasses?: string[];
-	onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-	children?: React.ReactNode;
+  app: App;
+  sourcePath: string;
+  path: string;
+  text?: string;
+  className?: string;
+  additionalClasses?: string[];
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  children?: React.ReactNode;
 }): JSX.Element {
-	const { app, sourcePath, path, text, className, additionalClasses, onClick, children } = props;
-	const classes = ["internal-link", className, ...(additionalClasses ?? [])]
-		.filter(Boolean)
-		.join(" ");
+  const {
+    app,
+    sourcePath,
+    path,
+    text,
+    className,
+    additionalClasses,
+    onClick,
+    children,
+  } = props;
+  const classes = ["internal-link", className, ...(additionalClasses ?? [])]
+    .filter(Boolean)
+    .join(" ");
 
-	return (
-		<a
-			className={classes}
-			data-href={path}
-			href={path}
-			data-tooltip-position="top"
-			target="_blank"
-			rel="noopener"
-			onClick={(e) => {
-				e.preventDefault();
-				onClick?.(e);
-				app.workspace.openLinkText(path, sourcePath, e.ctrlKey || e.metaKey);
-			}}
-		>
-			{children ?? text}
-		</a>
-	);
+  return (
+    <a
+      className={classes}
+      data-href={path}
+      href={path}
+      data-tooltip-position="top"
+      target="_blank"
+      rel="noopener"
+      onClick={(e) => {
+        e.preventDefault();
+        onClick?.(e);
+        app.workspace.openLinkText(path, sourcePath, e.ctrlKey || e.metaKey);
+      }}
+    >
+      {children ?? text}
+    </a>
+  );
 }
 
 export function Icon(props: { name: string; className?: string }): JSX.Element {
-	const { name, className } = props;
-	const ref = useRef<HTMLSpanElement | null>(null);
+  const { name, className } = props;
+  const ref = useRef<HTMLSpanElement | null>(null);
 
-	useEffect(() => {
-		if (ref.current) {
-			setIcon(ref.current, name);
-		}
-	}, [name]);
+  useEffect(() => {
+    if (ref.current) {
+      setIcon(ref.current, name);
+    }
+  }, [name]);
 
-	return <span ref={ref} className={className} />;
+  return <span ref={ref} className={className} />;
 }

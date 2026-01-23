@@ -30,14 +30,21 @@ export class PromptModal extends Modal {
 			},
 		});
 
+		const submit = () => {
+			const value = input.value || "";
+			this.resolve(value.trim() || null);
+			this.close();
+		};
+
 		input.addEventListener("input", () => {
 			this.value = input.value;
 		});
 
 		input.addEventListener("keydown", (e) => {
 			if (e.key === "Enter") {
-				this.resolve(this.value || null);
-				this.close();
+				e.preventDefault();
+				e.stopPropagation();
+				submit();
 			}
 			if (e.key === "Escape") {
 				this.resolve(null);
@@ -57,8 +64,7 @@ export class PromptModal extends Modal {
 
 		const okBtn = btnContainer.createEl("button", { text: "Create", cls: "mod-cta" });
 		okBtn.addEventListener("click", () => {
-			this.resolve(this.value || null);
-			this.close();
+			submit();
 		});
 
 		input.focus();

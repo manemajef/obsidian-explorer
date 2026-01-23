@@ -13,6 +13,7 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
 	autoCollapseTree: false,
 	showNotes: true,
 };
+export const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n"
 
 export const EXCLUDED_EXTENSIONS = [
 	"json",
