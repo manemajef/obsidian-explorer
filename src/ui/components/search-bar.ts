@@ -26,7 +26,7 @@ export function renderSearchBar(container: HTMLElement, options: SearchBarOption
 		const exitBtn = searchContainer.createDiv();
 		const exitLink = exitBtn.createEl("span", { cls: "clickable-icon" });
 		setIcon(exitLink, "undo-2");
-		exitLink.createSpan({ text: " exit", attr: { style: "width: .25em" } });
+		exitLink.createSpan({ text: " exit", attr: { style: "width: 1em" } });
 		exitLink.addEventListener("click", options.onSearchToggle);
 
 		// Search input

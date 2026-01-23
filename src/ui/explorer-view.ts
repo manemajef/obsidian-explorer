@@ -112,12 +112,13 @@ export class ExplorerView {
 	}
 
 	private renderNotesActions(): void {
+		const visibleCount = this.getRenderedChildrenCount();
 		renderSearchBar(this.container, {
 			searchMode: this.searchMode,
 			searchQuery: this.searchQuery,
 			allowSearch: this.settings.allowSearch,
 			isTreeView: this.settings.view === "tree",
-			childrenSize: this.folderIndex?.childrenSize || 0,
+			childrenSize: visibleCount,
 			autoCollapseTree: this.settings.autoCollapseTree,
 			onSearchToggle: () => {
 				this.searchMode = !this.searchMode;
@@ -138,6 +139,21 @@ export class ExplorerView {
 				this.render();
 			},
 		});
+	}
+
+	private getRenderedChildrenCount(): number {
+		if (!this.folderIndex) return 0;
+
+		let files = this.folderIndex.getFilesToDisplay(this.settings);
+
+		if (!this.settings.showFolders) {
+			files = [...this.folderIndex.folderNotes, ...files];
+		}
+
+		files = this.filterFiles(files);
+		files = this.sortFiles(files);
+
+		return files.length;
 	}
 
 	private renderFilesOnly(): void {
