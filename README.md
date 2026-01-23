@@ -1,6 +1,6 @@
 # Explorer Plugin
 
-A file explorer view for Obsidian that displays folder contents with card, list, and tree views. Supports sorting, pagination, search, and folder notes.
+A file explorer view for Obsidian that displays folder contents with card and list views. Supports sorting, pagination, search, and folder notes.
 
 ## Usage
 
@@ -67,14 +67,13 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 | ------------------ | ------------------------------------------ | -------- | ------------------------------------------ |
 | `sortBy`           | `newest`, `oldest`, `edited`, `name`       | `newest` | How to sort files                          |
 | `sortDir`          | `asc`, `desc`                              | `desc`   | Sort direction                             |
-| `view`             | `cards`, `list`,                           | `list`   | Display mode                               |
+| `view`             | `cards`, `list`                            | `list`   | Display mode                               |
 | `depth`            | `0-10`                                     | `0`      | Subfolder depth (0 = direct children only) |
 | `pageSize`         | `6-100`                                    | `12`     | Items per page                             |
 | `onlyNotes`        | `true`, `false`                            | `true`   | Show only .md and .pdf files               |
 | `showFolders`      | `true`, `false`                            | `true`   | Show folder buttons                        |
 | `searchEnabled`    | `true`, `false`                            | `true`   | Show search bar                            |
 | `cardExt`          | `folder`, `ctime`, `mtime`, `desc`, `none` | `ctime`  | Card footer info                           |
-| `autoCollapseTree` | `true`, `false`                            | `false`  | Start tree view collapsed                  |
 
 ## Features
 
@@ -124,12 +123,35 @@ npm run dev
 
 ## Architecture
 
-The plugin uses a single TypeScript file (`main.ts`) that includes:
+The plugin uses a modular TypeScript/React architecture:
 
-- **ExplorerPlugin**: Main plugin class that registers the code block processor
-- **ExplorerView**: Handles rendering and user interactions
-- **FolderIndex**: Queries and indexes folder contents with async loading
-- **ExplorerSettingsModal**: Native Obsidian modal for settings
+```
+main.ts                    # Plugin entry point, registers code block processor
+src/
+├── types.ts               # TypeScript interfaces
+├── constants.ts           # Default settings
+├── services/
+│   ├── folder-index.ts    # Queries and indexes folder contents
+│   └── settings-parser.ts # Parses/serializes code block settings
+├── ui/
+│   ├── explorer-view.tsx  # Main view controller
+│   ├── explorer-ui.tsx    # Root React component
+│   ├── settings-tab.ts    # Plugin settings tab
+│   ├── components/        # Reusable React components
+│   │   ├── cards-view.tsx
+│   │   ├── list-view.tsx
+│   │   ├── search-bar.tsx
+│   │   ├── breadcrumbs.tsx
+│   │   ├── pagination.tsx
+│   │   └── shared.tsx     # Icon, InternalLink components
+│   └── modals/
+│       ├── settings-modal.ts
+│       └── prompt-modal.ts
+└── utils/
+    ├── file-utils.ts      # File/folder note utilities
+    ├── helpers.ts         # RTL detection, etc.
+    └── link-utils.ts      # Internal link handling
+```
 
 Settings are stored directly in the code block, making them portable and per-note.
 
