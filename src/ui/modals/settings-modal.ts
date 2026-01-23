@@ -37,7 +37,6 @@ export class ExplorerSettingsModal extends Modal {
 				dropdown
 					.addOption("cards", "Cards")
 					.addOption("list", "List")
-					.addOption("tree", "Tree")
 					.setValue(this.settings.view)
 					.onChange((value) => {
 						this.updateSetting("view", value as ExplorerSettings["view"]);
@@ -144,15 +143,6 @@ export class ExplorerSettingsModal extends Modal {
 			.addToggle((toggle) => {
 				toggle.setValue(this.settings.showBreadcrumbs).onChange((value) => {
 					this.updateSetting("showBreadcrumbs", value);
-				});
-			});
-
-		new Setting(contentEl)
-			.setName("Auto collapse tree")
-			.setDesc("Start tree view collapsed")
-			.addToggle((toggle) => {
-				toggle.setValue(this.settings.autoCollapseTree).onChange((value) => {
-					this.updateSetting("autoCollapseTree", value);
 				});
 			});
 

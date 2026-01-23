@@ -5,23 +5,17 @@ export function SearchBar(props: {
   searchMode: boolean;
   searchQuery: string;
   allowSearch: boolean;
-  isTreeView: boolean;
   childrenSize: number;
-  autoCollapseTree: boolean;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  onCollapseToggle: () => void;
 }): JSX.Element {
   const {
     searchMode,
     searchQuery,
     allowSearch,
-    isTreeView,
     childrenSize,
-    autoCollapseTree,
     onSearchToggle,
     onSearchInput,
-    onCollapseToggle,
   } = props;
 
   const [value, setValue] = useState(searchQuery);
@@ -68,19 +62,10 @@ export function SearchBar(props: {
         </div>
       ) : (
         <>
-          {allowSearch && !isTreeView && childrenSize > 12 ? (
+          {allowSearch && childrenSize > 12 ? (
             <button className="clickable-icon" onClick={onSearchToggle}>
               <Icon name="search" />
               <span style={{ marginInlineStart: ".5em" }}> Search</span>
-            </button>
-          ) : null}
-          {isTreeView ? (
-            <button className="clickable-icon" onClick={onCollapseToggle}>
-              <Icon
-                name={
-                  autoCollapseTree ? "chevrons-down-up" : "chevrons-up-down"
-                }
-              />
             </button>
           ) : null}
         </>

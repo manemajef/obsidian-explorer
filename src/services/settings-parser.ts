@@ -22,7 +22,7 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 				}
 				break;
 			case "view":
-				if (["cards", "list", "tree"].includes(value)) {
+				if (["cards", "list"].includes(value)) {
 					settings.view = value as ExplorerSettings["view"];
 				}
 				break;
@@ -54,9 +54,6 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 				if (["folder", "ctime", "mtime", "desc", "none", "default"].includes(value)) {
 					settings.cardExt = value as ExplorerSettings["cardExt"];
 				}
-				break;
-			case "autoCollapseTree":
-				settings.autoCollapseTree = value === "true";
 				break;
 			case "showNotes":
 				settings.showNotes = value === "true";
@@ -100,9 +97,6 @@ export function serializeSettings(settings: ExplorerSettings): string {
 	}
 	if (settings.cardExt !== DEFAULT_SETTINGS.cardExt) {
 		lines.push(`cardExt: "${settings.cardExt}"`);
-	}
-	if (settings.autoCollapseTree !== DEFAULT_SETTINGS.autoCollapseTree) {
-		lines.push(`autoCollapseTree: ${settings.autoCollapseTree}`);
 	}
 	if (settings.showNotes !== DEFAULT_SETTINGS.showNotes) {
 		lines.push(`showNotes: ${settings.showNotes}`);

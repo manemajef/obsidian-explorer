@@ -2,7 +2,7 @@ import { TFile, TFolder } from "obsidian";
 
 export interface ExplorerSettings {
 	sortBy: "newest" | "oldest" | "edited" | "name";
-	view: "cards" | "list" | "tree";
+	view: "cards" | "list";
 	depth: number;
 	pageSize: number;
 	onlyNotes: boolean;
@@ -10,7 +10,6 @@ export interface ExplorerSettings {
 	showBreadcrumbs: boolean;
 	allowSearch: boolean;
 	cardExt: "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
-	autoCollapseTree: boolean;
 	showNotes: boolean;
 }
 

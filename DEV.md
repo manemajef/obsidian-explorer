@@ -21,8 +21,8 @@ It uses a React UI, but keeps data/Obsidian operations inside a view class.
   - `src/ui/explorer-ui.tsx` is the top-level React layout, composed from smaller components.
 
 - React components
-  - `src/ui/components/*.tsx`
-    - `breadcrumbs.tsx`, `search-bar.tsx`, `pagination.tsx`, `cards-view.tsx`, `list-view.tsx`, `tree-view.tsx`, `folder-buttons.tsx`
+- `src/ui/components/*.tsx`
+    - `breadcrumbs.tsx`, `search-bar.tsx`, `pagination.tsx`, `cards-view.tsx`, `list-view.tsx`, `folder-buttons.tsx`
     - `shared.tsx` contains `InternalLink` (Obsidian-safe link) and `Icon` helpers.
 
 - Services / data

@@ -29,7 +29,6 @@ export class ExplorerView {
   private currentPage = 0;
   private searchQuery = "";
   private searchMode = false;
-  private collapsedFolders: Set<string> = new Set();
   private reactRoot: Root | null = null;
 
   constructor(
@@ -90,9 +89,7 @@ export class ExplorerView {
       return 0;
     });
 
-    const usePaging =
-      fileInfos.length > this.settings.pageSize &&
-      this.settings.view !== "tree";
+    const usePaging = fileInfos.length > this.settings.pageSize;
     const totalPages = Math.ceil(fileInfos.length / this.settings.pageSize);
     const startIdx = this.currentPage * this.settings.pageSize;
     const pageFiles = usePaging
@@ -114,9 +111,7 @@ export class ExplorerView {
         sourcePath={this.sourcePath}
         folder={this.currentFolder}
         settings={this.settings}
-        folderIndex={this.folderIndex}
         folderNotes={this.folderIndex.folderNotes}
-        fileInfos={fileInfos}
         pageFiles={pageFiles}
         usePaging={usePaging}
         totalPages={totalPages}
@@ -125,7 +120,6 @@ export class ExplorerView {
         searchMode={this.searchMode}
         searchQuery={this.searchQuery}
         visibleCount={visibleCount}
-        collapsedFolders={this.collapsedFolders}
         onOpenSettings={() => this.openSettings()}
         onNewFolder={() => this.promptNewFolder(this.currentFolder?.path || "")}
         onNewNote={() => this.createNewNote(this.currentFolder?.path || "")}
@@ -142,21 +136,8 @@ export class ExplorerView {
           this.currentPage = 0;
           this.renderWithIndex();
         }}
-        onCollapseToggle={() => {
-          this.settings.autoCollapseTree = !this.settings.autoCollapseTree;
-          this.updateSourceBlock(this.settings);
-          this.render();
-        }}
         onPageChange={(page) => {
           this.currentPage = page;
-          this.renderWithIndex();
-        }}
-        onToggleFolder={(folderPath) => {
-          if (this.collapsedFolders.has(folderPath)) {
-            this.collapsedFolders.delete(folderPath);
-          } else {
-            this.collapsedFolders.add(folderPath);
-          }
           this.renderWithIndex();
         }}
       />,

@@ -24,7 +24,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 				dropdown
 					.addOption("list", "List")
 					.addOption("cards", "Cards")
-					.addOption("tree", "Tree")
 					.setValue(this.plugin.settings.view)
 					.onChange(async (value) => {
 						this.updateSetting("view", value as ExplorerSettings["view"]);
@@ -133,15 +132,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle.setValue(this.plugin.settings.allowSearch).onChange((value) => {
 					this.updateSetting("allowSearch", value);
-				});
-			});
-
-		new Setting(containerEl)
-			.setName("Auto collapse tree")
-			.setDesc("Start tree view collapsed.")
-			.addToggle((toggle) => {
-				toggle.setValue(this.plugin.settings.autoCollapseTree).onChange((value) => {
-					this.updateSetting("autoCollapseTree", value);
 				});
 			});
 

@@ -10,7 +10,6 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
 	showBreadcrumbs: false,
 	allowSearch: true,
 	cardExt: "default",
-	autoCollapseTree: false,
 	showNotes: true,
 };
 export const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n"

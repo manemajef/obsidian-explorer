@@ -1,23 +1,19 @@
 import React from "react";
 import { App, TFile, TFolder } from "obsidian";
 import { ExplorerSettings, FileInfo } from "../types";
-import { FolderIndex } from "../services/folder-index";
 import { Breadcrumbs } from "./components/breadcrumbs";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-buttons";
 import { ListView } from "./components/list-view";
 import { Pagination } from "./components/pagination";
 import { SearchBar } from "./components/search-bar";
-import { TreeView } from "./components/tree-view";
 import { Icon } from "./components/shared";
 interface ExplorerUIProps {
   app: App;
   sourcePath: string;
   folder: TFolder;
   settings: ExplorerSettings;
-  folderIndex: FolderIndex;
   folderNotes: TFile[];
-  fileInfos: FileInfo[];
   pageFiles: FileInfo[];
   usePaging: boolean;
   totalPages: number;
@@ -26,15 +22,12 @@ interface ExplorerUIProps {
   searchMode: boolean;
   searchQuery: string;
   visibleCount: number;
-  collapsedFolders: Set<string>;
   onOpenSettings: () => void;
   onNewFolder: () => void;
   onNewNote: () => void;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  onCollapseToggle: () => void;
   onPageChange: (page: number) => void;
-  onToggleFolder: (folderPath: string) => void;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
@@ -43,9 +36,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     sourcePath,
     folder,
     settings,
-    folderIndex,
     folderNotes,
-    fileInfos,
     pageFiles,
     usePaging,
     totalPages,
@@ -54,15 +45,12 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     searchMode,
     searchQuery,
     visibleCount,
-    collapsedFolders,
     onOpenSettings,
     onNewFolder,
     onNewNote,
     onSearchToggle,
     onSearchInput,
-    onCollapseToggle,
     onPageChange,
-    onToggleFolder,
   } = props;
 
   return (
@@ -77,9 +65,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         onNewNote={onNewNote}
       />
 
-      {settings.showFolders &&
-      settings.view !== "tree" &&
-      folderNotes.length > 0 ? (
+      {settings.showFolders && folderNotes.length > 0 ? (
         <FolderButtons
           app={app}
           sourcePath={sourcePath}
@@ -91,12 +77,9 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         searchMode={searchMode}
         searchQuery={searchQuery}
         allowSearch={settings.allowSearch}
-        isTreeView={settings.view === "tree"}
         childrenSize={visibleCount}
-        autoCollapseTree={settings.autoCollapseTree}
         onSearchToggle={onSearchToggle}
         onSearchInput={onSearchInput}
-        onCollapseToggle={onCollapseToggle}
       />
 
       {settings.showNotes ? (
@@ -114,17 +97,6 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
             ) : null}
             {settings.view === "list" ? (
               <ListView app={app} sourcePath={sourcePath} files={pageFiles} />
-            ) : null}
-            {settings.view === "tree" ? (
-              <TreeView
-                app={app}
-                sourcePath={sourcePath}
-                files={fileInfos}
-                folderIndex={folderIndex}
-                settings={settings}
-                collapsedFolders={collapsedFolders}
-                onToggleFolder={onToggleFolder}
-              />
             ) : null}
           </div>
 
