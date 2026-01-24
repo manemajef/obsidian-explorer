@@ -11,6 +11,11 @@
   gap: 1em;
   margin-bottom: 1.5em;
 }
+
+.is-mobile .explorer-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+}
 /*.is-mobile .explorer-folder-grid {
   margin-top: 2em;
 }*/
@@ -21,12 +26,17 @@
 
 .is-mobile .explorer-notes-grid {
   grid-template-columns: 1fr 1fr !important;
-  gap: 1em;
+  gap: .75em;
 }
+.is-mobile .explorer-folder-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 
+}
 /* ===== Folder Cards (buttons) ===== */
 .explorer-folder-card {
   box-sizing: border-box;
+  border: 1px solid red;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -47,7 +57,7 @@
   /*padding: 1.2em 1em !important;*/
   /*box-shadow: var(--input-shadow) !important;*/
   /*border: 1px solid var(--background-modifier-border);*/
-  border-radius: 16em;
+  border-radius: 16px;
 }
 
 body.theme-light .explorer-folder-card {
@@ -128,9 +138,10 @@ body.theme-light .explorer-folder-card {
 
 /* ===== List View ===== */
 .explorer-list {
-  padding: 0.25em 0.25em;
+  padding: 0.4em 0.25em;
   list-style: none;
   margin-inline-start: 1em;
+  font-size: .9em;
 }
 
 .is-mobile .explorer-list {
