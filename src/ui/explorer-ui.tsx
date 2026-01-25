@@ -63,6 +63,8 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         onOpenSettings={onOpenSettings}
         onNewFolder={onNewFolder}
         onNewNote={onNewNote}
+        onSearchToggle={onSearchToggle}
+        searchMode={searchMode}
       />
 
       {settings.showFolders && folderInfos.length > 0 ? (
@@ -90,11 +92,11 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
             app={app}
           />
         </div>
-        <div style={{ display: "flex" }}>
+        {/* <div style={{ display: "flex" }}>
           <button className="clickable-icon" onClick={onNewNote}>
             <Icon name="plus" />
           </button>
-        </div>
+        </div> */}
       </div>
 
       {settings.showNotes ? (
@@ -143,11 +145,17 @@ function FolderActions(props: {
   onOpenSettings: () => void;
   onNewFolder: () => void;
   onNewNote: () => void;
+  onSearchToggle: () => void;
+  searchMode: boolean;
 }): JSX.Element {
-  const { onOpenSettings, onNewFolder, onNewNote } = props;
+  const { onOpenSettings, onNewFolder, onNewNote, onSearchToggle, searchMode } =
+    props;
 
   return (
-    <div className="folder-nav">
+    <div
+      className="folder-nav justify-between"
+      style={{ marginBottom: "1em", position: "sticky" }}
+    >
       {/* <div
         className="explorer-actions-left"
         style={{
@@ -157,27 +165,39 @@ function FolderActions(props: {
           gap: "1em",
         }}
       > */}
-      <div>
-        <button className="clickable-icon" onClick={onOpenSettings}>
+      <div className="flex gap-2">
+        <button className="clickable-icon action-icon" onClick={onOpenSettings}>
           <Icon name="settings-2" />
         </button>
+        {/* <SearchBar /> */}
       </div>
       <div>
-        <div
-          className="explorer-actions-wrap"
-          style={{
-            display: "flex",
-            gap: ".5em",
-            borderInlineStart: "1px solid var(--background-modifier-border)",
-            paddingInlineStart: "1em",
-          }}
-        >
-          <button className="clickable-icon" onClick={onNewFolder}>
-            <Icon name="folder-plus" />
-          </button>
-          <button className="clickable-icon" onClick={onNewNote}>
-            <Icon name="file-plus-2" />
-          </button>
+        <div className="flex">
+          <div className="action-icons">
+            <button className="clickable-icon" onClick={onNewFolder}>
+              <Icon name="folder-plus" />
+            </button>
+            <button className="clickable-icon" onClick={onNewNote}>
+              <Icon name="file-plus-2" />
+            </button>
+          </div>
+          <div
+            className="explorer-actions-wrap flex gap-2"
+            style={{
+              display: "flex",
+              gap: ".5em",
+              borderInlineStart: "1px solid var(--background-modifier-border)",
+              paddingInlineStart: "1em",
+              marginInlineStart: "1em",
+            }}
+          >
+            <button
+              className="clickable-icon action-icon"
+              onClick={onSearchToggle}
+            >
+              <Icon name={searchMode ? "undo-2" : "search"} />
+            </button>
+          </div>
         </div>
       </div>
       {/* </div> */}

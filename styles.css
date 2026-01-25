@@ -1,3 +1,51 @@
+:root {
+  --glass-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+.flex {
+  display: flex;
+}
+.gap-4 {
+  gap: 1em;
+}
+.gap-2 {
+  gap: .5em;
+}
+.justify-start {
+  justify-content: start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.align-center {
+  align-items: center;
+}
+.center {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+.p-4 {
+  padding: 1em;
+}
+.p-2 {
+  padding: .5em;
+}
+.m-4 {
+  margin: 1em;
+}
+.m-2 {
+  margin: .5em;
+}
+
+
+
+
 /* ===== Grid Layouts ===== */
 .explorer-grid {
   display: grid;
@@ -23,7 +71,11 @@
 .explorer-notes-grid {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
-
+/* .use-glass .explorer-files-container {
+  box-shadow: var(--glass-shadow);
+  padding: .25em .5em;
+  border-radius: .5em;
+} */
 .is-mobile .explorer-notes-grid {
   grid-template-columns: 1fr 1fr !important;
   gap: .75em;
@@ -36,7 +88,7 @@
 /* ===== Folder Cards (buttons) ===== */
 .explorer-folder-card {
   box-sizing: border-box;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -47,6 +99,14 @@
   border-radius: 0.8em;
   font-size: 0.9em;
   border: none;
+}
+.use-glass .explorer-folder-card {
+  /* box-shadow: var(--glass-shadow) !important; */
+box-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--background-modifier-border);
 }
 
 .explorer-folder-card:hover {
@@ -171,6 +231,8 @@ body.theme-light .explorer-folder-card {
 
 /* ===== Search ===== */
 .search-bar-container {
+  margin: auto;
+  margin-bottom: 1em;
   display: flex;
   gap: 0.5em;
   min-width: 90%;
@@ -183,6 +245,10 @@ body.theme-light .explorer-folder-card {
   align-items: center;
   flex: 1 1 auto;
   width: 80%;
+}
+.search-input {
+  min-height: 3em;
+  padding-bottom: 1em;
 }
 
 .explorer-search-bar input {
@@ -203,6 +269,10 @@ body.theme-light .explorer-folder-card {
   border-radius: 6px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
+.use-glass .paging-controll {
+  border-radius: 2em;
+  box-shadow: var(--glass-shadow);
+}
 
 .paging-label {
   display: flex;
@@ -213,7 +283,10 @@ body.theme-light .explorer-folder-card {
   border-radius: 6px;
   cursor: pointer;
 }
-
+.use-glass .paging-label {
+  border-radius: 100%;
+  padding: .2em .85em;
+}
 .paging-label:hover {
   background-color: var(--background-primary-alt);
 }
@@ -246,17 +319,21 @@ body.theme-light .explorer-folder-card {
 /* ===== Navigation Bars ===== */
 .folder-nav,
 .pages-nav {
-  padding-bottom: 0.5em;
+  padding-bottom: 0em;
 }
 .is-mobile .folder-nav {
   padding-bottom: 1em !important;
 }
 
 .folder-nav {
+  direction: ltr !important;
   display: flex;
   align-items: center;
   /* justify-content: space-between; */
   gap: 1em;
+}
+.use-glass .folder-nav {
+  padding-bottom: .5em;
 }
 
 /* ===== Breadcrumbs ===== */
@@ -337,7 +414,8 @@ body.theme-light .explorer-folder-card {
 	cursor: default;
 }
 
-.explorer-folder-card,
+
+.explorer-folder-card,  
 .explorer-folder-card * {
 	cursor: default;
 }
@@ -347,7 +425,52 @@ body.theme-light .explorer-folder-card {
 	cursor: default;
 } */
 
+.use-glass .action-icons, .use-glass .action-icon {
+  border-radius: 2em;
+  /* backdrop-filter: blur(50px); */
+  background-color: rgba(0,0,0,0.01);
+  /* margin-bottom: 1em; */
+
+  /* -webkit-backdrop-filter: blur(20px) saturate(180%); */
+  /* border: 1px solid rgba(var(--mono-rgb-100), 0.1); */
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.use-glass .action-icons button {
+  border-radius: 2em;
+}
+.action-icons {
+  padding: .1em .5em;
+  gap:.5em;
+  display: flex;
+}
+.action-icon:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+.action-icon.clickable-icon:hover {
+  background-color: none;
+}
 .explorer-container a,
 .explorer-container a * {
   cursor: pointer;
+}
+
+.glass-btn {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px 6px;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.01);
+  backdrop-filter: blur(20px) saturate(180%);
+  /* -webkit-backdrop-filter: blur(20px) saturate(180%); */
+  border: 1px solid rgba(var(--mono-rgb-100), 0.15);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
 }

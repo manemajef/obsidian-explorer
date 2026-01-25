@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
 	allowSearch: true,
 	cardExt: "default",
 	showNotes: true,
+	useGlass: true,
 };
 export const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n"
 

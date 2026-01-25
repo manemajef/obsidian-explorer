@@ -11,6 +11,7 @@ export interface ExplorerSettings {
 	allowSearch: boolean;
 	cardExt: "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
 	showNotes: boolean;
+	useGlass: boolean;
 }
 
 export interface FileInfo {

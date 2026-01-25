@@ -135,6 +135,15 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 				});
 			});
 
+		new Setting(containerEl)
+			.setName("Use glass")
+			.setDesc("Add a .use-glass class to the explorer root.")
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.useGlass).onChange((value) => {
+					this.updateSetting("useGlass", value);
+				});
+			});
+
 		new Setting(containerEl).addButton((button) => {
 			button.setButtonText("Reset defaults").onClick(async () => {
 				this.plugin.settings = { ...DEFAULT_SETTINGS };

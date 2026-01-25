@@ -46,6 +46,7 @@ export class ExplorerView {
 
   async render(): Promise<void> {
     this.container.addClass("explorer-container");
+    this.container.classList.toggle("use-glass", this.settings.useGlass);
 
     const blockFile = this.app.vault.getAbstractFileByPath(this.sourcePath);
     if (!(blockFile instanceof TFile) || !blockFile.parent) {

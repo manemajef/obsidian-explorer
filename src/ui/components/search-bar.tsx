@@ -49,18 +49,20 @@ export function SearchBar(props: {
     >
       {searchMode ? (
         <div className="search-bar-container">
-          <button className="clickable-icon" onClick={onSearchToggle}>
-            <span
-              style={{ display: "flex", gap: ".5em", alignItems: "center" }}
-            >
-              <Icon name="undo-2" />
-              <span style={{}}> exit</span>
-            </span>
-          </button>
-          <div className="explorer-search-bar">
+          {/* <button className="clickable-icon" onClick={onSearchToggle}> */}
+          {/*   <span */}
+          {/*     style={{ display: "flex", gap: ".5em", alignItems: "center" }} */}
+          {/*     // className="glass" */}
+          {/*   > */}
+          {/*     <Icon name="undo-2" /> */}
+          {/*     <span style={{}}> exit</span> */}
+          {/*   </span> */}
+          {/* </button> */}
+          <div className="explorer-search-bar" style={{ position: "relative" }}>
             <input
               ref={inputRef}
               type="text"
+              className="search-input"
               placeholder={
                 Platform.isMobile
                   ? "search"
@@ -69,15 +71,24 @@ export function SearchBar(props: {
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
+            <button
+              style={{ position: "absolute", insetInlineStart: "-1em" }}
+              className="clickable-icon glass-btn"
+              onClick={onSearchToggle}
+            >
+              <Icon name="undo-2" />
+            </button>
           </div>
         </div>
       ) : (
         <>
-          {allowSearch && childrenSize > 12 ? (
-            <button className="clickable-icon" onClick={onSearchToggle}>
-              <Icon name="search" />
-              <span style={{ marginInlineStart: ".5em" }}> Search</span>
-            </button>
+          {false && allowSearch && childrenSize > 12 ? (
+            <div>
+              <button className="clickable-icon" onClick={onSearchToggle}>
+                <Icon name="search" />
+                <span style={{ marginInlineStart: ".5em" }}> Search</span>
+              </button>
+            </div>
           ) : null}
         </>
       )}
