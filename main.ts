@@ -7,6 +7,7 @@ import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 
 export default class ExplorerPlugin extends Plugin {
 	settings: ExplorerSettings;
+	createdFolderNotes: string[] = [];
 
 	async onload() {
 		await this.loadSettings();
@@ -24,11 +25,32 @@ export default class ExplorerPlugin extends Plugin {
 	onunload() {}
 
 	async loadSettings(): Promise<void> {
-		const data = (await this.loadData()) as Partial<ExplorerSettings> | null;
+		const data = (await this.loadData()) as
+			| Partial<{ settings: ExplorerSettings; createdFolderNotes: string[] }>
+			| ExplorerSettings
+			| null;
+
+		if (data && "settings" in data) {
+			this.settings = { ...DEFAULT_SETTINGS, ...(data.settings ?? {}) };
+			this.createdFolderNotes = Array.isArray(data.createdFolderNotes)
+				? data.createdFolderNotes
+				: [];
+			return;
+		}
+
 		this.settings = { ...DEFAULT_SETTINGS, ...(data ?? {}) };
 	}
 
 	async saveSettings(): Promise<void> {
-		await this.saveData(this.settings);
+		await this.saveData({
+			settings: this.settings,
+			createdFolderNotes: this.createdFolderNotes,
+		});
+	}
+
+	async trackCreatedFolderNote(path: string): Promise<void> {
+		if (this.createdFolderNotes.includes(path)) return;
+		this.createdFolderNotes.push(path);
+		await this.saveSettings();
 	}
 }

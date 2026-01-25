@@ -273,6 +273,7 @@ export class ExplorerView {
       let file = this.app.vault.getAbstractFileByPath(folderNotePath);
       if (!file) {
         file = await this.app.vault.create(folderNotePath, FOLDERNOTE_TEMPLATE);
+        this.trackCreatedFolderNote(file.path);
       }
 
       if (file instanceof TFile) {
@@ -280,6 +281,13 @@ export class ExplorerView {
       }
     } catch (e) {
       new Notice(`Failed to create folder: ${e}`);
+    }
+  }
+
+  private trackCreatedFolderNote(path: string): void {
+    const plugin = (this.app as any)?.plugins?.getPlugin?.("explorer");
+    if (plugin?.trackCreatedFolderNote) {
+      void plugin.trackCreatedFolderNote(path);
     }
   }
 

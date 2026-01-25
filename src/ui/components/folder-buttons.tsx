@@ -10,6 +10,13 @@ export function FolderButtons(props: {
 }): JSX.Element {
   const { app, sourcePath, folderInfos } = props;
 
+  const trackCreatedFolderNote = (path: string): void => {
+    const plugin = (app as any)?.plugins?.getPlugin?.("explorer");
+    if (plugin?.trackCreatedFolderNote) {
+      void plugin.trackCreatedFolderNote(path);
+    }
+  };
+
   const openOrCreateFolderNote = async (
     folderInfo: FolderInfo,
     e: React.MouseEvent,
@@ -39,6 +46,7 @@ export function FolderButtons(props: {
         folderNotePath,
         FOLDERNOTE_TEMPLATE,
       );
+      trackCreatedFolderNote(created.path);
       app.workspace.openLinkText(
         created.path,
         sourcePath,
