@@ -25,14 +25,18 @@ export function SearchBar(props: {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    setValue(searchQuery);
-  }, [searchQuery]);
-
-  useEffect(() => {
     if (searchMode) {
-      inputRef.current?.focus();
+      // Delay to let React/Obsidian settle after full re-render
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
     }
   }, [searchMode]);
+
+  useEffect(() => {
+    setValue(searchQuery);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (!searchMode) return;
@@ -48,17 +52,22 @@ export function SearchBar(props: {
       style={{ display: "flex", justifyContent: "space-between" }}
     >
       {searchMode ? (
-        <div className="search-bar-container">
-          {/* <button className="clickable-icon" onClick={onSearchToggle}> */}
-          {/*   <span */}
-          {/*     style={{ display: "flex", gap: ".5em", alignItems: "center" }} */}
-          {/*     // className="glass" */}
-          {/*   > */}
-          {/*     <Icon name="undo-2" /> */}
-          {/*     <span style={{}}> exit</span> */}
-          {/*   </span> */}
-          {/* </button> */}
-          <div className="explorer-search-bar" style={{ position: "relative" }}>
+        <div
+          id="explorer-searchbar"
+          className="search-bar-container"
+          style={{ scrollMarginTop: "8em" }}
+        >
+          <button
+            className="clickable-icon glass-btn"
+            onClick={(e) => {
+              const container = (e.currentTarget as HTMLElement).closest(".explorer-container") as HTMLElement;
+              container?.scrollIntoView({ behavior: "smooth", block: "start" });
+              onSearchToggle();
+            }}
+          >
+            <Icon name="undo-2" />
+          </button>
+          <div className="explorer-search-bar">
             <input
               ref={inputRef}
               type="text"
@@ -71,13 +80,6 @@ export function SearchBar(props: {
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
-            <button
-              style={{ position: "absolute", insetInlineStart: "-1em" }}
-              className="clickable-icon glass-btn"
-              onClick={onSearchToggle}
-            >
-              <Icon name="undo-2" />
-            </button>
           </div>
         </div>
       ) : (

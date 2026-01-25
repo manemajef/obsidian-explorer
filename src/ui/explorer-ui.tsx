@@ -153,8 +153,9 @@ function FolderActions(props: {
 
   return (
     <div
+      id="explorer-actions"
       className="folder-nav justify-between"
-      style={{ marginBottom: "1em", position: "sticky" }}
+      style={{ marginBottom: "1em" }}
     >
       {/* <div
         className="explorer-actions-left"
@@ -191,12 +192,18 @@ function FolderActions(props: {
               marginInlineStart: "1em",
             }}
           >
-            <button
+            <a
+              href="#explorer-searchbar"
               className="clickable-icon action-icon"
-              onClick={onSearchToggle}
+              onClick={(e) => {
+                if (searchMode) {
+                  e.preventDefault();
+                }
+                onSearchToggle();
+              }}
             >
               <Icon name={searchMode ? "undo-2" : "search"} />
-            </button>
+            </a>
           </div>
         </div>
       </div>
