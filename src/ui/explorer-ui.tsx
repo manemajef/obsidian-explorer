@@ -1,6 +1,6 @@
 import React from "react";
-import { App, TFile, TFolder } from "obsidian";
-import { ExplorerSettings, FileInfo } from "../types";
+import { App, TFolder } from "obsidian";
+import { ExplorerSettings, FileInfo, FolderInfo } from "../types";
 import { Breadcrumbs } from "./components/breadcrumbs";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-buttons";
@@ -13,7 +13,7 @@ interface ExplorerUIProps {
   sourcePath: string;
   folder: TFolder;
   settings: ExplorerSettings;
-  folderNotes: TFile[];
+  folderInfos: FolderInfo[];
   pageFiles: FileInfo[];
   usePaging: boolean;
   totalPages: number;
@@ -36,7 +36,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     sourcePath,
     folder,
     settings,
-    folderNotes,
+    folderInfos,
     pageFiles,
     usePaging,
     totalPages,
@@ -65,11 +65,11 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         onNewNote={onNewNote}
       />
 
-      {settings.showFolders && folderNotes.length > 0 ? (
+      {settings.showFolders && folderInfos.length > 0 ? (
         <FolderButtons
           app={app}
           sourcePath={sourcePath}
-          folderNotes={folderNotes}
+          folderInfos={folderInfos}
         />
       ) : null}
       <div

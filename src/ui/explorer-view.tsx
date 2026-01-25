@@ -111,7 +111,7 @@ export class ExplorerView {
         sourcePath={this.sourcePath}
         folder={this.currentFolder}
         settings={this.settings}
-        folderNotes={this.folderIndex.folderNotes}
+        folderInfos={this.folderIndex.folders}
         pageFiles={pageFiles}
         usePaging={usePaging}
         totalPages={totalPages}

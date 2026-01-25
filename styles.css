@@ -53,6 +53,14 @@
   background-color: var(--interactive-hover);
 }
 
+.explorer-folder-card--missing {
+  opacity: 0.7;
+}
+
+.explorer-folder-link--missing {
+  color: var(--text-muted);
+}
+
 .is-mobile .explorer-folder-card {
   /*padding: 1.2em 1em !important;*/
   /*box-shadow: var(--input-shadow) !important;*/
