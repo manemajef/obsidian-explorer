@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "./shared";
-import { App } from "obsidian";
+import { App, Platform } from "obsidian";
 
 export function SearchBar(props: {
   searchMode: boolean;
@@ -50,7 +50,9 @@ export function SearchBar(props: {
       {searchMode ? (
         <div className="search-bar-container">
           <button className="clickable-icon" onClick={onSearchToggle}>
-            <span style={{ display: "flex", gap: ".5em", alignItems: "center" }}>
+            <span
+              style={{ display: "flex", gap: ".5em", alignItems: "center" }}
+            >
               <Icon name="undo-2" />
               <span style={{}}> exit</span>
             </span>
@@ -60,7 +62,9 @@ export function SearchBar(props: {
               ref={inputRef}
               type="text"
               placeholder={
-                app.isMobile ? "search" : "use '#' for tags and '@' for folders"
+                Platform.isMobile
+                  ? "search"
+                  : "use '#' for tags and '@' for folders"
               }
               value={value}
               onChange={(e) => setValue(e.target.value)}
