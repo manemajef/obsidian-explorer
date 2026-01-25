@@ -101,12 +101,13 @@
   border: none;
 }
 .use-glass .explorer-folder-card {
-  /* box-shadow: var(--glass-shadow) !important; */
-box-shadow: 
+  box-shadow: var(--glass-shadow) !important;
+/* box-shadow: 
     0 1px 4px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid var(--background-modifier-border);
+} */
 }
 
 .explorer-folder-card:hover {
