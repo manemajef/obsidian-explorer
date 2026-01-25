@@ -1,9 +1,22 @@
-:root {
+body {
   --glass-shadow:
     0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    /* inset -1px -1px 0 rgba(255, 255, 255, 0.04) */
+    ;
+  --glass-shadow-light: 
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    /* .markdown-preview-view {
+  scroll-behavior: smooth;
+} */
+  /* transition: all 0.2s ease; */
 }
+
+
+
 .flex {
   display: flex;
 }
@@ -100,8 +113,8 @@
   font-size: 0.9em;
   border: none;
 }
-.use-glass .explorer-folder-card {
-  box-shadow: var(--glass-shadow) !important;
+.theme-dark .use-glass .explorer-folder-card {
+  box-shadow: var(--glass-shadow-light) !important;
 /* box-shadow: 
     0 1px 4px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -145,6 +158,12 @@ body.theme-light .explorer-folder-card {
   justify-content: space-between;
   cursor: pointer;
 }
+/* .theme-dark .use-glass .explorer-card {
+  box-shadow: var(--glass-shadow-light);
+  border-radius: .5em;
+  border: 1px solid rgba(0,0,0,0);
+
+} */
 
 .explorer-card:hover {
   border: 1px solid var(--background-modifier-border-hover);
@@ -272,7 +291,7 @@ body.theme-light .explorer-folder-card {
 }
 .use-glass .paging-controll {
   border-radius: 2em;
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--glass-shadow-light);
 }
 
 .paging-label {
@@ -285,7 +304,7 @@ body.theme-light .explorer-folder-card {
   cursor: pointer;
 }
 .use-glass .paging-label {
-  border-radius: 100%;
+  border-radius: 2em;
   padding: .2em .85em;
 }
 .paging-label:hover {
@@ -376,6 +395,10 @@ body.theme-light .explorer-folder-card {
   text-decoration: underline;
 }
 
+.explorer-container {
+  scroll-margin-top: 10em;
+}
+
 /* ===== Links ===== */
 .explorer-container a {
   text-decoration: none !important;
@@ -429,15 +452,16 @@ body.theme-light .explorer-folder-card {
 .use-glass .action-icons, .use-glass .action-icon {
   border-radius: 2em;
   /* backdrop-filter: blur(50px); */
-  background-color: rgba(0,0,0,0.01);
+  /* background-color: rgba(0,0,0,0.01); */
   /* margin-bottom: 1em; */
 
   /* -webkit-backdrop-filter: blur(20px) saturate(180%); */
   /* border: 1px solid rgba(var(--mono-rgb-100), 0.1); */
-  box-shadow: 
+  /* box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05); */
+  box-shadow: var(--glass-shadow-light);
   transition: all 0.2s ease;
 }
 .use-glass .action-icons button {
@@ -447,6 +471,7 @@ body.theme-light .explorer-folder-card {
   padding: .1em .5em;
   gap:.5em;
   display: flex;
+  align-items: center;
 }
 .action-icon:hover {
   background-color: rgba(0,0,0,0.1);
