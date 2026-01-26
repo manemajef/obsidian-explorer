@@ -1,6 +1,8 @@
 import { ExplorerSettings } from "../types";
 import { DEFAULT_SETTINGS } from "../constants";
 
+// Per-block settings parser/serializer for explorer code blocks.
+
 /**
  * Parse settings from code block source text
  * Format: key: "value" or key: value

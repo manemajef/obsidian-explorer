@@ -1,6 +1,7 @@
 import { App, Modal, Setting } from "obsidian";
 import { ExplorerSettings } from "../../types";
 
+// Per-block settings UI (applies to a single explorer code block).
 export class ExplorerSettingsModal extends Modal {
 	settings: ExplorerSettings;
 	onSettingsChange: (settings: ExplorerSettings) => void;

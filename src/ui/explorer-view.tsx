@@ -20,7 +20,7 @@ import { FOLDERNOTE_TEMPLATE } from "src/constants";
 export class ExplorerView {
   app: App;
   container: HTMLElement;
-  settings: ExplorerSettings;
+  effectiveSettings: ExplorerSettings;
   ctx: MarkdownPostProcessorContext;
   sourcePath: string;
 
@@ -34,19 +34,19 @@ export class ExplorerView {
   constructor(
     app: App,
     container: HTMLElement,
-    settings: ExplorerSettings,
+    effectiveSettings: ExplorerSettings,
     ctx: MarkdownPostProcessorContext,
   ) {
     this.app = app;
     this.container = container;
-    this.settings = settings;
+    this.effectiveSettings = effectiveSettings;
     this.ctx = ctx;
     this.sourcePath = ctx.sourcePath;
   }
 
   async render(): Promise<void> {
     this.container.addClass("explorer-container");
-    this.container.classList.toggle("use-glass", this.settings.useGlass);
+    this.container.classList.toggle("use-glass", this.effectiveSettings.useGlass);
 
     const blockFile = this.app.vault.getAbstractFileByPath(this.sourcePath);
     if (!(blockFile instanceof TFile) || !blockFile.parent) {
@@ -59,7 +59,7 @@ export class ExplorerView {
     this.container.setAttribute("dir", isRtl() ? "rtl" : "ltr");
 
     this.folderIndex = new FolderIndex(this.app, folder);
-    await this.folderIndex.loadToDepth(this.settings.depth);
+    await this.folderIndex.loadToDepth(this.effectiveSettings.depth);
 
     this.renderWithIndex();
   }
@@ -90,17 +90,17 @@ export class ExplorerView {
       return 0;
     });
 
-    const usePaging = fileInfos.length > this.settings.pageSize;
-    const totalPages = Math.ceil(fileInfos.length / this.settings.pageSize);
-    const startIdx = this.currentPage * this.settings.pageSize;
+    const usePaging = fileInfos.length > this.effectiveSettings.pageSize;
+    const totalPages = Math.ceil(fileInfos.length / this.effectiveSettings.pageSize);
+    const startIdx = this.currentPage * this.effectiveSettings.pageSize;
     const pageFiles = usePaging
-      ? fileInfos.slice(startIdx, startIdx + this.settings.pageSize)
+      ? fileInfos.slice(startIdx, startIdx + this.effectiveSettings.pageSize)
       : fileInfos;
 
     const extForCard =
-      this.settings.cardExt !== "default"
-        ? this.settings.cardExt
-        : this.settings.depth > 0
+      this.effectiveSettings.cardExt !== "default"
+        ? this.effectiveSettings.cardExt
+        : this.effectiveSettings.depth > 0
           ? "folder"
           : "ctime";
 
@@ -109,7 +109,7 @@ export class ExplorerView {
         app={this.app}
         sourcePath={this.sourcePath}
         folder={this.currentFolder}
-        settings={this.settings}
+        effectiveSettings={this.effectiveSettings}
         folderInfos={this.folderIndex.folders}
         pageFiles={pageFiles}
         usePaging={usePaging}
@@ -149,9 +149,9 @@ export class ExplorerView {
   private getRenderedFiles(): TFile[] {
     if (!this.folderIndex) return [];
 
-    let files = this.folderIndex.getFilesToDisplay(this.settings);
+    let files = this.folderIndex.getFilesToDisplay(this.effectiveSettings);
 
-    if (!this.settings.showFolders) {
+    if (!this.effectiveSettings.showFolders) {
       files = [...this.folderIndex.folderNotes, ...files];
     }
 
@@ -192,7 +192,7 @@ export class ExplorerView {
   private sortFiles(files: TFile[]): TFile[] {
     const sorted = [...files];
 
-    switch (this.settings.sortBy) {
+    switch (this.effectiveSettings.sortBy) {
       case "newest":
         sorted.sort((a, b) => b.stat.ctime - a.stat.ctime);
         break;
@@ -211,8 +211,8 @@ export class ExplorerView {
   }
 
   private openSettings(): void {
-    new ExplorerSettingsModal(this.app, this.settings, async (newSettings) => {
-      this.settings = newSettings;
+    new ExplorerSettingsModal(this.app, this.effectiveSettings, async (newSettings) => {
+      this.effectiveSettings = newSettings;
       await this.updateSourceBlock(newSettings);
       await this.render();
     }).open();

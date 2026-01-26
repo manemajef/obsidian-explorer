@@ -3,6 +3,7 @@ import ExplorerPlugin from "../../main";
 import { DEFAULT_SETTINGS } from "../constants";
 import { ExplorerSettings } from "../types";
 
+// Global plugin defaults UI (Obsidian settings tab).
 export class ExplorerSettingsTab extends PluginSettingTab {
 	plugin: ExplorerPlugin;
 

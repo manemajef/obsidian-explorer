@@ -12,7 +12,7 @@ interface ExplorerUIProps {
   app: App;
   sourcePath: string;
   folder: TFolder;
-  settings: ExplorerSettings;
+  effectiveSettings: ExplorerSettings;
   folderInfos: FolderInfo[];
   pageFiles: FileInfo[];
   usePaging: boolean;
@@ -34,7 +34,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     app,
     sourcePath,
     folder,
-    settings,
+    effectiveSettings,
     folderInfos,
     pageFiles,
     usePaging,
@@ -53,7 +53,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
 
   return (
     <>
-      {settings.showBreadcrumbs ? (
+      {effectiveSettings.showBreadcrumbs ? (
         <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
       ) : null}
 
@@ -65,7 +65,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         searchMode={searchMode}
       />
 
-      {settings.showFolders && folderInfos.length > 0 ? (
+      {effectiveSettings.showFolders && folderInfos.length > 0 ? (
         <FolderButtons
           app={app}
           sourcePath={sourcePath}
@@ -94,12 +94,12 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         </div> */}
       </div>
 
-      {settings.showNotes ? (
+      {effectiveSettings.showNotes ? (
         <div className="explorer-files-container">
           <div
-            className={`explorer ${settings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`}
+            className={`explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`}
           >
-            {settings.view === "cards" ? (
+            {effectiveSettings.view === "cards" ? (
               <CardsView
                 app={app}
                 sourcePath={sourcePath}
@@ -107,7 +107,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
                 extForCard={extForCard}
               />
             ) : null}
-            {settings.view === "list" ? (
+            {effectiveSettings.view === "list" ? (
               <ListView app={app} sourcePath={sourcePath} files={pageFiles} />
             ) : null}
           </div>

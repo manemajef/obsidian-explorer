@@ -13,10 +13,15 @@ export default class ExplorerPlugin extends Plugin {
 		this.addSettingTab(new ExplorerSettingsTab(this.app, this));
 
 		this.registerMarkdownCodeBlockProcessor("explorer", async (source, el, ctx) => {
-			const parsedSettings = parseSettings(source);
-			const settings: ExplorerSettings = { ...this.settings, ...parsedSettings };
+			const pluginSettings = this.settings;
+			const blockSettings = parseSettings(source);
+			const effectiveSettings: ExplorerSettings = {
+				...pluginSettings,
+				...blockSettings,
+			};
 
-			const view = new ExplorerView(this.app, el, settings, ctx);
+			// Per-block settings override plugin defaults for this render.
+			const view = new ExplorerView(this.app, el, effectiveSettings, ctx);
 			await view.render();
 		});
 	}

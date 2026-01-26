@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "./shared";
 import { Platform } from "obsidian";
-import { smoothScrollToTarget } from "../../utils/scroll-utils";
+import { useSmartScroll } from "../../hooks/use-smart-scroll";
 
 export function SearchBar(props: {
   searchMode: boolean;
@@ -9,27 +9,20 @@ export function SearchBar(props: {
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
 }): JSX.Element {
-  const {
-    searchMode,
-    searchQuery,
-    onSearchToggle,
-    onSearchInput,
-  } = props;
+  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const scrollOffsetEm = 2;
+  const { targetRef, scrollToTarget, scrollToTopOf } = useSmartScroll({
+    offsetEm: 2,
+    durationMs: 300,
+  });
 
   useEffect(() => {
     if (searchMode) {
       // Delay to let React/Obsidian settle after full re-render
       const timer = setTimeout(() => {
-        const target = containerRef.current;
-        if (target) {
-          const fontSize = parseFloat(getComputedStyle(target).fontSize) || 16;
-          smoothScrollToTarget(target, fontSize * scrollOffsetEm);
-        }
+        scrollToTarget();
         inputRef.current?.focus();
       }, 50);
       return () => clearTimeout(timer);
@@ -56,7 +49,7 @@ export function SearchBar(props: {
       {searchMode ? (
         <div
           id="explorer-searchbar"
-          ref={containerRef}
+          ref={targetRef}
           className="search-bar-container"
         >
           <button
@@ -65,9 +58,7 @@ export function SearchBar(props: {
               const container = (e.currentTarget as HTMLElement).closest(
                 ".explorer-container",
               ) as HTMLElement;
-              if (container) {
-                smoothScrollToTarget(container, 0);
-              }
+              scrollToTopOf(container);
               onSearchToggle();
             }}
           >
@@ -88,9 +79,7 @@ export function SearchBar(props: {
             />
           </div>
         </div>
-      ) : (
-        null
-      )}
+      ) : null}
     </div>
   );
 }

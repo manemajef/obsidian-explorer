@@ -61,18 +61,38 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 - Open Obsidian → Settings → Community plugins
 - Turn on “Explorer”
 
-### Available Settings
+### Settings
 
-| Setting            | Values                                     | Default  | Description                                |
-| ------------------ | ------------------------------------------ | -------- | ------------------------------------------ |
-| `sortBy`           | `newest`, `oldest`, `edited`, `name`       | `newest` | How to sort files                          |
-| `sortDir`          | `asc`, `desc`                              | `desc`   | Sort direction                             |
-| `view`             | `cards`, `list`                            | `list`   | Display mode                               |
-| `depth`            | `0-10`                                     | `0`      | Subfolder depth (0 = direct children only) |
-| `pageSize`         | `6-100`                                    | `12`     | Items per page                             |
-| `onlyNotes`        | `true`, `false`                            | `true`   | Show only .md and .pdf files               |
-| `showFolders`      | `true`, `false`                            | `true`   | Show folder buttons                        |
-| `cardExt`          | `folder`, `ctime`, `mtime`, `desc`, `none` | `ctime`  | Card footer info                           |
+#### Global defaults (Settings → Explorer)
+
+| Setting           | Values                                               | Default  | Description                                |
+| ----------------- | ---------------------------------------------------- | -------- | ------------------------------------------ |
+| `sortBy`          | `newest`, `oldest`, `edited`, `name`                 | `oldest` | How to sort files                          |
+| `view`            | `cards`, `list`                                      | `list`   | Display mode                               |
+| `depth`           | `0-10`                                               | `0`      | Subfolder depth (0 = direct children only) |
+| `pageSize`        | `6-100`                                              | `15`     | Items per page                             |
+| `onlyNotes`       | `true`, `false`                                      | `false`  | Show only .md and .pdf files               |
+| `showFolders`     | `true`, `false`                                      | `true`   | Show folder buttons                        |
+| `showBreadcrumbs` | `true`, `false`                                      | `false`  | Show navigation breadcrumbs                |
+| `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`| `default`| Card footer info                           |
+| `showNotes`       | `true`, `false`                                      | `true`   | Show note files                            |
+| `useGlass`        | `true`, `false`                                      | `true`   | Glass styling (global only)                |
+
+#### Per-block overrides (inside the `explorer` code block)
+
+You can override these settings per block. Keys not listed here are ignored.
+
+| Setting           | Values                                               |
+| ----------------- | ---------------------------------------------------- |
+| `sortBy`          | `newest`, `oldest`, `edited`, `name`                 |
+| `view`            | `cards`, `list`                                      |
+| `depth`           | `0-10`                                               |
+| `pageSize`        | `6-100`                                              |
+| `onlyNotes`       | `true`, `false`                                      |
+| `showFolders`     | `true`, `false`                                      |
+| `showBreadcrumbs` | `true`, `false`                                      |
+| `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`|
+| `showNotes`       | `true`, `false`                                      |
 
 ## Features
 
@@ -152,7 +172,7 @@ src/
     └── link-utils.ts      # Internal link handling
 ```
 
-Settings are stored directly in the code block, making them portable and per-note.
+Settings have global defaults (plugin settings tab) with optional per-block overrides in the code block.
 
 ## Differences from Original (datacore version)
 

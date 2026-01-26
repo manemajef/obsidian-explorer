@@ -42,7 +42,7 @@ It uses a React UI, but keeps data/Obsidian operations inside a view class.
 ## Runtime flow
 
 1) `main.ts` loads saved plugin defaults, registers `ExplorerSettingsTab`, and registers the `explorer` code block.
-2) On render, code block settings are parsed and merged over plugin defaults.
+2) On render, code block settings are parsed and merged over plugin defaults (effective settings).
 3) `ExplorerView.render()`:
    - finds the active file and parent folder
    - builds a `FolderIndex` for the folder
@@ -54,7 +54,7 @@ It uses a React UI, but keeps data/Obsidian operations inside a view class.
 
 - Per-block overrides: `src/services/settings-parser.ts`
 - Default settings: `DEFAULT_SETTINGS` in `src/constants.ts`
-- Merge order: plugin defaults -> code block overrides
+- Merge order: plugin defaults -> code block overrides (effective settings used by `ExplorerView`).
 
 ## Settings
 
@@ -64,6 +64,7 @@ There are two layers:
 - Per-block overrides (code block or modal): `src/services/settings-parser.ts` and `src/ui/modals/settings-modal.ts`
 
 The per-block modal updates the source markdown block via `ExplorerView.updateSourceBlock()`.
+`ExplorerView` renders using the merged effective settings.
 
 ## React UI notes
 
