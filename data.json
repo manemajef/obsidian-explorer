@@ -9,5 +9,5 @@
   "allowSearch": true,
   "cardExt": "default",
   "showNotes": true,
-  "useGlass": true
+  "useGlass": false
 }
