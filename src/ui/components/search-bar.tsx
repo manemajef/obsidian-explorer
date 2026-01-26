@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "./shared";
-import { Platform } from "obsidian";
+import { Platform, TFile } from "obsidian";
 import { useSmartScroll } from "../../hooks/use-smart-scroll";
 
 export function SearchBar(props: {
@@ -8,8 +8,15 @@ export function SearchBar(props: {
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
+  getAllFiles: () => TFile[];
 }): JSX.Element {
-  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
+  const {
+    searchMode,
+    searchQuery,
+    onSearchToggle,
+    onSearchInput,
+    getAllFiles,
+  } = props;
 
   const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);

@@ -46,7 +46,10 @@ export class ExplorerView {
 
   async render(): Promise<void> {
     this.container.addClass("explorer-container");
-    this.container.classList.toggle("use-glass", this.effectiveSettings.useGlass);
+    this.container.classList.toggle(
+      "use-glass",
+      this.effectiveSettings.useGlass,
+    );
 
     const blockFile = this.app.vault.getAbstractFileByPath(this.sourcePath);
     if (!(blockFile instanceof TFile) || !blockFile.parent) {
@@ -91,7 +94,9 @@ export class ExplorerView {
     });
 
     const usePaging = fileInfos.length > this.effectiveSettings.pageSize;
-    const totalPages = Math.ceil(fileInfos.length / this.effectiveSettings.pageSize);
+    const totalPages = Math.ceil(
+      fileInfos.length / this.effectiveSettings.pageSize,
+    );
     const startIdx = this.currentPage * this.effectiveSettings.pageSize;
     const pageFiles = usePaging
       ? fileInfos.slice(startIdx, startIdx + this.effectiveSettings.pageSize)
@@ -121,6 +126,7 @@ export class ExplorerView {
         onOpenSettings={() => this.openSettings()}
         onNewFolder={() => this.promptNewFolder(this.currentFolder?.path || "")}
         onNewNote={() => this.createNewNote(this.currentFolder?.path || "")}
+        getAllFiles={async () => await this.folderIndex?.getAllContent()}
         onSearchToggle={() => {
           this.searchMode = !this.searchMode;
           if (!this.searchMode) {
@@ -211,11 +217,15 @@ export class ExplorerView {
   }
 
   private openSettings(): void {
-    new ExplorerSettingsModal(this.app, this.effectiveSettings, async (newSettings) => {
-      this.effectiveSettings = newSettings;
-      await this.updateSourceBlock(newSettings);
-      await this.render();
-    }).open();
+    new ExplorerSettingsModal(
+      this.app,
+      this.effectiveSettings,
+      async (newSettings) => {
+        this.effectiveSettings = newSettings;
+        await this.updateSourceBlock(newSettings);
+        await this.render();
+      },
+    ).open();
   }
 
   private async updateSourceBlock(settings: ExplorerSettings): Promise<void> {

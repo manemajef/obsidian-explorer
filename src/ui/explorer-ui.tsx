@@ -1,5 +1,5 @@
 import React from "react";
-import { App, TFolder } from "obsidian";
+import { App, TFile, TFolder } from "obsidian";
 import { ExplorerSettings, FileInfo, FolderInfo } from "../types";
 import { Breadcrumbs } from "./components/breadcrumbs";
 import { CardsView } from "./components/cards-view";
@@ -27,6 +27,7 @@ interface ExplorerUIProps {
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
   onPageChange: (page: number) => void;
+  getAllFiles: () => TFile[];
 }
 
 export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
@@ -49,6 +50,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     onSearchToggle,
     onSearchInput,
     onPageChange,
+    getAllFiles,
   } = props;
 
   return (
@@ -79,6 +81,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
             searchQuery={searchQuery}
             onSearchToggle={onSearchToggle}
             onSearchInput={onSearchInput}
+            getAllFiles={getAllFiles}
           />
         </div>
         {/* <div style={{ display: "flex" }}>
