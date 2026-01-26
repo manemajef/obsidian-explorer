@@ -1,39 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Platform } from "obsidian";
 import { Icon } from "./shared";
-import { Platform, TFile } from "obsidian";
-import { useSmartScroll } from "../../hooks/use-smart-scroll";
+import { findScrollParent } from "../../utils/scroll-utils";
 
 export function SearchBar(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  getAllFiles: () => TFile[];
 }): JSX.Element {
-  const {
-    searchMode,
-    searchQuery,
-    onSearchToggle,
-    onSearchInput,
-    getAllFiles,
-  } = props;
+  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { targetRef, scrollToTarget, scrollToTopOf } = useSmartScroll({
-    offsetEm: 2,
-    durationMs: 300,
-  });
+  const targetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (searchMode) {
-      // Delay to let React/Obsidian settle after full re-render
-      const timer = setTimeout(() => {
-        scrollToTarget();
-        inputRef.current?.focus();
-      }, 50);
-      return () => clearTimeout(timer);
-    }
+    if (!searchMode) return;
+    const frame = window.requestAnimationFrame(() => {
+      targetRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      inputRef.current?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [searchMode]);
 
   useEffect(() => {
@@ -61,8 +52,11 @@ export function SearchBar(props: {
             onClick={(e) => {
               const container = (e.currentTarget as HTMLElement).closest(
                 ".explorer-container",
-              ) as HTMLElement;
-              scrollToTopOf(container);
+              ) as HTMLElement | null;
+              const scroller = container ? findScrollParent(container) : null;
+              if (scroller) {
+                scroller.scrollTo({ top: 0, behavior: "smooth" });
+              }
               onSearchToggle();
             }}
           >

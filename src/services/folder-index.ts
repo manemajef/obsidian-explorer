@@ -3,6 +3,13 @@ import { ExplorerSettings, FolderInfo } from "../types";
 import { EXCLUDED_EXTENSIONS } from "../constants";
 import { isFolderNote, getFolderNoteForFolder } from "../utils/file-utils";
 
+export type GetAllContentOptions = {
+  onBatch?: (batch: TFile[]) => void;
+  chunkSize?: number;
+  signal?: AbortSignal;
+  includeFolderNotes?: boolean;
+};
+
 /**
  * Indexes folder contents with support for nested loading
  */
@@ -54,38 +61,11 @@ export class FolderIndex {
   async loadToDepth(depth: number): Promise<void> {
     this.loadImmediate();
     if (depth > 0) {
-      await this.loadNestedAsync(depth - 1);
+      this.nestedFiles = await this.walkFolder({
+        depth,
+        includeFolderNotes: true,
+      });
     }
-  }
-
-  /**
-   * Recursively load nested folders
-   */
-  private async loadNestedAsync(remainingDepth: number): Promise<void> {
-    if (remainingDepth < 0) return;
-
-    const promises = this.folders.map(async (folderInfo) => {
-      const subIndex = new FolderIndex(this.app, folderInfo.folder);
-      subIndex.loadImmediate();
-
-      for (const file of subIndex.files) {
-        this.nestedFiles.push(file);
-      }
-
-      for (const fn of subIndex.folderNotes) {
-        this.nestedFiles.push(fn);
-      }
-
-      if (remainingDepth > 0) {
-        for (const subFolderInfo of subIndex.folders) {
-          const deepIndex = new FolderIndex(this.app, subFolderInfo.folder);
-          await deepIndex.loadToDepth(remainingDepth);
-          this.nestedFiles.push(...deepIndex.nestedFiles);
-        }
-      }
-    });
-
-    await Promise.all(promises);
   }
 
   /**
@@ -95,15 +75,15 @@ export class FolderIndex {
     this.nestedFiles = [];
     await this.loadToDepth(depth);
   }
-  async getAllContent(): Promise<TFile[]> {
-    const prefix = this.folder.path.endsWith("/")
-      ? this.folder.path
-      : this.folder.path + "/";
 
-    return this.app.vault
-      .getFiles()
-      .filter((f) => f.path.startsWith(prefix))
-      .filter((f) => this.shouldIncludeFile(f));
+  async getAllContent(options: GetAllContentOptions = {}): Promise<TFile[]> {
+    return this.walkFolder({
+      depth: null,
+      includeFolderNotes: options.includeFolderNotes ?? true,
+      onBatch: options.onBatch,
+      chunkSize: options.chunkSize ?? 200,
+      signal: options.signal,
+    });
   }
   /**
    * Check if a file should be included in the listing
@@ -128,5 +108,74 @@ export class FolderIndex {
     }
 
     return files;
+  }
+
+  private async walkFolder(options: {
+    depth: number | null;
+    includeFolderNotes: boolean;
+    onBatch?: (batch: TFile[]) => void;
+    chunkSize?: number;
+    signal?: AbortSignal;
+  }): Promise<TFile[]> {
+    const {
+      depth,
+      includeFolderNotes,
+      onBatch,
+      chunkSize = 0,
+      signal,
+    } = options;
+
+    const results: TFile[] = [];
+    let batch: TFile[] = [];
+    let processed = 0;
+
+    const visit = async (
+      folder: TFolder,
+      remaining: number | null,
+    ): Promise<void> => {
+      for (const child of folder.children) {
+        if (signal?.aborted) return;
+
+        if (child instanceof TFile) {
+          if (this.shouldIncludeFile(child)) {
+            results.push(child);
+            batch.push(child);
+          }
+        } else if (child instanceof TFolder) {
+          if (includeFolderNotes) {
+            const folderNote = getFolderNoteForFolder(this.app, child);
+            if (folderNote) {
+              results.push(folderNote);
+              batch.push(folderNote);
+            }
+          }
+          if (remaining === null || remaining > 0) {
+            await visit(child, remaining === null ? null : remaining - 1);
+          }
+        }
+
+        if (chunkSize > 0) {
+          processed += 1;
+          if (processed >= chunkSize) {
+            processed = 0;
+            if (batch.length) {
+              onBatch?.(batch);
+              batch = [];
+            }
+            await new Promise<void>((resolve) =>
+              window.requestAnimationFrame(() => resolve()),
+            );
+          }
+        }
+      }
+    };
+
+    await visit(this.folder, depth);
+
+    if (batch.length) {
+      onBatch?.(batch);
+    }
+
+    return results;
   }
 }
