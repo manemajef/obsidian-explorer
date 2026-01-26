@@ -104,8 +104,6 @@ export class ExplorerView {
           ? "folder"
           : "ctime";
 
-    const visibleCount = fileInfos.length;
-
     this.renderReact(
       <ExplorerUI
         app={this.app}
@@ -120,7 +118,6 @@ export class ExplorerView {
         extForCard={extForCard}
         searchMode={this.searchMode}
         searchQuery={this.searchQuery}
-        visibleCount={visibleCount}
         onOpenSettings={() => this.openSettings()}
         onNewFolder={() => this.promptNewFolder(this.currentFolder?.path || "")}
         onNewNote={() => this.createNewNote(this.currentFolder?.path || "")}
@@ -130,7 +127,11 @@ export class ExplorerView {
             this.searchQuery = "";
             this.currentPage = 0;
           }
-          this.render();
+          if (this.folderIndex) {
+            this.renderWithIndex();
+          } else {
+            void this.render();
+          }
         }}
         onSearchInput={(query) => {
           this.searchQuery = query;

@@ -257,6 +257,7 @@ body.theme-light .explorer-folder-card {
   gap: 0.5em;
   min-width: 90%;
   align-items: center;
+  scroll-margin-top: 8em;
 }
 
 .explorer-search-bar {
@@ -490,7 +491,7 @@ body.theme-light .explorer-folder-card {
   padding: 4px 6px;
   border-radius: 100%;
   background: rgba(0, 0, 0, 0.01);
-  backdrop-filter: blur(20px) saturate(180%);
+  /* backdrop-filter: blur(20px); */
   /* -webkit-backdrop-filter: blur(20px) saturate(180%); */
   border: 1px solid rgba(var(--mono-rgb-100), 0.15);
   box-shadow: 

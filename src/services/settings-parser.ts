@@ -47,9 +47,6 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 			case "showBreadcrumbs":
 				settings.showBreadcrumbs = value === "true";
 				break;
-			case "allowSearch":
-				settings.allowSearch = value === "true";
-				break;
 			case "cardExt":
 				if (["folder", "ctime", "mtime", "desc", "none", "default"].includes(value)) {
 					settings.cardExt = value as ExplorerSettings["cardExt"];
@@ -91,9 +88,6 @@ export function serializeSettings(settings: ExplorerSettings): string {
 	}
 	if (settings.showBreadcrumbs !== DEFAULT_SETTINGS.showBreadcrumbs) {
 		lines.push(`showBreadcrumbs: ${settings.showBreadcrumbs}`);
-	}
-	if (settings.allowSearch !== DEFAULT_SETTINGS.allowSearch) {
-		lines.push(`allowSearch: ${settings.allowSearch}`);
 	}
 	if (settings.cardExt !== DEFAULT_SETTINGS.cardExt) {
 		lines.push(`cardExt: "${settings.cardExt}"`);

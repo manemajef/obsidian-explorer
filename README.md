@@ -72,7 +72,6 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 | `pageSize`         | `6-100`                                    | `12`     | Items per page                             |
 | `onlyNotes`        | `true`, `false`                            | `true`   | Show only .md and .pdf files               |
 | `showFolders`      | `true`, `false`                            | `true`   | Show folder buttons                        |
-| `searchEnabled`    | `true`, `false`                            | `true`   | Show search bar                            |
 | `cardExt`          | `folder`, `ctime`, `mtime`, `desc`, `none` | `ctime`  | Card footer info                           |
 
 ## Features
@@ -84,7 +83,7 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 
 ### Search
 
-The search bar supports special prefixes:
+The search bar supports special prefixes. Use the search icon in the top bar to toggle it.
 
 - Normal text: Search by filename
 - `#tag`: Search by tags in frontmatter

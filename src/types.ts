@@ -8,7 +8,6 @@ export interface ExplorerSettings {
 	onlyNotes: boolean;
 	showFolders: boolean;
 	showBreadcrumbs: boolean;
-	allowSearch: boolean;
 	cardExt: "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
 	showNotes: boolean;
 	useGlass: boolean;

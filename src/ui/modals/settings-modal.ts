@@ -129,15 +129,6 @@ export class ExplorerSettingsModal extends Modal {
 			});
 
 		new Setting(contentEl)
-			.setName("Allow search")
-			.setDesc("Show search button")
-			.addToggle((toggle) => {
-				toggle.setValue(this.settings.allowSearch).onChange((value) => {
-					this.updateSetting("allowSearch", value);
-				});
-			});
-
-		new Setting(contentEl)
 			.setName("Show breadcrumbs")
 			.setDesc("Show navigation breadcrumbs")
 			.addToggle((toggle) => {

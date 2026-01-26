@@ -21,7 +21,6 @@ interface ExplorerUIProps {
   extForCard: string;
   searchMode: boolean;
   searchQuery: string;
-  visibleCount: number;
   onOpenSettings: () => void;
   onNewFolder: () => void;
   onNewNote: () => void;
@@ -44,7 +43,6 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
     extForCard,
     searchMode,
     searchQuery,
-    visibleCount,
     onOpenSettings,
     onNewFolder,
     onNewNote,
@@ -85,11 +83,8 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
           <SearchBar
             searchMode={searchMode}
             searchQuery={searchQuery}
-            allowSearch={settings.allowSearch}
-            childrenSize={visibleCount}
             onSearchToggle={onSearchToggle}
             onSearchInput={onSearchInput}
-            app={app}
           />
         </div>
         {/* <div style={{ display: "flex" }}>
@@ -192,18 +187,13 @@ function FolderActions(props: {
               marginInlineStart: "1em",
             }}
           >
-            <a
-              href="#explorer-searchbar"
+            <button
+              type="button"
               className="clickable-icon action-icon"
-              onClick={(e) => {
-                if (searchMode) {
-                  e.preventDefault();
-                }
-                onSearchToggle();
-              }}
+              onClick={onSearchToggle}
             >
               <Icon name={searchMode ? "undo-2" : "search"} />
-            </a>
+            </button>
           </div>
         </div>
       </div>

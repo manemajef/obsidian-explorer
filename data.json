@@ -6,8 +6,7 @@
   "onlyNotes": false,
   "showFolders": true,
   "showBreadcrumbs": false,
-  "allowSearch": true,
   "cardExt": "default",
   "showNotes": true,
-  "useGlass": false
+  "useGlass": true
 }

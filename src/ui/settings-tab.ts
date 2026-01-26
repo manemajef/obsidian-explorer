@@ -127,15 +127,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Allow search")
-			.setDesc("Show search button.")
-			.addToggle((toggle) => {
-				toggle.setValue(this.plugin.settings.allowSearch).onChange((value) => {
-					this.updateSetting("allowSearch", value);
-				});
-			});
-
-		new Setting(containerEl)
 			.setName("Use glass")
 			.setDesc("Add a .use-glass class to the explorer root.")
 			.addToggle((toggle) => {

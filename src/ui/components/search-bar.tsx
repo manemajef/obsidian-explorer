@@ -1,33 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "./shared";
-import { App, Platform } from "obsidian";
+import { Platform } from "obsidian";
+import { smoothScrollToTarget } from "../../utils/scroll-utils";
 
 export function SearchBar(props: {
   searchMode: boolean;
   searchQuery: string;
-  allowSearch: boolean;
-  childrenSize: number;
   onSearchToggle: () => void;
-  app: App;
   onSearchInput: (query: string) => void;
 }): JSX.Element {
   const {
     searchMode,
     searchQuery,
-    allowSearch,
-    childrenSize,
     onSearchToggle,
     onSearchInput,
-    app,
   } = props;
 
   const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const scrollOffsetEm = 2;
 
   useEffect(() => {
     if (searchMode) {
       // Delay to let React/Obsidian settle after full re-render
       const timer = setTimeout(() => {
+        const target = containerRef.current;
+        if (target) {
+          const fontSize = parseFloat(getComputedStyle(target).fontSize) || 16;
+          smoothScrollToTarget(target, fontSize * scrollOffsetEm);
+        }
         inputRef.current?.focus();
       }, 50);
       return () => clearTimeout(timer);
@@ -54,14 +56,18 @@ export function SearchBar(props: {
       {searchMode ? (
         <div
           id="explorer-searchbar"
+          ref={containerRef}
           className="search-bar-container"
-          style={{ scrollMarginTop: "8em" }}
         >
           <button
             className="clickable-icon glass-btn"
             onClick={(e) => {
-              const container = (e.currentTarget as HTMLElement).closest(".explorer-container") as HTMLElement;
-              container?.scrollIntoView({ behavior: "smooth", block: "start" });
+              const container = (e.currentTarget as HTMLElement).closest(
+                ".explorer-container",
+              ) as HTMLElement;
+              if (container) {
+                smoothScrollToTarget(container, 0);
+              }
               onSearchToggle();
             }}
           >
@@ -83,16 +89,7 @@ export function SearchBar(props: {
           </div>
         </div>
       ) : (
-        <>
-          {false && allowSearch && childrenSize > 12 ? (
-            <div>
-              <button className="clickable-icon" onClick={onSearchToggle}>
-                <Icon name="search" />
-                <span style={{ marginInlineStart: ".5em" }}> Search</span>
-              </button>
-            </div>
-          ) : null}
-        </>
+        null
       )}
     </div>
   );

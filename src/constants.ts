@@ -8,7 +8,6 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
 	onlyNotes: false,
 	showFolders: true,
 	showBreadcrumbs: false,
-	allowSearch: true,
 	cardExt: "default",
 	showNotes: true,
 	useGlass: true,

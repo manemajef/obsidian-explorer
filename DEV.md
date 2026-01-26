@@ -81,6 +81,7 @@ The per-block modal updates the source markdown block via `ExplorerView.updateSo
 ## Search
 
 - Search is local and filters the current file list.
+- The search bar is toggled from the top actions bar and is always available.
 - Special prefixes:
   - `#tag` searches tags
   - `@folder` searches folder notes
@@ -122,5 +123,3 @@ The per-block modal updates the source markdown block via `ExplorerView.updateSo
 
 - React owns the container; don’t call `container.createEl` from elsewhere.
 - `InternalLink` is required for proper Obsidian link behavior and context menus.
-- `search` button visibility is controlled in `SearchBar` by `childrenSize` and view mode.
-
