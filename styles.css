@@ -71,7 +71,7 @@
   border: none;
 }
 .theme-dark .use-glass .explorer-folder-card {
-  box-shadow: var(--glass-shadow-light) !important;
+  box-shadow: var(--explorer-action-shadow) !important;
 }
 
 .explorer-folder-card:hover {
