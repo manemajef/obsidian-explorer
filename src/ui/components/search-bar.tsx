@@ -42,10 +42,7 @@ export function SearchBar(props: {
   }, [value, searchMode, onSearchInput]);
 
   return (
-    <div
-      className="pages-nav"
-      style={{ display: "flex", justifyContent: "space-between" }}
-    >
+    <div className="pages-nav">
       {searchMode ? (
         <div
           id="explorer-searchbar"
