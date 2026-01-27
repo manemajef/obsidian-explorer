@@ -9,6 +9,7 @@ const SEARCH_REQUIRES_QUERY = false;
 
 // Dev toggle: true = sort search results by setting, false = keep BFS order (closest first)
 const SORT_SEARCH_RESULTS = false;
+const SORT_RECENT_SEARCH = true;
 
 interface UseExplorerStateOptions {
   app: App;
@@ -102,7 +103,8 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   const sortedFiles = useMemo(() => {
     // Skip sorting for search if disabled - BFS order = closest first
     if (!SORT_SEARCH_RESULTS && searchMode && filteredAllFiles) {
-      return sourceFiles;
+      if (!SORT_RECENT_SEARCH) return sourceFiles;
+      return sortFiles(sourceFiles, "edited");
     }
     return sortFiles(sourceFiles, settings.sortBy);
   }, [sourceFiles, settings.sortBy, searchMode, filteredAllFiles]);
