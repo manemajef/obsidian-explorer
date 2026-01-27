@@ -1,6 +1,6 @@
 import { App, TFile, TFolder } from "obsidian";
 import { ExplorerSettings, FolderInfo } from "../types";
-import { EXCLUDED_EXTENSIONS } from "../constants";
+import { EXCLUDED_EXTENSIONS, SUPPORTED_EXTENSIONS } from "../constants";
 import { isFolderNote, getFolderNoteForFolder } from "../utils/file-utils";
 
 export type GetAllContentOptions = {
@@ -102,8 +102,14 @@ export class FolderIndex {
     let files = settings.depth > 0 ? this.nestedFiles : this.files;
 
     if (settings.onlyNotes) {
+      // Strict: only notes and PDFs
       files = files.filter(
         (f) => f.extension === "md" || f.extension === "pdf",
+      );
+    } else if (!settings.showUnsupportedFiles) {
+      // Default: show content files, hide code files
+      files = files.filter((f) =>
+        SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()),
       );
     }
 

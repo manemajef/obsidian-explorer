@@ -6,6 +6,7 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
 	depth: 0,
 	pageSize: 15,
 	onlyNotes: false,
+	showUnsupportedFiles: false,
 	showFolders: true,
 	showBreadcrumbs: false,
 	cardExt: "default",
@@ -22,4 +23,22 @@ export const EXCLUDED_EXTENSIONS = [
 	"svg",
 	"gif",
 	"webp",
+];
+
+// Content files that most users want to see (vs code files)
+export const SUPPORTED_EXTENSIONS = [
+	"md",
+	"pdf",
+	"canvas",
+	"docx",
+	"doc",
+	"pptx",
+	"ppt",
+	"xlsx",
+	"xls",
+	"csv",
+	"txt",
+	"rtf",
+	"html",
+	"epub",
 ];

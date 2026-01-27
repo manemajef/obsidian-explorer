@@ -3,6 +3,9 @@ import { App, TFile } from "obsidian";
 import { ExplorerSettings, FileInfo } from "../../types";
 import { getFileInfo, sortFiles, filterFiles } from "../../utils/file-utils";
 
+// Dev toggle: true = only show allFiles when query entered, false = show all immediately on search open
+const SEARCH_REQUIRES_QUERY = false;
+
 interface UseExplorerStateOptions {
   app: App;
   depthFiles: TFile[];
@@ -20,7 +23,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [allFiles, setAllFiles] = useState<TFile[] | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const loadingRef = useRef(false);  // Track loading without triggering re-renders
+  const loadingRef = useRef(false); // Track loading without triggering re-renders
 
   // ===== PAGINATION STATE =====
   const [currentPage, setCurrentPage] = useState(0);
@@ -58,14 +61,24 @@ export function useExplorerState(options: UseExplorerStateOptions) {
 
   // ===== SOURCE FILES (with folder notes when folders hidden) =====
   const sourceFiles = useMemo(() => {
-    const base = searchMode && allFiles ? allFiles : depthFiles;
+    // Use allFiles when searching (if SEARCH_REQUIRES_QUERY, only after typing)
+    const useAllFiles =
+      searchMode && allFiles && (!SEARCH_REQUIRES_QUERY || debouncedQuery);
+    const base = useAllFiles ? allFiles : depthFiles;
     return settings.showFolders ? base : [...folderNotes, ...base];
-  }, [searchMode, allFiles, depthFiles, folderNotes, settings.showFolders]);
+  }, [
+    searchMode,
+    debouncedQuery,
+    allFiles,
+    depthFiles,
+    folderNotes,
+    settings.showFolders,
+  ]);
 
   // ===== SORTED FILES (expensive - only when source or sort changes) =====
   const sortedFiles = useMemo(
     () => sortFiles(sourceFiles, settings.sortBy),
-    [sourceFiles, settings.sortBy]
+    [sourceFiles, settings.sortBy],
   );
 
   // ===== FILTERED + PAGINATED (cheap - on query/page change) =====
@@ -88,7 +101,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   // ===== FILE INFOS (only for displayed page) =====
   const pageFileInfos = useMemo<FileInfo[]>(
     () => pageFiles.map((f) => getFileInfo(app, f)),
-    [app, pageFiles]
+    [app, pageFiles],
   );
 
   // ===== CARD EXTENSION =====

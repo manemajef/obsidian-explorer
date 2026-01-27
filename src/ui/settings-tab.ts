@@ -119,6 +119,15 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName("Show unsupported files")
+			.setDesc("Show code files (.js, .ts, .py, etc). Off by default to hide clutter.")
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.showUnsupportedFiles).onChange((value) => {
+					this.updateSetting("showUnsupportedFiles", value);
+				});
+			});
+
+		new Setting(containerEl)
 			.setName("Show breadcrumbs")
 			.setDesc("Show navigation breadcrumbs.")
 			.addToggle((toggle) => {

@@ -6,6 +6,7 @@ export interface ExplorerSettings {
 	depth: number;
 	pageSize: number;
 	onlyNotes: boolean;
+	showUnsupportedFiles: boolean;
 	showFolders: boolean;
 	showBreadcrumbs: boolean;
 	cardExt: "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
