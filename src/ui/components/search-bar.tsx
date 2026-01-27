@@ -2,16 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
 
-function findScrollParent(el: HTMLElement): HTMLElement | null {
-	let current: HTMLElement | null = el.parentElement;
-	while (current) {
-		const style = getComputedStyle(current);
-		if (/(auto|scroll)/.test(style.overflowY)) return current;
-		current = current.parentElement;
-	}
-	return null;
-}
-
 export function SearchBar(props: {
   searchMode: boolean;
   searchQuery: string;
@@ -22,18 +12,12 @@ export function SearchBar(props: {
 
   const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const targetRef = useRef<HTMLDivElement | null>(null);
 
+  // Focus input when search opens
   useEffect(() => {
     if (!searchMode) return;
-    const frame = window.requestAnimationFrame(() => {
-      targetRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-      inputRef.current?.focus();
-    });
-    return () => window.cancelAnimationFrame(frame);
+    const timer = setTimeout(() => inputRef.current?.focus(), 0);
+    return () => clearTimeout(timer);
   }, [searchMode]);
 
   useEffect(() => {
@@ -42,33 +26,15 @@ export function SearchBar(props: {
 
   useEffect(() => {
     if (!searchMode) return;
-    const handle = window.setTimeout(() => {
-      onSearchInput(value);
-    }, 200);
-    return () => window.clearTimeout(handle);
+    const handle = setTimeout(() => onSearchInput(value), 200);
+    return () => clearTimeout(handle);
   }, [value, searchMode, onSearchInput]);
 
   return (
     <div className="pages-nav">
       {searchMode ? (
-        <div
-          id="explorer-searchbar"
-          ref={targetRef}
-          className="search-bar-container"
-        >
-          <button
-            className="clickable-icon glass-btn"
-            onClick={(e) => {
-              const container = (e.currentTarget as HTMLElement).closest(
-                ".explorer-container",
-              ) as HTMLElement | null;
-              const scroller = container ? findScrollParent(container) : null;
-              if (scroller) {
-                scroller.scrollTo({ top: 0, behavior: "smooth" });
-              }
-              onSearchToggle();
-            }}
-          >
+        <div id="explorer-searchbar" className="search-bar-container">
+          <button className="clickable-icon glass-btn" onClick={onSearchToggle}>
             <Icon name="undo-2" />
           </button>
           <div className="explorer-search-bar">
