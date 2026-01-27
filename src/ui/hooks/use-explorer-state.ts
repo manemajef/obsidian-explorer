@@ -7,6 +7,9 @@ import { getFileInfo, sortFiles, filterFiles } from "../../utils/file-utils";
 // Dev toggle: true = only show allFiles when query entered, false = show all immediately on search open
 const SEARCH_REQUIRES_QUERY = false;
 
+// Dev toggle: true = sort search results by setting, false = keep BFS order (closest first)
+const SORT_SEARCH_RESULTS = false;
+
 interface UseExplorerStateOptions {
   app: App;
   depthFiles: TFile[];
@@ -90,10 +93,13 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   ]);
 
   // ===== SORTED FILES (expensive - only when source or sort changes) =====
-  const sortedFiles = useMemo(
-    () => sortFiles(sourceFiles, settings.sortBy),
-    [sourceFiles, settings.sortBy],
-  );
+  const sortedFiles = useMemo(() => {
+    // Skip sorting for search if disabled - BFS order = closest first
+    if (!SORT_SEARCH_RESULTS && searchMode && filteredAllFiles) {
+      return sourceFiles;
+    }
+    return sortFiles(sourceFiles, settings.sortBy);
+  }, [sourceFiles, settings.sortBy, searchMode, filteredAllFiles]);
 
   // ===== FILTERED + PAGINATED (cheap - on query/page change) =====
   const { pageFiles, totalPages, usePaging } = useMemo(() => {

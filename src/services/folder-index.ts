@@ -116,6 +116,9 @@ export class FolderIndex {
     return files;
   }
 
+  /**
+   * BFS traversal - files closer to root appear first
+   */
   private async walkFolder(options: {
     depth: number | null;
     includeFolderNotes: boolean;
@@ -123,24 +126,24 @@ export class FolderIndex {
     chunkSize?: number;
     signal?: AbortSignal;
   }): Promise<TFile[]> {
-    const {
-      depth,
-      includeFolderNotes,
-      onBatch,
-      chunkSize = 0,
-      signal,
-    } = options;
+    const { depth, includeFolderNotes, onBatch, chunkSize = 0, signal } = options;
 
     const results: TFile[] = [];
     let batch: TFile[] = [];
     let processed = 0;
 
-    const visit = async (
-      folder: TFolder,
-      remaining: number | null,
-    ): Promise<void> => {
+    // BFS queue: [folder, currentDepth]
+    const queue: Array<{ folder: TFolder; currentDepth: number }> = [
+      { folder: this.folder, currentDepth: 0 },
+    ];
+
+    while (queue.length > 0) {
+      if (signal?.aborted) break;
+
+      const { folder, currentDepth } = queue.shift()!;
+
       for (const child of folder.children) {
-        if (signal?.aborted) return;
+        if (signal?.aborted) break;
 
         if (child instanceof TFile) {
           if (this.shouldIncludeFile(child)) {
@@ -155,11 +158,13 @@ export class FolderIndex {
               batch.push(folderNote);
             }
           }
-          if (remaining === null || remaining > 0) {
-            await visit(child, remaining === null ? null : remaining - 1);
+          // Add to queue if within depth limit (null = unlimited)
+          if (depth === null || currentDepth < depth) {
+            queue.push({ folder: child, currentDepth: currentDepth + 1 });
           }
         }
 
+        // Batch processing for large folders
         if (chunkSize > 0) {
           processed += 1;
           if (processed >= chunkSize) {
@@ -174,9 +179,7 @@ export class FolderIndex {
           }
         }
       }
-    };
-
-    await visit(this.folder, depth);
+    }
 
     if (batch.length) {
       onBatch?.(batch);
