@@ -24,6 +24,10 @@ export class ExplorerView {
 	private reactRoot: Root | null = null;
 	private depthFiles: TFile[] = [];
 
+	// Stable reference for React - bound once
+	private getAllFiles = () =>
+		this.folderIndex?.getAllContent() ?? Promise.resolve([]);
+
 	constructor(
 		app: App,
 		container: HTMLElement,
@@ -88,9 +92,7 @@ export class ExplorerView {
 				folderInfos={this.folderIndex.folders}
 				depthFiles={this.depthFiles}
 				folderNotes={this.folderIndex.folderNotes}
-				getAllFiles={() =>
-					this.folderIndex?.getAllContent() ?? Promise.resolve([])
-				}
+				getAllFiles={this.getAllFiles}
 				onOpenSettings={() => this.openSettings()}
 				onNewFolder={() => promptAndCreateFolder(this.app, folderPath)}
 				onNewNote={() => promptAndCreateNote(this.app, folderPath)}

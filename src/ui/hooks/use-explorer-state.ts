@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
 import { ExplorerSettings, FileInfo } from "../../types";
 import { getFileInfo, sortFiles, filterFiles } from "../../utils/file-utils";
@@ -20,6 +20,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [allFiles, setAllFiles] = useState<TFile[] | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const loadingRef = useRef(false);  // Track loading without triggering re-renders
 
   // ===== PAGINATION STATE =====
   const [currentPage, setCurrentPage] = useState(0);
@@ -34,25 +35,26 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   useEffect(() => {
     if (!searchMode) {
       setAllFiles(null);
+      setIsSearchLoading(false);
+      loadingRef.current = false;
       return;
     }
-    if (allFiles || isSearchLoading) return;
 
-    let cancelled = false;
+    // Already have files or already loading - skip
+    if (allFiles || loadingRef.current) return;
+
+    loadingRef.current = true;
     setIsSearchLoading(true);
 
     getAllFiles()
       .then((files) => {
-        if (!cancelled) setAllFiles(files);
+        setAllFiles(files);
       })
       .finally(() => {
-        if (!cancelled) setIsSearchLoading(false);
+        loadingRef.current = false;
+        setIsSearchLoading(false);
       });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [searchMode, allFiles, isSearchLoading, getAllFiles]);
+  }, [searchMode, allFiles, getAllFiles]);
 
   // ===== SOURCE FILES (with folder notes when folders hidden) =====
   const sourceFiles = useMemo(() => {
