@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
 import { ExplorerSettings, FileInfo } from "../../types";
+import { SUPPORTED_EXTENSIONS } from "../../constants";
 import { getFileInfo, sortFiles, filterFiles } from "../../utils/file-utils";
 
 // Dev toggle: true = only show allFiles when query entered, false = show all immediately on search open
@@ -59,17 +60,30 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       });
   }, [searchMode, allFiles, getAllFiles]);
 
+  // ===== FILTERED ALL FILES (apply same filters as depthFiles) =====
+  const filteredAllFiles = useMemo(() => {
+    if (!allFiles) return null;
+
+    if (settings.onlyNotes) {
+      return allFiles.filter(f => f.extension === "md" || f.extension === "pdf");
+    }
+    if (!settings.showUnsupportedFiles) {
+      return allFiles.filter(f => SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()));
+    }
+    return allFiles;
+  }, [allFiles, settings.onlyNotes, settings.showUnsupportedFiles]);
+
   // ===== SOURCE FILES (with folder notes when folders hidden) =====
   const sourceFiles = useMemo(() => {
     // Use allFiles when searching (if SEARCH_REQUIRES_QUERY, only after typing)
     const useAllFiles =
-      searchMode && allFiles && (!SEARCH_REQUIRES_QUERY || debouncedQuery);
-    const base = useAllFiles ? allFiles : depthFiles;
+      searchMode && filteredAllFiles && (!SEARCH_REQUIRES_QUERY || debouncedQuery);
+    const base = useAllFiles ? filteredAllFiles : depthFiles;
     return settings.showFolders ? base : [...folderNotes, ...base];
   }, [
     searchMode,
     debouncedQuery,
-    allFiles,
+    filteredAllFiles,
     depthFiles,
     folderNotes,
     settings.showFolders,
