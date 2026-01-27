@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
-import { findScrollParent } from "../../utils/scroll-utils";
+
+function findScrollParent(el: HTMLElement): HTMLElement | null {
+	let current: HTMLElement | null = el.parentElement;
+	while (current) {
+		const style = getComputedStyle(current);
+		if (/(auto|scroll)/.test(style.overflowY)) return current;
+		current = current.parentElement;
+	}
+	return null;
+}
 
 export function SearchBar(props: {
   searchMode: boolean;

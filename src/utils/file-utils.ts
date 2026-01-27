@@ -27,9 +27,66 @@ export function getFileInfo(app: App, file: TFile): FileInfo {
 
 	return {
 		file,
-		isPinned: frontmatter?.pin === true,
-		isFav: frontmatter?.fav === true,
 		description: frontmatter?.description || frontmatter?.desc,
 		tags: frontmatter?.tags || [],
 	};
+}
+
+/**
+ * Sort files by the given sort option
+ */
+export function sortFiles(
+	files: TFile[],
+	sortBy: "newest" | "oldest" | "edited" | "name"
+): TFile[] {
+	return [...files].sort((a, b) => {
+		switch (sortBy) {
+			case "newest":
+				return b.stat.ctime - a.stat.ctime;
+			case "oldest":
+				return a.stat.ctime - b.stat.ctime;
+			case "edited":
+				return b.stat.mtime - a.stat.mtime;
+			case "name":
+				return a.name.localeCompare(b.name);
+			default:
+				return 0;
+		}
+	});
+}
+
+/**
+ * Filter files by search query
+ * Supports: plain text, #tag, @foldernote
+ */
+export function filterFiles(files: TFile[], query: string): TFile[] {
+	if (!query) return files;
+
+	const q = query.toLowerCase();
+
+	// Tag search: #tagname
+	if (q.startsWith("#")) {
+		const tag = q.slice(1);
+		return files.filter((f) => {
+			const cache = (f as any).app?.metadataCache?.getFileCache(f);
+			const tags = cache?.frontmatter?.tags || [];
+			const tagList = Array.isArray(tags) ? tags : [String(tags)];
+			return tagList.some((t: string) => t.toLowerCase().includes(tag));
+		});
+	}
+
+	// Folder note search: @name
+	if (q.startsWith("@")) {
+		const term = q.slice(1);
+		return files.filter((f) => {
+			if (!isFolderNote(f)) return false;
+			return f.basename.toLowerCase().includes(term);
+		});
+	}
+
+	// Plain text search: name or path
+	return files.filter(
+		(f) =>
+			f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q)
+	);
 }

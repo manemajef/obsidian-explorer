@@ -34,11 +34,6 @@ export function CardsView(props: {
                 />
               </span>
               <span className="explorer-card-exts">
-                {fileInfo.isPinned || fileInfo.isFav ? (
-                  <span className="prop-tag">
-                    <Icon name={fileInfo.isFav ? "heart" : "pin"} />
-                  </span>
-                ) : null}
                 {fileInfo.file.extension !== "md" &&
                 !isFolderNote(fileInfo.file) ? (
                   <span className="ext-tag">{fileInfo.file.extension}</span>

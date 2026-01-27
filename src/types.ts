@@ -15,8 +15,6 @@ export interface ExplorerSettings {
 
 export interface FileInfo {
 	file: TFile;
-	isPinned: boolean;
-	isFav: boolean;
 	description?: string;
 	tags?: string[];
 }

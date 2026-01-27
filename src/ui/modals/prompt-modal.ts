@@ -1,5 +1,18 @@
 import { App, Modal } from "obsidian";
 
+/**
+ * Prompt user for a name/input via modal
+ */
+export function promptForName(
+	app: App,
+	title: string,
+	placeholder: string
+): Promise<string | null> {
+	return new Promise((resolve) => {
+		new PromptModal(app, title, placeholder, resolve).open();
+	});
+}
+
 export class PromptModal extends Modal {
 	title: string;
 	placeholder: string;

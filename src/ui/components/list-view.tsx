@@ -15,7 +15,7 @@ export function ListView(props: {
       {files.map((fileInfo) => (
         <li
           key={fileInfo.file.path}
-          className={`explorer-list ${fileInfo.isPinned || fileInfo.isFav ? "pinned" : ""}`}
+          className="explorer-list"
         >
           <span className="list-bullet" />
           <div
