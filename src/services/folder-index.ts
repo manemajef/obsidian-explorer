@@ -79,7 +79,7 @@ export class FolderIndex {
   async getAllContent(options: GetAllContentOptions = {}): Promise<TFile[]> {
     return this.walkFolder({
       depth: null,
-      includeFolderNotes: options.includeFolderNotes ?? true,
+      includeFolderNotes: options.includeFolderNotes ?? false,
       onBatch: options.onBatch,
       chunkSize: options.chunkSize ?? 200,
       signal: options.signal,
@@ -103,9 +103,7 @@ export class FolderIndex {
 
     if (settings.onlyNotes) {
       // Strict: only notes and PDFs
-      files = files.filter(
-        (f) => f.extension === "md" || f.extension === "pdf",
-      );
+      files = files.filter((f) => f.extension === "md" || f.extension === "pdf");
     } else if (!settings.showUnsupportedFiles) {
       // Default: show content files, hide code files
       files = files.filter((f) =>
@@ -151,7 +149,8 @@ export class FolderIndex {
             batch.push(child);
           }
         } else if (child instanceof TFolder) {
-          if (includeFolderNotes) {
+          // includeFolderNotes only applies to first level; nested levels always show folder notes
+          if (currentDepth > 0 || includeFolderNotes) {
             const folderNote = getFolderNoteForFolder(this.app, child);
             if (folderNote) {
               results.push(folderNote);

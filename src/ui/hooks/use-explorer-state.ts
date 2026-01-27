@@ -68,10 +68,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     if (!allFiles) return null;
 
     if (settings.onlyNotes) {
-      return allFiles.filter(f => f.extension === "md" || f.extension === "pdf");
+      return allFiles.filter(
+        (f) => f.extension === "md" || f.extension === "pdf",
+      );
     }
     if (!settings.showUnsupportedFiles) {
-      return allFiles.filter(f => SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()));
+      return allFiles.filter((f) =>
+        SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()),
+      );
     }
     return allFiles;
   }, [allFiles, settings.onlyNotes, settings.showUnsupportedFiles]);
@@ -80,7 +84,9 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   const sourceFiles = useMemo(() => {
     // Use allFiles when searching (if SEARCH_REQUIRES_QUERY, only after typing)
     const useAllFiles =
-      searchMode && filteredAllFiles && (!SEARCH_REQUIRES_QUERY || debouncedQuery);
+      searchMode &&
+      filteredAllFiles &&
+      (!SEARCH_REQUIRES_QUERY || debouncedQuery);
     const base = useAllFiles ? filteredAllFiles : depthFiles;
     return settings.showFolders ? base : [...folderNotes, ...base];
   }, [
@@ -145,6 +151,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
         setDebouncedQuery("");
         setAllFiles(null);
         setCurrentPage(0);
+      } else {
+        // Scroll to search bar when opening
+        setTimeout(() => {
+          document.getElementById("explorer-searchbar")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 50);
       }
       return !prev;
     });
