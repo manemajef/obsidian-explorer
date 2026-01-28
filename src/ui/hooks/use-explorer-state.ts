@@ -153,6 +153,12 @@ export function useExplorerState(options: UseExplorerStateOptions) {
         setDebouncedQuery("");
         setAllFiles(null);
         setCurrentPage(0);
+        setTimeout(() => {
+          document.getElementById("explorer-actions")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 50);
       } else {
         // Scroll to search bar when opening
         setTimeout(() => {

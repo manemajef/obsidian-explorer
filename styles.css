@@ -116,6 +116,7 @@ body.theme-light .explorer-folder-card {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1em;
+  min-width: 100%;
 }
 
 .explorer-card-exts {
