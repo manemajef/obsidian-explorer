@@ -99,18 +99,24 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     settings.showFolders,
   ]);
 
-  // ===== SORTED FILES (expensive - only when source or sort changes) =====
+  // ===== CONVERT TO FILE INFOS (includes isPinned for sorting) =====
+  const sourceFileInfos = useMemo<FileInfo[]>(
+    () => sourceFiles.map((f) => getFileInfo(app, f)),
+    [app, sourceFiles],
+  );
+
+  // ===== SORTED FILES (with pinned first) =====
   const sortedFiles = useMemo(() => {
     // Skip sorting for search if disabled - BFS order = closest first
     if (!SORT_SEARCH_RESULTS && searchMode && filteredAllFiles) {
-      if (!SORT_RECENT_SEARCH) return sourceFiles;
-      return sortFiles(sourceFiles, "edited");
+      if (!SORT_RECENT_SEARCH) return sourceFileInfos;
+      return sortFiles(sourceFileInfos, "edited");
     }
-    return sortFiles(sourceFiles, settings.sortBy);
-  }, [sourceFiles, settings.sortBy, searchMode, filteredAllFiles]);
+    return sortFiles(sourceFileInfos, settings.sortBy);
+  }, [sourceFileInfos, settings.sortBy, searchMode, filteredAllFiles]);
 
-  // ===== FILTERED + PAGINATED (cheap - on query/page change) =====
-  const { pageFiles, totalPages, usePaging } = useMemo(() => {
+  // ===== FILTERED + PAGINATED =====
+  const { pageFileInfos, totalPages, usePaging } = useMemo(() => {
     const filtered = debouncedQuery
       ? filterFiles(sortedFiles, debouncedQuery)
       : sortedFiles;
@@ -120,17 +126,11 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     const start = currentPage * pageSize;
 
     return {
-      pageFiles: filtered.slice(start, start + pageSize),
+      pageFileInfos: filtered.slice(start, start + pageSize),
       totalPages: total,
       usePaging: filtered.length > pageSize,
     };
   }, [sortedFiles, debouncedQuery, settings.pageSize, currentPage]);
-
-  // ===== FILE INFOS (only for displayed page) =====
-  const pageFileInfos = useMemo<FileInfo[]>(
-    () => pageFiles.map((f) => getFileInfo(app, f)),
-    [app, pageFiles],
-  );
 
   // ===== CARD EXTENSION =====
   const extForCard = useMemo(() => {

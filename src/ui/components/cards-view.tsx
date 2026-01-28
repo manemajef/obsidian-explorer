@@ -26,6 +26,11 @@ export function CardsView(props: {
           >
             <div className="explorer-card-header">
               <span className="explorer-card-link">
+                {fileInfo.isPinned && (
+                  <span className="pin-icon">
+                    <Icon name="heart" />
+                  </span>
+                )}
                 <InternalLink
                   app={app}
                   sourcePath={sourcePath}

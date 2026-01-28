@@ -1,7 +1,7 @@
 import React from "react";
 import { App } from "obsidian";
 import { FileInfo } from "../../types";
-import { InternalLink } from "./shared";
+import { Icon, InternalLink } from "./shared";
 
 export function ListView(props: {
   app: App;
@@ -15,9 +15,15 @@ export function ListView(props: {
       {files.map((fileInfo) => (
         <li
           key={fileInfo.file.path}
-          className="explorer-list"
+          className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
         >
-          <span className="list-bullet" />
+          {fileInfo.isPinned ? (
+            <span className="pin-icon">
+              <Icon name="heart" />
+            </span>
+          ) : (
+            <span className="list-bullet" />
+          )}
           <div
             style={{
               display: "flex",

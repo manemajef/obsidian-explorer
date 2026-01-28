@@ -1,7 +1,7 @@
 /* ===== Tokens / Variables ===== */
 .explorer-container {
-  --explorer-glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+  --explorer-glass-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
   --explorer-action-shadow: none;
   --explorer-action-radius: var(--clickable-icon-radius);
@@ -13,10 +13,10 @@
   --explorer-action-shadow: var(--explorer-glass-shadow);
   --explorer-action-radius: 2em;
   --explorer-action-transition: all 0.2s ease;
-  --exolorer-action-border: 1px solid rgba(0,0,0,0.05);
+  --exolorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
 }
 .theme-dark .explorer-container.use-glass {
-  --explorer-action-border: 1px solid rgba(255,255,255,0.05);
+  --explorer-action-border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* ===== Utilities ===== */
@@ -24,7 +24,7 @@
   display: flex;
 }
 .gap-2 {
-  gap: .5em;
+  gap: 0.5em;
 }
 .justify-between {
   justify-content: space-between;
@@ -46,7 +46,7 @@
 
 .is-mobile .explorer-folders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .explorer-notes-grid {
@@ -54,7 +54,7 @@
 }
 .is-mobile .explorer-notes-grid {
   grid-template-columns: 1fr 1fr !important;
-  gap: .75em;
+  gap: 0.75em;
 }
 /* ===== Folder Cards (buttons) ===== */
 .explorer-folder-card {
@@ -140,9 +140,8 @@ body.theme-light .explorer-folder-card {
   padding: 0.1em 0.5em !important;
   border: none;
   border-radius: 6px;
-  opacity: .7;
+  opacity: 0.7;
 }
-
 
 .explorer-card-footer {
   opacity: 0.5;
@@ -171,7 +170,7 @@ body.theme-light .explorer-folder-card {
   padding: 0.4em 0.25em;
   list-style: none;
   margin-inline-start: 1em;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .is-mobile .explorer-list {
@@ -184,6 +183,18 @@ body.theme-light .explorer-folder-card {
 
 .explorer-list.pinned a {
   color: var(--color-red) !important;
+}
+
+.pin-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.3em;
+  color: var(--color-red);
+}
+
+.pin-icon svg {
+  width: 0.9em;
+  height: 0.9em;
 }
 
 /* ===== Pagination ===== */
@@ -265,7 +276,7 @@ body.theme-light .explorer-folder-card {
   gap: 1em;
 }
 .use-glass .folder-nav {
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 }
 
 /* Actions bar layout */
@@ -274,7 +285,7 @@ body.theme-light .explorer-folder-card {
 }
 .explorer-actions-wrap {
   display: flex;
-  gap: .5em;
+  gap: 0.5em;
   border-inline-start: 1px solid var(--background-modifier-border);
   padding-inline-start: 1em;
   margin-inline-start: 1em;
@@ -405,8 +416,8 @@ body.theme-light .explorer-folder-card {
   border-radius: var(--explorer-action-radius);
 }
 .action-icons {
-  padding: .1em .5em;
-  gap:.5em;
+  padding: 0.1em 0.5em;
+  gap: 0.5em;
   display: flex;
   align-items: center;
 }
@@ -429,10 +440,9 @@ body.theme-light .explorer-folder-card {
   border-radius: 100%;
   background: rgba(0, 0, 0, 0.01);
   border: 1px solid rgba(var(--mono-rgb-100), 0.15);
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
-
 }
