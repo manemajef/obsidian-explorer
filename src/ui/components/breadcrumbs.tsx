@@ -1,13 +1,15 @@
 import React from "react";
-import { App, TFolder } from "obsidian";
+import { App, TFolder, Platform } from "obsidian";
 import { isRtl } from "../../utils/helpers";
 import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
 const HOMEPAGE = "Home.md";
-
+import { openOrCreateFolderNote } from "src/services/vault-actions";
+import { IconButton } from "./ui/icon-button";
+import { ActionButton } from "./ui/action-button";
 /** Max parts before trimming middle paths with "..." */
 const MAX_VISIBLE_PARTS = 3;
-
+const CURR_IS_VISIBLE = false;
 export function Breadcrumbs(props: {
   app: App;
   sourcePath: string;
@@ -22,9 +24,32 @@ export function Breadcrumbs(props: {
     allParts.unshift({ name: current.name, path: current.path });
     current = current.parent;
   }
+  // if (false) {
+  //   const parent = folder?.parent;
+
+  //   if (!parent) return <></>;
+  //   if (true && parent)
+  //     return (
+  //       <IconButton
+  //         onClick={() => openOrCreateFolderNote(app, parent)}
+  //         name="undo-2"
+  //         label={parent.name}
+  //       />
+  //     );
+  //   const onClickFolder = () => openOrCreateFolderNote(app, parent);
+  //   return <ActionButton icon="undo-2" onClick={onClickFolder}></ActionButton>;
+  // }
+  if (Platform.isMobile) {
+    const parent = folder?.parent;
+    if (!parent) return <></>;
+    const onClickFolder = () => openOrCreateFolderNote(app, parent);
+    return <ActionButton icon="undo-2" onClick={onClickFolder}></ActionButton>;
+  }
 
   // Trim: always show first + last 2, collapse middle into "..."
   let parts = allParts;
+  if (!CURR_IS_VISIBLE) parts = parts.slice(0, -1);
+
   // parts = parts.slice(0, -1);
   let showEllipsis = false;
   if (allParts.length > MAX_VISIBLE_PARTS) {
@@ -32,7 +57,6 @@ export function Breadcrumbs(props: {
 
     showEllipsis = true;
   }
-
   const chevron = (name: string) => (
     <div className="explorer-breadcrumb-sep">
       <Icon

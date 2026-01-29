@@ -297,12 +297,12 @@ body.theme-light .explorer-folder-card {
 #explorer-actions {
   direction: ltr !important;
   margin-bottom: 1em;
-  gap: 1em;
+  /* gap: 1em; */
 }
 /* Left group shrinks but doesn't clip (settings shadow visible) */
 .actions-left {
-  min-width: 0;
-  flex: 1;
+  min-width: 2em;
+  /* flex: 1; */
 }
 /* Breadcrumbs container clips overflow independently */
 .actions-breadcrumbs {
@@ -315,11 +315,19 @@ body.theme-light .explorer-folder-card {
 .actions-right {
   flex-shrink: 0;
 }
-#explorer-actions.search-active .actions-left {
+/* #explorer-actions.search-active .actions-left {
   flex: 0;
   min-width: 2em;
+} */
+#explorer-actions .actions-mid {
+  flex: 1;
+  min-width: 0;
+  /* align-self: flex-start; */
+  /* align-items: center; */
+
 }
-#explorer-actions.search-active .actions-right {
+#explorer-actions.search-active .actions-mid {
+  flex:0;
   /* flex: 1;
   min-width: 0; */
 }
@@ -347,6 +355,7 @@ body.theme-light .explorer-folder-card {
 }
 .actions-search > button {
   margin-inline-start: -2.5em;
+  margin-inline-end: 0;
   z-index: 1;
 }
 .is-mobile .actions-search > button {

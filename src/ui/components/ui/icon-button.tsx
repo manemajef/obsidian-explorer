@@ -5,8 +5,9 @@ export function IconButton(props: {
   name: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  label?: string;
 }): JSX.Element {
-  const { name, onClick, className } = props;
+  const { name, onClick, className, label } = props;
 
   return (
     <button
@@ -14,7 +15,10 @@ export function IconButton(props: {
       className={`clickable-icon explorer-icon-btn ${className ?? ""}`}
       onClick={onClick}
     >
-      <Icon name={name} />
+      <span className="flex">
+        <Icon name={name} />
+        {label && label}
+      </span>
     </button>
   );
 }
