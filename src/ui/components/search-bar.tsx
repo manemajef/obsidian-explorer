@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
 
@@ -10,7 +10,6 @@ export function SearchBar(props: {
 }): JSX.Element {
   const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
-  const [value, setValue] = useState(searchQuery);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Focus input when search opens
@@ -19,16 +18,6 @@ export function SearchBar(props: {
     const timer = setTimeout(() => inputRef.current?.focus(), 0);
     return () => clearTimeout(timer);
   }, [searchMode]);
-
-  useEffect(() => {
-    setValue(searchQuery);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (!searchMode) return;
-    const handle = setTimeout(() => onSearchInput(value), 200);
-    return () => clearTimeout(handle);
-  }, [value, searchMode, onSearchInput]);
 
   return (
     <div className="pages-nav">
@@ -47,8 +36,8 @@ export function SearchBar(props: {
                   ? "search"
                   : "use '#' for tags and '@' for folders"
               }
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => onSearchInput(e.target.value)}
             />
           </div>
         </div>

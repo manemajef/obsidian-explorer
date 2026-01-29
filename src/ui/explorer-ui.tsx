@@ -71,9 +71,11 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         onNewNote={onNewNote}
         onSearchToggle={toggleSearch}
         searchMode={searchMode}
+        searchQuery={searchQuery}
+        onSearchInput={setSearchQuery}
       />
 
-      {effectiveSettings.showFolders && folderInfos.length > 0 && (
+      {effectiveSettings.showFolders && folderInfos.length > 0 && !searchMode && (
         <FolderButtons
           app={app}
           sourcePath={sourcePath}

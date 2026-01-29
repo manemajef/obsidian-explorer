@@ -1,15 +1,24 @@
 import React from "react";
 import { Icon } from "./shared";
-
+import { SearchBar } from "./search-bar";
 export function ActionsBar(props: {
   onOpenSettings: () => void;
   onNewFolder: () => void;
   onNewNote: () => void;
   onSearchToggle: () => void;
   searchMode: boolean;
+  searchQuery: string;
+  onSearchInput: () => void;
 }): JSX.Element {
-  const { onOpenSettings, onNewFolder, onNewNote, onSearchToggle, searchMode } =
-    props;
+  const {
+    onOpenSettings,
+    onNewFolder,
+    onNewNote,
+    searchMode,
+    searchQuery,
+    onSearchToggle,
+    onSearchInput,
+  } = props;
 
   return (
     <div id="explorer-actions" className="folder-nav justify-between">
@@ -18,6 +27,15 @@ export function ActionsBar(props: {
           <Icon name="settings-2" />
         </button>
       </div>
+      {/*<div>
+        <SearchBar
+          onSearchInput={onSearchInput}
+          onSearchToggle={onSearchToggle}
+          searchMode={searchMode}
+          searchQuery={searchQuery}
+        />
+      </div>*/}
+
       <div>
         <div className="flex">
           <div className="action-icons">
