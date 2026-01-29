@@ -155,6 +155,7 @@
 .explorer-folder-card:hover {
   /* for glass design - might condider bad */
   box-shadow: var(--input-shadow) !important;
+  border: 1px solid rgba(0,0,0,0) !important;
   /* border: none !important; */
 
 }
