@@ -3,7 +3,8 @@ import { App, TFile } from "obsidian";
 import { FileInfo } from "../../types";
 import { diffDays } from "../../utils/helpers";
 import { isFolderNote } from "../../utils/file-utils";
-import { Icon, InternalLink } from "./shared";
+import { InternalLink } from "./shared";
+import { Badge } from "./ui/badge";
 
 export function CardsView(props: {
   app: App;
@@ -36,13 +37,11 @@ export function CardsView(props: {
 
               <span className="explorer-card-exts">
                 {fileInfo.file.extension === "md" && fileInfo.isPinned && (
-                  <span className="pin-icon">
-                    <Icon name="heart" />
-                  </span>
+                  <Badge variant="pin" />
                 )}
                 {fileInfo.file.extension !== "md" &&
                 !isFolderNote(fileInfo.file) ? (
-                  <span className="ext-tag">{fileInfo.file.extension}</span>
+                  <Badge variant="ext">{fileInfo.file.extension}</Badge>
                 ) : null}
               </span>
             </div>

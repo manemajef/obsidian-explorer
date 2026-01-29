@@ -1,7 +1,9 @@
 import React from "react";
 import { App } from "obsidian";
 import { FileInfo } from "../../types";
-import { Icon, InternalLink } from "./shared";
+import { InternalLink } from "./shared";
+import { Badge } from "./ui/badge";
+import { Group } from "./ui/layout";
 
 export function ListView(props: {
   app: App;
@@ -17,20 +19,8 @@ export function ListView(props: {
           key={fileInfo.file.path}
           className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
         >
-          {fileInfo.isPinned ? (
-            <span className="pin-icon">
-              <Icon name="heart" />
-            </span>
-          ) : (
-            <span className="list-bullet" />
-          )}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          {fileInfo.isPinned && <Badge variant="pin" />}
+          <Group justify="between">
             <InternalLink
               app={app}
               sourcePath={sourcePath}
@@ -42,11 +32,9 @@ export function ListView(props: {
               }
             />
             {fileInfo.file.extension !== "md" ? (
-              <span className="ext-tag ext-tag-bg">
-                {fileInfo.file.extension}
-              </span>
+              <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
             ) : null}
-          </div>
+          </Group>
         </li>
       ))}
     </>

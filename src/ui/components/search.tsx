@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { Icon } from "./shared";
+import { ActionButton } from "./ui/action-button";
+import { Group } from "./ui/layout";
 
 export function Search(props: {
   searchMode: boolean;
@@ -19,19 +20,11 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return (
-      <button
-        type="button"
-        className="clickable-icon action-icon"
-        onClick={onSearchToggle}
-      >
-        <Icon name="search" />
-      </button>
-    );
+    return <ActionButton icon="search" onClick={onSearchToggle} />;
   }
 
   return (
-    <div className="actions-search flex gap-2">
+    <Group className="actions-search">
       <div className="actions-search-input">
         <input
           ref={inputRef}
@@ -46,13 +39,7 @@ export function Search(props: {
           onChange={(e) => onSearchInput(e.target.value)}
         />
       </div>
-      <button
-        type="button"
-        className="clickable-icon action-icon cancel-search-btn"
-        onClick={onSearchToggle}
-      >
-        <Icon name="undo-2" />
-      </button>
-    </div>
+      <ActionButton icon="x" onClick={onSearchToggle} className="" />
+    </Group>
   );
 }

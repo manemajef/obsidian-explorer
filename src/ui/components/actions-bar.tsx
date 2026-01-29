@@ -1,6 +1,11 @@
 import React from "react";
-import { Icon } from "./shared";
 import { Search } from "./search";
+import { IconButton } from "./ui/icon-button";
+import { ActionButton, ActionGroup } from "./ui/action-button";
+import { Group, Separator } from "./ui/layout";
+import { Breadcrumbs } from "./breadcrumbs";
+import { App, TFolder } from "obsidian";
+const USE_BREADCRUMBS = false;
 
 export function ActionsBar(props: {
   onOpenSettings: () => void;
@@ -10,6 +15,9 @@ export function ActionsBar(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchInput: (query: string) => void;
+  app: App;
+  sourcePath: string;
+  folder: TFolder;
 }): JSX.Element {
   const {
     onOpenSettings,
@@ -19,36 +27,38 @@ export function ActionsBar(props: {
     searchQuery,
     onSearchToggle,
     onSearchInput,
+    app,
+    sourcePath,
+    folder,
   } = props;
 
   return (
-    <div
+    <Group
       id="explorer-actions"
-      className={`folder-nav flex justify-between ${searchMode ? "search-active" : ""}`}
+      justify="between"
+      className={searchMode ? "search-active" : ""}
     >
-      <div className="flex gap-2 action-settings">
-        <button className="clickable-icon action-icon" onClick={onOpenSettings}>
-          <Icon name="settings-2" />
-        </button>
-      </div>
+      <Group gap={2}>
+        {/* <ActionButton icon="undo-2" onClick={() => console.log("clicked")} /> */}
+        <ActionButton icon="settings-2" onClick={onOpenSettings} />
+      </Group>
+      {!searchMode && USE_BREADCRUMBS && (
+        <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
+      )}
 
-      <div className="actions-right flex">
-        <div className="action-icons action-add-btns">
-          <button className="clickable-icon" onClick={onNewFolder}>
-            <Icon name="folder-plus" />
-          </button>
-          <button className="clickable-icon" onClick={onNewNote}>
-            <Icon name="file-plus-2" />
-          </button>
-        </div>
-        <div className="actions-seperator" />
+      <Group className="actions-right">
+        <ActionGroup className="action-add-btns">
+          <IconButton name="folder-plus" onClick={onNewFolder} />
+          <IconButton name="file-plus-2" onClick={onNewNote} />
+        </ActionGroup>
+        <Separator />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}
           onSearchToggle={onSearchToggle}
           onSearchInput={onSearchInput}
         />
-      </div>
-    </div>
+      </Group>
+    </Group>
   );
 }

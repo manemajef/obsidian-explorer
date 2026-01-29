@@ -8,6 +8,7 @@ import { FolderButtons } from "./components/folder-buttons";
 import { ListView } from "./components/list-view";
 import { Pagination } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
+import { Divider } from "./components/ui/layout";
 import { TFile } from "obsidian";
 
 interface ExplorerUIProps {
@@ -72,18 +73,24 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         searchMode={searchMode}
         searchQuery={searchQuery}
         onSearchInput={setSearchQuery}
+        app={app}
+        sourcePath={sourcePath}
+        folder={folder}
       />
 
       {effectiveSettings.showFolders &&
         folderInfos.length > 0 &&
         !searchMode && (
-          <FolderButtons
-            app={app}
-            sourcePath={sourcePath}
-            folderInfos={folderInfos}
-          />
+          <>
+            <FolderButtons
+              app={app}
+              sourcePath={sourcePath}
+              folderInfos={folderInfos}
+            />
+            <Divider />
+          </>
         )}
-      <div className="br-md" />
+
       {effectiveSettings.showNotes && (
         <div className="explorer-files-container">
           <div

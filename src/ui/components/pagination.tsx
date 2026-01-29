@@ -1,6 +1,7 @@
 import React from "react";
 import { App } from "obsidian";
 import { Icon } from "./shared";
+import { Group } from "./ui/layout";
 
 export function Pagination(props: {
   app: App;
@@ -23,7 +24,7 @@ export function Pagination(props: {
   );
 
   return (
-    <div dir="ltr" style={{ display: "flex", justifyContent: "center" }}>
+    <Group justify="center">
       <div className="paging-controll">
         <span
           className="paging-label paging-icon"
@@ -99,6 +100,6 @@ export function Pagination(props: {
           <Icon name="chevron-right" />
         </span>
       </div>
-    </div>
+    </Group>
   );
 }
