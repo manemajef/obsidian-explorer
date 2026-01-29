@@ -75,8 +75,8 @@
   color: var(--color-red);
 }
 .explorer-badge.pin svg {
-  width: 0.9em;
-  height: 0.9em;
+  width: 1em !important;
+  height: 1em !important;
 }
 .explorer-badge.ext {
   opacity: 0.7;
@@ -141,12 +141,24 @@
   align-items: center;
   justify-content: center;
   background-color: var(--interactive-normal);
-  box-shadow: var(--input-shadow);
+  /* if not glass design return this */
+  /* box-shadow: var(--input-shadow); */
   padding: 1.5em 2em;
   border-radius: 0.8em;
   font-size: 0.9em;
   border: none;
+  /* for glass design - might concider bad */
+  border: var(--exolorer-action-border);
+  box-shadow: var(--explorer-action-shadow) !important;
+
 }
+.explorer-folder-card:hover {
+  /* for glass design - might condider bad */
+  box-shadow: var(--input-shadow) !important;
+  /* border: none !important; */
+
+}
+
 .is-mobile .explorer-folder-card {
   border: var(--exolorer-action-border);
 }
@@ -307,9 +319,10 @@ body.theme-light .explorer-folder-card {
   min-width: 2em;
 }
 #explorer-actions.search-active .actions-right {
-  flex: 1;
-  min-width: 0;
+  /* flex: 1;
+  min-width: 0; */
 }
+
 .use-glass #explorer-actions {
   padding-bottom: 0.5em;
 }
@@ -323,6 +336,7 @@ body.theme-light .explorer-folder-card {
 }
 #explorer-actions .actions-search-input input {
   width: 100%;
+  min-width: 250px;
   padding: 1.5em 4em 1.5em 1em;
   background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border-hover);
