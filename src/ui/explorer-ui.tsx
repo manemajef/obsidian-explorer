@@ -2,7 +2,6 @@ import React from "react";
 import { App, TFolder } from "obsidian";
 import { ExplorerSettings, FolderInfo } from "../types";
 import { useExplorerState } from "./hooks/use-explorer-state";
-import { Breadcrumbs } from "./components/breadcrumbs";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-buttons";
 import { ListView } from "./components/list-view";
@@ -61,11 +60,8 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
 
   return (
     <>
-      {effectiveSettings.showBreadcrumbs && (
-        <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
-      )}
-
       <ActionsBar
+        showBreadcrumbs={effectiveSettings.showBreadcrumbs}
         onOpenSettings={onOpenSettings}
         onNewFolder={onNewFolder}
         onNewNote={onNewNote}

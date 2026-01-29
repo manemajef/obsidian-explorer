@@ -4,51 +4,85 @@ import { isRtl } from "../../utils/helpers";
 import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
 
-export function Breadcrumbs(props: { app: App; sourcePath: string; folder: TFolder }): JSX.Element {
-	const { app, sourcePath, folder } = props;
+/** Max parts before trimming middle paths with "..." */
+const MAX_VISIBLE_PARTS = 3;
 
-	const parts: { name: string; path: string }[] = [];
-	let current: TFolder | null = folder;
+export function Breadcrumbs(props: {
+  app: App;
+  sourcePath: string;
+  folder: TFolder;
+}): JSX.Element {
+  const { app, sourcePath, folder } = props;
 
-	while (current && current.path !== "/") {
-		parts.unshift({ name: current.name, path: current.path });
-		current = current.parent;
-	}
+  const allParts: { name: string; path: string }[] = [];
+  let current: TFolder | null = folder;
 
-	return (
-		<div className="explorer-breadcrumbs">
-			<InternalLink
-				app={app}
-				sourcePath={sourcePath}
-				path="Home.md"
-				className="explorer-breadcrumb-home"
-			>
-				<Icon name="home" />
-			</InternalLink>
+  while (current && current.path !== "/") {
+    allParts.unshift({ name: current.name, path: current.path });
+    current = current.parent;
+  }
 
-			{parts.map((part) => {
-				const folderObj = app.vault.getAbstractFileByPath(part.path);
-				const folderNote = folderObj instanceof TFolder ? getFolderNoteForFolder(app, folderObj) : null;
+  // Trim: always show first + last 2, collapse middle into "..."
+  let parts = allParts;
+  let showEllipsis = false;
+  if (allParts.length > MAX_VISIBLE_PARTS) {
+    parts = [allParts[0], ...allParts.slice(-2)];
+    showEllipsis = true;
+  }
 
-				return (
-					<React.Fragment key={part.path}>
-						<span className="explorer-breadcrumb-sep">
-							<Icon name={isRtl(part.name) ? "chevron-left" : "chevron-right"} />
-						</span>
-						{folderNote ? (
-							<InternalLink
-								app={app}
-								sourcePath={sourcePath}
-								path={folderNote.path}
-								className="explorer-breadcrumb-link"
-								text={part.name}
-							/>
-						) : (
-							<span className="explorer-breadcrumb-link">{part.name}</span>
-						)}
-					</React.Fragment>
-				);
-			})}
-		</div>
-	);
+  const chevron = (name: string) => (
+    <div className="explorer-breadcrumb-sep">
+      <Icon
+        name={isRtl(name) ? "chevron-left" : "chevron-right"}
+        className="breadcrumbs-icon"
+      />
+    </div>
+  );
+
+  return (
+    <div className="explorer-breadcrumbs">
+      <div>
+        <InternalLink
+          app={app}
+          sourcePath={sourcePath}
+          path="Home.md"
+          className="explorer-breadcrumb-home"
+        >
+          <Icon name="home" className="breadcrumbs-home-icon" />
+        </InternalLink>
+      </div>
+
+      {parts.map((part, i) => {
+        const folderObj = app.vault.getAbstractFileByPath(part.path);
+        const folderNote =
+          folderObj instanceof TFolder
+            ? getFolderNoteForFolder(app, folderObj)
+            : null;
+
+        return (
+          <React.Fragment key={part.path}>
+            {i === 0 && chevron(part.name)}
+            {i === 1 && showEllipsis && (
+              <>
+                {chevron("...")}
+                <span className="explorer-breadcrumb-dots">...</span>
+              </>
+            )}
+            {i > 0 && chevron(part.name)}
+            {folderNote ? (
+              <InternalLink
+                app={app}
+                sourcePath={sourcePath}
+                path={folderNote.path}
+                className="explorer-breadcrumb-link"
+                text={part.name}
+              />
+            ) : (
+              <span className="explorer-breadcrumb-link">{part.name}</span>
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
 }

@@ -5,7 +5,7 @@ import { ActionButton, ActionGroup } from "./ui/action-button";
 import { Group, Separator } from "./ui/layout";
 import { Breadcrumbs } from "./breadcrumbs";
 import { App, TFolder } from "obsidian";
-const USE_BREADCRUMBS = false;
+const USE_BREADCRUMBS = true;
 
 export function ActionsBar(props: {
   onOpenSettings: () => void;
@@ -18,6 +18,7 @@ export function ActionsBar(props: {
   app: App;
   sourcePath: string;
   folder: TFolder;
+  showBreadcrumbs: boolean;
 }): JSX.Element {
   const {
     onOpenSettings,
@@ -30,6 +31,7 @@ export function ActionsBar(props: {
     app,
     sourcePath,
     folder,
+    showBreadcrumbs,
   } = props;
 
   return (
@@ -40,11 +42,16 @@ export function ActionsBar(props: {
     >
       <Group gap={2}>
         {/* <ActionButton icon="undo-2" onClick={() => console.log("clicked")} /> */}
+
         <ActionButton icon="settings-2" onClick={onOpenSettings} />
+
+        {!searchMode && USE_BREADCRUMBS && (
+          <>
+            <Separator />
+            <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
+          </>
+        )}
       </Group>
-      {!searchMode && USE_BREADCRUMBS && (
-        <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
-      )}
 
       <Group className="actions-right">
         <ActionGroup className="action-add-btns">

@@ -283,6 +283,14 @@ body.theme-light .explorer-folder-card {
   margin-bottom: 1em;
   gap: 1em;
 }
+/* Left group shrinks (breadcrumbs overflow), right group never shrinks */
+#explorer-actions > :first-child {
+  min-width: 0;
+  overflow: hidden;
+}
+.actions-right {
+  flex-shrink: 0;
+}
 .use-glass #explorer-actions {
   padding-bottom: 0.5em;
 }
@@ -327,38 +335,56 @@ body.theme-light .explorer-folder-card {
   min-width: 0;
 }
 
-/* ===== Breadcrumbs ===== */
+/* ===== Breadcrumbs (inline in actions bar) ===== */
 .explorer-breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 0.5em;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid var(--background-modifier-border);
+  gap: 2px;
+  font-size: 0.9em;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  /* flex: 1; */
+  justify-content: center;
 }
 .explorer-breadcrumb-home {
   display: flex;
   align-items: center;
-  color: var(--text-muted);
+  color: var(--text-faint) !important;
   cursor: pointer;
 }
+.breadcrumbs-home-icon {
+  font-size: .8em !important;
+}
 .explorer-breadcrumb-home:hover {
-  color: var(--text-normal);
+  color: var(--text-muted);
+}
+/* All icon spans inside breadcrumbs need inline-flex to align SVGs */
+.explorer-breadcrumbs span {
+  display: inline-flex;
+  align-items: center;
 }
 .explorer-breadcrumb-sep {
   display: flex;
   align-items: center;
   color: var(--text-faint);
+  font-size: 0.85em;
 }
 .explorer-breadcrumb-link {
-  color: var(--text-muted);
+  color: var(--text-faint) !important;
   cursor: pointer;
   text-decoration: none;
 }
 .explorer-breadcrumb-link:hover {
-  color: var(--text-normal);
+  color: var(--text-muted) !important;
   text-decoration: underline;
+}
+.explorer-breadcrumb-dots {
+  color: var(--text-faint);
+  font-size: 0.85em;
+}
+.is-mobile .explorer-breadcrumbs {
+  display: none;
 }
 
 /* ===== Links ===== */
