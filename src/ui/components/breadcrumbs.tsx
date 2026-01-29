@@ -3,6 +3,7 @@ import { App, TFolder } from "obsidian";
 import { isRtl } from "../../utils/helpers";
 import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
+const HOMEPAGE = "Home.md";
 
 /** Max parts before trimming middle paths with "..." */
 const MAX_VISIBLE_PARTS = 3;
@@ -13,7 +14,7 @@ export function Breadcrumbs(props: {
   folder: TFolder;
 }): JSX.Element {
   const { app, sourcePath, folder } = props;
-
+  if (app.workspace.getActiveFile()?.path === HOMEPAGE) return <div></div>;
   const allParts: { name: string; path: string }[] = [];
   let current: TFolder | null = folder;
 
@@ -24,16 +25,18 @@ export function Breadcrumbs(props: {
 
   // Trim: always show first + last 2, collapse middle into "..."
   let parts = allParts;
+  // parts = parts.slice(0, -1);
   let showEllipsis = false;
   if (allParts.length > MAX_VISIBLE_PARTS) {
     parts = [allParts[0], ...allParts.slice(-2)];
+
     showEllipsis = true;
   }
 
   const chevron = (name: string) => (
     <div className="explorer-breadcrumb-sep">
       <Icon
-        name={isRtl(name) ? "chevron-left" : "chevron-right"}
+        name={isRtl(name) ? "chevron-right" : "chevron-right"}
         className="breadcrumbs-icon"
       />
     </div>
@@ -69,6 +72,7 @@ export function Breadcrumbs(props: {
               </>
             )}
             {i > 0 && chevron(part.name)}
+
             {folderNote ? (
               <InternalLink
                 app={app}

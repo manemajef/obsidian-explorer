@@ -40,16 +40,14 @@ export function ActionsBar(props: {
       justify="between"
       className={searchMode ? "search-active" : ""}
     >
-      <Group gap={2}>
-        {/* <ActionButton icon="undo-2" onClick={() => console.log("clicked")} /> */}
-
+      <Group gap={2} className="actions-left">
         <ActionButton icon="settings-2" onClick={onOpenSettings} />
 
-        {!searchMode && USE_BREADCRUMBS && (
-          <>
+        {!searchMode && USE_BREADCRUMBS && showBreadcrumbs && (
+          <div className="actions-breadcrumbs">
             <Separator />
             <Breadcrumbs app={app} sourcePath={sourcePath} folder={folder} />
-          </>
+          </div>
         )}
       </Group>
 

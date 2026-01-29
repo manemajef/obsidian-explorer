@@ -93,11 +93,11 @@
   margin: 0 1.5em;
   border-inline-start: 1px solid var(--background-modifier-border);
   align-self: stretch;
-  flex: 1;
+  flex-shrink: 0;
 }
-.is-mobile .explorer-separator {
-  display: none;
-}
+/* .is-mobile .explorer-separator { */
+/*   display: none; */
+/* } */
 
 .explorer-divider {
   display: block;
@@ -146,6 +146,9 @@
   border-radius: 0.8em;
   font-size: 0.9em;
   border: none;
+}
+.is-mobile .explorer-folder-card {
+  border: var(--exolorer-action-border);
 }
 .theme-dark .use-glass .explorer-folder-card {
   box-shadow: var(--explorer-action-shadow) !important;
@@ -283,13 +286,29 @@ body.theme-light .explorer-folder-card {
   margin-bottom: 1em;
   gap: 1em;
 }
-/* Left group shrinks (breadcrumbs overflow), right group never shrinks */
-#explorer-actions > :first-child {
+/* Left group shrinks but doesn't clip (settings shadow visible) */
+.actions-left {
+  min-width: 0;
+  flex: 1;
+}
+/* Breadcrumbs container clips overflow independently */
+.actions-breadcrumbs {
+  display: flex;
+  align-items: center;
   min-width: 0;
   overflow: hidden;
+  flex: 1;
 }
 .actions-right {
   flex-shrink: 0;
+}
+#explorer-actions.search-active .actions-left {
+  flex: 0;
+  min-width: 2em;
+}
+#explorer-actions.search-active .actions-right {
+  flex: 1;
+  min-width: 0;
 }
 .use-glass #explorer-actions {
   padding-bottom: 0.5em;
@@ -309,10 +328,15 @@ body.theme-light .explorer-folder-card {
   border: 1px solid var(--background-modifier-border-hover);
   border-radius: 3em;
   color: var(--text-muted);
+  /* margin-inline-end: 1em; */
 }
 .actions-search > button {
   margin-inline-start: -2.5em;
   z-index: 1;
+}
+.is-mobile .actions-search > button {
+  margin-inline-start: -3em;
+  margin-inline-end: 0;
 }
 .cancel-search-btn {
   color: var(--text-accent);
@@ -332,20 +356,20 @@ body.theme-light .explorer-folder-card {
 .is-mobile #explorer-actions.search-active .actions-search,
 .is-mobile #explorer-actions.search-active .actions-search-input {
   flex: 1;
-  min-width: 0;
+  /* max-width: max-content; */
 }
 
 /* ===== Breadcrumbs (inline in actions bar) ===== */
 .explorer-breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: .35em;
   font-size: 0.9em;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
-  /* flex: 1; */
-  justify-content: center;
+  flex: 1;
+  justify-content: start;
 }
 .explorer-breadcrumb-home {
   display: flex;
@@ -357,7 +381,7 @@ body.theme-light .explorer-folder-card {
   font-size: .8em !important;
 }
 .explorer-breadcrumb-home:hover {
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
 }
 /* All icon spans inside breadcrumbs need inline-flex to align SVGs */
 .explorer-breadcrumbs span {
@@ -384,7 +408,7 @@ body.theme-light .explorer-folder-card {
   font-size: 0.85em;
 }
 .is-mobile .explorer-breadcrumbs {
-  display: none;
+  /* display: none; */
 }
 
 /* ===== Links ===== */

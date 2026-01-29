@@ -4,8 +4,9 @@
   "depth": 0,
   "pageSize": 15,
   "onlyNotes": false,
+  "showUnsupportedFiles": false,
   "showFolders": true,
-  "showBreadcrumbs": false,
+  "showBreadcrumbs": true,
   "cardExt": "default",
   "showNotes": true,
   "useGlass": true

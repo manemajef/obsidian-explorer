@@ -73,7 +73,7 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 | `pageSize`        | `6-100`                                              | `15`     | Items per page                             |
 | `onlyNotes`       | `true`, `false`                                      | `false`  | Show only .md and .pdf files               |
 | `showFolders`     | `true`, `false`                                      | `true`   | Show folder buttons                        |
-| `showBreadcrumbs` | `true`, `false`                                      | `false`  | Show navigation breadcrumbs                |
+| `showBreadcrumbs` | `true`, `false`                                      | `true`   | Show navigation breadcrumbs                |
 | `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`| `default`| Card footer info                           |
 | `showNotes`       | `true`, `false`                                      | `true`   | Show note files                            |
 | `useGlass`        | `true`, `false`                                      | `true`   | Glass styling (global only)                |
