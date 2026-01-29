@@ -29,7 +29,16 @@
 .justify-between {
   justify-content: space-between;
 }
+.br
+.br-md {
+  display: block;
+  width: 100%;
+  min-height: 0.5em;
 
+}
+.br-md {
+  margin: 2em 0;
+}
 /* ===== Grid Layouts ===== */
 .explorer-grid {
   display: grid;
@@ -258,50 +267,84 @@ body.theme-light .explorer-folder-card {
 }
 
 /* ===== Navigation Bars ===== */
-.folder-nav,
-.pages-nav {
-  padding-bottom: 0em;
-}
-.pages-nav {
-  display: flex;
-  justify-content: space-between;
-}
-.is-mobile .folder-nav {
-  padding-bottom: 1em !important;
-}
-
 .folder-nav {
   direction: ltr !important;
   display: flex;
   align-items: center;
   gap: 1em;
+  padding-bottom: 0;
 }
 .use-glass .folder-nav {
   padding-bottom: 0.5em;
 }
+.is-mobile .folder-nav {
+  padding-bottom: 1em !important;
+}
 
-/* Actions bar layout */
+/* ===== Actions Bar ===== */
 #explorer-actions {
   margin-bottom: 1em;
 }
-.explorer-actions-wrap {
-  display: flex;
-  gap: 0.5em;
+.actions-right {
+  align-items: center;
+}
+.actions-seperator {
+  min-width: 1px;
+  min-height: max-content;
+  margin: 0 1.5em;
   border-inline-start: 1px solid var(--background-modifier-border);
-  padding-inline-start: 1em;
-  margin-inline-start: 1em;
-}
-
-/* Search bar layout */
-.explorer-search-row {
-  display: flex;
-  justify-content: space-between;
-}
-.explorer-search-col {
+  align-self: stretch;
   flex: 1;
 }
+.is-mobile .actions-seperator {
+  display: none;
+}
 
-/* ===== Search ===== */
+/* ===== Inline Search (search.tsx) ===== */
+/* Container: input + cancel button, no gap (cancel overlaps via negative margin) */
+.actions-search {
+  gap: 0;
+}
+#explorer-actions .actions-search-input input {
+  width: 100%;
+  padding: 1.5em 4em 1.5em 1em;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: 3em;
+  color: var(--text-muted);
+  
+}
+.actions-search > button {
+  margin-inline-start: -2.5em;
+  z-index: 1;
+}
+.cancel-search-btn {
+  color: var(--text-accent);
+  opacity: 0.7;
+}
+.cancel-search-btn:hover {
+  opacity: 1;
+  background: var(--background-modifier-hover);
+}
+
+/* Search active (mobile): stretch input to full width, hide extras */
+.is-mobile #explorer-actions.search-active .action-add-btns,
+.is-mobile #explorer-actions.search-active .actions-seperator {
+  display: none;
+}
+.is-mobile #explorer-actions.search-active .actions-right,
+.is-mobile #explorer-actions.search-active .actions-search,
+.is-mobile #explorer-actions.search-active .actions-search-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===== Legacy Search Bar (search-bar.tsx — kept for rollback) ===== */
+.pages-nav {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0;
+}
 .search-bar-container {
   margin: auto;
   margin-bottom: 1em;
@@ -311,7 +354,6 @@ body.theme-light .explorer-folder-card {
   align-items: center;
   scroll-margin-top: 8em;
 }
-
 .explorer-search-bar {
   display: flex;
   justify-content: center;
@@ -319,11 +361,6 @@ body.theme-light .explorer-folder-card {
   flex: 1 1 auto;
   width: 80%;
 }
-.search-input {
-  min-height: 3em;
-  padding-bottom: 1em;
-}
-
 .explorer-search-bar input {
   padding: 1em !important;
   background-color: var(--background-primary);
@@ -392,20 +429,6 @@ body.theme-light .explorer-folder-card {
 }
 
 /* ===== Clickable Icons ===== */
-.clickable-muted {
-  color: var(--text-muted) !important;
-  background-color: var(--background-primary);
-  display: flex;
-  align-items: center;
-  padding: var(--size-2-2) var(--size-2-3);
-  cursor: var(--cursor);
-  border-radius: var(--clickable-icon-radius);
-  opacity: var(--icon-opacity);
-  transition: opacity var(--anim-duration-fast) ease-in-out;
-  height: auto;
-  font-size: 0.9em;
-}
-
 .action-icons,
 .action-icon {
   border-radius: var(--explorer-action-radius);
@@ -425,9 +448,6 @@ body.theme-light .explorer-folder-card {
 .action-icon:hover,
 .action-icons .clickable-icon:hover {
   background-color: var(--explorer-action-hover);
-}
-.action-icon.clickable-icon:hover {
-  /* background-color: transparent; */
 }
 .explorer-container a,
 .explorer-container a * {

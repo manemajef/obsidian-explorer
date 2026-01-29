@@ -7,7 +7,6 @@ import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-buttons";
 import { ListView } from "./components/list-view";
 import { Pagination } from "./components/pagination";
-import { SearchBar } from "./components/search-bar";
 import { ActionsBar } from "./components/actions-bar";
 import { TFile } from "obsidian";
 
@@ -75,25 +74,16 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
         onSearchInput={setSearchQuery}
       />
 
-      {effectiveSettings.showFolders && folderInfos.length > 0 && !searchMode && (
-        <FolderButtons
-          app={app}
-          sourcePath={sourcePath}
-          folderInfos={folderInfos}
-        />
-      )}
-
-      <div className="explorer-search-row">
-        <div className="explorer-search-col">
-          <SearchBar
-            searchMode={searchMode}
-            searchQuery={searchQuery}
-            onSearchToggle={toggleSearch}
-            onSearchInput={setSearchQuery}
+      {effectiveSettings.showFolders &&
+        folderInfos.length > 0 &&
+        !searchMode && (
+          <FolderButtons
+            app={app}
+            sourcePath={sourcePath}
+            folderInfos={folderInfos}
           />
-        </div>
-      </div>
-
+        )}
+      <div className="br-md" />
       {effectiveSettings.showNotes && (
         <div className="explorer-files-container">
           <div
@@ -108,7 +98,11 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
               />
             )}
             {effectiveSettings.view === "list" && (
-              <ListView app={app} sourcePath={sourcePath} files={pageFileInfos} />
+              <ListView
+                app={app}
+                sourcePath={sourcePath}
+                files={pageFileInfos}
+              />
             )}
           </div>
 
