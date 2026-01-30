@@ -36,6 +36,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
 
   // Paginate normal view
   const normalPaginated = useMemo(() => {
+    if (!settings.usePagination) {
+      return {
+        files: normalSortedFiles,
+        totalPages: 1,
+        usePaging: false,
+      };
+    }
+
     const pageSize = settings.pageSize;
     const total = Math.ceil(normalSortedFiles.length / pageSize);
     const start = normalPage * pageSize;
@@ -45,7 +53,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       totalPages: total,
       usePaging: normalSortedFiles.length > pageSize,
     };
-  }, [normalSortedFiles, settings.pageSize, normalPage]);
+  }, [normalSortedFiles, settings.pageSize, settings.usePagination, normalPage]);
 
   // Reset normal page if out of bounds
   useEffect(() => {
@@ -124,6 +132,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       ? filterFiles(app, searchSortedFiles, debouncedQuery)
       : searchSortedFiles;
 
+    if (!settings.usePagination) {
+      return {
+        files: filtered,
+        totalPages: 1,
+        usePaging: false,
+      };
+    }
+
     const pageSize = settings.pageSize;
     const total = Math.ceil(filtered.length / pageSize);
     const start = searchPage * pageSize;
@@ -133,7 +149,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       totalPages: total,
       usePaging: filtered.length > pageSize,
     };
-  }, [app, searchSortedFiles, debouncedQuery, settings.pageSize, searchPage]);
+  }, [
+    app,
+    searchSortedFiles,
+    debouncedQuery,
+    settings.pageSize,
+    settings.usePagination,
+    searchPage,
+  ]);
 
   // Reset search page if out of bounds
   useEffect(() => {

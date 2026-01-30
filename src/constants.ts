@@ -5,6 +5,7 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
   view: "list",
   depth: 0,
   pageSize: 15,
+  usePagination: true,
   onlyNotes: false,
   showUnsupportedFiles: false,
   showFolders: true,

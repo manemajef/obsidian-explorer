@@ -12,8 +12,6 @@ export function InternalLink(props: {
   children?: React.ReactNode;
 }): JSX.Element {
   const {
-    app,
-    sourcePath,
     path,
     text,
     className,
@@ -31,13 +29,7 @@ export function InternalLink(props: {
       data-href={path}
       href={path}
       data-tooltip-position="top"
-      target="_blank"
-      rel="noopener"
-      onClick={(e) => {
-        e.preventDefault();
-        onClick?.(e);
-        app.workspace.openLinkText(path, sourcePath, e.ctrlKey || e.metaKey);
-      }}
+      onClick={onClick}
     >
       {children ?? text}
     </a>

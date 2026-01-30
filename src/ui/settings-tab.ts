@@ -57,17 +57,32 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           });
       });
 
-    new Setting(containerEl).setName("Default page size").addText((text) => {
-      text
-        .setPlaceholder(String(DEFAULT_SETTINGS.pageSize))
-        .setValue(String(this.plugin.settings.pageSize))
-        .onChange(async (value) => {
-          const parsed = Number.parseInt(value, 10);
-          if (!Number.isNaN(parsed) && parsed > 0) {
-            this.updateSetting("pageSize", parsed);
-          }
+    let pageSizeSetting: Setting | null = null;
+
+    new Setting(containerEl)
+      .setName("Enable pagination")
+      .setDesc("Turn off to show all files in a single list.")
+      .addToggle((toggle) => {
+        toggle.setValue(this.plugin.settings.usePagination).onChange((value) => {
+          this.updateSetting("usePagination", value);
+          pageSizeSetting?.setDisabled(!value);
         });
-    });
+      });
+
+    pageSizeSetting = new Setting(containerEl)
+      .setName("Default page size")
+      .addText((text) => {
+        text
+          .setPlaceholder(String(DEFAULT_SETTINGS.pageSize))
+          .setValue(String(this.plugin.settings.pageSize))
+          .onChange(async (value) => {
+            const parsed = Number.parseInt(value, 10);
+            if (!Number.isNaN(parsed) && parsed > 0) {
+              this.updateSetting("pageSize", parsed);
+            }
+          });
+      });
+    pageSizeSetting.setDisabled(!this.plugin.settings.usePagination);
 
     // ===== PLUGIN SETTINGS =====
     containerEl.createEl("h2", { text: "Plugin settings" });

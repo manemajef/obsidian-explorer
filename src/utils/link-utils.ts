@@ -18,8 +18,6 @@ export function createInternalLink(
       "data-href": path,
       href: path,
       "data-tooltip-position": "top",
-      target: "_blank",
-      rel: "noopener",
     },
   });
 

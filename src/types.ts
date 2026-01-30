@@ -5,6 +5,7 @@ export interface ExplorerSettings {
   view: "cards" | "list";
   depth: number;
   pageSize: number;
+  usePagination: boolean;
   onlyNotes: boolean;
   showUnsupportedFiles: boolean;
   showFolders: boolean;

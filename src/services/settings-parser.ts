@@ -40,6 +40,9 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 					settings.pageSize = pageSizeNum;
 				}
 				break;
+			case "usePagination":
+				settings.usePagination = value === "true";
+				break;
 			case "onlyNotes":
 				settings.onlyNotes = value === "true";
 				break;
@@ -81,6 +84,9 @@ export function serializeSettings(settings: ExplorerSettings): string {
 	}
 	if (settings.pageSize !== DEFAULT_SETTINGS.pageSize) {
 		lines.push(`pageSize: ${settings.pageSize}`);
+	}
+	if (settings.usePagination !== DEFAULT_SETTINGS.usePagination) {
+		lines.push(`usePagination: ${settings.usePagination}`);
 	}
 	if (settings.onlyNotes !== DEFAULT_SETTINGS.onlyNotes) {
 		lines.push(`onlyNotes: ${settings.onlyNotes}`);

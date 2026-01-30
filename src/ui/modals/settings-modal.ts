@@ -72,7 +72,19 @@ export class ExplorerSettingsModal extends Modal {
 					});
 			});
 
+		let pageSizeSetting: Setting | null = null;
+
 		new Setting(contentEl)
+			.setName("Enable pagination")
+			.setDesc("Turn off to show all files in a single list.")
+			.addToggle((toggle) => {
+				toggle.setValue(this.settings.usePagination).onChange((value) => {
+					this.updateSetting("usePagination", value);
+					pageSizeSetting?.setDisabled(!value);
+				});
+			});
+
+		pageSizeSetting = new Setting(contentEl)
 			.setName("Page size")
 			.setDesc("Number of items per page")
 			.addSlider((slider) => {
@@ -84,6 +96,7 @@ export class ExplorerSettingsModal extends Modal {
 						this.updateSetting("pageSize", value);
 					});
 			});
+		pageSizeSetting.setDisabled(!this.settings.usePagination);
 
 		new Setting(contentEl)
 			.setName("Card info")
