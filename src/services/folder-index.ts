@@ -103,7 +103,9 @@ export class FolderIndex {
 
     if (settings.onlyNotes) {
       // Strict: only notes and PDFs
-      files = files.filter((f) => f.extension === "md" || f.extension === "pdf");
+      files = files.filter(
+        (f) => f.extension === "md" || f.extension === "BASE",
+      );
     } else if (!settings.showUnsupportedFiles) {
       // Default: show content files, hide code files
       files = files.filter((f) =>
@@ -124,7 +126,13 @@ export class FolderIndex {
     chunkSize?: number;
     signal?: AbortSignal;
   }): Promise<TFile[]> {
-    const { depth, includeFolderNotes, onBatch, chunkSize = 0, signal } = options;
+    const {
+      depth,
+      includeFolderNotes,
+      onBatch,
+      chunkSize = 0,
+      signal,
+    } = options;
 
     const results: TFile[] = [];
     let batch: TFile[] = [];
