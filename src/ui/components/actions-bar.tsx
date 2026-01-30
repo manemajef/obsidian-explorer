@@ -56,7 +56,8 @@ export function ActionsBar(props: {
       {!searchMode &&
         USE_BREADCRUMBS &&
         showBreadcrumbs &&
-        !Platform.isMobile && (
+        !Platform.isMobile &&
+        parent && (
           <>
             <Separator />
             <div className="actions-mid">

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
 import { ActionButton } from "./ui/action-button";
 import { Group } from "./ui/layout";
+import { IconButton } from "./ui/icon-button";
 
 export function Search(props: {
   searchMode: boolean;
@@ -39,7 +40,11 @@ export function Search(props: {
           onChange={(e) => onSearchInput(e.target.value)}
         />
       </div>
-      <ActionButton icon="x" onClick={onSearchToggle} className="" />
+      <ActionButton
+        icon="x"
+        onClick={onSearchToggle}
+        className="cancel-search-btn"
+      />
     </Group>
   );
 }

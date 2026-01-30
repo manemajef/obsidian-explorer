@@ -11,7 +11,7 @@ export function ActionButton(props: {
   return (
     <button
       type="button"
-      className={`clickable-icon explorer-action ${className ?? ""}`}
+      className={`clickable-icon explorer-action action-btn ${className ?? ""}`}
       onClick={onClick}
     >
       <Icon name={icon} />
@@ -26,8 +26,6 @@ export function ActionGroup(props: {
   const { className, children } = props;
 
   return (
-    <div className={`explorer-action-group ${className ?? ""}`}>
-      {children}
-    </div>
+    <div className={`explorer-action-group ${className ?? ""}`}>{children}</div>
   );
 }
