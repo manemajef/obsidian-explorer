@@ -40,11 +40,13 @@ export function Search(props: {
           onChange={(e) => onSearchInput(e.target.value)}
         />
       </div>
-      <ActionButton
-        icon="x"
-        onClick={onSearchToggle}
-        className="cancel-search-btn"
-      />
+      <div className="search-x-btn">
+        <ActionButton
+          icon="x"
+          onClick={onSearchToggle}
+          className="cancel-search-btn "
+        />
+      </div>
     </Group>
   );
 }

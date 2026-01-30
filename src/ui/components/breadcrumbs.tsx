@@ -24,21 +24,6 @@ export function Breadcrumbs(props: {
     allParts.unshift({ name: current.name, path: current.path });
     current = current.parent;
   }
-  // if (false) {
-  //   const parent = folder?.parent;
-
-  //   if (!parent) return <></>;
-  //   if (true && parent)
-  //     return (
-  //       <IconButton
-  //         onClick={() => openOrCreateFolderNote(app, parent)}
-  //         name="undo-2"
-  //         label={parent.name}
-  //       />
-  //     );
-  //   const onClickFolder = () => openOrCreateFolderNote(app, parent);
-  //   return <ActionButton icon="undo-2" onClick={onClickFolder}></ActionButton>;
-  // }
   if (Platform.isMobile) {
     const parent = folder?.parent;
     if (!parent) return <></>;

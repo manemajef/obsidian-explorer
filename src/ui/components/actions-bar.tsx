@@ -41,9 +41,9 @@ export function ActionsBar(props: {
     <Group
       id="explorer-actions"
       justify="between"
-      className={searchMode ? "search-active" : ""}
+      className={searchMode ? "search-active action-bar" : "action-bar"}
     >
-      <Group gap={2} className="actions-left">
+      <Group gap={2} className="action-left">
         {Platform.isMobile && parent && showBreadcrumbs && (
           <ActionButton
             icon="undo-2"
@@ -60,7 +60,7 @@ export function ActionsBar(props: {
         parent && (
           <>
             <Separator />
-            <div className="actions-mid">
+            <div className="action-mid">
               <div className="actions-breadcrumbs">
                 <Breadcrumbs
                   app={app}
@@ -72,7 +72,7 @@ export function ActionsBar(props: {
           </>
         )}
 
-      <Group className="actions-right">
+      <Group className="action-right">
         <ActionGroup className="action-add-btns">
           <IconButton name="folder-plus" onClick={onNewFolder} />
           <IconButton name="file-plus-2" onClick={onNewNote} />

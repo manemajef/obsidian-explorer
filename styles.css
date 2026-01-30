@@ -63,6 +63,15 @@
 .explorer-action-group .clickable-icon:hover {
   background-color: var(--explorer-action-hover);
 }
+.cancel-search-btn {
+  color: var(--text-accent);
+  color: var(--color-red);
+
+}
+.cancel-search-btn:hover {
+  opacity: 1;
+  background: var(--background-modifier-hover);
+}
 
 /* ===== Badge ===== */
 .explorer-badge {
@@ -108,6 +117,39 @@
   margin: 1em 0;
 }
 
+
+
+/* ========= mid-shrink is a general containr where left right re fixed and mid is flexible===== */
+/* action-bar */
+.mid-shrink-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0; /* critical */
+}
+
+/* LEFT */
+.mid-shrink-start {
+  flex: 0 0 auto;      /* no grow, no shrink */
+  white-space: nowrap;
+  justify-content: space-between;
+}
+
+/* MID */
+.mid-shrink-mid {
+  flex: 1 1 auto;      /* can grow & shrink */
+  min-width: 0;        /* CRITICAL for scrolling */
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-inline-end: 1em;
+}
+
+/* RIGHT */
+.mid-shrink-end {
+  flex: 0 0 auto;      /* fixed by default */
+  white-space: nowrap;
+}
 /* ===== Grid Layouts ===== */
 .explorer-grid {
   display: grid;
@@ -135,6 +177,7 @@
   gap: 0.75em;
 }
 
+/* ============ should be its own file!!!!! ============= */
 /* ===== Folder Cards (buttons) ===== */
 .explorer-folder-card {
   box-sizing: border-box;
@@ -156,9 +199,10 @@
 }
 .explorer-folder-card:hover {
   /* for glass design - might condider bad */
-  box-shadow: var(--input-shadow) !important;
-  border: 1px solid rgba(0,0,0,0) !important;
+  /* box-shadow: var(--input-shadow) !important; */
+  /* border: 1px solid rgba(0,0,0,0) !important; */
   /* border: none !important; */
+  border: 1px solid var(--background-modifier-border-hover);
 
 }
 
@@ -183,7 +227,9 @@
 body.theme-light .explorer-folder-card {
   background-color: var(--background-primary) !important;
 }
+/* ========== end folder-card  =========== */
 
+/* ============ should be its own file!!!!! ============= */
 /* ===== Note Cards ===== */
 .explorer-card {
   padding: 0.5em;
@@ -236,7 +282,9 @@ body.theme-light .explorer-folder-card {
 .prop-tag svg {
   color: var(--color-red) !important;
 }
+/* ============== end notes card ============== */
 
+/* ============ should be its own file!!!!! ============= */
 /* ===== List View ===== */
 .explorer-list {
   padding: 0.4em 0.25em;
@@ -301,36 +349,6 @@ body.theme-light .explorer-folder-card {
   margin-bottom: 1em;
   /* gap: 1em; */
 }
-/* Left group shrinks but doesn't clip (settings shadow visible) */
-.actions-left {
-  min-width: 2em;
-  /* flex: 1; */
-}
-/* Breadcrumbs container clips overflow independently */
-.actions-breadcrumbs {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow: hidden;
-  flex: 1;
-}
-.actions-right {
-  flex-shrink: 0;
-}
-/* #explorer-actions.search-active .actions-left {
-  flex: 0;
-  min-width: 2em;
-} */
-#explorer-actions .actions-mid {
-  flex: 1;
-  min-width: 0;
-  /* align-self: flex-start; */
-  /* align-items: center; */
-
-}
-#explorer-actions.search-active .actions-mid {
-  flex: 0;
-}
 
 .use-glass #explorer-actions {
   padding-bottom: 0.5em;
@@ -339,61 +357,26 @@ body.theme-light .explorer-folder-card {
   padding-bottom: 1em !important;
 }
 
-/* ===== Inline Search (search.tsx) ===== */
-.actions-search {
-  gap: 0;
-}
-#explorer-actions .actions-search-input input {
-  /* width: 100%; */
-  min-width: 250px;
-  padding: 1.5em 3.5em 1.5em 1em;
-  background-color: var(--background-primary);
-  border: 1px solid var(--background-modifier-border-hover);
-  border-radius: 3em;
-  
-  color: var(--text-muted);
-  /* margin-inline-end: 1em; */
-}
-.actions-search > button {
-  margin-inline-start: -3em;
-  margin-inline-end: 0;
-  /* z-index: 1; */
-}
-.is-mobile .actions-search > button {
-  margin-inline-start: .5em;
-  margin-inline-end: 0;
-  
-}
-.cancel-search-btn {
-  color: var(--text-accent);
-  /* border-radius: 100%; */
-  color: var(--color-red);
-  /* border: 1px solid var(--background-modifier-border); */
-  /* opacity: 0.7; */
-}
-.cancel-search-btn:hover {
-  opacity: 1;
-  background: var(--background-modifier-hover);
+
+
+/* ============ should be its own file=========== (and should be slimmed down wtf is going on here thats a mess==== */
+/* Breadcrumbs container clips overflow independently */
+.actions-breadcrumbs {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1;
 }
 
-/* Search active (mobile): stretch input to full width, hide extras */
-.is-mobile #explorer-actions.search-active .action-add-btns,
-.is-mobile #explorer-actions.search-active .explorer-separator {
-  display: none;
-}
-.is-mobile #explorer-actions.search-active .actions-right,
-.is-mobile #explorer-actions.search-active .actions-search,
-.is-mobile #explorer-actions.search-active .actions-search-input {
-  flex: 1;
-  /* max-width: max-content; */
-}
+
 
 /* ===== Breadcrumbs (inline in actions bar) ===== */
 .explorer-breadcrumbs {
   display: flex;
   align-items: center;
   gap: .35em;
-  font-size: 0.9em;
+  font-size: 0.8em;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
@@ -457,3 +440,88 @@ body.theme-light .explorer-folder-card {
   padding-bottom: 2em;
   max-height: 80vh;
 }
+
+
+/* ========= should probably be its own file, atlist partialy ============ */
+
+/* action-bar */
+.action-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0; /* critical */
+}
+
+
+/* ========== concider depcrating since ive made a `mid-shrink-bar` class ===== */
+/* LEFT */
+.action-left {
+  flex: 0 0 auto;      /* no grow, no shrink */
+  white-space: nowrap;
+  justify-content: space-between;
+}
+
+/* MID */
+.action-mid {
+  flex: 1 1 auto;      /* can grow & shrink */
+  min-width: 0;        /* CRITICAL for scrolling */
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-inline-end: 1em;
+}
+
+/* RIGHT */
+.action-right {
+  flex: 0 0 auto;      /* fixed by default */
+  white-space: nowrap;
+}
+.actions-search{
+  position: relative;
+   gap: 0;
+}
+.search-x-btn {
+  position: absolute;
+  inset-inline-end: .25em;
+  top: 0;
+  /* top: .5em;
+  bottom: 0; */
+  top: auto;
+  bottom: auto;
+}
+
+
+.actions-search-input input {
+  /* width: 100%; */
+  min-width: 250px;
+  padding: 1.5em 3em 1.5em 1em;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: 3em;
+  color: var(--text-muted);
+  /* margin-inline-end: 1em; */
+}
+
+
+/* Search active (mobile): stretch input to full width, hide extras */
+.is-mobile #explorer-actions.search-active .action-add-btns,
+.is-mobile #explorer-actions.search-active .explorer-separator {
+  display: none;
+}
+.is-mobile #explorer-actions.search-active .actions-right,
+.is-mobile #explorer-actions.search-active .actions-search,
+.is-mobile #explorer-actions.search-active .actions-search-input {
+  flex: 1;
+
+}
+
+
+/* .actions-search > button {
+ 
+} */
+/* .is-mobile .actions-search > button {
+  margin-inline-start: .5em;
+  margin-inline-end: 0;
+  
+} */
+/* ============ end action-bar ====== */
