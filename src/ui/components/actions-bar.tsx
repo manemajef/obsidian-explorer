@@ -44,7 +44,7 @@ export function ActionsBar(props: {
       className={searchMode ? "search-active action-bar" : "action-bar"}
     >
       <Group gap={2} className="action-left">
-        {Platform.isMobile && parent && showBreadcrumbs && (
+        {(Platform.isMobile || true) && parent && showBreadcrumbs && (
           <ActionButton
             icon="undo-2"
             onClick={() => openOrCreateFolderNote(app, parent)}
@@ -57,6 +57,7 @@ export function ActionsBar(props: {
         USE_BREADCRUMBS &&
         showBreadcrumbs &&
         !Platform.isMobile &&
+        false &&
         parent && (
           <>
             <Separator />
