@@ -128,12 +128,22 @@ export async function promptAndCreateNote(
 export async function openOrCreateFolderNote(
   app: App,
   folder: TFolder,
-  // e: React.MouseEvent,
 ): Promise<void> {
-  const existingNote = folder.children.find((c) => c.name === folder.name);
-  if (existingNote) {
-    app.workspace.openLinkText(existingNote.path, "", false);
+  if (folder.isRoot()) {
+    app.workspace.openLinkText("Home.md", "", false);
     return;
+  }
+  const parent = folder.parent;
+  if (parent) {
+    const parentNotePath =
+      parent.path === "/"
+        ? `${folder.name}.md`
+        : `${parent.path}/${folder.name}.md`;
+    const parentNote = app.vault.getAbstractFileByPath(parentNotePath);
+    if (parentNote instanceof TFile) {
+      app.workspace.openLinkText(parentNote.path, "", false);
+      return;
+    }
   }
 
   const folderNotePath = `${folder.path}/${folder.name}.md`;
