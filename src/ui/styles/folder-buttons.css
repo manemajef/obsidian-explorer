@@ -5,16 +5,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--interactive-normal);
+  background-color: var(--explorer-bg-interactive) !important;
   padding: 1.5em 2em;
   border-radius: 0.8em;
   font-size: 0.9em;
   border: var(--exolorer-action-border);
   box-shadow: var(--explorer-action-shadow) !important;
+  transition: .15s;
 }
 .explorer-folder-card:hover {
-  border: 1px solid var(--background-modifier-border-hover);
-  background-color: var(--interactive-hover);
+  /* border: 1px solid var(--background-modifier-border-hover); */
+  background-color: var(--explorer-action-hover) !important;
 }
 .is-mobile .explorer-folder-card {
   border: var(--exolorer-action-border);

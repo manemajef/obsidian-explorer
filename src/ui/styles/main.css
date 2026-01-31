@@ -7,6 +7,8 @@
   --explorer-action-transition: none;
   --explorer-action-hover: rgba(0, 0, 0, 0.1);
   --exolorer-action-border: none;
+  --exolorer-action-border-hover: rgba(0,0,0,0.1);
+  --explorer-bg-interactive: rgba(0,0,0,0.005);
 }
 .explorer-container.use-glass {
   --explorer-action-shadow: var(--explorer-glass-shadow);
@@ -15,7 +17,14 @@
   --exolorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
 }
 .theme-dark .explorer-container.use-glass {
+   --explorer-glass-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
   --explorer-action-border: 1px solid rgba(255, 255, 255, 0.05);
+  --explorer-bg-interactive: rgba(255,255,255,0.025);
+    --explorer-action-hover: rgba(255, 255, 255, 0.05);
+  --explorer-action-border-hover: rgba(255,255,255,0.1);
+  
 }
 
 .explorer-container {
@@ -32,7 +41,11 @@
   transition: var(--explorer-action-transition);
   display: flex;
   align-items: center;
+  background-color: var(--explorer-bg-interactive);
 }
+/* .theme-dark .explorer-action, .theme-dark .explorer-action-group {
+  background: rgba(255, 255, 255, 0.025);
+} */
 .explorer-action.clickable-icon ,
 .explorer-action-group .clickable-icon {
   color: var(--text-normal);
@@ -48,6 +61,7 @@
 }
 .explorer-action:hover {
   background-color: var(--explorer-action-hover);
+  border: 1px solid var(--exolorer-action-border-hover);
 }
 
 /* Action group — shared container, hover on individual children */
