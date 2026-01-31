@@ -3,10 +3,12 @@ import { Search } from "./search";
 import { IconButton } from "./ui/icon-button";
 import { ActionButton, ActionGroup } from "./ui/action-button";
 import { Group, Separator } from "./ui/layout";
-import { Breadcrumbs } from "./breadcrumbs";
-import { App, TFolder, Platform } from "obsidian";
+import { App, TFolder } from "obsidian";
 import { openOrCreateFolderNote } from "src/services/vault-actions";
-const USE_BREADCRUMBS = true;
+
+// Breadcrumbs shelved — flip to true and uncomment the block below when ready
+// import { Breadcrumbs } from "./breadcrumbs";
+// const USE_BREADCRUMBS = false;
 
 export function ActionsBar(props: {
   onOpenSettings: () => void;
@@ -19,7 +21,7 @@ export function ActionsBar(props: {
   app: App;
   sourcePath: string;
   folder: TFolder;
-  showBreadcrumbs: boolean;
+  showParentButton: boolean;
 }): JSX.Element {
   const {
     onOpenSettings,
@@ -30,12 +32,10 @@ export function ActionsBar(props: {
     onSearchToggle,
     onSearchInput,
     app,
-    sourcePath,
     folder,
-    showBreadcrumbs,
+    showParentButton,
   } = props;
   const parent = folder?.parent;
-  // const onClickFolder = () => openOrCreateFolderNote(app, parent);
 
   return (
     <Group
@@ -44,7 +44,7 @@ export function ActionsBar(props: {
       className={searchMode ? "search-active action-bar" : "action-bar"}
     >
       <Group gap={2} className="action-left">
-        {(Platform.isMobile || true) && parent && showBreadcrumbs && (
+        {parent && showParentButton && (
           <ActionButton
             icon="undo-2"
             onClick={() => openOrCreateFolderNote(app, parent)}
@@ -53,11 +53,11 @@ export function ActionsBar(props: {
         <ActionButton icon="settings-2" onClick={onOpenSettings} />
       </Group>
 
+      {/* Breadcrumbs shelved — uncomment when ready to ship
       {!searchMode &&
         USE_BREADCRUMBS &&
         showBreadcrumbs &&
         !Platform.isMobile &&
-        false &&
         parent && (
           <>
             <Separator />
@@ -72,6 +72,7 @@ export function ActionsBar(props: {
             </div>
           </>
         )}
+      */}
 
       <Group className="action-right">
         <ActionGroup className="action-add-btns">

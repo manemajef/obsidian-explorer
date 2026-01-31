@@ -52,6 +52,9 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 			case "showBreadcrumbs":
 				settings.showBreadcrumbs = value === "true";
 				break;
+			case "showParentButton":
+				settings.showParentButton = value === "true";
+				break;
 			case "cardExt":
 				if (["folder", "ctime", "mtime", "desc", "none", "default"].includes(value)) {
 					settings.cardExt = value as ExplorerSettings["cardExt"];

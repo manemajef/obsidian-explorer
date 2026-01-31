@@ -1,0 +1,125 @@
+/* ===== Actions Bar ===== */
+#explorer-actions {
+  direction: ltr !important;
+  margin-bottom: 1em;
+}
+.use-glass #explorer-actions {
+  padding-bottom: 0.5em;
+}
+.is-mobile #explorer-actions {
+  padding-bottom: 1em !important;
+}
+
+
+/* ===== Action Bar Layout ===== */
+.action-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.action-left {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  justify-content: space-between;
+}
+.action-mid {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-inline-end: 1em;
+}
+.action-right {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ===== Search ===== */
+.actions-search {
+  position: relative;
+  gap: 0;
+}
+.search-x-btn {
+  position: absolute;
+  inset-inline-end: .25em;
+  top: auto;
+  bottom: auto;
+}
+.actions-search-input input {
+  min-width: 250px;
+  padding: 1.5em 3em 1.5em 1em;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: 3em;
+  color: var(--text-muted);
+}
+
+/* Search active (mobile): stretch input to full width, hide extras */
+.is-mobile #explorer-actions.search-active .action-add-btns,
+.is-mobile #explorer-actions.search-active .explorer-separator {
+  display: none;
+}
+.is-mobile #explorer-actions.search-active .actions-right,
+.is-mobile #explorer-actions.search-active .actions-search,
+.is-mobile #explorer-actions.search-active .actions-search-input {
+  flex: 1;
+}
+
+/* ===== Breadcrumbs (shelved — kept for future use) ===== */
+.actions-breadcrumbs {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1;
+}
+.explorer-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: .35em;
+  font-size: 0.8em;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+  justify-content: start;
+}
+.explorer-breadcrumb-home {
+  display: flex;
+  align-items: center;
+  color: var(--text-faint) !important;
+  cursor: pointer;
+}
+.breadcrumbs-home-icon {
+  font-size: .8em !important;
+}
+.explorer-breadcrumb-home:hover {
+  color: var(--text-muted) !important;
+}
+.explorer-breadcrumbs span {
+  display: inline-flex;
+  align-items: center;
+}
+.explorer-breadcrumb-sep {
+  display: flex;
+  align-items: center;
+  color: var(--text-faint);
+  font-size: 0.85em;
+}
+.explorer-breadcrumb-link {
+  color: var(--text-faint) !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+.explorer-breadcrumb-link:hover {
+  color: var(--text-muted) !important;
+  text-decoration: underline;
+}
+.explorer-breadcrumb-dots {
+  color: var(--text-faint);
+  font-size: 0.85em;
+}
+.is-mobile .explorer-breadcrumbs {
+}

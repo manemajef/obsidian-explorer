@@ -10,6 +10,7 @@ export const DEFAULT_SETTINGS: ExplorerSettings = {
   showUnsupportedFiles: false,
   showFolders: true,
   showBreadcrumbs: true,
+  showParentButton: true,
   cardExt: "default",
   showNotes: true,
   useGlass: true,

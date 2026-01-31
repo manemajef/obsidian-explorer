@@ -61,7 +61,7 @@ export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
   return (
     <>
       <ActionsBar
-        showBreadcrumbs={effectiveSettings.showBreadcrumbs}
+        showParentButton={effectiveSettings.showParentButton}
         onOpenSettings={onOpenSettings}
         onNewFolder={onNewFolder}
         onNewNote={onNewNote}

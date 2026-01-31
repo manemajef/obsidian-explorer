@@ -10,6 +10,7 @@ export interface ExplorerSettings {
   showUnsupportedFiles: boolean;
   showFolders: boolean;
   showBreadcrumbs: boolean;
+  showParentButton: boolean;
   cardExt: "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
   showNotes: boolean;
   useGlass: boolean;

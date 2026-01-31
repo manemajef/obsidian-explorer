@@ -1,0 +1,52 @@
+/* ===== Note Cards ===== */
+.explorer-card {
+  padding: 0.5em;
+  border: 1px solid var(--background-modifier-border);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
+  border-radius: 6px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.explorer-card:hover {
+  border: 1px solid var(--background-modifier-border-hover);
+}
+.explorer-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1em;
+  min-width: 100%;
+}
+.explorer-card-exts {
+  opacity: 0.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25em;
+}
+.explorer-card-exts:hover {
+  opacity: 0.9 !important;
+}
+.explorer-card-exts svg {
+  max-height: 0.9em;
+  max-width: 0.9em;
+}
+.explorer-card-footer {
+  opacity: 0.5;
+  font-size: 0.7em;
+  margin-bottom: 0 !important;
+}
+.explorer-card-footer:hover {
+  opacity: 0.9 !important;
+}
+.explorer-card-footer a {
+  color: var(--text-normal) !important;
+}
+.explorer-card-footer:hover a {
+  color: var(--text-accent) !important;
+}
+.prop-tag svg {
+  color: var(--color-red) !important;
+}

@@ -142,14 +142,15 @@ export class ExplorerSettingsModal extends Modal {
 				});
 			});
 
-		new Setting(contentEl)
-			.setName("Show breadcrumbs")
-			.setDesc("Show navigation breadcrumbs")
-			.addToggle((toggle) => {
-				toggle.setValue(this.settings.showBreadcrumbs).onChange((value) => {
-					this.updateSetting("showBreadcrumbs", value);
-				});
-			});
+		// Breadcrumbs shelved — uncomment when ready to ship
+		// new Setting(contentEl)
+		// 	.setName("Show breadcrumbs")
+		// 	.setDesc("Show navigation breadcrumbs")
+		// 	.addToggle((toggle) => {
+		// 		toggle.setValue(this.settings.showBreadcrumbs).onChange((value) => {
+		// 			this.updateSetting("showBreadcrumbs", value);
+		// 		});
+		// 	});
 
 		new Setting(contentEl).addButton((button) => {
 			button

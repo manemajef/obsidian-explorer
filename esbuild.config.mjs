@@ -18,7 +18,10 @@ const context = await esbuild.context({
 	banner: {
 		js: banner,
 	},
-	entryPoints: [resolve(__dirname, "main.ts")],
+	entryPoints: {
+		main: resolve(__dirname, "main.ts"),
+		styles: resolve(__dirname, "src/ui/styles/index.css"),
+	},
 	bundle: true,
 	jsx: "automatic",
 	loader: {
@@ -46,7 +49,7 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: resolve(__dirname, "main.js"),
+	outdir: resolve(__dirname),
 });
 
 if (prod) {

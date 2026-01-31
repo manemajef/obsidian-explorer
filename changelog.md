@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-02-01 - Shelve Breadcrumbs & Independent Parent Button
+
+**Task:** Gate breadcrumbs behind dev flag (commented out), give parent-folder button its own `showParentButton` plugin setting.
+**Files:** `types.ts` (+showParentButton), `constants.ts` (default true), `settings-parser.ts` (parse), `settings-tab.ts` (new toggle, breadcrumbs toggle commented out), `settings-modal.ts` (breadcrumbs toggle commented out), `actions-bar.tsx` (uses showParentButton, breadcrumbs block commented out), `explorer-ui.tsx` (passes showParentButton)
+
+## 2026-02-01 - CSS Refactor: Component-Scoped Stylesheets
+
+**Task:** Split monolithic `styles.css` into component files in `src/ui/styles/`, bundled via esbuild.
+**Files:** New `src/ui/styles/` directory with: `variables.css`, `shared.css`, `folder-buttons.css`, `note-cards.css`, `list-view.css`, `pagination.css`, `action-bar.css`, `index.css` (entry). `esbuild.config.mjs` updated to use `outdir` + CSS entry point. `styles.css` is now a build output.
+
+---
+
 ## 2026-01-30 - Pagination Opt-Out Setting
 
 **Task:** Add a `usePagination` setting to disable pagination and skip page slicing.

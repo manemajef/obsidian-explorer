@@ -160,14 +160,28 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       });
 
+    // Breadcrumbs shelved — uncomment when ready to ship
+    // new Setting(containerEl)
+    //   .setName("Show breadcrumbs")
+    //   .setDesc("Show folder path navigation.")
+    //   .addToggle((toggle) => {
+    //     toggle
+    //       .setValue(this.plugin.settings.showBreadcrumbs)
+    //       .onChange((value) => {
+    //         this.updateSetting("showBreadcrumbs", value);
+    //       });
+    //   });
+
+    // ===== PLUGIN NAVIGATION =====
+
     new Setting(containerEl)
-      .setName("Show breadcrumbs")
-      .setDesc("Show folder path navigation.")
+      .setName("Show parent folder button")
+      .setDesc("Show a button to navigate to the parent folder.")
       .addToggle((toggle) => {
         toggle
-          .setValue(this.plugin.settings.showBreadcrumbs)
+          .setValue(this.plugin.settings.showParentButton)
           .onChange((value) => {
-            this.updateSetting("showBreadcrumbs", value);
+            this.updateSetting("showParentButton", value);
           });
       });
 
