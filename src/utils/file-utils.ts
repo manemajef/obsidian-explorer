@@ -27,8 +27,8 @@ export function getFileInfo(app: App, file: TFile): FileInfo {
 
   return {
     file,
-    description: frontmatter?.description || frontmatter?.desc,
-    tags: frontmatter?.tags || [],
+    description: (frontmatter?.description || frontmatter?.desc) as string | undefined,
+    tags: (frontmatter?.tags || []) as string[],
     isPinned: frontmatter?.pin === true || frontmatter?.fav === true,
   };
 }
@@ -88,7 +88,7 @@ export function filterFiles(app: App, files: TFile[], query: string): TFile[] {
   if (q.startsWith("#")) {
     const tag = q.slice(1);
     return files.filter((f) => {
-      const tags = app.metadataCache.getFileCache(f)?.frontmatter?.tags || [];
+      const tags = (app.metadataCache.getFileCache(f)?.frontmatter?.tags || []) as string | string[];
       const tagList = Array.isArray(tags) ? tags : [String(tags)];
       return tagList.some((t: string) => t.toLowerCase().includes(tag));
     });

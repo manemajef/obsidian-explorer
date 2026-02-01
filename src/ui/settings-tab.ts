@@ -85,7 +85,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     pageSizeSetting.setDisabled(!this.plugin.settings.usePagination);
 
     // ===== PLUGIN SETTINGS =====
-    new Setting(containerEl).setName("Plugin settings").setHeading();
+    new Setting(containerEl).setName("Behavior").setHeading();
 
     new Setting(containerEl)
       .setName("Use glass effect")
@@ -153,7 +153,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Only notes")
-      .setDesc("Show only .md and .pdf files.")
+      .setDesc("Show only notes and PDF files.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.onlyNotes).onChange((value) => {
           void this.updateSetting("onlyNotes", value);

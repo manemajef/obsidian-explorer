@@ -135,7 +135,7 @@ export class ExplorerSettingsModal extends Modal {
 
 		new Setting(contentEl)
 			.setName("Only notes")
-			.setDesc("Show only .md and .pdf files")
+			.setDesc("Show only notes and PDF files")
 			.addToggle((toggle) => {
 				toggle.setValue(this.settings.onlyNotes).onChange((value) => {
 					this.updateSetting("onlyNotes", value);
