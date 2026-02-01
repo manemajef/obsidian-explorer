@@ -24,7 +24,7 @@ interface ExplorerUIProps {
   onNewNote: () => void;
 }
 
-export function ExplorerUI(props: ExplorerUIProps): JSX.Element {
+export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const {
     app,
     sourcePath,

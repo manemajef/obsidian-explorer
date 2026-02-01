@@ -29,7 +29,7 @@ export class ExplorerSettingsModal extends Modal {
 		contentEl.empty();
 		contentEl.addClass("explorer-settings-modal");
 
-		contentEl.createEl("h2", { text: "Explorer Settings" });
+		new Setting(contentEl).setName("Explorer settings").setHeading();
 
 		new Setting(contentEl)
 			.setName("View")

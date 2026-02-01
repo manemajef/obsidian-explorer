@@ -9,7 +9,7 @@ import { ExplorerSettings } from "../types";
 import { FOLDERNOTE_TEMPLATE } from "../constants";
 import { serializeSettings } from "./settings-parser";
 import { promptForName } from "../ui/modals/prompt-modal";
-import { FolderInfo } from "../types";
+
 
 // ===== HELPERS =====
 
@@ -130,7 +130,7 @@ export async function openOrCreateFolderNote(
   folder: TFolder,
 ): Promise<void> {
   if (folder.isRoot()) {
-    app.workspace.openLinkText("Home.md", "", false);
+    void app.workspace.openLinkText("Home.md", "", false);
     return;
   }
   const parent = folder.parent;
@@ -141,7 +141,7 @@ export async function openOrCreateFolderNote(
         : `${parent.path}/${folder.name}.md`;
     const parentNote = app.vault.getAbstractFileByPath(parentNotePath);
     if (parentNote instanceof TFile) {
-      app.workspace.openLinkText(parentNote.path, "", false);
+      void app.workspace.openLinkText(parentNote.path, "", false);
       return;
     }
   }
@@ -149,13 +149,13 @@ export async function openOrCreateFolderNote(
   const folderNotePath = `${folder.path}/${folder.name}.md`;
   const existing = app.vault.getAbstractFileByPath(folderNotePath);
   if (existing instanceof TFile) {
-    app.workspace.openLinkText(existing.path, "", false);
+    void app.workspace.openLinkText(existing.path, "", false);
     return;
   }
 
   try {
     const created = await app.vault.create(folderNotePath, FOLDERNOTE_TEMPLATE);
-    app.workspace.openLinkText(created.path, "", false);
+    void app.workspace.openLinkText(created.path, "", false);
   } catch (err) {
     new Notice(`Failed to create folder note: ${err}`);
   }

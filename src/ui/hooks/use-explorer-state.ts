@@ -93,8 +93,9 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     loadingRef.current = true;
     setIsSearchLoading(true);
 
-    getAllFiles()
+    void getAllFiles()
       .then((files) => setAllFiles(files))
+      .catch(() => { /* search load failed silently */ })
       .finally(() => {
         loadingRef.current = false;
         setIsSearchLoading(false);

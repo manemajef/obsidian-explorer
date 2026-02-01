@@ -10,7 +10,7 @@ export function InternalLink(props: {
   additionalClasses?: string[];
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children?: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const {
     path,
     text,
@@ -36,7 +36,7 @@ export function InternalLink(props: {
   );
 }
 
-export function Icon(props: { name: string; className?: string }): JSX.Element {
+export function Icon(props: { name: string; className?: string }): React.JSX.Element {
   const { name, className } = props;
   const ref = useRef<HTMLSpanElement | null>(null);
 

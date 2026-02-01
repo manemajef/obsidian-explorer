@@ -94,8 +94,8 @@ export class ExplorerView {
 				folderNotes={this.folderIndex.folderNotes}
 				getAllFiles={this.getAllFiles}
 				onOpenSettings={() => this.openSettings()}
-				onNewFolder={() => promptAndCreateFolder(this.app, folderPath)}
-				onNewNote={() => promptAndCreateNote(this.app, folderPath)}
+				onNewFolder={() => void promptAndCreateFolder(this.app, folderPath)}
+				onNewNote={() => void promptAndCreateNote(this.app, folderPath)}
 			/>
 		);
 	}
@@ -104,16 +104,15 @@ export class ExplorerView {
 		new ExplorerSettingsModal(
 			this.app,
 			this.effectiveSettings,
-			async (newSettings) => {
+			(newSettings) => {
 				this.effectiveSettings = newSettings;
-				await updateExplorerBlock(
+				void updateExplorerBlock(
 					this.app,
 					this.container,
 					this.ctx,
 					this.sourcePath,
 					newSettings
-				);
-				await this.render();
+				).then(() => this.render());
 			}
 		).open();
 	}

@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
 import { ActionButton } from "./ui/action-button";
 import { Group } from "./ui/layout";
-import { IconButton } from "./ui/icon-button";
+
 
 export function Search(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);

@@ -6,7 +6,7 @@ export function IconButton(props: {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   label?: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const { name, onClick, className, label } = props;
 
   return (

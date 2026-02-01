@@ -5,7 +5,7 @@ export function ActionButton(props: {
   icon: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const { icon, onClick, className } = props;
 
   return (
@@ -22,7 +22,7 @@ export function ActionButton(props: {
 export function ActionGroup(props: {
   className?: string;
   children: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const { className, children } = props;
 
   return (

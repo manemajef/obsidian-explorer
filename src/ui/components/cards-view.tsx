@@ -11,7 +11,7 @@ export function CardsView(props: {
   sourcePath: string;
   files: FileInfo[];
   extForCard: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const { app, sourcePath, files, extForCard } = props;
 
   return (
@@ -22,7 +22,7 @@ export function CardsView(props: {
             className="explorer-card"
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
-              app.workspace.openLinkText(fileInfo.file.path, sourcePath, false);
+              void app.workspace.openLinkText(fileInfo.file.path, sourcePath, false);
             }}
           >
             <div className="explorer-card-header">
@@ -65,7 +65,7 @@ function CardFooter(props: {
   sourcePath: string;
   fileInfo: FileInfo;
   extForCard: string;
-}): JSX.Element | null {
+}): React.JSX.Element | null {
   const { app, sourcePath, fileInfo, extForCard } = props;
 
   switch (extForCard) {

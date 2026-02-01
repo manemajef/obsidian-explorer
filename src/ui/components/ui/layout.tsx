@@ -8,7 +8,7 @@ export function Group(props: {
   className?: string;
   id?: string;
   children: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const { justify = "start", gap, className, id, children } = props;
 
   const justifyMap: Record<Justify, string> = {
@@ -36,7 +36,7 @@ export function Stack(props: {
   gap?: number;
   className?: string;
   children: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const { gap, className, children } = props;
 
   const style: React.CSSProperties = {
@@ -52,10 +52,10 @@ export function Stack(props: {
   );
 }
 
-export function Separator(props: { className?: string }): JSX.Element {
+export function Separator(props: { className?: string }): React.JSX.Element {
   return <div className={`explorer-separator ${props.className ?? ""}`} />;
 }
 
-export function Divider(props: { className?: string }): JSX.Element {
+export function Divider(props: { className?: string }): React.JSX.Element {
   return <div className={`explorer-divider ${props.className ?? ""}`} />;
 }

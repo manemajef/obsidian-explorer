@@ -7,7 +7,7 @@ export function Badge(props: {
   variant: BadgeVariant;
   className?: string;
   children?: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const { variant, className, children } = props;
 
   if (variant === "pin") {

@@ -16,7 +16,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Block defaults" });
+    new Setting(containerEl).setName("Block defaults").setHeading();
     containerEl.createEl("p", {
       text: "These can be overridden per code block.",
       cls: "setting-item-description",
@@ -27,8 +27,8 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         .addOption("list", "List")
         .addOption("cards", "Cards")
         .setValue(this.plugin.settings.view)
-        .onChange(async (value) => {
-          this.updateSetting("view", value as ExplorerSettings["view"]);
+        .onChange((value) => {
+          void this.updateSetting("view", value as ExplorerSettings["view"]);
         });
     });
 
@@ -39,8 +39,8 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         .addOption("edited", "Last edited")
         .addOption("name", "Name")
         .setValue(this.plugin.settings.sortBy)
-        .onChange(async (value) => {
-          this.updateSetting("sortBy", value as ExplorerSettings["sortBy"]);
+        .onChange((value) => {
+          void this.updateSetting("sortBy", value as ExplorerSettings["sortBy"]);
         });
     });
 
@@ -52,8 +52,8 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           .setLimits(0, 10, 1)
           .setValue(this.plugin.settings.depth)
           .setDynamicTooltip()
-          .onChange(async (value) => {
-            this.updateSetting("depth", value);
+          .onChange((value) => {
+            void this.updateSetting("depth", value);
           });
       });
 
@@ -64,7 +64,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       .setDesc("Turn off to show all files in a single list.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.usePagination).onChange((value) => {
-          this.updateSetting("usePagination", value);
+          void this.updateSetting("usePagination", value);
           pageSizeSetting?.setDisabled(!value);
         });
       });
@@ -75,24 +75,24 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         text
           .setPlaceholder(String(DEFAULT_SETTINGS.pageSize))
           .setValue(String(this.plugin.settings.pageSize))
-          .onChange(async (value) => {
+          .onChange((value) => {
             const parsed = Number.parseInt(value, 10);
             if (!Number.isNaN(parsed) && parsed > 0) {
-              this.updateSetting("pageSize", parsed);
+              void this.updateSetting("pageSize", parsed);
             }
           });
       });
     pageSizeSetting.setDisabled(!this.plugin.settings.usePagination);
 
     // ===== PLUGIN SETTINGS =====
-    containerEl.createEl("h2", { text: "Plugin settings" });
+    new Setting(containerEl).setName("Plugin settings").setHeading();
 
     new Setting(containerEl)
       .setName("Use glass effect")
       .setDesc("Add a .use-glass class to the explorer root for styling.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.useGlass).onChange((value) => {
-          this.updateSetting("useGlass", value);
+          void this.updateSetting("useGlass", value);
         });
       });
 
@@ -105,7 +105,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         toggle
           .setValue(this.plugin.settings.showUnsupportedFiles)
           .onChange((value) => {
-            this.updateSetting("showUnsupportedFiles", value);
+            void this.updateSetting("showUnsupportedFiles", value);
           });
       });
 
@@ -123,11 +123,11 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           .addOption("desc", "Description")
           .addOption("none", "None")
           .setValue(this.plugin.settings.cardExt)
-          .onChange(async (value) => {
-            this.updateSetting("cardExt", value as ExplorerSettings["cardExt"]);
+          .onChange((value) => {
+            void this.updateSetting("cardExt", value as ExplorerSettings["cardExt"]);
           });
       });
-    containerEl.createEl("h2", { text: "Default display" });
+    new Setting(containerEl).setName("Default display").setHeading();
     containerEl.createEl("p", {
       text: "Visibility defaults for new blocks.",
       cls: "setting-item-description",
@@ -138,7 +138,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       .setDesc("Show folder buttons when available.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.showFolders).onChange((value) => {
-          this.updateSetting("showFolders", value);
+          void this.updateSetting("showFolders", value);
         });
       });
 
@@ -147,7 +147,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       .setDesc("Show note files in the listing.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.showNotes).onChange((value) => {
-          this.updateSetting("showNotes", value);
+          void this.updateSetting("showNotes", value);
         });
       });
 
@@ -156,7 +156,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       .setDesc("Show only .md and .pdf files.")
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.onlyNotes).onChange((value) => {
-          this.updateSetting("onlyNotes", value);
+          void this.updateSetting("onlyNotes", value);
         });
       });
 
@@ -181,12 +181,11 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         toggle
           .setValue(this.plugin.settings.showParentButton)
           .onChange((value) => {
-            this.updateSetting("showParentButton", value);
+            void this.updateSetting("showParentButton", value);
           });
       });
 
     // ===== RESET =====
-    containerEl.createEl("h2", { text: "" }); // spacer
     new Setting(containerEl).addButton((button) => {
       button.setButtonText("Reset all to defaults").onClick(async () => {
         this.plugin.settings = { ...DEFAULT_SETTINGS };

@@ -28,18 +28,20 @@ export function parseSettings(source: string): Partial<ExplorerSettings> {
 					settings.view = value as ExplorerSettings["view"];
 				}
 				break;
-			case "depth":
+			case "depth": {
 				const depthNum = parseInt(value);
 				if (!isNaN(depthNum) && depthNum >= 0 && depthNum <= 10) {
 					settings.depth = depthNum;
 				}
 				break;
-			case "pageSize":
+			}
+			case "pageSize": {
 				const pageSizeNum = parseInt(value);
 				if (!isNaN(pageSizeNum) && pageSizeNum >= 6 && pageSizeNum <= 100) {
 					settings.pageSize = pageSizeNum;
 				}
 				break;
+			}
 			case "usePagination":
 				settings.usePagination = value === "true";
 				break;

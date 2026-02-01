@@ -9,7 +9,7 @@ export function ListView(props: {
   app: App;
   sourcePath: string;
   files: FileInfo[];
-}): JSX.Element {
+}): React.JSX.Element {
   const { app, sourcePath, files } = props;
 
   return (

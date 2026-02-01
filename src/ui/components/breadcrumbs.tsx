@@ -5,7 +5,6 @@ import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
 const HOMEPAGE = "Home.md";
 import { openOrCreateFolderNote } from "src/services/vault-actions";
-import { IconButton } from "./ui/icon-button";
 import { ActionButton } from "./ui/action-button";
 /** Max parts before trimming middle paths with "..." */
 const MAX_VISIBLE_PARTS = 3;
@@ -14,7 +13,7 @@ export function Breadcrumbs(props: {
   app: App;
   sourcePath: string;
   folder: TFolder;
-}): JSX.Element {
+}): React.JSX.Element {
   const { app, sourcePath, folder } = props;
   if (app.workspace.getActiveFile()?.path === HOMEPAGE) return <div></div>;
   const allParts: { name: string; path: string }[] = [];
@@ -27,8 +26,7 @@ export function Breadcrumbs(props: {
   if (Platform.isMobile) {
     const parent = folder?.parent;
     if (!parent) return <></>;
-    const onClickFolder = () => openOrCreateFolderNote(app, parent);
-    return <ActionButton icon="undo-2" onClick={onClickFolder}></ActionButton>;
+    return <ActionButton icon="undo-2" onClick={() => void openOrCreateFolderNote(app, parent)}></ActionButton>;
   }
 
   // Trim: always show first + last 2, collapse middle into "..."

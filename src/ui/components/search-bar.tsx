@@ -7,7 +7,7 @@ export function SearchBar(props: {
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);

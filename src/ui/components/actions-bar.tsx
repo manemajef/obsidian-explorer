@@ -22,7 +22,7 @@ export function ActionsBar(props: {
   sourcePath: string;
   folder: TFolder;
   showParentButton: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const {
     onOpenSettings,
     onNewFolder,
@@ -47,7 +47,7 @@ export function ActionsBar(props: {
         {parent && showParentButton && (
           <ActionButton
             icon="undo-2"
-            onClick={() => openOrCreateFolderNote(app, parent)}
+            onClick={() => void openOrCreateFolderNote(app, parent)}
           ></ActionButton>
         )}
         <ActionButton icon="settings-2" onClick={onOpenSettings} />

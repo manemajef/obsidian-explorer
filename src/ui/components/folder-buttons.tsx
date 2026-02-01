@@ -7,7 +7,7 @@ export function FolderButtons(props: {
   app: App;
   sourcePath: string;
   folderInfos: FolderInfo[];
-}): JSX.Element {
+}): React.JSX.Element {
   const { app, sourcePath, folderInfos } = props;
 
   const openOrCreateFolderNote = async (
@@ -16,7 +16,7 @@ export function FolderButtons(props: {
   ): Promise<void> => {
     const existingNote = folderInfo.folderNote;
     if (existingNote) {
-      app.workspace.openLinkText(
+      void app.workspace.openLinkText(
         existingNote.path,
         sourcePath,
         e.ctrlKey || e.metaKey,
@@ -27,7 +27,7 @@ export function FolderButtons(props: {
     const folderNotePath = `${folderInfo.folder.path}/${folderInfo.folder.name}.md`;
     const existing = app.vault.getAbstractFileByPath(folderNotePath);
     if (existing instanceof TFile) {
-      app.workspace.openLinkText(
+      void app.workspace.openLinkText(
         existing.path,
         sourcePath,
         e.ctrlKey || e.metaKey,
@@ -40,7 +40,7 @@ export function FolderButtons(props: {
         folderNotePath,
         FOLDERNOTE_TEMPLATE,
       );
-      app.workspace.openLinkText(
+      void app.workspace.openLinkText(
         created.path,
         sourcePath,
         e.ctrlKey || e.metaKey,

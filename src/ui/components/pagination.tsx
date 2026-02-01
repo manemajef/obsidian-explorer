@@ -8,9 +8,9 @@ export function Pagination(props: {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const { app, currentPage, totalPages, onPageChange } = props;
-  const isMobile = (app as any).isMobile;
+  const isMobile = (app as App & { isMobile: boolean }).isMobile;
   const page = currentPage;
 
   const useLeftDots = isMobile ? page > 1 : page > 2;

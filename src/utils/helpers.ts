@@ -6,7 +6,7 @@ import { TFile } from "obsidian";
 export function isRtl(text?: string): boolean {
 	let checkText = text || "";
 	if (!checkText) {
-		const activeFile = (window as any).app?.workspace?.getActiveFile();
+		const activeFile = (window as unknown as { app?: { workspace?: { getActiveFile?: () => TFile | null } } }).app?.workspace?.getActiveFile?.();
 		checkText = activeFile?.basename || "";
 	}
 	const rtlRegex = /[\u0590-\u05FF\u0600-\u06FF]/;
