@@ -1,6 +1,7 @@
 
 .explorer-container {
   --g-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.32) 100%);
+  --g-base: rbga(0,0,0,0.01);
   --g-border-base: rgba(0, 0, 0, 0.08);
 
   --g-shadow: 
@@ -9,6 +10,7 @@
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
 
   --g-shine-opacity: 0; /* Hide 45deg shine in light mode */
+
 }
 
 /* ------------------------------------------------------------
@@ -17,7 +19,8 @@
    ------------------------------------------------------------ */
 .theme-dark .explorer-container {
   /* Deep subtle gradient */
-  --g-bg: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.005) 100%);
+  --g-bg: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%);
+  --g-base: rgba(255,255,255,0.01);
 
   
   /* Low opacity border for definition */
@@ -39,19 +42,33 @@
    ------------------------------------------------------------ */
 .glass {
   position: relative;
-  background: var(--g-bg);
+  background: var(--g-bg), var(--g-base);
   border-radius: 99px;
   box-shadow: var(--g-shadow);
   border: 1px solid var(--g-border-base);
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
+  background-color: var(--g-base) !important;
+  background-image: var(--g-bg) !important;
+}
+.glass-surface {
+  /* background-color: var(--g-base) !important; */
+  background: var(--g-bg) !important;
+  box-shadow: var(--g-shadow);
+  border: var(--exolorer-action-border);
+
+}
+
+/* If a glass element is placed inside a .glass-surface wrapper, disable the shine */
+.glass-surface .glass::after {
+  opacity: 0;
 }
 
 /* 
    The Liquid Edge Shine (45deg)
    Only visible in Dark Mode via --g-shine-opacity
 */
-.glass::after {
+ .glass:not(.glass-surface)::after {
   content: "";
   position: absolute;
   inset: -1px;
@@ -67,6 +84,8 @@
     var(--g-shine-color) 100%
   );
   
+
+
   -webkit-mask: 
     linear-gradient(#fff 0 0) content-box, 
     linear-gradient(#fff 0 0);

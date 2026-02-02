@@ -25,7 +25,7 @@ export function Pagination(props: {
 
   return (
     <Group justify="center">
-      <div className="paging-controll">
+      <div className="paging-controll glass-surfface">
         <span
           className="paging-label paging-icon"
           onClick={() => {
