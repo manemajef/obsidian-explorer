@@ -1,181 +1,155 @@
-/* ============================================================
-   Glass — CSS for glass.tsx components.
-   Scoped to .explorer-container.
-   ============================================================ */
-
-/* ---------- Theme tokens ---------- */
 .explorer-container {
-  --glass-bg: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.22),
-    rgba(255,255,255,0.08)
-  );
-  --glass-bg-hover: rgba(0, 0, 0, 0.06);
-  /* --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-border-bottom: rgba(0, 0, 0, 0.12); */
- --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-border-bottom: rgba(0, 0, 0, 0.12);  
---glass-shadow: 0 10px 36px rgba(0, 0, 0, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px
+  --g-bg: linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(0,0,0,0.00) 100%);
 
-    rgba(0, 0, 0, 0.05);
-
-  --glass-shadow-hover: rgba(0, 0, 0, 0.2);
-  --glass-shadow-inset: rgba(255, 255, 255, 0.9);
-  --glass-text: var(--text-normal);
-  --glass-highlight-opacity: 0.85;
-  --glass-shine-color: rgba(255, 255, 255, 0.95);
-  --glass-shine-secondary: rgba(255, 255, 255, 0.6);
-
-  --glass-surface-hi: rgba(255, 255, 255, 0.78);
-  --glass-surface-lo: rgba(255, 255, 255, 0.32);
+  --g-border-base: rgba(0, 0, 0, 0.12);
+  
+  /* crisp white shine */
+  --g-shine-color: rgba(255, 255, 255, 1.0);
+  
+  /* tighter shadow for definition */
+  --g-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
+/* ------------------------------------------------------------
+   Dark Mode
+   Goal: "Item" look applied to "Group". 
+   Subtle, liquid, no "warped metal ring".
+   ------------------------------------------------------------ */
 .theme-dark .explorer-container {
-  --glass-bg: rgba(255, 255, 255, 0.01);
-  --glass-bg-hover: rgba(255, 255, 255, 0.07);
-  --glass-border: rgba(255, 255, 255, 0.02);
-  --glass-border-bottom: rgba(255, 255, 255, 0.02);
-  --glass-shadow: rgba(0, 0, 0, 0.5);
-  --glass-shadow: 0 10px 36px rgba(0, 0, 0, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 -1px 2px
-
-    rgba(0, 0, 0, 0.05);
-  --glass-shadow-hover: rgba(0, 0, 0, 0.6);
-  --glass-shadow-inset: rgba(255, 255, 255, 0.08);
-  --glass-text: var(--text-normal);
-  --glass-highlight-opacity: 0.15;
-  --glass-shine-color: rgba(255, 255, 255, 0.18);
-  --glass-shine-secondary: rgba(255, 255, 255, 0.08);
-  --glass-surface-hi: rgba(255, 255, 255, 0.04);
-  --glass-surface-lo: rgba(255, 255, 255, 0.01);
+  /* Very faint background, mostly reliance on blur (if we had it) and shine */
+  --g-bg: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.005) 100%);
+  /* Extremely subtle border to avoid the "outline" look */
+  --g-border-base: rgba(255, 255, 255, 0.04);
+  /* Moderate shine, enough to be liquid but not metallic */
+  --g-shine-color: rgba(255, 255, 255, 0.22);
+  --g-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-/* ---------- Base glass surface ---------- */
+/* ------------------------------------------------------------
+   Base Glass Component
+   ------------------------------------------------------------ */
 .glass {
   position: relative;
-  color: var(--glass-text);
-  background:
-    linear-gradient(
-      135deg,
-      var(--glass-surface-hi),
-      var(--glass-surface-lo)
-    ),
-    var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-bottom-color: var(--glass-border-bottom);
-  isolation: isolate;
+  background: var(--g-bg);
+  border-radius: 99px;
+  box-shadow: var(--g-shadow);
+  border: 1px solid var(--g-border-base);
+  
+  /* Scale effect on hover (User liked this) */
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
   will-change: transform;
-  transition:
-    background 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease;
-  box-shadow: var(--glass-shadow);
-
 }
 
-/* Specular highlight — top edge shine */
-.glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: var(--glass-highlight-opacity);
-  background: linear-gradient(
-    135deg,
-    var(--glass-shine-color) 0%,
-    var(--glass-shine-secondary) 12%,
-    var(--glass-surface-lo) 30%,
-    transparent 55%
-  );
-  mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
-  will-change: opacity;
-  transform: translateZ(0);
-}
-
-/* Rim light — subtle edge glow */
+/* 
+   The Liquid Edge Shine 
+   Uses a mask to only show the gradient on the border area.
+*/
 .glass::after {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: 1;
+  inset: -1px;
   border-radius: inherit;
-  pointer-events: none;
-  opacity: 0.5;
-  background: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    var(--glass-shine-color) 0%,
-    transparent 60%
+  padding: 1px;
+  
+  /* 
+     Refined Gradient:
+     Keeps the "liquid" feel by having soft fade-ins at corners.
+  */
+  background: linear-gradient(
+    135deg, 
+    var(--g-shine-color) 0%, 
+    transparent 35%, 
+    transparent 65%, 
+    var(--g-shine-color) 100%
   );
-  will-change: opacity;
-  transform: translateZ(0);
+  
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  
+  pointer-events: none;
 }
 
-/* ---------- GlassItem — standalone circle button ---------- */
+/* Hover: simple scale up */
+.glass:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* ------------------------------------------------------------
+   Item (Circle Button)
+   ------------------------------------------------------------ */
 .glass-item {
-  border-radius: 50%;
-  clip-path: inset(0 round 50%);
-  padding: 0.35em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  color: var(--text-normal);
+  
+  /* Reset defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 50%; /* Force circle override */
 }
-
-.glass-item:hover {
-  background: var(--glass-bg-hover);
-  transform: scale(1.06);
-  box-shadow:
-    0 4px 16px var(--glass-shadow-hover),
-    0 2px 6px var(--glass-shadow),
-    inset 0 1px 0 var(--glass-shadow-inset);
+.glass-group-item {
+  color: var(--text-normal) !important;
 }
-
-.glass-item:active {
-  transform: scale(0.95);
-  transition-duration: 0.08s;
-}
-
-.glass-item--active {
-  background: var(--glass-bg-hover);
-  box-shadow: inset 0 1px 3px var(--glass-shadow);
-}
-
-/* ---------- GlassGroup — shared surface for multiple items ---------- */
+/* ------------------------------------------------------------
+   Group (Pill Container)
+   ------------------------------------------------------------ */
 .glass-group {
-  border-radius: 2em;
-  clip-path: inset(0 round 2em);
-  padding: 0.15em 0.5em;
   display: inline-flex;
   align-items: center;
-  gap: 0.5em;
+  padding: 3px;
+  gap: 2px;
+  /* Inherits pill radius from .glass */
 }
 
-/* ---------- GlassGroupItem — flat button inside a group ---------- */
+
+/* .theme-light .glass-item {
+  background: linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(0,0,0,0.05) 100%);
+  border-color: rgba(0, 0, 0, 0.15);
+} */
+
+/* ------------------------------------------------------------
+   Group Items (Inner Buttons)
+   ------------------------------------------------------------ */
 .glass-group-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  padding: 0.2em;
-  color: inherit;
-  will-change: transform;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
 }
 
 .glass-group-item:hover {
-  transform: scale(1.06);
+  color: var(--text-normal) !important;
+  background-color: var(--background-modifier-hover);
+  transform: scale(1.1);
 }
 
-.glass-group-item:active {
-  transform: scale(0.95);
-  transition-duration: 0.08s;
+.glass-group-item--active {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-active-hover);
 }
