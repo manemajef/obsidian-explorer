@@ -1,16 +1,16 @@
 .explorer-container {
   --g-bg: linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(0,0,0,0.00) 100%);
 
-  --g-border-base: rgba(0, 0, 0, 0.12);
+  --g-border-base: rgba(0, 0, 0, 0.07);
   
   /* crisp white shine */
-  --g-shine-color: rgba(255, 255, 255, 1.0);
+  --g-shine-color: rgba(255, 255, 255, 0.2);
   
   /* tighter shadow for definition */
   --g-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    0 0px 1px rgba(0, 0, 0, 0.05),
+    0 0px 3px rgba(0, 0, 0, 0.03),
+    inset -1px  0 1px rgba(255, 255, 255, 0.4);
 }
 
 /* ------------------------------------------------------------
