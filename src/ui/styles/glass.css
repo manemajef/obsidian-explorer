@@ -1,33 +1,37 @@
-.explorer-container {
-  --g-bg: linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(0,0,0,0.00) 100%);
 
-  --g-border-base: rgba(0, 0, 0, 0.07);
-  
-  /* crisp white shine */
-  --g-shine-color: rgba(255, 255, 255, 0.2);
-  
-  /* tighter shadow for definition */
+.explorer-container {
+  --g-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.32) 100%);
+  --g-border-base: rgba(0, 0, 0, 0.08);
+
   --g-shadow: 
-    0 0px 1px rgba(0, 0, 0, 0.05),
-    0 0px 3px rgba(0, 0, 0, 0.03),
-    inset -1px  0 1px rgba(255, 255, 255, 0.4);
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+
+  --g-shine-opacity: 0; /* Hide 45deg shine in light mode */
 }
 
 /* ------------------------------------------------------------
    Dark Mode
-   Goal: "Item" look applied to "Group". 
-   Subtle, liquid, no "warped metal ring".
+   Restored to the "Balanced" version you preferred.
    ------------------------------------------------------------ */
 .theme-dark .explorer-container {
-  /* Very faint background, mostly reliance on blur (if we had it) and shine */
+  /* Deep subtle gradient */
   --g-bg: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.005) 100%);
-  /* Extremely subtle border to avoid the "outline" look */
-  --g-border-base: rgba(255, 255, 255, 0.04);
-  /* Moderate shine, enough to be liquid but not metallic */
-  --g-shine-color: rgba(255, 255, 255, 0.22);
+
+  
+  /* Low opacity border for definition */
+  --g-border-base: rgba(255, 255, 255, 0.02);
+  
+  /* Moderate shine opacity (0.22) */
+  --g-shine-color: rgba(255, 255, 255, 0.21);
+  
   --g-shadow: 
     0 4px 10px rgba(0, 0, 0, 0.3),
+    /* inset 0 1px 0 rgba(255, 255, 255, 0.05), */
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+
+  --g-shine-opacity: 1; /* Show 45deg shine in dark mode */
 }
 
 /* ------------------------------------------------------------
@@ -39,15 +43,13 @@
   border-radius: 99px;
   box-shadow: var(--g-shadow);
   border: 1px solid var(--g-border-base);
-  
-  /* Scale effect on hover (User liked this) */
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
 }
 
 /* 
-   The Liquid Edge Shine 
-   Uses a mask to only show the gradient on the border area.
+   The Liquid Edge Shine (45deg)
+   Only visible in Dark Mode via --g-shine-opacity
 */
 .glass::after {
   content: "";
@@ -55,11 +57,8 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
+  opacity: var(--g-shine-opacity);
   
-  /* 
-     Refined Gradient:
-     Keeps the "liquid" feel by having soft fade-ins at corners.
-  */
   background: linear-gradient(
     135deg, 
     var(--g-shine-color) 0%, 
@@ -73,18 +72,16 @@
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  
   pointer-events: none;
 }
 
-/* Hover: simple scale up */
 .glass:hover {
   transform: scale(1.05);
   z-index: 10;
 }
 
 /* ------------------------------------------------------------
-   Item (Circle Button)
+   Layouts
    ------------------------------------------------------------ */
 .glass-item {
   display: inline-flex;
@@ -94,37 +91,27 @@
   height: 32px;
   cursor: pointer;
   color: var(--text-normal);
-  
-  /* Reset defaults */
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
   padding: 0;
-  border-radius: 50%; /* Force circle override */
+  border-radius: 50%;
 }
+
 .glass-group-item {
   color: var(--text-normal) !important;
 }
-/* ------------------------------------------------------------
-   Group (Pill Container)
-   ------------------------------------------------------------ */
 .glass-group {
   display: inline-flex;
+  background: transparent;
   align-items: center;
   padding: 3px;
   gap: 2px;
-  /* Inherits pill radius from .glass */
 }
-
-
 /* .theme-light .glass-item {
   background: linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(0,0,0,0.05) 100%);
   border-color: rgba(0, 0, 0, 0.15);
 } */
-
-/* ------------------------------------------------------------
-   Group Items (Inner Buttons)
-   ------------------------------------------------------------ */
 .glass-group-item {
   display: inline-flex;
   align-items: center;
@@ -137,19 +124,18 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0;
-  margin: 0;
+    appearance: none;
+ -webkit-appearance: none;
+    padding: 0;
 }
 
 .glass-group-item:hover {
   color: var(--text-normal) !important;
-  background-color: var(--background-modifier-hover);
+  /* background-color: var(--background-modifier-hover); */
   transform: scale(1.1);
 }
 
 .glass-group-item--active {
   color: var(--text-normal);
-  background-color: var(--background-modifier-active-hover);
+  /* background-color: var(--background-modifier-active-hover); */
 }
