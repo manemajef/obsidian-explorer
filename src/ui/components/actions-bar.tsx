@@ -1,7 +1,6 @@
 import React from "react";
 import { Search } from "./search";
-import { IconButton } from "./ui/icon-button";
-import { ActionButton, ActionGroup } from "./ui/action-button";
+import { GlassItem, GlassGroup, GlassGroupItem } from "./ui/glass";
 import { Group, Separator } from "./ui/layout";
 import { App, TFolder } from "obsidian";
 import { openOrCreateFolderNote } from "src/services/vault-actions";
@@ -45,40 +44,19 @@ export function ActionsBar(props: {
     >
       <Group gap={2} className="action-left">
         {parent && showParentButton && (
-          <ActionButton
+          <GlassItem
             icon="undo-2"
             onClick={() => void openOrCreateFolderNote(app, parent)}
-          ></ActionButton>
+          />
         )}
-        <ActionButton icon="settings-2" onClick={onOpenSettings} />
+        <GlassItem icon="settings-2" onClick={onOpenSettings} />
       </Group>
 
-      {/* Breadcrumbs shelved — uncomment when ready to ship
-      {!searchMode &&
-        USE_BREADCRUMBS &&
-        showBreadcrumbs &&
-        !Platform.isMobile &&
-        parent && (
-          <>
-            <Separator />
-            <div className="action-mid">
-              <div className="actions-breadcrumbs">
-                <Breadcrumbs
-                  app={app}
-                  sourcePath={sourcePath}
-                  folder={folder}
-                />
-              </div>
-            </div>
-          </>
-        )}
-      */}
-
       <Group className="action-right">
-        <ActionGroup className="action-add-btns">
-          <IconButton name="folder-plus" onClick={onNewFolder} />
-          <IconButton name="file-plus-2" onClick={onNewNote} />
-        </ActionGroup>
+        <GlassGroup className="action-add-btns">
+          <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
+        </GlassGroup>
         <Separator />
         <Search
           searchMode={searchMode}

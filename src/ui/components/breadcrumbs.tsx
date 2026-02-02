@@ -5,7 +5,7 @@ import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
 const HOMEPAGE = "Home.md";
 import { openOrCreateFolderNote } from "src/services/vault-actions";
-import { ActionButton } from "./ui/action-button";
+import { GlassItem } from "./ui/glass";
 /** Max parts before trimming middle paths with "..." */
 const MAX_VISIBLE_PARTS = 3;
 const CURR_IS_VISIBLE = false;
@@ -26,7 +26,12 @@ export function Breadcrumbs(props: {
   if (Platform.isMobile) {
     const parent = folder?.parent;
     if (!parent) return <></>;
-    return <ActionButton icon="undo-2" onClick={() => void openOrCreateFolderNote(app, parent)}></ActionButton>;
+    return (
+      <GlassItem
+        icon="undo-2"
+        onClick={() => void openOrCreateFolderNote(app, parent)}
+      />
+    );
   }
 
   // Trim: always show first + last 2, collapse middle into "..."

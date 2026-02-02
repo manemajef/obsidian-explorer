@@ -53,7 +53,12 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       totalPages: total,
       usePaging: normalSortedFiles.length > pageSize,
     };
-  }, [normalSortedFiles, settings.pageSize, settings.usePagination, normalPage]);
+  }, [
+    normalSortedFiles,
+    settings.pageSize,
+    settings.usePagination,
+    normalPage,
+  ]);
 
   // Reset normal page if out of bounds
   useEffect(() => {
@@ -95,7 +100,9 @@ export function useExplorerState(options: UseExplorerStateOptions) {
 
     void getAllFiles()
       .then((files) => setAllFiles(files))
-      .catch(() => { /* search load failed silently */ })
+      .catch(() => {
+        /* search load failed silently */
+      })
       .finally(() => {
         loadingRef.current = false;
         setIsSearchLoading(false);
