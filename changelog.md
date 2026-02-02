@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-02-02 - Glass UI Components
+
+**Task:** Replace old action buttons with new self-contained glass components. New glass effect system with specular highlights, theme-aware tokens, Obsidian-compatible compositing.
+**Files:**
+- `src/ui/components/ui/glass.tsx` (new) — `GlassItem`, `GlassGroup`, `GlassGroupItem` with built-in icon rendering via `setIcon`
+- `src/ui/styles/glass.css` (new) — glass surface, theme tokens scoped to `.explorer-container`, pseudo-element highlights
+- `src/ui/styles/index.css` — added `glass.css` import, removed dead `shared.css` import
+- `src/ui/components/actions-bar.tsx` — uses glass components directly (no middlemen)
+- `src/ui/components/search.tsx` — uses `GlassItem` directly
+- `src/ui/components/breadcrumbs.tsx` — uses `GlassItem` directly
+- `src/ui/components/ui/action-button.tsx` → moved to `deprecated/` (reference only)
+- `src/ui/components/ui/icon-button.tsx` → moved to `deprecated/` (reference only)
+
+Details → `notes/changes/2026-02-02-glass-components.md`
+
+---
+
 ## 2026-02-01 - Shelve Breadcrumbs & Independent Parent Button
 
 **Task:** Gate breadcrumbs behind dev flag (commented out), give parent-folder button its own `showParentButton` plugin setting.

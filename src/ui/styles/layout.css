@@ -1,0 +1,101 @@
+/* ────────────────────────────────
+   Bar container
+──────────────────────────────── */
+
+.bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ────────────────────────────────
+   Fixed item
+──────────────────────────────── */
+
+.bar-item {
+  display: flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+
+/* ────────────────────────────────
+   Flexible spring
+──────────────────────────────── */
+
+.bar-spring {
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 1;
+  flex-basis: 0;
+  min-width: 0; /* critical for shrink */
+}
+
+/* ===== Separator & Divider ===== */
+.explorer-separator {
+  min-width: 1px;
+  min-height: max-content;
+  margin: 0 1.5em;
+  border-inline-start: 1px solid var(--background-modifier-border);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.explorer-divider {
+  display: block;
+  width: 100%;
+  min-height: 0.5em;
+  margin: .25em 0;
+}
+
+/* ===== Mid-shrink: general container where left/right are fixed and mid is flexible ===== */
+.mid-shrink-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.mid-shrink-start {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  justify-content: space-between;
+}
+.mid-shrink-mid {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-inline-end: 1em;
+}
+.mid-shrink-end {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ===== Grid Layouts ===== */
+.explorer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75em;
+}
+.explorer-folders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+.is-mobile .explorer-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+.explorer-notes-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.is-mobile .explorer-notes-grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.75em;
+}

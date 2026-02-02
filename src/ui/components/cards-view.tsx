@@ -19,10 +19,14 @@ export function CardsView(props: {
       {files.map((fileInfo) => (
         <div key={fileInfo.file.path}>
           <div
-            className="explorer-card"
+            className="explorer-card "
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
-              void app.workspace.openLinkText(fileInfo.file.path, sourcePath, false);
+              void app.workspace.openLinkText(
+                fileInfo.file.path,
+                sourcePath,
+                false,
+              );
             }}
           >
             <div className="explorer-card-header">

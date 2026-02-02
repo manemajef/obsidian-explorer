@@ -1,3 +1,6 @@
+/**
+ * DEPRECATED — kept as reference. Consumers now use glass.tsx directly.
+ */
 import React from "react";
 import { Icon } from "../shared";
 

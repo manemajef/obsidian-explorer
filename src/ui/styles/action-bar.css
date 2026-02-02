@@ -13,6 +13,7 @@
 
 /* ===== Action Bar Layout ===== */
 .action-bar {
+  position: sticky;
   display: flex;
   align-items: center;
   width: 100%;

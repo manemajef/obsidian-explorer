@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { Icon } from "./shared";
+import { Icon } from "../shared";
 
 export function SearchBar(props: {
   searchMode: boolean;

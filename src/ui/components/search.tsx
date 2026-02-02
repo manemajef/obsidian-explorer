@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { ActionButton } from "./ui/action-button";
+import { GlassItem } from "./ui/glass";
 import { Group } from "./ui/layout";
-
 
 export function Search(props: {
   searchMode: boolean;
@@ -21,7 +20,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <ActionButton icon="search" onClick={onSearchToggle} />;
+    return <GlassItem icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -32,19 +31,17 @@ export function Search(props: {
           type="text"
           className="search-input"
           placeholder={
-            Platform.isMobile
-              ? "search"
-              : "use '#' for tags and '@' for folders"
+            Platform.isMobile ? "search" : "use '#' for tags and '@' for folders"
           }
           value={searchQuery}
           onChange={(e) => onSearchInput(e.target.value)}
         />
       </div>
       <div className="search-x-btn">
-        <ActionButton
+        <GlassItem
           icon="x"
           onClick={onSearchToggle}
-          className="cancel-search-btn "
+          className="cancel-search-btn"
         />
       </div>
     </Group>
