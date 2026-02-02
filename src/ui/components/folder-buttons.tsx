@@ -63,7 +63,7 @@ export function FolderButtons(props: {
         return (
           <button
             key={folderNotePath}
-            className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""}`}
+            className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""} explorer-hover-scale`}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               void openOrCreateFolderNote(folderInfo, e);
