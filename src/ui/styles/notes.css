@@ -50,3 +50,17 @@
 .prop-tag svg {
   color: var(--color-red) !important;
 }
+
+/* ===== List View ===== */
+.explorer-list {
+  padding: 0.4em 0.25em;
+  list-style: none;
+  margin-inline-start: 1em;
+  font-size: 0.9em;
+}
+.explorer-list:hover {
+  border-radius: 4px;
+}
+.explorer-list.pinned a {
+  color: var(--color-red) !important;
+}

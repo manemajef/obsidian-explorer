@@ -30,6 +30,30 @@
 .explorer-container {
   scroll-margin-top: 10em;
 }
+/* ===== Grid Layouts ===== */
+.explorer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75em;
+}
+.explorer-folders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  /* margin-bottom: 1em; */
+}
+.is-mobile .explorer-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+.explorer-notes-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: 1em;
+}
+.is-mobile .explorer-notes-grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.75em;
+}
 
 /* ===== Action Button & Action Group (glass surface) ===== */
 .explorer-action,
