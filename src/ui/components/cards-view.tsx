@@ -19,7 +19,7 @@ export function CardsView(props: {
       {files.map((fileInfo) => (
         <div key={fileInfo.file.path}>
           <div
-            className="explorer-card glass-surface glass"
+            className="explorer-card glass-surface glass static"
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               void app.workspace.openLinkText(

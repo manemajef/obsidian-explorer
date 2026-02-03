@@ -6,7 +6,7 @@ import React, {
   useState,
   PropsWithChildren,
 } from "react";
-import "./bar.css";
+// import "./bar.css";
 
 /* ────────────────────────────────
    Context

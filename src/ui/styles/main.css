@@ -59,9 +59,10 @@
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
 }
-.explorer-hover-scale:hover {
+:not(.is-mobile) .explorer-hover-scale:hover {
   transform: scale(1.05);
 }
+
 /* ===== Action Button & Action Group (glass surface) ===== */
 .explorer-action,
 .explorer-action-group {
