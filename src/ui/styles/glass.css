@@ -1,4 +1,5 @@
 
+/* ligh-dark stugff */
 .explorer-container {
   --g-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.32) 100%);
   --g-base: rbga(0,0,0,0.01);
@@ -13,28 +14,29 @@
 
 }
 
-/* ------------------------------------------------------------
-   Dark Mode
-   Restored to the "Balanced" version you preferred.
-   ------------------------------------------------------------ */
+
 .theme-dark .explorer-container {
   /* Deep subtle gradient */
   --g-bg: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%);
   --g-base: rgba(255,255,255,0.01);
-
-  
   /* Low opacity border for definition */
   --g-border-base: rgba(255, 255, 255, 0.02);
-  
   /* Moderate shine opacity (0.22) */
   --g-shine-color: rgba(255, 255, 255, 0.21);
-  
   --g-shadow: 
     0 4px 10px rgba(0, 0, 0, 0.1),
     /* inset 0 1px 0 rgba(255, 255, 255, 0.05), */
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-
   --g-shine-opacity: 1; /* Show 45deg shine in dark mode */
+}
+
+.explorer-container {
+  --explorer-icon-size: 32px;
+  --explorer-group-icon-size: 28px;
+}
+.is-mobile .explorer-container {
+  --explorer-icon-size: 48px;
+  --explorer-group-icon-size: 38px; 
 }
 
 /* ------------------------------------------------------------
@@ -111,8 +113,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: var(--explorer-icon-size);
+  height: var(--explorer-icon-size);
   cursor: pointer;
   color: var(--text-normal);
   appearance: none;
@@ -140,8 +142,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: var(--explorer-group-icon-size);
+  height: var(--explorer-group-icon-size);
   border-radius: 50%;
   color: var(--text-muted);
   background: transparent;

@@ -2,7 +2,7 @@ import React from "react";
 import { Search } from "./search";
 import { GlassItem, GlassGroup, GlassGroupItem } from "./ui/glass";
 import { Group, Separator } from "./ui/layout";
-import { App, TFolder } from "obsidian";
+import { App, Platform, TFolder } from "obsidian";
 import { openOrCreateFolderNote } from "src/services/vault-actions";
 import { Bar } from "./ui/bar";
 import { Breadcrumbs } from "./breadcrumbs";
@@ -62,10 +62,12 @@ export function ActionsBar(props: {
 
           <Bar.Item>
             <Group className="">
-              <GlassGroup className="action-add-btns">
-                <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
-                <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
-              </GlassGroup>
+              {!(searchMode && Platform.isMobile) && (
+                <GlassGroup className="action-add-btns">
+                  <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
+                  <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
+                </GlassGroup>
+              )}
               <Separator />
               <Search
                 searchMode={searchMode}

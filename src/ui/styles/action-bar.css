@@ -56,7 +56,9 @@
   border-radius: 3em;
   color: var(--text-muted);
 }
-
+.is-mobile .actions-search-input {
+  min-width: max-content  !important;
+}
 /* Search active (mobile): stretch input to full width, hide extras */
 .is-mobile #explorer-actions.search-active .action-add-btns,
 .is-mobile #explorer-actions.search-active .explorer-separator {
