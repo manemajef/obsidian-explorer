@@ -5,6 +5,27 @@
 
 ---
 
+## 2026-02-04 - Backend API + Obsidian Bridge Refactor
+
+**Task:** Introduce a backend API/core layer and move Obsidian orchestration out of UI while preserving existing plugin behavior.
+**Files:**
+- `main.ts` — now resolves effective settings via backend resolver and delegates block rendering to `ExplorerBridge`
+- `src/plugin/obsidian/explorer-bridge.tsx` (new) — thin host adapter that wires Obsidian context to backend + UI callbacks
+- `src/backend/explorer-api.ts` (new) — single backend facade for render model building and all vault actions
+- `src/backend/file-listing.ts` (new) — centralized sort/filter/search/pagination computation
+- `src/backend/settings-resolver.ts` (new) — canonical effective settings merge + normalization
+- `src/backend/contracts.ts` (new) — typed backend boundary contracts
+- `src/backend/services/block-settings.ts` (new) — explorer block parser/serializer moved behind backend service
+- `src/ui/hooks/use-explorer-state.ts` — now state-focused and delegates display logic to backend listing
+- `src/ui/components/actions-bar.tsx`, `src/ui/components/folder-buttons.tsx`, `src/ui/components/breadcrumbs.tsx` — no direct service imports; use callbacks from parent
+- `src/services/vault-actions.ts` — `openOrCreateFolderNote` now supports `sourcePath/newLeaf` for correct UI callback flow
+- `src/services/folder-index.ts` — fixed `onlyNotes` filter bug (`BASE` → `pdf`)
+- `src/ui/explorer-view.tsx` — compatibility alias to new bridge
+
+Details → `notes/changes/2026-02-04-backend-api-bridge-refactor.md`
+
+---
+
 ## 2026-02-02 - Glass UI Components
 
 **Task:** Replace old action buttons with new self-contained glass components. New glass effect system with specular highlights, theme-aware tokens, Obsidian-compatible compositing.

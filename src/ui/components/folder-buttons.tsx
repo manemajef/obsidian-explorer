@@ -1,54 +1,12 @@
 import React from "react";
-import { App, Notice, TFile } from "obsidian";
+import { TFolder } from "obsidian";
 import { FolderInfo } from "../../types";
-import { FOLDERNOTE_TEMPLATE } from "../../constants";
 
 export function FolderButtons(props: {
-  app: App;
-  sourcePath: string;
   folderInfos: FolderInfo[];
+  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
 }): React.JSX.Element {
-  const { app, sourcePath, folderInfos } = props;
-
-  const openOrCreateFolderNote = async (
-    folderInfo: FolderInfo,
-    e: React.MouseEvent,
-  ): Promise<void> => {
-    const existingNote = folderInfo.folderNote;
-    if (existingNote) {
-      void app.workspace.openLinkText(
-        existingNote.path,
-        sourcePath,
-        e.ctrlKey || e.metaKey,
-      );
-      return;
-    }
-
-    const folderNotePath = `${folderInfo.folder.path}/${folderInfo.folder.name}.md`;
-    const existing = app.vault.getAbstractFileByPath(folderNotePath);
-    if (existing instanceof TFile) {
-      void app.workspace.openLinkText(
-        existing.path,
-        sourcePath,
-        e.ctrlKey || e.metaKey,
-      );
-      return;
-    }
-
-    try {
-      const created = await app.vault.create(
-        folderNotePath,
-        FOLDERNOTE_TEMPLATE,
-      );
-      void app.workspace.openLinkText(
-        created.path,
-        sourcePath,
-        e.ctrlKey || e.metaKey,
-      );
-    } catch (err) {
-      new Notice(`Failed to create folder note: ${err}`);
-    }
-  };
+  const { folderInfos, onOpenFolderNote } = props;
 
   return (
     <div className="explorer-folders-grid">
@@ -66,7 +24,7 @@ export function FolderButtons(props: {
             className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""} explorer-hover-scale`}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
-              void openOrCreateFolderNote(folderInfo, e);
+              onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
             }}
           >
             <a
@@ -79,7 +37,7 @@ export function FolderButtons(props: {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                void openOrCreateFolderNote(folderInfo, e);
+                onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
               }}
             >
               {linkText}

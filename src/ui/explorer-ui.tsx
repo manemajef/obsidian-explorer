@@ -22,6 +22,7 @@ interface ExplorerUIProps {
   onOpenSettings: () => void;
   onNewFolder: () => void;
   onNewNote: () => void;
+  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
@@ -37,6 +38,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     onOpenSettings,
     onNewFolder,
     onNewNote,
+    onOpenFolderNote,
   } = props;
 
   const {
@@ -72,6 +74,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         app={app}
         sourcePath={sourcePath}
         folder={folder}
+        onOpenFolderNote={onOpenFolderNote}
       />
 
       {effectiveSettings.showFolders &&
@@ -79,9 +82,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         !searchMode && (
           <>
             <FolderButtons
-              app={app}
-              sourcePath={sourcePath}
               folderInfos={folderInfos}
+              onOpenFolderNote={onOpenFolderNote}
             />
             <Divider />
           </>

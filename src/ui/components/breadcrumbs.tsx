@@ -4,7 +4,6 @@ import { isRtl } from "../../utils/helpers";
 import { getFolderNoteForFolder } from "../../utils/file-utils";
 import { Icon, InternalLink } from "./shared";
 const HOMEPAGE = "Home.md";
-import { openOrCreateFolderNote } from "src/services/vault-actions";
 import { GlassItem } from "./ui/glass";
 /** Max parts before trimming middle paths with "..." */
 const MAX_VISIBLE_PARTS = 3;
@@ -13,8 +12,9 @@ export function Breadcrumbs(props: {
   app: App;
   sourcePath: string;
   folder: TFolder;
+  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
 }): React.JSX.Element {
-  const { app, sourcePath, folder } = props;
+  const { app, sourcePath, folder, onOpenFolderNote } = props;
   if (app.workspace.getActiveFile()?.path === HOMEPAGE) return <div></div>;
   const allParts: { name: string; path: string }[] = [];
   let current: TFolder | null = folder;
@@ -29,7 +29,7 @@ export function Breadcrumbs(props: {
     return (
       <GlassItem
         icon="undo-2"
-        onClick={() => void openOrCreateFolderNote(app, parent)}
+        onClick={() => onOpenFolderNote(parent, false)}
       />
     );
   }

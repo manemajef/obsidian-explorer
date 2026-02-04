@@ -1,8 +1,9 @@
 import { Plugin } from "obsidian";
 import { ExplorerSettings } from "./src/types";
 import { DEFAULT_SETTINGS } from "./src/constants";
-import { parseSettings } from "./src/services/settings-parser";
-import { ExplorerView } from "./src/ui/explorer-view";
+import { parseSettings } from "./src/backend/services/block-settings";
+import { resolveEffectiveSettings } from "./src/backend/settings-resolver";
+import { ExplorerBridge } from "./src/plugin/obsidian/explorer-bridge";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 
 export default class ExplorerPlugin extends Plugin {
@@ -13,16 +14,13 @@ export default class ExplorerPlugin extends Plugin {
 		this.addSettingTab(new ExplorerSettingsTab(this.app, this));
 
 		this.registerMarkdownCodeBlockProcessor("explorer", async (source, el, ctx) => {
-			const pluginSettings = this.settings;
 			const blockSettings = parseSettings(source);
-			const effectiveSettings: ExplorerSettings = {
-				...pluginSettings,
-				...blockSettings,
-			};
-
-			// Per-block settings override plugin defaults for this render.
-			const view = new ExplorerView(this.app, el, effectiveSettings, ctx);
-			await view.render();
+			const effectiveSettings = resolveEffectiveSettings(
+				this.settings,
+				blockSettings
+			);
+			const bridge = new ExplorerBridge(this.app, el, effectiveSettings, ctx);
+			await bridge.render();
 		});
 	}
 

@@ -3,7 +3,6 @@ import { Search } from "./search";
 import { GlassItem, GlassGroup, GlassGroupItem } from "./ui/glass";
 import { Group, Separator } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
-import { openOrCreateFolderNote } from "src/services/vault-actions";
 import { Bar } from "./ui/bar";
 import { Breadcrumbs } from "./breadcrumbs";
 
@@ -19,6 +18,7 @@ export function ActionsBar(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchInput: (query: string) => void;
+  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
   app: App;
   sourcePath: string;
   folder: TFolder;
@@ -32,7 +32,9 @@ export function ActionsBar(props: {
     searchQuery,
     onSearchToggle,
     onSearchInput,
+    onOpenFolderNote,
     app,
+    sourcePath,
     folder,
     showParentButton,
   } = props;
@@ -46,7 +48,9 @@ export function ActionsBar(props: {
               {parent && showParentButton && (
                 <GlassItem
                   icon="undo-2"
-                  onClick={() => void openOrCreateFolderNote(app, parent)}
+                  onClick={() => {
+                    if (parent) onOpenFolderNote(parent, false);
+                  }}
                 />
               )}
               <GlassItem icon="settings-2" onClick={onOpenSettings} />
@@ -56,7 +60,12 @@ export function ActionsBar(props: {
 
           <Bar.Spring>
             {USE_BREADCRUMBS && (
-              <Breadcrumbs app={app} folder={folder} sourcePath={folder.path} />
+              <Breadcrumbs
+                app={app}
+                folder={folder}
+                sourcePath={sourcePath}
+                onOpenFolderNote={onOpenFolderNote}
+              />
             )}
           </Bar.Spring>
 
@@ -91,7 +100,9 @@ export function ActionsBar(props: {
         {parent && showParentButton && (
           <GlassItem
             icon="undo-2"
-            onClick={() => void openOrCreateFolderNote(app, parent)}
+            onClick={() => {
+              if (parent) onOpenFolderNote(parent, false);
+            }}
           />
         )}
         <GlassItem icon="settings-2" onClick={onOpenSettings} />

@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
-import { ExplorerSettings, FileInfo } from "../../types";
-import { SUPPORTED_EXTENSIONS } from "../../constants";
-import { getFileInfo, sortFiles, filterFiles } from "../../utils/file-utils";
-
-// Dev toggle: true = sort search results by recent edit, false = keep BFS order (closest first)
-const SORT_SEARCH_BY_RECENT = true;
+import { ExplorerSettings } from "../../types";
+import {
+  computeFileListing,
+  resolveCardFooterMode,
+} from "../../backend/file-listing";
 
 interface UseExplorerStateOptions {
   app: App;
@@ -28,44 +27,25 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     return settings.showFolders ? depthFiles : [...folderNotes, ...depthFiles];
   }, [depthFiles, folderNotes, settings.showFolders]);
 
-  // Sort by user preference (operates on TFile[] directly)
-  const normalSortedFiles = useMemo(
-    () => sortFiles(app, normalSourceFiles, settings.sortBy),
-    [app, normalSourceFiles, settings.sortBy],
+  const normalListing = useMemo(
+    () =>
+      computeFileListing({
+        app,
+        files: normalSourceFiles,
+        settings,
+        query: "",
+        page: normalPage,
+        sortBy: settings.sortBy,
+      }),
+    [app, normalSourceFiles, settings, normalPage],
   );
-
-  // Paginate normal view
-  const normalPaginated = useMemo(() => {
-    if (!settings.usePagination) {
-      return {
-        files: normalSortedFiles,
-        totalPages: 1,
-        usePaging: false,
-      };
-    }
-
-    const pageSize = settings.pageSize;
-    const total = Math.ceil(normalSortedFiles.length / pageSize);
-    const start = normalPage * pageSize;
-
-    return {
-      files: normalSortedFiles.slice(start, start + pageSize),
-      totalPages: total,
-      usePaging: normalSortedFiles.length > pageSize,
-    };
-  }, [
-    normalSortedFiles,
-    settings.pageSize,
-    settings.usePagination,
-    normalPage,
-  ]);
 
   // Reset normal page if out of bounds
   useEffect(() => {
-    if (normalPage > 0 && normalPage >= normalPaginated.totalPages) {
-      setNormalPage(Math.max(normalPaginated.totalPages - 1, 0));
+    if (normalPage > 0 && normalPage >= normalListing.totalPages) {
+      setNormalPage(Math.max(normalListing.totalPages - 1, 0));
     }
-  }, [normalPage, normalPaginated.totalPages]);
+  }, [normalPage, normalListing.totalPages]);
 
   // =============================================================================
   // SEARCH STATE (completely separate from normal view)
@@ -109,89 +89,36 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       });
   }, [searchMode, allFiles, getAllFiles]);
 
-  // Filter all files by extension settings
-  const filteredAllFiles = useMemo(() => {
-    if (!allFiles) return [];
-
-    if (settings.onlyNotes) {
-      return allFiles.filter(
-        (f) => f.extension === "md" || f.extension === "pdf",
-      );
-    }
-    if (!settings.showUnsupportedFiles) {
-      return allFiles.filter((f) =>
-        SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()),
-      );
-    }
-    return allFiles;
-  }, [allFiles, settings.onlyNotes, settings.showUnsupportedFiles]);
-
-  // Sort search results (operates on TFile[] directly)
-  const searchSortedFiles = useMemo(() => {
-    if (SORT_SEARCH_BY_RECENT) {
-      return sortFiles(app, filteredAllFiles, "edited");
-    }
-    return filteredAllFiles;
-  }, [app, filteredAllFiles]);
-
-  // Filter by query, then paginate (operates on TFile[])
-  const searchPaginated = useMemo(() => {
-    const filtered = debouncedQuery
-      ? filterFiles(app, searchSortedFiles, debouncedQuery)
-      : searchSortedFiles;
-
-    if (!settings.usePagination) {
-      return {
-        files: filtered,
-        totalPages: 1,
-        usePaging: false,
-      };
-    }
-
-    const pageSize = settings.pageSize;
-    const total = Math.ceil(filtered.length / pageSize);
-    const start = searchPage * pageSize;
-
-    return {
-      files: filtered.slice(start, start + pageSize),
-      totalPages: total,
-      usePaging: filtered.length > pageSize,
-    };
-  }, [
-    app,
-    searchSortedFiles,
-    debouncedQuery,
-    settings.pageSize,
-    settings.usePagination,
-    searchPage,
-  ]);
+  const searchListing = useMemo(
+    () =>
+      computeFileListing({
+        app,
+        files: allFiles ?? [],
+        settings,
+        query: debouncedQuery,
+        page: searchPage,
+        // Keep current behavior: search results are ranked by recent edit.
+        sortBy: "edited",
+      }),
+    [app, allFiles, settings, debouncedQuery, searchPage],
+  );
 
   // Reset search page if out of bounds
   useEffect(() => {
-    if (searchPage > 0 && searchPage >= searchPaginated.totalPages) {
-      setSearchPage(Math.max(searchPaginated.totalPages - 1, 0));
+    if (searchPage > 0 && searchPage >= searchListing.totalPages) {
+      setSearchPage(Math.max(searchListing.totalPages - 1, 0));
     }
-  }, [searchPage, searchPaginated.totalPages]);
+  }, [searchPage, searchListing.totalPages]);
 
   // =============================================================================
   // UNIFIED OUTPUT (switch between normal and search)
   // =============================================================================
-  // Convert only the displayed page of TFiles to FileInfo (cheap: ~pageSize items)
-  const displayedTFiles = searchMode
-    ? searchPaginated.files
-    : normalPaginated.files;
-
-  const displayedFiles = useMemo<FileInfo[]>(
-    () => displayedTFiles.map((f) => getFileInfo(app, f)),
-    [app, displayedTFiles],
-  );
-
   const totalPages = searchMode
-    ? searchPaginated.totalPages
-    : normalPaginated.totalPages;
+    ? searchListing.totalPages
+    : normalListing.totalPages;
   const usePaging = searchMode
-    ? searchPaginated.usePaging
-    : normalPaginated.usePaging;
+    ? searchListing.usePaging
+    : normalListing.usePaging;
   const currentPage = searchMode ? searchPage : normalPage;
 
   const setCurrentPage = useCallback(
@@ -208,10 +135,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   // =============================================================================
   // CARD EXTENSION
   // =============================================================================
-  const extForCard = useMemo(() => {
-    if (settings.cardExt !== "default") return settings.cardExt;
-    return settings.depth > 0 ? "folder" : "ctime";
-  }, [settings.cardExt, settings.depth]);
+  const extForCard = useMemo(() => resolveCardFooterMode(settings), [settings]);
 
   // =============================================================================
   // ACTIONS
@@ -261,7 +185,9 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     setCurrentPage,
 
     // Computed (unified - switches based on mode)
-    pageFileInfos: displayedFiles,
+    pageFileInfos: searchMode
+      ? searchListing.pageFileInfos
+      : normalListing.pageFileInfos,
     totalPages,
     usePaging,
     extForCard,

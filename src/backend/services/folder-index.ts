@@ -1,7 +1,7 @@
 import { App, TFile, TFolder } from "obsidian";
-import { ExplorerSettings, FolderInfo } from "../types";
-import { EXCLUDED_EXTENSIONS, SUPPORTED_EXTENSIONS } from "../constants";
-import { isFolderNote, getFolderNoteForFolder } from "../utils/file-utils";
+import { ExplorerSettings, FolderInfo } from "../../types";
+import { EXCLUDED_EXTENSIONS, SUPPORTED_EXTENSIONS } from "../../constants";
+import { isFolderNote, getFolderNoteForFolder } from "../../utils/file-utils";
 
 export type GetAllContentOptions = {
   onBatch?: (batch: TFile[]) => void;
@@ -104,7 +104,7 @@ export class FolderIndex {
     if (settings.onlyNotes) {
       // Strict: only notes and PDFs
       files = files.filter(
-        (f) => f.extension === "md" || f.extension === "BASE",
+        (f) => f.extension === "md" || f.extension === "pdf",
       );
     } else if (!settings.showUnsupportedFiles) {
       // Default: show content files, hide code files
