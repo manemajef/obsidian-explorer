@@ -39,6 +39,23 @@ export function ActionsBar(props: {
     showParentButton,
   } = props;
   const parent = folder?.parent;
+  if (Platform.isMobile && searchMode)
+    return (
+      <div id="explorer-actions">
+        <Bar>
+          <Bar.Spring />
+          <Bar.Item>
+            <Search
+              searchMode={searchMode}
+              searchQuery={searchQuery}
+              onSearchToggle={onSearchToggle}
+              onSearchInput={onSearchInput}
+            />
+          </Bar.Item>
+          <Bar.Spring />
+        </Bar>
+      </div>
+    );
   return (
     <div id="explorer-actions">
       <Bar>
