@@ -6,6 +6,5 @@
 	"description": "A file explorer view with card and list views. Displays folder contents with sorting, pagination, and search.",
 	"author": "manemajef",
 	"authorUrl": "https://github.com/manemajef",
-	"fundingUrl": "",
 	"isDesktopOnly": false
 }
