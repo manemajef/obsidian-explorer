@@ -1,17 +1,14 @@
 import { SUPPORTED_EXTENSIONS } from "../constants";
 import { BlockSettings } from "../settings/schema";
 import { filterFiles, getFileInfo, sortFiles } from "../utils/file-utils";
-import {
-  ComputeFileListingInput,
-  ComputeFileListingOutput,
-} from "./contracts";
+import { ComputeFileListingInput, ComputeFileListingOutput } from "./contracts";
 
 function applyFileVisibilityRules(
   files: ComputeFileListingInput["files"],
   settings: BlockSettings,
 ) {
   if (settings.onlyNotes) {
-    return files.filter((f) => f.extension === "md" || f.extension === "pdf");
+    return files.filter((f) => f.extension === "md");
   }
 
   if (!settings.showUnsupportedFiles) {
@@ -30,7 +27,9 @@ export function computeFileListing(
 
   const visibleFiles = applyFileVisibilityRules(files, settings);
   const sortedFiles = sortFiles(app, visibleFiles, sortBy);
-  const queriedFiles = query ? filterFiles(app, sortedFiles, query) : sortedFiles;
+  const queriedFiles = query
+    ? filterFiles(app, sortedFiles, query)
+    : sortedFiles;
 
   if (!settings.usePagination) {
     return {
