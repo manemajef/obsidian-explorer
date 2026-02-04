@@ -5,7 +5,7 @@ import {
   TFile,
   TFolder,
 } from "obsidian";
-import { ExplorerSettings } from "../../types";
+import { BlockSettings } from "../../settings/schema";
 import { FOLDERNOTE_TEMPLATE } from "../../constants";
 import { serializeSettings } from "./block-settings";
 import { promptForName } from "../../ui/modals/prompt-modal";
@@ -13,8 +13,11 @@ import { promptForName } from "../../ui/modals/prompt-modal";
 
 // ===== HELPERS =====
 
-function formatExplorerBlock(settings: ExplorerSettings): string {
-  const yaml = serializeSettings(settings);
+function formatExplorerBlock(
+  settings: BlockSettings,
+  defaultSettings: BlockSettings,
+): string {
+  const yaml = serializeSettings(settings, defaultSettings);
   return yaml ? `\`\`\`explorer\n${yaml}\n\`\`\`` : "```explorer\n```";
 }
 
@@ -25,12 +28,13 @@ export async function updateExplorerBlock(
   container: HTMLElement,
   ctx: MarkdownPostProcessorContext,
   sourcePath: string,
-  settings: ExplorerSettings,
+  defaultSettings: BlockSettings,
+  settings: BlockSettings,
 ): Promise<void> {
   const file = app.vault.getAbstractFileByPath(sourcePath);
   if (!(file instanceof TFile)) return;
 
-  const newBlock = formatExplorerBlock(settings);
+  const newBlock = formatExplorerBlock(settings, defaultSettings);
   const content = await app.vault.read(file);
   const sectionInfo = ctx.getSectionInfo(container);
 

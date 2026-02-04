@@ -1,5 +1,5 @@
 import { SUPPORTED_EXTENSIONS } from "../constants";
-import { ExplorerSettings } from "../types";
+import { BlockSettings } from "../settings/schema";
 import { filterFiles, getFileInfo, sortFiles } from "../utils/file-utils";
 import {
   ComputeFileListingInput,
@@ -8,7 +8,7 @@ import {
 
 function applyFileVisibilityRules(
   files: ComputeFileListingInput["files"],
-  settings: ExplorerSettings,
+  settings: BlockSettings,
 ) {
   if (settings.onlyNotes) {
     return files.filter((f) => f.extension === "md" || f.extension === "pdf");
@@ -53,11 +53,10 @@ export function computeFileListing(
   };
 }
 
-export function resolveCardFooterMode(settings: ExplorerSettings): string {
+export function resolveCardFooterMode(settings: BlockSettings): string {
   if (settings.cardExt !== "default") {
     return settings.cardExt;
   }
 
   return settings.depth > 0 ? "folder" : "ctime";
 }
-

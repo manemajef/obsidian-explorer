@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-02-04 - Settings Schema Split (Block vs Plugin)
+
+**Task:** Separate block settings from plugin settings, move defaults under `defaultBlockSettings`, and make parser/serializer schema-driven.
+**Files:**
+- `src/settings/schema.ts` (new) — canonical block-settings schema, defaults, coercion, plugin-settings normalization (with legacy migration), UI metadata, and surface helpers
+- `main.ts` — plugin now stores `PluginSettings`; code blocks resolve from `settings.defaultBlockSettings`
+- `src/backend/services/block-settings.ts` — parser/serializer now schema-driven and supports custom default baseline
+- `src/backend/settings-resolver.ts`, `src/backend/contracts.ts`, `src/backend/explorer-api.ts` — backend typed to `BlockSettings` and block-default aware updates
+- `src/backend/services/vault-actions.ts` — block update now serializes only overrides vs plugin defaults
+- `src/ui/settings-tab.ts`, `src/ui/modals/settings-modal.ts` — controls are generated from schema metadata (surface + section + order + labels), no hardcoded field list
+- `src/ui/explorer-ui.tsx`, `src/ui/hooks/*`, `src/backend/file-listing.ts`, `src/backend/services/folder-index.ts` — switched to `BlockSettings` type
+- `src/constants.ts`, `src/types.ts` — removed legacy flat settings type/default
+
+Details → `notes/changes/2026-02-04-settings-schema-split.md`
+
+---
+
 ## 2026-02-04 - Backend API + Obsidian Bridge Refactor
 
 **Task:** Introduce a backend API/core layer and move Obsidian orchestration out of UI while preserving existing plugin behavior.

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { App, TFile } from "obsidian";
-import { ExplorerSettings } from "../../types";
+import { BlockSettings } from "../../settings/schema";
 import { computeFileListing, resolveCardFooterMode } from "../../backend/file-listing";
 import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
@@ -9,7 +9,7 @@ interface UseExplorerStateOptions {
   app: App;
   depthFiles: TFile[];
   folderNotes: TFile[];
-  settings: ExplorerSettings;
+  settings: BlockSettings;
   getAllFiles: () => Promise<TFile[]>;
 }
 

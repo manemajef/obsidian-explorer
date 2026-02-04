@@ -1,20 +1,3 @@
-import { ExplorerSettings } from "./types";
-
-export const DEFAULT_SETTINGS: ExplorerSettings = {
-  sortBy: "oldest",
-  view: "list",
-  depth: 0,
-  pageSize: 15,
-  usePagination: true,
-  onlyNotes: false,
-  showUnsupportedFiles: false,
-  showFolders: true,
-  showBreadcrumbs: true,
-  showParentButton: true,
-  cardExt: "default",
-  showNotes: true,
-  useGlass: true,
-};
 export const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 
 export const EXCLUDED_EXTENSIONS = [

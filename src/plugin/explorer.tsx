@@ -1,31 +1,32 @@
 import React from "react";
 import { createRoot, Root } from "react-dom/client";
-import { App, MarkdownPostProcessorContext, TFolder } from "obsidian";
-import { ExplorerSettings } from "../../types";
-import { isRtl } from "../../utils/helpers";
-import { ExplorerUI } from "../../ui/explorer-ui";
-import { ExplorerSettingsModal } from "../../ui/modals/settings-modal";
-import { promptForName } from "../../ui/modals/prompt-modal";
-import { ExplorerAPI } from "../../backend/explorer-api";
+import { App, MarkdownPostProcessorContext } from "obsidian";
+import { BlockSettings } from "../settings/schema";
+import { isRtl } from "../utils/helpers";
+import { ExplorerUI } from "../ui/explorer-ui";
+import { ExplorerSettingsModal } from "../ui/modals/settings-modal";
+import { ExplorerAPI } from "../backend/explorer-api";
 
 export class ExplorerBridge {
   private app: App;
   private container: HTMLElement;
-  private effectiveSettings: ExplorerSettings;
+  private blockDefaults: BlockSettings;
+  private effectiveSettings: BlockSettings;
   private ctx: MarkdownPostProcessorContext;
   private sourcePath: string;
   private reactRoot: Root | null = null;
-  private currentFolder: TFolder | null = null;
   private api: ExplorerAPI;
 
   constructor(
     app: App,
     container: HTMLElement,
-    effectiveSettings: ExplorerSettings,
+    blockDefaults: BlockSettings,
+    effectiveSettings: BlockSettings,
     ctx: MarkdownPostProcessorContext,
   ) {
     this.app = app;
     this.container = container;
+    this.blockDefaults = blockDefaults;
     this.effectiveSettings = effectiveSettings;
     this.ctx = ctx;
     this.sourcePath = ctx.sourcePath;
@@ -47,7 +48,7 @@ export class ExplorerBridge {
       return;
     }
 
-    this.currentFolder = model.folder;
+    const folderPath = model.folder.path;
     this.renderReact(
       <ExplorerUI
         app={this.app}
@@ -62,8 +63,8 @@ export class ExplorerBridge {
         onOpenFolderNote={(folder, newLeaf) =>
           void this.api.openFolderNote(folder, this.sourcePath, newLeaf)
         }
-        onNewFolder={() => void this.promptAndCreateFolder()}
-        onNewNote={() => void this.promptAndCreateNote()}
+        onNewFolder={() => void this.api.promptAndCreateFolder(folderPath)}
+        onNewNote={() => void this.api.promptAndCreateNote(folderPath)}
       />,
     );
   }
@@ -83,24 +84,10 @@ export class ExplorerBridge {
           container: this.container,
           ctx: this.ctx,
           sourcePath: this.sourcePath,
+          defaultSettings: this.blockDefaults,
           settings: newSettings,
         })
         .then(() => this.render());
     }).open();
   }
-
-  private async promptAndCreateFolder(): Promise<void> {
-    if (!this.currentFolder) return;
-    const name = await promptForName(this.app, "New Folder", "Enter folder name");
-    if (!name) return;
-    await this.api.createFolder(this.currentFolder.path, name);
-  }
-
-  private async promptAndCreateNote(): Promise<void> {
-    if (!this.currentFolder) return;
-    const name = await promptForName(this.app, "New Note", "Enter note name");
-    if (!name) return;
-    await this.api.createNote(this.currentFolder.path, name);
-  }
 }
-

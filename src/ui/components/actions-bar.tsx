@@ -39,88 +39,53 @@ export function ActionsBar(props: {
     showParentButton,
   } = props;
   const parent = folder?.parent;
-  if (true)
-    return (
-      <div id="explorer-actions">
-        <Bar>
-          <Bar.Item>
-            <Group gap={2} className="">
-              {parent && showParentButton && (
-                <GlassItem
-                  icon="undo-2"
-                  onClick={() => {
-                    if (parent) onOpenFolderNote(parent, false);
-                  }}
-                />
-              )}
-              <GlassItem icon="settings-2" onClick={onOpenSettings} />
-            </Group>
-          </Bar.Item>
-          <Bar.Item />
-
-          <Bar.Spring>
-            {USE_BREADCRUMBS && (
-              <Breadcrumbs
-                app={app}
-                folder={folder}
-                sourcePath={sourcePath}
-                onOpenFolderNote={onOpenFolderNote}
+  return (
+    <div id="explorer-actions">
+      <Bar>
+        <Bar.Item>
+          <Group gap={2} className="">
+            {parent && showParentButton && (
+              <GlassItem
+                icon="undo-2"
+                onClick={() => {
+                  if (parent) onOpenFolderNote(parent, false);
+                }}
               />
             )}
-          </Bar.Spring>
+            <GlassItem icon="settings-2" onClick={onOpenSettings} />
+          </Group>
+        </Bar.Item>
+        <Bar.Item />
 
-          <Bar.Item>
-            <Group className="">
-              {!(searchMode && Platform.isMobile) && (
-                <GlassGroup className="action-add-btns">
-                  <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
-                  <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
-                </GlassGroup>
-              )}
-              <Separator />
-              <Search
-                searchMode={searchMode}
-                searchQuery={searchQuery}
-                onSearchToggle={onSearchToggle}
-                onSearchInput={onSearchInput}
-              />
-            </Group>
-          </Bar.Item>
-        </Bar>
-      </div>
-    );
+        <Bar.Spring>
+          {USE_BREADCRUMBS && (
+            <Breadcrumbs
+              app={app}
+              folder={folder}
+              sourcePath={sourcePath}
+              onOpenFolderNote={onOpenFolderNote}
+            />
+          )}
+        </Bar.Spring>
 
-  return (
-    <Group
-      id="explorer-actions"
-      justify="between"
-      className={searchMode ? "search-active action-bar" : "action-bar"}
-    >
-      <Group gap={2} className="action-left">
-        {parent && showParentButton && (
-          <GlassItem
-            icon="undo-2"
-            onClick={() => {
-              if (parent) onOpenFolderNote(parent, false);
-            }}
-          />
-        )}
-        <GlassItem icon="settings-2" onClick={onOpenSettings} />
-      </Group>
-
-      <Group className="action-right">
-        <GlassGroup className="action-add-btns">
-          <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
-          <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
-        </GlassGroup>
-        <Separator />
-        <Search
-          searchMode={searchMode}
-          searchQuery={searchQuery}
-          onSearchToggle={onSearchToggle}
-          onSearchInput={onSearchInput}
-        />
-      </Group>
-    </Group>
+        <Bar.Item>
+          <Group className="">
+            {!(searchMode && Platform.isMobile) && (
+              <GlassGroup className="action-add-btns">
+                <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
+                <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
+              </GlassGroup>
+            )}
+            <Separator />
+            <Search
+              searchMode={searchMode}
+              searchQuery={searchQuery}
+              onSearchToggle={onSearchToggle}
+              onSearchInput={onSearchInput}
+            />
+          </Group>
+        </Bar.Item>
+      </Bar>
+    </div>
   );
 }

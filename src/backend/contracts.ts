@@ -1,9 +1,10 @@
 import { App, MarkdownPostProcessorContext, TFile, TFolder } from "obsidian";
-import { ExplorerSettings, FileInfo, FolderInfo } from "../types";
+import { FileInfo, FolderInfo } from "../types";
+import { BlockSettings } from "../settings/schema";
 
 export interface BuildRenderModelInput {
   sourcePath: string;
-  settings: ExplorerSettings;
+  settings: BlockSettings;
 }
 
 export interface BuildRenderModelOutput {
@@ -17,10 +18,10 @@ export interface BuildRenderModelOutput {
 export interface ComputeFileListingInput {
   app: App;
   files: TFile[];
-  settings: ExplorerSettings;
+  settings: BlockSettings;
   query: string;
   page: number;
-  sortBy: ExplorerSettings["sortBy"];
+  sortBy: BlockSettings["sortBy"];
 }
 
 export interface ComputeFileListingOutput {
@@ -34,6 +35,6 @@ export interface UpdateBlockSettingsInput {
   container: HTMLElement;
   ctx: MarkdownPostProcessorContext;
   sourcePath: string;
-  settings: ExplorerSettings;
+  defaultSettings: BlockSettings;
+  settings: BlockSettings;
 }
-

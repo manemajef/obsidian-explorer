@@ -1,6 +1,7 @@
 import React from "react";
 import { App, TFolder } from "obsidian";
-import { ExplorerSettings, FolderInfo } from "../types";
+import { FolderInfo } from "../types";
+import { BlockSettings } from "../settings/schema";
 import { useExplorerState } from "./hooks/use-explorer-state";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-buttons";
@@ -14,7 +15,7 @@ interface ExplorerUIProps {
   app: App;
   sourcePath: string;
   folder: TFolder;
-  effectiveSettings: ExplorerSettings;
+  effectiveSettings: BlockSettings;
   folderInfos: FolderInfo[];
   depthFiles: TFile[];
   folderNotes: TFile[];

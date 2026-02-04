@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
-import { ExplorerSettings } from "../../types";
+import { BlockSettings } from "../../settings/schema";
 import { computeFileListing } from "../../backend/file-listing";
 import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 
 interface UseSearchStateOptions {
   app: App;
-  settings: ExplorerSettings;
+  settings: BlockSettings;
   getAllFiles: () => Promise<TFile[]>;
 }
 
@@ -108,4 +108,3 @@ export function useSearchState(options: UseSearchStateOptions) {
     setSearchQuery: handleSearchInput,
   };
 }
-

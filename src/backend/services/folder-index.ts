@@ -1,5 +1,6 @@
 import { App, TFile, TFolder } from "obsidian";
-import { ExplorerSettings, FolderInfo } from "../../types";
+import { FolderInfo } from "../../types";
+import { BlockSettings } from "../../settings/schema";
 import { EXCLUDED_EXTENSIONS, SUPPORTED_EXTENSIONS } from "../../constants";
 import { isFolderNote, getFolderNoteForFolder } from "../../utils/file-utils";
 
@@ -98,7 +99,7 @@ export class FolderIndex {
   /**
    * Get files to display based on current settings
    */
-  getFilesToDisplay(settings: ExplorerSettings): TFile[] {
+  getFilesToDisplay(settings: BlockSettings): TFile[] {
     let files = settings.depth > 0 ? this.nestedFiles : this.files;
 
     if (settings.onlyNotes) {

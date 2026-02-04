@@ -1,127 +1,107 @@
-import { DEFAULT_SETTINGS } from "../../constants";
-import { ExplorerSettings } from "../../types";
+import {
+  BLOCK_SETTING_KEYS,
+  BLOCK_SETTINGS_SCHEMA,
+  BlockSettingKey,
+  BlockSettings,
+  DEFAULT_BLOCK_SETTINGS,
+} from "../../settings/schema";
+
+const BLOCK_KEY_TO_SETTING_KEY: Record<string, BlockSettingKey> =
+  BLOCK_SETTING_KEYS.reduce(
+    (acc, key) => {
+      acc[BLOCK_SETTINGS_SCHEMA[key].blockKey] = key;
+      return acc;
+    },
+    {} as Record<string, BlockSettingKey>,
+  );
+
+function parseValue<K extends BlockSettingKey>(
+  key: K,
+  rawValue: string,
+): BlockSettings[K] | undefined {
+  const field = BLOCK_SETTINGS_SCHEMA[key];
+
+  if (field.kind === "boolean") {
+    if (rawValue === "true") return true as BlockSettings[K];
+    if (rawValue === "false") return false as BlockSettings[K];
+    return undefined;
+  }
+
+  if (field.kind === "number") {
+    const parsed = Number.parseInt(rawValue, 10);
+    if (Number.isNaN(parsed) || parsed < field.min || parsed > field.max) {
+      return undefined;
+    }
+    return parsed as BlockSettings[K];
+  }
+
+  if (field.options.includes(rawValue as never)) {
+    return rawValue as BlockSettings[K];
+  }
+
+  return undefined;
+}
+
+function setOverride<K extends BlockSettingKey>(
+  target: Partial<BlockSettings>,
+  key: K,
+  value: BlockSettings[K],
+): void {
+  target[key] = value;
+}
+
+function formatValue<K extends BlockSettingKey>(
+  key: K,
+  value: BlockSettings[K],
+): string {
+  const field = BLOCK_SETTINGS_SCHEMA[key];
+  if (field.kind === "enum") {
+    return `"${String(value)}"`;
+  }
+  return String(value);
+}
 
 /**
  * Parse per-block settings from explorer code block source text.
  */
-export function parseSettings(source: string): Partial<ExplorerSettings> {
-  const settings: Partial<ExplorerSettings> = {};
+export function parseSettings(source: string): Partial<BlockSettings> {
+  const overrides: Partial<BlockSettings> = {};
   const lines = source.trim().split("\n");
 
   for (const line of lines) {
     const match = line.match(/^(\w+):\s*["']?([^"'\n]+)["']?$/);
     if (!match) continue;
 
-    const [, key, value] = match;
+    const [, blockKey, value] = match;
+    const settingKey = BLOCK_KEY_TO_SETTING_KEY[blockKey];
+    if (!settingKey) continue;
 
-    switch (key) {
-      case "sortBy":
-        if (["newest", "oldest", "edited", "name"].includes(value)) {
-          settings.sortBy = value as ExplorerSettings["sortBy"];
-        }
-        break;
-      case "view":
-        if (["cards", "list"].includes(value)) {
-          settings.view = value as ExplorerSettings["view"];
-        }
-        break;
-      case "depth": {
-        const depthNum = parseInt(value, 10);
-        if (!isNaN(depthNum) && depthNum >= 0 && depthNum <= 10) {
-          settings.depth = depthNum;
-        }
-        break;
-      }
-      case "pageSize": {
-        const pageSizeNum = parseInt(value, 10);
-        if (!isNaN(pageSizeNum) && pageSizeNum >= 6 && pageSizeNum <= 100) {
-          settings.pageSize = pageSizeNum;
-        }
-        break;
-      }
-      case "usePagination":
-        settings.usePagination = value === "true";
-        break;
-      case "onlyNotes":
-        settings.onlyNotes = value === "true";
-        break;
-      case "showFolders":
-        settings.showFolders = value === "true";
-        break;
-      case "showBreadcrumbs":
-        settings.showBreadcrumbs = value === "true";
-        break;
-      case "showParentButton":
-        settings.showParentButton = value === "true";
-        break;
-      case "cardExt":
-        if (
-          ["folder", "ctime", "mtime", "desc", "none", "default"].includes(value)
-        ) {
-          settings.cardExt = value as ExplorerSettings["cardExt"];
-        }
-        break;
-      case "showNotes":
-        settings.showNotes = value === "true";
-        break;
-      case "useGlass":
-        settings.useGlass = value === "true";
-        break;
-      case "showUnsupportedFiles":
-        settings.showUnsupportedFiles = value === "true";
-        break;
+    const parsed = parseValue(settingKey, value.trim());
+    if (parsed !== undefined) {
+      setOverride(overrides, settingKey, parsed);
     }
   }
 
-  return settings;
+  return overrides;
 }
 
 /**
- * Serialize settings into block syntax, emitting only non-default values.
+ * Serialize settings into block syntax, emitting only values that differ from defaults.
  */
-export function serializeSettings(settings: ExplorerSettings): string {
+export function serializeSettings(
+  settings: BlockSettings,
+  defaultSettings: BlockSettings = DEFAULT_BLOCK_SETTINGS,
+): string {
   const lines: string[] = [];
 
-  if (settings.sortBy !== DEFAULT_SETTINGS.sortBy) {
-    lines.push(`sortBy: "${settings.sortBy}"`);
-  }
-  if (settings.view !== DEFAULT_SETTINGS.view) {
-    lines.push(`view: "${settings.view}"`);
-  }
-  if (settings.depth !== DEFAULT_SETTINGS.depth) {
-    lines.push(`depth: ${settings.depth}`);
-  }
-  if (settings.pageSize !== DEFAULT_SETTINGS.pageSize) {
-    lines.push(`pageSize: ${settings.pageSize}`);
-  }
-  if (settings.usePagination !== DEFAULT_SETTINGS.usePagination) {
-    lines.push(`usePagination: ${settings.usePagination}`);
-  }
-  if (settings.onlyNotes !== DEFAULT_SETTINGS.onlyNotes) {
-    lines.push(`onlyNotes: ${settings.onlyNotes}`);
-  }
-  if (settings.showUnsupportedFiles !== DEFAULT_SETTINGS.showUnsupportedFiles) {
-    lines.push(`showUnsupportedFiles: ${settings.showUnsupportedFiles}`);
-  }
-  if (settings.showFolders !== DEFAULT_SETTINGS.showFolders) {
-    lines.push(`showFolders: ${settings.showFolders}`);
-  }
-  if (settings.showBreadcrumbs !== DEFAULT_SETTINGS.showBreadcrumbs) {
-    lines.push(`showBreadcrumbs: ${settings.showBreadcrumbs}`);
-  }
-  if (settings.showParentButton !== DEFAULT_SETTINGS.showParentButton) {
-    lines.push(`showParentButton: ${settings.showParentButton}`);
-  }
-  if (settings.cardExt !== DEFAULT_SETTINGS.cardExt) {
-    lines.push(`cardExt: "${settings.cardExt}"`);
-  }
-  if (settings.showNotes !== DEFAULT_SETTINGS.showNotes) {
-    lines.push(`showNotes: ${settings.showNotes}`);
-  }
-  if (settings.useGlass !== DEFAULT_SETTINGS.useGlass) {
-    lines.push(`useGlass: ${settings.useGlass}`);
+  for (const key of BLOCK_SETTING_KEYS) {
+    if (settings[key] === defaultSettings[key]) {
+      continue;
+    }
+
+    const blockKey = BLOCK_SETTINGS_SCHEMA[key].blockKey;
+    lines.push(`${blockKey}: ${formatValue(key, settings[key])}`);
   }
 
   return lines.join("\n");
 }
-

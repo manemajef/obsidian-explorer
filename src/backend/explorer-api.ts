@@ -4,15 +4,18 @@ import {
   createFolderWithNote,
   createNewNote,
   openOrCreateFolderNote,
+  promptAndCreateFolder,
+  promptAndCreateNote,
   updateExplorerBlock,
 } from "./services/vault-actions";
-import { ExplorerSettings } from "../types";
 import {
   BuildRenderModelInput,
   BuildRenderModelOutput,
   UpdateBlockSettingsInput,
 } from "./contracts";
 import { resolveEffectiveSettings } from "./settings-resolver";
+import { parseSettings } from "./services/block-settings";
+import { BlockSettings } from "../settings/schema";
 
 export class ExplorerAPI {
   private app: App;
@@ -22,10 +25,18 @@ export class ExplorerAPI {
   }
 
   resolveSettings(
-    pluginSettings: ExplorerSettings,
-    blockSettings: Partial<ExplorerSettings>,
-  ): ExplorerSettings {
-    return resolveEffectiveSettings(pluginSettings, blockSettings);
+    defaultBlockSettings: BlockSettings,
+    blockSettings: Partial<BlockSettings>,
+  ): BlockSettings {
+    return resolveEffectiveSettings(defaultBlockSettings, blockSettings);
+  }
+
+  resolveSettingsFromSource(
+    source: string,
+    defaultBlockSettings: BlockSettings,
+  ): BlockSettings {
+    const blockSettings = parseSettings(source);
+    return this.resolveSettings(defaultBlockSettings, blockSettings);
   }
 
   async buildRenderModel(
@@ -64,6 +75,7 @@ export class ExplorerAPI {
       input.container,
       input.ctx,
       input.sourcePath,
+      input.defaultSettings,
       input.settings,
     );
   }
@@ -74,6 +86,14 @@ export class ExplorerAPI {
 
   async createNote(basePath: string, name: string): Promise<void> {
     await createNewNote(this.app, basePath, name);
+  }
+
+  async promptAndCreateFolder(basePath: string): Promise<void> {
+    await promptAndCreateFolder(this.app, basePath);
+  }
+
+  async promptAndCreateNote(basePath: string): Promise<void> {
+    await promptAndCreateNote(this.app, basePath);
   }
 
   async openFolderNote(
