@@ -1,6 +1,12 @@
 export type SortBy = "newest" | "oldest" | "edited" | "name";
 export type ViewMode = "cards" | "list";
-export type CardExt = "folder" | "ctime" | "mtime" | "desc" | "none" | "default";
+export type CardExt =
+  | "folder"
+  | "ctime"
+  | "mtime"
+  | "desc"
+  | "none"
+  | "default";
 
 export type SettingsSurface = "plugin" | "block";
 export type SettingsSection = "core" | "behavior" | "display" | "navigation";
@@ -253,13 +259,14 @@ export const BLOCK_SETTINGS_SCHEMA = {
   }),
 } as const;
 
-type InferSettingValue<T> = T extends SettingField<infer V>
-  ? V
-  : T extends NumberSettingField
-    ? number
-    : T extends BooleanSettingField
-      ? boolean
-      : never;
+type InferSettingValue<T> =
+  T extends SettingField<infer V>
+    ? V
+    : T extends NumberSettingField
+      ? number
+      : T extends BooleanSettingField
+        ? boolean
+        : never;
 
 export type BlockSettings = {
   -readonly [K in keyof typeof BLOCK_SETTINGS_SCHEMA]: InferSettingValue<
@@ -282,7 +289,10 @@ export function getSettingKeysForSurface(
 ): BlockSettingKey[] {
   return BLOCK_SETTING_KEYS.filter((key) =>
     BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
-  ).sort((a, b) => BLOCK_SETTINGS_SCHEMA[a].ui.order - BLOCK_SETTINGS_SCHEMA[b].ui.order);
+  ).sort(
+    (a, b) =>
+      BLOCK_SETTINGS_SCHEMA[a].ui.order - BLOCK_SETTINGS_SCHEMA[b].ui.order,
+  );
 }
 
 export function getSettingLabel(
@@ -311,14 +321,18 @@ export function getEnumOptionLabel<K extends BlockSettingKey>(
 }
 
 export function createDefaultBlockSettings(): BlockSettings {
-  const defaults = {} as Record<BlockSettingKey, BlockSettings[BlockSettingKey]>;
+  const defaults = {} as Record<
+    BlockSettingKey,
+    BlockSettings[BlockSettingKey]
+  >;
   for (const key of BLOCK_SETTING_KEYS) {
     defaults[key] = BLOCK_SETTINGS_SCHEMA[key].defaultValue;
   }
   return defaults as BlockSettings;
 }
 
-export const DEFAULT_BLOCK_SETTINGS: BlockSettings = createDefaultBlockSettings();
+export const DEFAULT_BLOCK_SETTINGS: BlockSettings =
+  createDefaultBlockSettings();
 
 export function createDefaultPluginSettings(): PluginSettings {
   return {
@@ -375,7 +389,10 @@ export function coerceBlockSettings(
   fallback: BlockSettings = DEFAULT_BLOCK_SETTINGS,
 ): BlockSettings {
   const source = input ?? {};
-  const normalized = {} as Record<BlockSettingKey, BlockSettings[BlockSettingKey]>;
+  const normalized = {} as Record<
+    BlockSettingKey,
+    BlockSettings[BlockSettingKey]
+  >;
 
   for (const key of BLOCK_SETTING_KEYS) {
     normalized[key] = coerceFieldValue(key, source[key], fallback[key]);
