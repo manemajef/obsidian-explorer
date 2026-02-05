@@ -1,4 +1,14 @@
 /* ===== Folder Cards (buttons) ===== */
+.explorer-folders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  /* margin-bottom: 1em; */
+}
+.is-mobile .explorer-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 2fr));
+}
 .explorer-folder-card {
   box-sizing: border-box;
   cursor: pointer;
@@ -21,6 +31,7 @@
 .is-mobile .explorer-folder-card {
   border: var(--exolorer-action-border);
   border-radius: 16px;
+  padding: 1em .2em;
 }
 /* .theme-dark .use-glass .explorer-folder-card {
   box-shadow: var(--explorer-action-shadow) !important;

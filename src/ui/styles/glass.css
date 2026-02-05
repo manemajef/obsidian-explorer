@@ -30,14 +30,7 @@
   --g-shine-opacity: 1; /* Show 45deg shine in dark mode */
 }
 
-.explorer-container {
-  --explorer-icon-size: 32px;
-  --explorer-group-icon-size: 28px;
-}
-.is-mobile .explorer-container {
-  --explorer-icon-size: 48px;
-  --explorer-group-icon-size: 38px; 
-}
+
 
 /* ------------------------------------------------------------
    Base Glass Component
@@ -61,6 +54,9 @@
 
 }
 
+.glass-shine {
+
+}
 /* If a glass element is placed inside a .glass-surface wrapper, disable the shine */
 .glass-surface .glass::after {
   opacity: 0;
@@ -73,7 +69,7 @@
    The Liquid Edge Shine (45deg)
    Only visible in Dark Mode via --g-shine-opacity
 */
- .glass:not(.glass-surface)::after {
+ .glass:not(.glass-surface):after {
   content: "";
   position: absolute;
   inset: -1px;

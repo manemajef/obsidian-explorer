@@ -93,7 +93,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {effectiveSettings.showNotes && (
         <div className="explorer-files-container">
           <div
-            className={`explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`}
+            className={`explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : `explorer-file-list-container`}`}
           >
             {effectiveSettings.view === "cards" && (
               <CardsView

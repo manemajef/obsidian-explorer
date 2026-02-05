@@ -11,3 +11,37 @@
 .explorer-list.pinned a {
   color: var(--color-red) !important;
 }
+.is-mobile .explorer-list-container {
+  /* background-color: var(--background-primary-alt); */
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--explorer-glass-shadow);
+  padding-bottom: .5em;
+  /* border: 1px solid var(--background-modifier-border); */
+  /* padding: .5em .5em; */
+
+}
+
+.is-mobile .explorer-list {
+  
+  margin-inline: .75em !important;
+  /* margin-inline: 0; */
+  padding: 1.5em 0 .5em .5em;
+}
+
+.is-mobile li.explorer-list + .is-mobile li.explorer-list  {
+border-bottom: 1px solid var(--background-modifier-border);
+}
+.is-mobile li.explorer-list + li.explorer-list {
+  border-top: 1px solid var(--background-modifier-border);
+  
+}
+
+.is-mobile .explorer-list a {
+ color: var(--text-normal) !important;
+
+  font-size: var(--font-text-size);
+
+}
+.is-mobile .explorer-list .list-bullet {
+  display: none;
+}

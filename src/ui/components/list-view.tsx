@@ -13,7 +13,7 @@ export function ListView(props: {
   const { app, sourcePath, files } = props;
 
   return (
-    <>
+    <div className="glass-surface explorer-list-container static radius-md">
       {files.map((fileInfo) => (
         <li
           key={fileInfo.file.path}
@@ -38,6 +38,6 @@ export function ListView(props: {
           </Group>
         </li>
       ))}
-    </>
+    </div>
   );
 }
