@@ -65,6 +65,9 @@
 .glass-surface .glass::after {
   opacity: 0;
 }
+.glass.no-shine {
+  --g-shine-opacity: 0 !important;
+}
 
 /* 
    The Liquid Edge Shine (45deg)

@@ -161,3 +161,9 @@
   max-height: 80vh;
 }
 
+.headless-link  {
+  color: var(--text-normal) !important;
+}
+a.headless-link:hover {
+  text-decoration: none !important;
+}

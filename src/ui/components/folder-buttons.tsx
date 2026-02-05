@@ -19,16 +19,16 @@ export function FolderButtons(props: {
         const linkText = folderInfo.folder.name;
 
         return (
-          <button
+          <div
             key={folderNotePath}
-            className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""} explorer-hover-scale`}
+            className={`explorer-folder-card glass ${isMissing ? " explorer-folder-card--missing" : ""} explorer-hover-scale no-shine`}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
             }}
           >
             <a
-              className={`internal-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
+              className={`internal-link headless-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
               data-href={folderNotePath}
               href={folderNotePath}
               data-tooltip-position="top"
@@ -42,7 +42,7 @@ export function FolderButtons(props: {
             >
               {linkText}
             </a>
-          </button>
+          </div>
         );
       })}
     </div>
