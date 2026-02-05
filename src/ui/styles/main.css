@@ -1,103 +1,81 @@
 .explorer-container {
-  --explorer-glass-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-  /* --explorer-action-shadow: none; */
-  /* --explorer-action-radius: var(--clickable-icon-radius); */
-  /* --explorer-action-transition: none; */
-  --explorer-action-hover: rgba(0, 0, 0, 0.1);
-  /* --exolorer-action-border: none; */
-  --exolorer-action-border-hover: rgba(0,0,0,0.1);
-  --explorer-bg-interactive: rgba(0,0,0,0.005);
-  --explorer-action-shadow: var(--explorer-glass-shadow);
-  --explorer-action-radius: 2em;
-  --explorer-action-transition: all 0.2s ease;
-  --exolorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
-}
-.explorer-container.use-glass {
-  --explorer-action-shadow: var(--explorer-glass-shadow);
-  --explorer-action-radius: 2em;
-  --explorer-action-transition: all 0.2s ease;
-  --exolorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
-}
-.theme-dark .explorer-container.use-glass {
-   --explorer-glass-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-  --explorer-action-border: 1px solid rgba(255, 255, 255, 0.05);
-  --explorer-bg-interactive: rgba(255,255,255,0.025);
-    --explorer-action-hover: rgba(255, 255, 255, 0.05);
-  --explorer-action-border-hover: rgba(255,255,255,0.1);
-  
-}
-.explorer-container {
+  /* Spacing scale */
+  --explorer-space-1: 0.25em;
+  --explorer-space-2: 0.5em;
+  --explorer-space-3: 0.75em;
+  --explorer-space-4: 1em;
+  --explorer-space-5: 1.5em;
+  --explorer-space-6: 2em;
+
+  /* Radius scale */
+  --explorer-radius-sm: 4px;
+  --explorer-radius-md: 6px;
+  --explorer-radius-lg: 0.8em;
+  --explorer-radius-pill: 999px;
+
+  /* Sizes */
   --explorer-icon-size: 32px;
   --explorer-group-icon-size: 28px;
+
+  /* Glass tokens */
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.32) 100%
+  );
+  --glass-base: rgba(0, 0, 0, 0.01);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --glass-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+  --glass-shine-color: rgba(255, 255, 255, 0.35);
+  --glass-shine-opacity: 0;
+  --glass-hover-scale: 1.05;
+
+  /* Interactive surfaces */
+  --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
+  --explorer-action-hover: rgba(0, 0, 0, 0.1);
+  --explorer-action-radius: 2em;
+  --explorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
+  --explorer-action-border-hover: 1px solid rgba(0, 0, 0, 0.1);
+  --explorer-action-shadow:\n    0 2px 8px rgba(0, 0, 0, 0.05),\n    inset 0 1px 0 rgba(255, 255, 255, 0.05),\n    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+
+  /* Cards */
+  --explorer-card-border: 1px solid var(--background-modifier-border);
+  --explorer-card-border-hover: 1px solid var(--background-modifier-border-hover);
+  --explorer-card-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
+
+  scroll-margin-top: 10em;
+}
+
+.theme-dark .explorer-container {
+  --glass-bg: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.005) 100%
+  );
+  --glass-base: rgba(255, 255, 255, 0.01);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.02);
+  --glass-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --glass-shine-color: rgba(255, 255, 255, 0.21);
+  --glass-shine-opacity: 1;
+
+  --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
+  --explorer-action-hover: rgba(255, 255, 255, 0.05);
+  --explorer-action-border: 1px solid rgba(255, 255, 255, 0.05);
+  --explorer-action-border-hover: 1px solid rgba(255, 255, 255, 0.1);
+  --explorer-action-shadow:\n    0 2px 8px rgba(0, 0, 0, 0.05),\n    inset 0 1px 0 rgba(255, 255, 255, 0.1),\n    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .is-mobile .explorer-container {
   --explorer-icon-size: 42px;
-  --explorer-group-icon-size: 38px; 
-}
-.explorer-container {
-  scroll-margin-top: 10em;
+  --explorer-group-icon-size: 38px;
 }
 
-:not(.is-mobile) .explorer-hover-scale:hover {
-  transform: scale(1.05);
-}
-
-/* ===== Badge ===== */
-.explorer-badge {
-  font-size: 0.7em;
-  border-radius: 6px;
-  padding: 0.1em 0.5em;
-}
-.explorer-badge.pin {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.3em;
-  color: var(--color-red);
-}
-.explorer-badge.pin svg {
-  width: 1em !important;
-  height: 1em !important;
-}
-.explorer-badge.ext {
-  opacity: 0.7;
-}
-.explorer-badge.ext-filled {
-  background: var(--background-modifier-border);
-  opacity: 0.7;
-}
-
-
-
-/* ===== Links ===== */
-.explorer-container a {
-  text-decoration: none !important;
-}
-.explorer-container a:hover {
-  text-decoration: underline !important;
-}
-.explorer-container a,
-.explorer-container a * {
-  cursor: pointer;
-}
-
-/* ===== Mobile Adjustments ===== */
 .is-mobile .modal {
   padding-bottom: 2em;
   max-height: 80vh;
-}
-
-.headless-link  {
-  color: var(--text-normal) !important;
-}
-a.headless-link:hover {
-  text-decoration: none !important;
-}
-
-.radius-md {
-  border-radius: var(--radius-md);
 }

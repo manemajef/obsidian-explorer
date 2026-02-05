@@ -30,7 +30,7 @@ export function CardsView(props: {
             }}
           >
             <div className="explorer-card-header">
-              <span className="explorer-card-link">
+              <span>
                 <InternalLink
                   app={app}
                   sourcePath={sourcePath}

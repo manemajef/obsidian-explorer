@@ -1,0 +1,205 @@
+/* ------------------------------------------------------------
+   Glass
+   ------------------------------------------------------------ */
+.glass {
+  position: relative;
+  background: var(--glass-bg), var(--glass-base);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--glass-radius, var(--explorer-radius-pill));
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  background-color: var(--glass-base) !important;
+  background-image: var(--glass-bg) !important;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  opacity: var(--glass-shine-opacity);
+  background: linear-gradient(
+    135deg,
+    var(--glass-shine-color) 0%,
+    transparent 35%,
+    transparent 65%,
+    var(--glass-shine-color) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass:hover {
+  transform: scale(var(--glass-hover-scale));
+  z-index: 10;
+}
+
+.glass.static:hover {
+  transform: scale(1) !important;
+}
+
+.glass-surface {
+  --glass-shine-opacity: 0;
+}
+
+.glass.no-shine {
+  --glass-shine-opacity: 0 !important;
+}
+
+.glass-item {
+  --glass-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--explorer-icon-size);
+  height: var(--explorer-icon-size);
+  cursor: pointer;
+  color: var(--text-normal);
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+}
+
+.glass-group {
+  --glass-radius: var(--explorer-action-radius);
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  padding: 3px;
+  gap: 2px;
+}
+
+.glass-group-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--explorer-group-icon-size);
+  height: var(--explorer-group-icon-size);
+  border-radius: 50%;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+}
+
+.glass-group-item:hover {
+  color: var(--text-normal) !important;
+  transform: scale(1.1);
+}
+
+.glass-group-item--active {
+  color: var(--text-normal);
+}
+
+/* ------------------------------------------------------------
+   Layout helpers
+   ------------------------------------------------------------ */
+.bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.bar-item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+
+.bar-spring {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.explorer-separator {
+  min-width: 1px;
+  min-height: max-content;
+  margin: 0 var(--explorer-space-5);
+  border-inline-start: 1px solid var(--background-modifier-border);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.explorer-divider {
+  display: block;
+  width: 100%;
+  min-height: 0.5em;
+  margin: var(--explorer-space-2) 0;
+}
+
+.explorer-files-container {
+  margin-top: var(--explorer-space-5);
+}
+
+.is-mobile .explorer-files-container {
+  margin-top: var(--explorer-space-5);
+}
+
+/* ------------------------------------------------------------
+   Badges
+   ------------------------------------------------------------ */
+.explorer-badge {
+  font-size: 0.7em;
+  border-radius: var(--explorer-radius-md);
+  padding: 0.1em 0.5em;
+}
+
+.explorer-badge.pin {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.3em;
+  color: var(--color-red);
+}
+
+.explorer-badge.pin svg {
+  width: 1em !important;
+  height: 1em !important;
+}
+
+.explorer-badge.ext {
+  opacity: 0.7;
+}
+
+.explorer-badge.ext-filled {
+  background: var(--background-modifier-border);
+  opacity: 0.7;
+}
+
+/* ------------------------------------------------------------
+   Links
+   ------------------------------------------------------------ */
+.explorer-container a {
+  text-decoration: none !important;
+}
+
+.explorer-container a:hover {
+  text-decoration: underline !important;
+}
+
+.explorer-container a,
+.explorer-container a * {
+  cursor: pointer;
+}
+
+.headless-link {
+  color: var(--text-normal) !important;
+}
+
+a.headless-link:hover {
+  text-decoration: none !important;
+}

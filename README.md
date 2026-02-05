@@ -76,7 +76,6 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 | `showBreadcrumbs` | `true`, `false`                                      | `true`   | Show navigation breadcrumbs                |
 | `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`| `default`| Card footer info                           |
 | `showNotes`       | `true`, `false`                                      | `true`   | Show note files                            |
-| `useGlass`        | `true`, `false`                                      | `true`   | Glass styling (global only)                |
 
 #### Per-block overrides (inside the `explorer` code block)
 

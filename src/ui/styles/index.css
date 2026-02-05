@@ -1,9 +1,7 @@
 @import "./main.css";
-@import "./glass.css";
-@import "./folder-buttons.css";
-@import "./notes.css";
-@import "./list-view.css";
+@import "./shared.css";
+@import "./folder-view.css";
+@import "./notes-card-view.css";
+@import "./notes-list-view.css";
 @import "./pagination.css";
 @import "./action-bar.css";
-@import "./layout.css";
-

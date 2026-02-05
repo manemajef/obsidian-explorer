@@ -88,7 +88,7 @@ export function ActionsBar(props: {
         <Bar.Item>
           <Group className="">
             {!(searchMode && Platform.isMobile) && (
-              <GlassGroup className="action-add-btns">
+              <GlassGroup>
                 <GlassGroupItem icon="folder-plus" onClick={onNewFolder} />
                 <GlassGroupItem icon="file-plus-2" onClick={onNewNote} />
               </GlassGroup>

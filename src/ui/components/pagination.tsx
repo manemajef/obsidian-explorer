@@ -25,7 +25,7 @@ export function Pagination(props: {
 
   return (
     <Group justify="center">
-      <div className="paging-controll glass static glass-surface">
+      <div className="paging-control glass static glass-surface">
         <span
           className="paging-label paging-icon"
           onClick={() => {
@@ -35,7 +35,7 @@ export function Pagination(props: {
           <Icon name="chevron-left" />
         </span>
 
-        <div className="paging-controll-nums">
+        <div className="paging-control-nums">
           {page !== 0 ? (
             <span
               className="paging-num paging-label"

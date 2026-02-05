@@ -41,10 +41,6 @@ export class ExplorerBridge {
 
   async render(): Promise<void> {
     this.container.addClass("explorer-container");
-    this.container.classList.toggle(
-      "use-glass",
-      this.effectiveSettings.useGlass,
-    );
     this.container.setAttribute("dir", isRtl() ? "rtl" : "ltr");
 
     const model = await this.api.buildRenderModel({

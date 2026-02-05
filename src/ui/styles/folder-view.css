@@ -1,0 +1,54 @@
+/* ===== Folder Cards ===== */
+.explorer-folders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--explorer-space-4);
+}
+
+.is-mobile .explorer-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+}
+
+.is-mobile .explorer-folder-card {
+  max-width: 140px !important;
+}
+
+.explorer-folder-card {
+  --glass-radius: var(--explorer-radius-lg);
+  --glass-base: var(--explorer-bg-interactive);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8em var(--explorer-space-6);
+  font-size: 0.9em;
+  transition: 0.15s;
+}
+
+.explorer-folder-card:hover {
+  --glass-base: var(--explorer-action-hover);
+}
+
+.is-mobile .explorer-folder-card {
+  --glass-radius: 16px;
+  padding: 1.15em 0.2em;
+}
+
+.explorer-folder-card--missing {
+  opacity: 0.7;
+}
+
+.explorer-folder-link--missing {
+  color: var(--text-muted);
+}
+
+body.theme-light .explorer-folder-card {
+  --glass-base: var(--background-primary);
+}
+
+.explorer-folder-card a {
+  font-weight: var(--font-semibold);
+  color: var(--text-normal) !important;
+}

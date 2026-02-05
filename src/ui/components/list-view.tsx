@@ -14,7 +14,7 @@ export function ListView(props: {
 
   return (
     <div
-      className={`explorer-list-container static radius-md ${Platform.isMobile ? "glass-surface static" : ""}`}
+      className={`explorer-list-container${Platform.isMobile ? " glass glass-surface static" : ""}`}
     >
       {files.map((fileInfo) => (
         <li

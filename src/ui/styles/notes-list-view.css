@@ -1,0 +1,45 @@
+/* ===== List View ===== */
+.explorer-list {
+  padding: 0.4em var(--explorer-space-1);
+  list-style: none;
+  margin-inline-start: var(--explorer-space-4);
+  font-size: 0.9em;
+}
+
+.explorer-list:hover {
+  border-radius: var(--explorer-radius-sm);
+}
+
+.explorer-list.pinned a {
+  color: var(--color-red) !important;
+}
+
+.explorer-list-container {
+  --glass-radius: var(--explorer-radius-md);
+  --glass-shadow: var(--explorer-action-shadow);
+  --glass-border: none;
+}
+
+.is-mobile .explorer-list-container {
+  margin-top: var(--explorer-space-5);
+  padding-bottom: var(--explorer-space-2);
+}
+
+.is-mobile .explorer-list {
+  margin-inline: var(--explorer-space-4) !important;
+  padding: var(--explorer-space-5) 0 var(--explorer-space-2)
+    var(--explorer-space-2);
+}
+
+.is-mobile li.explorer-list + li.explorer-list {
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.is-mobile .explorer-list a {
+  color: var(--text-normal) !important;
+  font-size: var(--font-text-size);
+}
+
+.is-mobile .explorer-list .list-bullet {
+  display: none;
+}

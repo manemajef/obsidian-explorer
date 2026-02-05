@@ -155,17 +155,6 @@ export const BLOCK_SETTINGS_SCHEMA = {
       },
     },
   }),
-  useGlass: booleanField({
-    label: "Use glass effect",
-    description: "Add a .use-glass class to the explorer root for styling",
-    blockKey: "useGlass",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "behavior",
-      order: 10,
-    },
-  }),
   showUnsupportedFiles: booleanField({
     label: "Show unsupported files",
     description: "Show code files and uncommon formats",

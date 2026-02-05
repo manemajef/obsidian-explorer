@@ -1,51 +1,55 @@
 /* ===== Pagination ===== */
-.paging-controll {
+.paging-control {
   direction: ltr !important;
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: 0.25em 0.5em;
-  border: var(--exolorer-action-border);
-  /* background-color: var(--explorer-bg-interactive); */
-  box-shadow: var(--explorer-action-shadow);
-  border-radius: var(--explorer-action-radius);
+  padding: var(--explorer-space-1) var(--explorer-space-2);
+  --glass-radius: var(--explorer-action-radius);
+  --glass-border: var(--explorer-action-border);
+  --glass-shadow: var(--explorer-action-shadow);
 }
-.is-mobile .paging-controll {
-  padding: .5em .75em;
-  /* background-color: none !important; */
-  /* width: 100%; */
+
+.is-mobile .paging-control {
+  padding: var(--explorer-space-2) var(--explorer-space-3);
   font-size: large;
 }
+
 .paging-label {
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0.6;
-  padding: 0.25em 0.75em;
+  padding: var(--explorer-space-1) var(--explorer-space-3);
   border-radius: var(--explorer-action-radius);
   cursor: pointer;
 }
+
 .paging-label:hover {
   background-color: var(--background-primary-alt);
 }
+
 .paging-label.paging-dots {
   padding: 0 !important;
   cursor: default;
 }
+
 .paging-icon {
-  margin: 0 0.5em;
+  margin: 0 var(--explorer-space-2);
   font-size: 1.2em;
   color: var(--text-accent);
   padding: 0.2em 0.25em;
   opacity: 1;
 }
+
 .paging-label.active-page {
   border: 1px solid var(--background-modifier-border-hover);
   opacity: 1;
   color: var(--text-accent);
 }
-.paging-controll-nums {
-  gap: 0.2em;
+
+.paging-control-nums {
+  gap: var(--explorer-space-1);
   display: flex;
   justify-content: space-around;
 }

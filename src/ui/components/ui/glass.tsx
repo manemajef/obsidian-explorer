@@ -1,7 +1,7 @@
 /**
  * Glass UI components for the explorer plugin.
  * Self-contained — renders icons via Obsidian's setIcon.
- * Pair with glass.css (imported via index.css).
+ * Pair with shared.css (imported via index.css).
  */
 import {
   forwardRef,

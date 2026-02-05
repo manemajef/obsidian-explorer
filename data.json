@@ -8,6 +8,5 @@
   "showFolders": true,
   "showBreadcrumbs": true,
   "cardExt": "default",
-  "showNotes": true,
-  "useGlass": true
+  "showNotes": true
 }

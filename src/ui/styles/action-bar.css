@@ -1,148 +1,64 @@
 /* ===== Actions Bar ===== */
 #explorer-actions {
   direction: ltr !important;
-  margin-bottom: 1em;
+  margin-bottom: var(--explorer-space-4);
+  padding-bottom: var(--explorer-space-2);
 }
-.use-glass #explorer-actions {
-  padding-bottom: 0.5em;
-}
+
 .is-mobile #explorer-actions {
-  padding-bottom: 1em !important;
+  padding-bottom: var(--explorer-space-4) !important;
 }
-
-/* ===== Action Button & Action Group (glass surface) ===== */
-.explorer-action,
-.explorer-action-group {
-  border-radius: var(--explorer-action-radius);
-  box-shadow: var(--explorer-action-shadow);
-  border: var(--exolorer-action-border);
-  transition: var(--explorer-action-transition);
-  display: flex;
-  align-items: center;
-  background-color: var(--explorer-bg-interactive);
-}
-/* .theme-dark .explorer-action, .theme-dark .explorer-action-group {
-  background: rgba(255, 255, 255, 0.025);
-} */
-.explorer-action.clickable-icon ,
-.explorer-action-group .clickable-icon {
-  color: var(--text-normal);
-}
-
-/* Single action — circle, tight padding */
-.explorer-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1;
-  padding: 0.35em;
-}
-.explorer-action:hover {
-  background-color: var(--explorer-action-hover);
-  border: 1px solid var(--exolorer-action-border-hover);
-}
-
-/* Action group — shared container, hover on individual children */
-.explorer-action-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.15em 0.5em;
-}
-.explorer-action-group .clickable-icon {
-  border-radius: var(--explorer-action-radius);
-}
-.explorer-action-group .clickable-icon:hover {
-  background-color: var(--explorer-action-hover);
-}
-.cancel-search-btn {
-  color: var(--text-accent);
-  color: var(--color-red);
-}
-.cancel-search-btn:hover {
-  opacity: 1;
-  background: var(--background-modifier-hover);
-}
-
-
-/* ===== Action Bar Layout ===== */
-/* .action-bar {
-  position: sticky;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-}
-.action-left {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  justify-content: space-between;
-}
-.action-mid {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  padding-inline-end: 1em;
-}
-.action-right {
-  flex: 0 0 auto;
-  white-space: nowrap;
-} */
 
 /* ===== Search ===== */
 .actions-search {
   position: relative;
   gap: 0;
 }
+
 .is-mobile .actions-search {
   min-width: 100% !important;
 }
+
 .search-x-btn {
   position: absolute;
-  inset-inline-end: .25em;
+  inset-inline-end: var(--explorer-space-1);
   top: auto;
   bottom: auto;
 }
+
 .is-mobile .search-x-btn {
   position: static !important;
-  margin-inline-start: .5em;
+  margin-inline-start: var(--explorer-space-2);
 }
+
 .actions-search-input input {
   min-width: 250px;
-  padding: 1.5em 3em 1.5em 1em;
+  padding: var(--explorer-space-5) 3em var(--explorer-space-5)
+    var(--explorer-space-4);
   background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border-hover);
-  border-radius: 3em;
+  border-radius: var(--explorer-radius-pill);
   color: var(--text-muted);
 }
+
 .is-mobile .actions-search-input input {
-  min-width: 100%  !important;
+  min-width: 100% !important;
 }
-/* Search active (mobile): stretch input to full width, hide extras */
-.is-mobile #explorer-actions.search-active .action-add-btns,
-.is-mobile #explorer-actions.search-active .explorer-separator {
-  display: none;
+
+.cancel-search-btn {
+  color: var(--color-red);
 }
-.is-mobile #explorer-actions.search-active .actions-right,
-.is-mobile #explorer-actions.search-active .actions-search,
-.is-mobile #explorer-actions.search-active .actions-search-input {
-  flex: 1;
+
+.cancel-search-btn:hover {
+  opacity: 1;
+  background: var(--background-modifier-hover);
 }
 
 /* ===== Breadcrumbs (shelved — kept for future use) ===== */
-.actions-breadcrumbs {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow: hidden;
-  flex: 1;
-}
 .explorer-breadcrumbs {
   display: flex;
   align-items: center;
-  gap: .35em;
+  gap: 0.35em;
   font-size: 0.8em;
   overflow: hidden;
   white-space: nowrap;
@@ -150,40 +66,46 @@
   flex: 1;
   justify-content: start;
 }
+
 .explorer-breadcrumb-home {
   display: flex;
   align-items: center;
   color: var(--text-faint) !important;
   cursor: pointer;
 }
+
 .breadcrumbs-home-icon {
-  font-size: .8em !important;
+  font-size: 0.8em !important;
 }
+
 .explorer-breadcrumb-home:hover {
   color: var(--text-muted) !important;
 }
+
 .explorer-breadcrumbs span {
   display: inline-flex;
   align-items: center;
 }
+
 .explorer-breadcrumb-sep {
   display: flex;
   align-items: center;
   color: var(--text-faint);
   font-size: 0.85em;
 }
+
 .explorer-breadcrumb-link {
   color: var(--text-faint) !important;
   cursor: pointer;
   text-decoration: none;
 }
+
 .explorer-breadcrumb-link:hover {
   color: var(--text-muted) !important;
   text-decoration: underline;
 }
+
 .explorer-breadcrumb-dots {
   color: var(--text-faint);
   font-size: 0.85em;
-}
-.is-mobile .explorer-breadcrumbs {
 }
