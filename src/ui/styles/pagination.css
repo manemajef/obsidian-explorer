@@ -10,6 +10,12 @@
   box-shadow: var(--explorer-action-shadow);
   border-radius: var(--explorer-action-radius);
 }
+.is-mobile .paging-controll {
+  padding: .5em .75em;
+  /* background-color: none !important; */
+  /* width: 100%; */
+  font-size: large;
+}
 .paging-label {
   display: flex;
   align-items: center;

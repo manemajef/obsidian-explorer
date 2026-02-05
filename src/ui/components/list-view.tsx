@@ -1,5 +1,5 @@
 import React from "react";
-import { App } from "obsidian";
+import { App, Platform } from "obsidian";
 import { FileInfo } from "../../types";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
@@ -13,7 +13,9 @@ export function ListView(props: {
   const { app, sourcePath, files } = props;
 
   return (
-    <div className="glass-surface explorer-list-container static radius-md">
+    <div
+      className={`explorer-list-container static radius-md ${Platform.isMobile ? "glass-surface static" : ""}`}
+    >
       {files.map((fileInfo) => (
         <li
           key={fileInfo.file.path}

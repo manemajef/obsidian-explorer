@@ -12,6 +12,7 @@
   color: var(--color-red) !important;
 }
 .is-mobile .explorer-list-container {
+  margin-top: 1.5em;
   /* background-color: var(--background-primary-alt); */
   border-radius: var(--radius-xl) !important;
   box-shadow: var(--explorer-glass-shadow);
@@ -23,7 +24,7 @@
 
 .is-mobile .explorer-list {
   
-  margin-inline: .75em !important;
+  margin-inline: 1em !important;
   /* margin-inline: 0; */
   padding: 1.5em 0 .5em .5em;
 }

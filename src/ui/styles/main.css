@@ -42,82 +42,9 @@
 .explorer-container {
   scroll-margin-top: 10em;
 }
-/* ===== Grid Layouts ===== */
-.explorer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.75em;
-}
 
-.explorer-notes-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  margin-top: 1em;
-}
-.is-mobile .explorer-notes-grid {
-  grid-template-columns: 1fr 1fr !important;
-  gap: 0.75em;
-}
-
-.explorer-hover-scale {
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-}
 :not(.is-mobile) .explorer-hover-scale:hover {
   transform: scale(1.05);
-}
-
-/* ===== Action Button & Action Group (glass surface) ===== */
-.explorer-action,
-.explorer-action-group {
-  border-radius: var(--explorer-action-radius);
-  box-shadow: var(--explorer-action-shadow);
-  border: var(--exolorer-action-border);
-  transition: var(--explorer-action-transition);
-  display: flex;
-  align-items: center;
-  background-color: var(--explorer-bg-interactive);
-}
-/* .theme-dark .explorer-action, .theme-dark .explorer-action-group {
-  background: rgba(255, 255, 255, 0.025);
-} */
-.explorer-action.clickable-icon ,
-.explorer-action-group .clickable-icon {
-  color: var(--text-normal);
-}
-
-/* Single action — circle, tight padding */
-.explorer-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1;
-  padding: 0.35em;
-}
-.explorer-action:hover {
-  background-color: var(--explorer-action-hover);
-  border: 1px solid var(--exolorer-action-border-hover);
-}
-
-/* Action group — shared container, hover on individual children */
-.explorer-action-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.15em 0.5em;
-}
-.explorer-action-group .clickable-icon {
-  border-radius: var(--explorer-action-radius);
-}
-.explorer-action-group .clickable-icon:hover {
-  background-color: var(--explorer-action-hover);
-}
-.cancel-search-btn {
-  color: var(--text-accent);
-  color: var(--color-red);
-}
-.cancel-search-btn:hover {
-  opacity: 1;
-  background: var(--background-modifier-hover);
 }
 
 /* ===== Badge ===== */

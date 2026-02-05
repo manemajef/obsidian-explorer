@@ -1,4 +1,39 @@
 /* ===== Note Cards ===== */
+/* ===== Grid Layouts ===== */
+.explorer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75em;
+}
+
+.explorer-notes-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: 1em;
+  
+}
+/* .is-mobile .explorer-notes-grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.75em;
+} */
+
+.is-mobile .explorer-notes-grid {
+  /* grid-template-columns: 1fr !important; */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1em !important;
+  /* gap: 1em; */
+}
+
+.explorer-hover-scale {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.explorer-files-container {
+  margin-top: 1.5em;
+}
+.is-mobile .explorer-files-container {
+  margin-top:  1.5em;
+}
 .explorer-card {
   padding: 0.5em;
   border: 1px solid var(--background-modifier-border);
@@ -9,7 +44,23 @@
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
+
 }
+.explorer-card a {
+  color: var(--text-accent) !important;
+}
+.is-mobile .explorer-card {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: .75em;
+  border-radius: .5em;
+}
+.is-mobile .explorer-file-cards-container {
+  margin-top: 1em;
+}
+
 .explorer-card:hover {
   border: 1px solid var(--background-modifier-border-hover);
 }
@@ -18,7 +69,11 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1em;
-  min-width: 100%;
+  flex:1;
+  /* min-width: 100%; */
+}
+.is-mobile .explorer-card-header {
+
 }
 .explorer-card-exts {
   opacity: 0.4;
@@ -51,16 +106,3 @@
   color: var(--color-red) !important;
 }
 
-/* ===== List View ===== */
-.explorer-list {
-  padding: 0.4em 0.25em;
-  list-style: none;
-  margin-inline-start: 1em;
-  font-size: 0.9em;
-}
-.explorer-list:hover {
-  border-radius: 4px;
-}
-.explorer-list.pinned a {
-  color: var(--color-red) !important;
-}
