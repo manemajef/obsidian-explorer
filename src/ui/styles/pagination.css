@@ -5,9 +5,7 @@
   align-items: stretch;
   justify-content: center;
   padding: var(--explorer-space-1) var(--explorer-space-2);
-  --glass-radius: var(--explorer-action-radius);
-  --glass-border: var(--explorer-action-border);
-  --glass-shadow: var(--explorer-action-shadow);
+  --explorer-glass-shine-opacity: 0;
 }
 
 .is-mobile .paging-control {
@@ -21,7 +19,7 @@
   justify-content: center;
   opacity: 0.6;
   padding: var(--explorer-space-1) var(--explorer-space-3);
-  border-radius: var(--explorer-action-radius);
+  border-radius: var(--explorer-radius-pill);
   cursor: pointer;
 }
 

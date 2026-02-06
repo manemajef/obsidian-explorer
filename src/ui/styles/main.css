@@ -5,6 +5,7 @@
   --explorer-space-3: 0.75em;
   --explorer-space-4: 1em;
   --explorer-space-5: 1.5em;
+  --explorer-space-5-5: 1.75em;
   --explorer-space-6: 2em;
 
   /* Radius scale */
@@ -13,33 +14,30 @@
   --explorer-radius-lg: 0.8em;
   --explorer-radius-pill: 999px;
 
-  /* Sizes */
-  --explorer-icon-size: 32px;
-  --explorer-group-icon-size: 28px;
+  /* Control sizes */
+  --explorer-control-size: 32px;
 
-  /* Glass tokens */
-  --glass-bg: linear-gradient(
+  /* Glass effect tuning */
+  --explorer-glass-gradient: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.78) 0%,
     rgba(255, 255, 255, 0.32) 100%
   );
-  --glass-base: rgba(0, 0, 0, 0.01);
-  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
-  --glass-shadow:
+  --explorer-glass-tint: rgba(0, 0, 0, 0.01);
+  --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
+  --explorer-shadow-glass:
     0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-  --glass-shine-color: rgba(255, 255, 255, 0.35);
-  --glass-shine-opacity: 0;
-  --glass-hover-scale: 1.05;
+  --explorer-glass-shine-color: rgba(255, 255, 255, 0.35);
+  --explorer-glass-shine-opacity: 0;
+
+  /* Motion */
+  --explorer-hover-scale: 1.05;
 
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
-  --explorer-action-hover: rgba(0, 0, 0, 0.1);
-  --explorer-action-radius: 2em;
-  --explorer-action-border: 1px solid rgba(0, 0, 0, 0.05);
-  --explorer-action-border-hover: 1px solid rgba(0, 0, 0, 0.1);
-  --explorer-action-shadow:\n    0 2px 8px rgba(0, 0, 0, 0.05),\n    inset 0 1px 0 rgba(255, 255, 255, 0.05),\n    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  --explorer-bg-interactive-hover: rgba(0, 0, 0, 0.1);
 
   /* Cards */
   --explorer-card-border: 1px solid var(--background-modifier-border);
@@ -50,29 +48,25 @@
 }
 
 .theme-dark .explorer-container {
-  --glass-bg: linear-gradient(
+  --explorer-glass-gradient: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.02) 0%,
-    rgba(255, 255, 255, 0.005) 100%
+    rgba(255, 255, 255, 0.01) 0%,
+    rgba(255, 255, 255, 0.004) 100%
   );
-  --glass-base: rgba(255, 255, 255, 0.01);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.02);
-  --glass-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.1),
+  --explorer-glass-tint: rgba(255, 255, 255, 0.01);
+  --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
+  --explorer-shadow-glass:
+    0 4px 10px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  --glass-shine-color: rgba(255, 255, 255, 0.21);
-  --glass-shine-opacity: 1;
+  --explorer-glass-shine-color: rgba(255, 255, 255, 0.21);
+  --explorer-glass-shine-opacity: 1;
 
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
-  --explorer-action-hover: rgba(255, 255, 255, 0.05);
-  --explorer-action-border: 1px solid rgba(255, 255, 255, 0.05);
-  --explorer-action-border-hover: 1px solid rgba(255, 255, 255, 0.1);
-  --explorer-action-shadow:\n    0 2px 8px rgba(0, 0, 0, 0.05),\n    inset 0 1px 0 rgba(255, 255, 255, 0.1),\n    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  --explorer-bg-interactive-hover: rgba(255, 255, 255, 0.05);
 }
 
 .is-mobile .explorer-container {
-  --explorer-icon-size: 42px;
-  --explorer-group-icon-size: 38px;
+  --explorer-control-size: 42px;
 }
 
 .is-mobile .modal {

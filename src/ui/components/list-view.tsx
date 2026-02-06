@@ -4,6 +4,7 @@ import { FileInfo } from "../../types";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
+const FANCY_LIST = false;
 
 export function ListView(props: {
   app: App;
@@ -14,12 +15,16 @@ export function ListView(props: {
 
   return (
     <div
-      className={`explorer-list-container${Platform.isMobile ? " glass glass-surface static" : ""}`}
+      className={`explorer-list-container ${FANCY_LIST ? "use-fancy-list" : ""}`}
     >
       {files.map((fileInfo) => (
         <li
           key={fileInfo.file.path}
           className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
+          onClick={() =>
+            (Platform.isMobile || FANCY_LIST) &&
+            app.workspace.openLinkText(fileInfo.file.path, "", false)
+          }
         >
           <span className="list-bullet" />
           <Group justify="between">

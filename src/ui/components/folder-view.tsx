@@ -21,7 +21,7 @@ export function FolderButtons(props: {
         return (
           <div
             key={folderNotePath}
-            className={`explorer-folder-card glass${isMissing ? " explorer-folder-card--missing" : ""} no-shine`}
+            className={`explorer-folder-card glass hover-scale${isMissing ? " explorer-folder-card--missing" : ""} no-shine`}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);

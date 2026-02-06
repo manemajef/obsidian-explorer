@@ -11,14 +11,17 @@
 }
 
 .is-mobile .explorer-notes-grid {
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: var(--explorer-space-4) !important;
+  /* grid-template-columns: repeat(auto-fit, minmax(1px, 1fr)); */
+  /* gap: var(--explorer-space-4) !important; */
 }
 
 .explorer-card {
-  --glass-radius: var(--explorer-radius-md);
-  --glass-border: var(--explorer-card-border);
-  --glass-shadow: var(--explorer-card-shadow);
+  /* background: var(--explorer-glass-gradient), var(--explorer-glass-tint); */
+  /* background-color: var(--explorer-glass-tint) !important; */
+  /* background-image: var(--explorer-glass-gradient) !important; */
+  border: var(--explorer-card-border);
+  /* box-shadow: var(--explorer-card-shadow); */
+  border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
   height: 100%;
   display: flex;
@@ -26,22 +29,42 @@
   justify-content: space-between;
   cursor: pointer;
 }
+.theme-dark .explorer-card {
+  background: var(--explorer-glass-gradient), var(--explorer-glass-tint); 
+  background-color: var(--explorer-glass-tint) !important;
+  background-image: var(--explorer-glass-gradient) !important;
+ 
 
+}
+.theme-dark .explorer-card:hover {
+   background-color: var(--explorer-bg-interactive-hover) !important;
+    border: 1px solid var(--background-modifier-border-hover);
+
+}
+
+.explorer-card:hover {
+  border: 1px solid var(--background-modifier-border-hover);
+  background-color: var(--explorer-bg-interactive-hover);
+   background: var(--explorer-glass-gradient), var(--explorer-glass-tint); 
+  background-color: var(--explorer-glass-tint) !important;
+   background-image: var(--explorer-glass-gradient) !important;
+
+}
 .explorer-card a {
   color: var(--text-accent) !important;
 }
 
-.is-mobile .explorer-card {
+/* .is-mobile .explorer-card {
   display: flex;
   flex-direction: row !important;
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--explorer-space-3);
-  --glass-radius: 0.5em;
-}
+  --explorer-surface-radius: 0.5em;
+} */
 
 .explorer-card:hover {
-  --glass-border: var(--explorer-card-border-hover);
+  --explorer-surface-border: var(--explorer-card-border-hover);
 }
 
 .explorer-card-header {
@@ -85,3 +108,4 @@
 .explorer-card-footer:hover a {
   color: var(--text-accent) !important;
 }
+

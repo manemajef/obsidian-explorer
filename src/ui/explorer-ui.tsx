@@ -4,7 +4,7 @@ import { FolderInfo } from "../types";
 import { BlockSettings } from "../settings/schema";
 import { useExplorerState } from "./hooks/use-explorer-state";
 import { CardsView } from "./components/cards-view";
-import { FolderButtons } from "./components/folder-buttons";
+import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { Pagination } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";

@@ -15,8 +15,8 @@
 }
 
 .explorer-folder-card {
-  --glass-radius: var(--explorer-radius-lg);
-  --glass-base: var(--explorer-bg-interactive);
+  --explorer-surface-radius: var(--explorer-radius-lg);
+  --explorer-surface-tint: var(--explorer-bg-interactive);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -28,11 +28,11 @@
 }
 
 .explorer-folder-card:hover {
-  --glass-base: var(--explorer-action-hover);
+  --explorer-surface-tint: var(--explorer-bg-interactive-hover);
 }
 
 .is-mobile .explorer-folder-card {
-  --glass-radius: 16px;
+  --explorer-surface-radius: 16px;
   padding: 1.15em 0.2em;
 }
 
@@ -44,9 +44,9 @@
   color: var(--text-muted);
 }
 
-body.theme-light .explorer-folder-card {
-  --glass-base: var(--background-primary);
-}
+/* body.theme-light .explorer-folder-card {
+  --explorer-surface-tint: var(--background-primary);
+} */
 
 .explorer-folder-card a {
   font-weight: var(--font-semibold);

@@ -3,14 +3,15 @@
    ------------------------------------------------------------ */
 .glass {
   position: relative;
-  background: var(--glass-bg), var(--glass-base);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: var(--glass-radius, var(--explorer-radius-pill));
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint));
+  border: var(--explorer-surface-border, var(--explorer-border-glass));
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
+  border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
-  background-color: var(--glass-base) !important;
-  background-image: var(--glass-bg) !important;
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
 }
 
 .glass::after {
@@ -19,13 +20,13 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  opacity: var(--glass-shine-opacity);
+  opacity: var(--explorer-glass-shine-opacity);
   background: linear-gradient(
     135deg,
-    var(--glass-shine-color) 0%,
+    var(--explorer-glass-shine-color) 0%,
     transparent 35%,
     transparent 65%,
-    var(--glass-shine-color) 100%
+    var(--explorer-glass-shine-color) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -35,30 +36,13 @@
   pointer-events: none;
 }
 
-.glass:hover {
-  transform: scale(var(--glass-hover-scale));
-  z-index: 10;
-}
-
-.glass.static:hover {
-  transform: scale(1) !important;
-}
-
-.glass-surface {
-  --glass-shine-opacity: 0;
-}
-
-.glass.no-shine {
-  --glass-shine-opacity: 0 !important;
-}
 
 .glass-item {
-  --glass-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--explorer-icon-size);
-  height: var(--explorer-icon-size);
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
   cursor: pointer;
   color: var(--text-normal);
   appearance: none;
@@ -67,22 +51,22 @@
 }
 
 .glass-group {
-  --glass-radius: var(--explorer-action-radius);
   display: inline-flex;
   align-items: center;
   background: transparent;
-  padding: 3px;
   gap: 2px;
+  height: var(--explorer-control-size);
+  padding-inline: 3px;
 }
 
 .glass-group-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--explorer-group-icon-size);
-  height: var(--explorer-group-icon-size);
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
   border-radius: 50%;
-  color: var(--text-muted);
+  color: var(--text-normal);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -94,7 +78,6 @@
 
 .glass-group-item:hover {
   color: var(--text-normal) !important;
-  transform: scale(1.1);
 }
 
 .glass-group-item--active {
@@ -202,4 +185,50 @@
 
 a.headless-link:hover {
   text-decoration: none !important;
+}
+
+/*  */
+.rounded-md {
+  border-radius: var(--explorer-radius-md);
+}
+
+.no-shine {
+  --explorer-glass-shine-opacity: 0 !important;
+}
+
+.pill {
+  --explorer-surface-radius: var(--explorer-radius-pill);
+}
+
+.circle {
+  --explorer-surface-radius: 50%;
+}
+
+.hover-scale:hover {
+  transform: scale(var(--explorer-hover-scale));
+  z-index: 10;
+}
+
+.radius-sm {
+  --explorer-surface-radius: var(--explorer-radius-sm);
+}
+
+.radius-md {
+  --explorer-surface-radius: var(--explorer-radius-md);
+}
+
+.radius-lg {
+  --explorer-surface-radius: var(--explorer-radius-lg);
+}
+
+.radius-pill {
+  --explorer-surface-radius: var(--explorer-radius-pill);
+}
+
+.border-glass {
+  --explorer-surface-border: var(--explorer-border-glass);
+}
+
+.shadow-glass {
+  --explorer-surface-shadow: var(--explorer-shadow-glass);
 }
