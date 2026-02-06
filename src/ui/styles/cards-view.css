@@ -21,9 +21,9 @@
   /* background: var(--explorer-glass-gradient), var(--explorer-glass-tint);  */
   /* background-color: var(--explorer-glass-tint) !important; */
  /* background-image: var(--explorer-glass-gradient) !important; */
- background-color: var(--explorer-bg-interactive);
+ background-color: var(--explorer-glass-gradient);
   border: var(--explorer-card-border);
-  box-shadow: var(--explorer-card-shadow);
+  /* box-shadow: var(--explorer-card-shadow); */
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
   height: 100%;
@@ -36,6 +36,7 @@
   background: var(--explorer-glass-gradient), var(--explorer-glass-tint); 
   background-color: var(--explorer-glass-tint) !important;
   background-image: var(--explorer-glass-gradient) !important;
+  /* box-shadow: none; */
  
 
 }

@@ -126,11 +126,11 @@
 }
 
 .explorer-files-container {
-  margin-top: var(--explorer-space-5);
+  margin-top: var(--explorer-space-2);
 }
 
 .is-mobile .explorer-files-container {
-  margin-top: var(--explorer-space-5);
+  margin-top: var(--explorer-space-4);
 }
 
 /* ------------------------------------------------------------

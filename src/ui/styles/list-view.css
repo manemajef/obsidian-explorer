@@ -20,7 +20,7 @@
 }
 
 .is-mobile .explorer-list-container {
-  margin-top: var(--explorer-space-5);
+  margin-top: var(--explorer-space-3);
   padding-bottom: var(--explorer-space-2);
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
