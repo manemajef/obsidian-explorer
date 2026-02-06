@@ -11,7 +11,9 @@
 }
 
 .is-mobile .explorer-notes-grid {
-  /* grid-template-columns: repeat(auto-fit, minmax(1px, 1fr)); */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+
+ /* grid-template-columns: repeat(auto-fit, minmax(1px, 1fr));  */
   /* gap: var(--explorer-space-4) !important; */
 }
 

@@ -38,6 +38,7 @@
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
   --explorer-bg-interactive-hover: rgba(0, 0, 0, 0.1);
+  --explorer-bg-alt: rgba(0,0,0,0.01);
 
   /* Cards */
   --explorer-card-border: 1px solid var(--background-modifier-border);
@@ -63,6 +64,7 @@
 
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-interactive-hover: rgba(255, 255, 255, 0.05);
+  --explorer-bg-alt: var(--explorer-bg-interactive);
 }
 
 .is-mobile .explorer-container {

@@ -22,9 +22,13 @@
 .is-mobile .explorer-list-container {
   margin-top: var(--explorer-space-5);
   padding-bottom: var(--explorer-space-2);
-  background-color: var(--explorer-bg-interactive);
+  background-color: var(--explorer-bg-alt);
   border-radius: 1em;
   
+}
+
+.is-mobile .explorer-list:hover {
+  background-color: var(--explorer-bg-interactive-hover);
 }
 
 .is-mobile .explorer-list {
