@@ -5,6 +5,55 @@
 
 ---
 
+## 2026-02-06 - CSS Refactor + Glass Overhaul
+
+**Task:** Unify glass system, rename tokens, remove `useGlass`, add utilities, and align CSS/view naming.
+**Files:**
+- `src/ui/styles/main.css` — new token naming + glass tuning
+- `src/ui/styles/shared.css` — glass utilities + shared helpers
+- `src/ui/styles/cards-view.css`, `src/ui/styles/list-view.css`, `src/ui/styles/folder-view.css` — view-specific styling
+- `src/ui/styles/pagination.css`, `src/ui/styles/action-bar.css`, `src/ui/styles/index.css`
+- `src/ui/components/ui/glass.tsx`, `src/ui/components/cards-view.tsx`, `src/ui/components/list-view.tsx`, `src/ui/components/pagination.tsx`, `src/ui/components/folder-view.tsx`
+- `src/plugin/explorer.tsx`, `src/settings/schema.ts` — removed `useGlass`
+- `README.md`, `data.json`, `styles.css`
+
+Details → `notes/changes/2026-02-06-css-refactor-glass-overhaul.md`
+
+---
+
+## 2026-02-05 - Mobile Redesign (Explorer UI)
+
+**Task:** Improve mobile layouts across list/grid, action bar/search, and pagination.
+**Files:**
+- `src/ui/components/list-view.tsx`, `src/ui/explorer-ui.tsx`
+- `src/ui/styles/action-bar.css`, `src/ui/styles/list-view.css`, `src/ui/styles/folder-view.css`, `src/ui/styles/cards-view.css`, `src/ui/styles/pagination.css`, `src/ui/styles/main.css`
+- `styles.css`
+
+Details → `notes/changes/2026-02-05-mobile-redesign.md`
+
+---
+
+## 2026-02-05 - Refresh on Vault Change
+
+**Task:** Refresh explorer view + re-index on vault create/delete/rename.
+**Files:** `src/plugin/explorer.tsx`, `src/settings/schema.ts`
+
+---
+
+## 2026-02-05 - Folder Button Style Tweak
+
+**Task:** Adjust folder button styling and related glass tokens.
+**Files:** `src/ui/components/folder-view.tsx`, `src/ui/styles/folder-view.css`, `src/ui/styles/main.css`, `styles.css`
+
+---
+
+## 2026-02-04 - Maintenance Fixes
+
+**Task:** Mobile search fixes, `onlyNotes` excludes PDFs, and version URL cleanup.
+**Files:** `src/ui/components/actions-bar.tsx`, `src/ui/styles/action-bar.css`, `src/backend/file-listing.ts`, `manifest.json`, `versions.json`, `styles.css`
+
+---
+
 ## 2026-02-04 - Settings Schema Split (Block vs Plugin)
 
 **Task:** Separate block settings from plugin settings, move defaults under `defaultBlockSettings`, and make parser/serializer schema-driven.
