@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "../shared";
 
-type BadgeVariant = "ext" | "ext-filled" | "pin";
+type BadgeVariant = "ext" | "ext-filled" | "pin" | "tag";
 
 export function Badge(props: {
   variant: BadgeVariant;

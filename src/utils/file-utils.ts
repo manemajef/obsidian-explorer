@@ -12,7 +12,10 @@ export function isFolderNote(file: TFile): boolean {
 /**
  * Get the folder note for a given folder if it exists
  */
-export function getFolderNoteForFolder(app: App, folder: TFolder): TFile | null {
+export function getFolderNoteForFolder(
+  app: App,
+  folder: TFolder,
+): TFile | null {
   const folderNotePath = `${folder.path}/${folder.name}.md`;
   const file = app.vault.getAbstractFileByPath(folderNotePath);
   return file instanceof TFile ? file : null;
@@ -21,14 +24,39 @@ export function getFolderNoteForFolder(app: App, folder: TFolder): TFile | null 
 /**
  * Get file metadata from frontmatter cache
  */
+const rmHashTag = (s: string): string => s.replace(/^#+\s*/g, "");
+const normalizeTag = (tag: unknown): string => rmHashTag(String(tag)).trim();
+
+function getFileTags(app: App, file: TFile): string[] {
+  const cache = app.metadataCache.getFileCache(file);
+  if (!cache) return [];
+
+  const tags: string[] = [];
+  const fmTags = cache.frontmatter?.tags;
+
+  if (Array.isArray(fmTags)) {
+    tags.push(...fmTags.map(normalizeTag));
+  } else if (fmTags != null) {
+    tags.push(normalizeTag(fmTags));
+  }
+
+  cache.tags?.forEach((t) => {
+    if (!t?.tag) return;
+    tags.push(normalizeTag(t.tag));
+  });
+
+  return Array.from(new Set(tags)).filter((t) => t.length > 0);
+}
 export function getFileInfo(app: App, file: TFile): FileInfo {
   const cache = app.metadataCache.getFileCache(file);
   const frontmatter = cache?.frontmatter;
 
   return {
     file,
-    description: (frontmatter?.description || frontmatter?.desc) as string | undefined,
-    tags: (frontmatter?.tags || []) as string[],
+    description: (frontmatter?.description || frontmatter?.desc) as
+      | string
+      | undefined,
+    tags: getFileTags(app, file),
     isPinned: frontmatter?.pin === true || frontmatter?.fav === true,
   };
 }
@@ -88,7 +116,7 @@ export function filterFiles(app: App, files: TFile[], query: string): TFile[] {
   if (q.startsWith("#")) {
     const tag = q.slice(1);
     return files.filter((f) => {
-      const tags = (app.metadataCache.getFileCache(f)?.frontmatter?.tags || []) as string | string[];
+      const tags = (getFileTags(app, f) || []) as string | string[];
       const tagList = Array.isArray(tags) ? tags : [String(tags)];
       return tagList.some((t: string) => t.toLowerCase().includes(tag));
     });
@@ -105,8 +133,6 @@ export function filterFiles(app: App, files: TFile[], query: string): TFile[] {
 
   // Plain text search: name or path
   return files.filter(
-    (f) =>
-      f.name.toLowerCase().includes(q) ||
-      f.path.toLowerCase().includes(q),
+    (f) => f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q),
   );
 }

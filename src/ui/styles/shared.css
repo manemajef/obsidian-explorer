@@ -163,6 +163,11 @@
   opacity: 0.7;
 }
 
+.explorer-badge.tag {
+  background-color: var(--background-modifier-border) !important;
+  border-radius: var(--explorer-radius-pill);
+}
+
 /* ------------------------------------------------------------
    Links
    ------------------------------------------------------------ */

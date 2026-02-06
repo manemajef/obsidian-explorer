@@ -13,6 +13,7 @@ export function ListView(props: {
 }): React.JSX.Element {
   const { app, sourcePath, files } = props;
   const n = files.length;
+  if (n == 0) return <div></div>;
 
   return (
     <div
@@ -25,11 +26,7 @@ export function ListView(props: {
             className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
             onClick={() => {
               if (Platform.isMobile || FANCY_LIST) {
-                void app.workspace.openLinkText(
-                  fileInfo.file.path,
-                  "",
-                  false,
-                );
+                void app.workspace.openLinkText(fileInfo.file.path, "", false);
               }
             }}
           >

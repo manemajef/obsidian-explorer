@@ -80,14 +80,14 @@
 }
 
 .explorer-card-exts {
-  opacity: 0.4;
+  opacity: 0.8;
   display: flex;
   align-items: flex-start;
   gap: var(--explorer-space-1);
 }
 
 .explorer-card-exts:hover {
-  opacity: 0.9 !important;
+  /* opacity: 0.9 !important; */
 }
 
 .explorer-card-exts svg {
@@ -113,3 +113,20 @@
   color: var(--text-accent) !important;
 }
 
+.tags-container {
+  display: flex; 
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin-inline-start: .5em;
+  gap: .25em;
+}
+.explorer-card-exts .explorer-badge {
+  opacity: .7 !important;
+}
+.explorer-card-exts .explorer-badge:hover {
+  opacity: 1 !important;
+}
+.explorer-card-exts .tag:hover {
+
+}
