@@ -23,10 +23,15 @@ export function ListView(props: {
           <li
             key={fileInfo.file.path}
             className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
-            onClick={() =>
-              (Platform.isMobile || FANCY_LIST) &&
-              app.workspace.openLinkText(fileInfo.file.path, "", false)
-            }
+            onClick={() => {
+              if (Platform.isMobile || FANCY_LIST) {
+                void app.workspace.openLinkText(
+                  fileInfo.file.path,
+                  "",
+                  false,
+                );
+              }
+            }}
           >
             <span className="list-bullet" />
             <Group justify="between">
