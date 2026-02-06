@@ -1,5 +1,6 @@
 # Explorer Plugin
 
+![](/assets/main.jpg)
 A file explorer view for Obsidian that displays folder contents with card and list views. Supports sorting, pagination, search, and folder notes.
 
 ## Usage
@@ -18,15 +19,19 @@ This will display the contents of the current folder with default settings.
 
 ### Card View
 
-![](/assets/card-view.png)
+![](/assets/card-view.jpg)
 
 ### List View
 
-![](/assets/list-view.png)
+![](/assets/list-view.jpg)
 
 ### Settings
 
-![](/assets/settings.png)
+![](/assets/settings.jpg)
+
+### Dark Mode
+
+![](/assets/dark-mode.jpg)
 
 ### Configuration
 
@@ -63,35 +68,20 @@ git clone https://github.com/manemajef/obsidian-explorer "C:\Path\To\Your\Vault\
 
 ### Settings
 
-#### Global defaults (Settings → Explorer)
-
-| Setting           | Values                                               | Default  | Description                                |
-| ----------------- | ---------------------------------------------------- | -------- | ------------------------------------------ |
-| `sortBy`          | `newest`, `oldest`, `edited`, `name`                 | `oldest` | How to sort files                          |
-| `view`            | `cards`, `list`                                      | `list`   | Display mode                               |
-| `depth`           | `0-10`                                               | `0`      | Subfolder depth (0 = direct children only) |
-| `pageSize`        | `6-100`                                              | `15`     | Items per page                             |
-| `onlyNotes`       | `true`, `false`                                      | `false`  | Show only .md and .pdf files               |
-| `showFolders`     | `true`, `false`                                      | `true`   | Show folder buttons                        |
-| `showBreadcrumbs` | `true`, `false`                                      | `true`   | Show navigation breadcrumbs                |
-| `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`| `default`| Card footer info                           |
-| `showNotes`       | `true`, `false`                                      | `true`   | Show note files                            |
-
 #### Per-block overrides (inside the `explorer` code block)
 
 You can override these settings per block. Keys not listed here are ignored.
 
-| Setting           | Values                                               |
-| ----------------- | ---------------------------------------------------- |
-| `sortBy`          | `newest`, `oldest`, `edited`, `name`                 |
-| `view`            | `cards`, `list`                                      |
-| `depth`           | `0-10`                                               |
-| `pageSize`        | `6-100`                                              |
-| `onlyNotes`       | `true`, `false`                                      |
-| `showFolders`     | `true`, `false`                                      |
-| `showBreadcrumbs` | `true`, `false`                                      |
-| `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default`|
-| `showNotes`       | `true`, `false`                                      |
+| Setting       | Values                                                |
+| ------------- | ----------------------------------------------------- |
+| `sortBy`      | `newest`, `oldest`, `edited`, `name`                  |
+| `view`        | `cards`, `list`                                       |
+| `depth`       | `0-10`                                                |
+| `pageSize`    | `6-100`                                               |
+| `onlyNotes`   | `true`, `false`                                       |
+| `showFolders` | `true`, `false`                                       |
+| `cardExt`     | `folder`, `ctime`, `mtime`, `desc`, `none`, `default` |
+| `showNotes`   | `true`, `false`                                       |
 
 ## Features
 
@@ -99,6 +89,12 @@ You can override these settings per block. Keys not listed here are ignored.
 
 - **Cards**: Grid of cards showing file name, extension, and metadata
 - **List**: Simple bulleted list of files
+
+### Folder Notes
+
+- autumaticly creates a folder note if missing as `path/to/foldername/foldername.md`
+- If foldernotes exist, it dosnt ovverride them
+- Plays well with [Obsidian Folder Note Plugin](https://github.com/LostPaul/obsidian-folder-notes), but works without it as well
 
 ### Search
 
@@ -138,50 +134,6 @@ npm run build
 ```bash
 npm run dev
 ```
-
-## Architecture
-
-The plugin uses a modular TypeScript/React architecture:
-
-```
-main.ts                    # Plugin entry point, registers code block processor
-src/
-├── types.ts               # TypeScript interfaces
-├── constants.ts           # Default settings
-├── services/
-│   ├── folder-index.ts    # Queries and indexes folder contents
-│   └── settings-parser.ts # Parses/serializes code block settings
-├── ui/
-│   ├── explorer-view.tsx  # Main view controller
-│   ├── explorer-ui.tsx    # Root React component
-│   ├── settings-tab.ts    # Plugin settings tab
-│   ├── components/        # Reusable React components
-│   │   ├── cards-view.tsx
-│   │   ├── list-view.tsx
-│   │   ├── search-bar.tsx
-│   │   ├── breadcrumbs.tsx
-│   │   ├── pagination.tsx
-│   │   └── shared.tsx     # Icon, InternalLink components
-│   └── modals/
-│       ├── settings-modal.ts
-│       └── prompt-modal.ts
-└── utils/
-    ├── file-utils.ts      # File/folder note utilities
-    ├── helpers.ts         # RTL detection, etc.
-    └── link-utils.ts      # Internal link handling
-```
-
-Settings have global defaults (plugin settings tab) with optional per-block overrides in the code block.
-
-## Differences from Original (datacore version)
-
-| Aspect        | Original                            | New Plugin                       |
-| ------------- | ----------------------------------- | -------------------------------- |
-| React         | Uses datacore for React integration | Native Obsidian DOM manipulation |
-| State Storage | JSON cache file                     | Stored in code block             |
-| Dependencies  | Requires datacore plugin            | Standalone                       |
-| Settings      | Global cache                        | Per-block settings               |
-| Performance   | Queries via datacore                | Direct vault API                 |
 
 ## License
 

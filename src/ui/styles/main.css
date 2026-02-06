@@ -38,7 +38,7 @@
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
   --explorer-bg-interactive-hover: rgba(0, 0, 0, 0.1);
-  --explorer-bg-alt: rgba(0,0,0,0.015);
+  --explorer-bg-alt: rgba(0,0,0,0.02);
 
   /* Cards */
   --explorer-card-border: 1px solid var(--background-modifier-border);

@@ -17,3 +17,5 @@ Thumbs.db
 .context/*
 .context
 dev/
+assets/unused/
+
