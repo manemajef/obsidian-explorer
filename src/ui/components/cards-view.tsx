@@ -91,7 +91,7 @@ function CardFooter(props: {
             sourcePath={sourcePath}
             path={folderNotePath}
             text={folder.name}
-            onClick={(e) => e.stopPropagation()}
+            // onClick={}
           />
         );
       }
