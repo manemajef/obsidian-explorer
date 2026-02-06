@@ -20,8 +20,8 @@
   /* Glass effect tuning */
   --explorer-glass-gradient: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.78) 0%,
-    rgba(255, 255, 255, 0.32) 100%
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.01) 100%
   );
   --explorer-glass-tint: rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
