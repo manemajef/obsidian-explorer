@@ -32,7 +32,7 @@ function getFileTags(app: App, file: TFile): string[] {
   if (!cache) return [];
 
   const tags: string[] = [];
-  const fmTags = cache.frontmatter?.tags;
+  const fmTags: unknown = cache.frontmatter?.tags;
 
   if (Array.isArray(fmTags)) {
     tags.push(...fmTags.map(normalizeTag));

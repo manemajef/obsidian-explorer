@@ -11,14 +11,7 @@ export function InternalLink(props: {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children?: React.ReactNode;
 }): React.JSX.Element {
-  const {
-    path,
-    text,
-    className,
-    additionalClasses,
-    onClick,
-    children,
-  } = props;
+  const { path, text, className, additionalClasses, onClick, children } = props;
   const classes = ["internal-link", className, ...(additionalClasses ?? [])]
     .filter(Boolean)
     .join(" ");
@@ -36,7 +29,10 @@ export function InternalLink(props: {
   );
 }
 
-export function Icon(props: { name: string; className?: string }): React.JSX.Element {
+export function Icon(props: {
+  name: string;
+  className?: string;
+}): React.JSX.Element {
   const { name, className } = props;
   const ref = useRef<HTMLSpanElement | null>(null);
 

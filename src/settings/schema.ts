@@ -138,6 +138,17 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 40,
     },
   }),
+  showTags: booleanField({
+    label: "Display Tags",
+    description: "Show Tags in list and card view",
+    blockKey: "showTags",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      order: 25,
+    },
+  }),
   pageSize: numberField({
     label: "Page size",
     description: "Number of items per page",

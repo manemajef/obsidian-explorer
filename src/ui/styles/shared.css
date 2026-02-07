@@ -145,13 +145,21 @@
 .explorer-badge.pin {
   display: inline-flex;
   align-items: center;
-  margin-right: 0.3em;
+  
+  /* border: 1px solid var(--background-modifier-border); */
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: flex-end !important;
+  padding: .25em .5em;
+  /* margin-right: 0.3em; */
   color: var(--color-red);
+  flex:0;
 }
 
 .explorer-badge.pin svg {
-  width: 1em !important;
-  height: 1em !important;
+  width: 1.25em !important;
+  height: 1.25em !important;
 }
 
 .explorer-badge.ext {
@@ -236,4 +244,29 @@ a.headless-link:hover {
 
 .shadow-glass {
   --explorer-surface-shadow: var(--explorer-shadow-glass);
+}
+.tags-container {
+  display: flex; 
+  flex-wrap: wrap;
+  justify-content: end;
+  margin-inline-start: .5em;
+  gap: .25em;
+  max-height: 5.75em;
+  overflow-y: auto;
+}
+
+.flex-scroll {
+  display: flex;
+  flex-wrap: nowrap !important;
+  overflow-x: auto;
+  border-radius: var(--explorer-radius-pill);
+  justify-content: flex-start;
+  /* padding-inline: var(--explorer-space-4); */
+  /* overflow-y: hidden; */
+}
+.flex-strech > * {
+  flex-grow: 1;
+}
+.flex-scroll > * {
+  flex: 0 0 auto;
 }

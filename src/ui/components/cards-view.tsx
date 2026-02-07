@@ -6,14 +6,15 @@ import { isFolderNote } from "../../utils/file-utils";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import Bar from "./ui/bar";
-const SHOW_TAGS = false;
+
 export function CardsView(props: {
   app: App;
   sourcePath: string;
   files: FileInfo[];
   extForCard: string;
+  showTags: boolean;
 }): React.JSX.Element {
-  const { app, sourcePath, files, extForCard } = props;
+  const { app, sourcePath, files, extForCard, showTags } = props;
 
   return (
     <>
@@ -39,19 +40,18 @@ export function CardsView(props: {
                   text={fileInfo.file.basename}
                 />
               </span>
-              <Bar.Spring />
+              {/* <Bar.Spring /> */}
+              <Bar.Item />
 
               <span className="explorer-card-exts">
-                {fileInfo.file.extension === "md" && fileInfo.isPinned && (
-                  <Badge variant="pin" />
-                )}
-                {SHOW_TAGS && (
-                  <div className="tags-container">
-                    {fileInfo.tags?.map((t) => (
-                      <Badge variant="tag">{t}</Badge>
-                    ))}
-                  </div>
-                )}
+                <div className="tags-container flex-strech">
+                  {fileInfo.file.extension === "md" && fileInfo.isPinned && (
+                    <Badge variant="pin" />
+                  )}
+                  {showTags &&
+                    fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                </div>
+
                 {fileInfo.file.extension !== "md" &&
                 !isFolderNote(fileInfo.file) ? (
                   <Badge variant="ext">{fileInfo.file.extension}</Badge>

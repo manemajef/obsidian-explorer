@@ -101,6 +101,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 sourcePath={sourcePath}
                 files={pageFileInfos}
                 extForCard={extForCard}
+                showTags={effectiveSettings.showTags}
               />
             )}
             {effectiveSettings.view === "list" && (
@@ -108,6 +109,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 app={app}
                 sourcePath={sourcePath}
                 files={pageFileInfos}
+                showTags={effectiveSettings.showTags}
               />
             )}
           </div>

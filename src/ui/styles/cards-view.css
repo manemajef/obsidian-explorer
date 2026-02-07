@@ -113,16 +113,14 @@
   color: var(--text-accent) !important;
 }
 
-.tags-container {
-  display: flex; 
-  flex-wrap: wrap;
-  justify-content: center;
-
-  margin-inline-start: .5em;
-  gap: .25em;
+.explorer-card-ext .tags-container {
+  max-height: 1em !important;
 }
+
 .explorer-card-exts .explorer-badge {
   opacity: .7 !important;
+  display: flex;
+  justify-content: center;
 }
 .explorer-card-exts .explorer-badge:hover {
   opacity: 1 !important;

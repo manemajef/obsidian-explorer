@@ -10,8 +10,9 @@ export function ListView(props: {
   app: App;
   sourcePath: string;
   files: FileInfo[];
+  showTags: boolean;
 }): React.JSX.Element {
-  const { app, sourcePath, files } = props;
+  const { app, sourcePath, files, showTags } = props;
   const n = files.length;
   if (n == 0) return <div></div>;
 
@@ -42,6 +43,13 @@ export function ListView(props: {
                     : `${fileInfo.file.basename}.${fileInfo.file.extension}`
                 }
               />
+              {showTags && (
+                <div className="tags-container flex-scroll">
+                  {fileInfo.tags?.map((t) => (
+                    <Badge variant="tag">{t}</Badge>
+                  ))}
+                </div>
+              )}
               {fileInfo.file.extension !== "md" && (
                 <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
               )}
