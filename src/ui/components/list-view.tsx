@@ -48,12 +48,12 @@ export function ListView(props: {
                   {fileInfo.tagsToDisplay?.map((t) => (
                     <Badge variant="tag">{t}</Badge>
                   ))}
+                  {fileInfo.isPinned && <Badge variant="pin" />}
                 </div>
               )}
               {fileInfo.file.extension !== "md" && (
                 <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
               )}
-              {fileInfo.isPinned && <Badge variant="pin" />}
             </Group>
             {i < n - 1 && (Platform.isMobile || FANCY_LIST) && (
               <div className="list-seperator" />

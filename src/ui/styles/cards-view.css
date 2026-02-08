@@ -132,3 +132,6 @@
 .explorer-card-exts .tag:hover {
 
 }
+.explorer-card-exts .explorer-badge.pin svg {
+  transform: scale(1.3);
+}
