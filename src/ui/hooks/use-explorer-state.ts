@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { App, TFile } from "obsidian";
 import { BlockSettings } from "../../settings/schema";
 import {
@@ -22,6 +22,9 @@ interface UseExplorerStateOptions {
 export function useExplorerState(options: UseExplorerStateOptions) {
   const { app, depthFiles, folderNotes, settings, getAllFiles } = options;
 
+  const [tick, setTick] = useState(0);
+  const refresh = useCallback(() => setTick((t) => t + 1), []);
+
   const normalPagination = usePaginationState();
   const normalSourceFiles = useMemo(() => {
     return settings.showFolders ? depthFiles : [...folderNotes, ...depthFiles];
@@ -37,7 +40,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
         page: normalPagination.page,
         sortBy: settings.sortBy,
       }),
-    [app, normalSourceFiles, settings, normalPagination.page],
+    [app, normalSourceFiles, settings, normalPagination.page, tick],
   );
 
   usePaginationBounds(
@@ -50,9 +53,23 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     app,
     settings,
     getAllFiles,
+    tick,
   });
 
   const activeListing = search.mode ? search.listing : normalListing;
+
+  const pageFileInfos = useMemo(
+    () =>
+      activeListing.pageFileInfos.map((fileInfo) => ({
+        ...fileInfo,
+        togglePin: () => {
+          fileInfo.togglePin();
+          setTimeout(refresh, 100);
+        },
+      })),
+    [activeListing.pageFileInfos, refresh],
+  );
+
   const currentPage = search.mode ? search.page : normalPagination.page;
 
   const setCurrentPage = useCallback(
@@ -76,7 +93,8 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     setSearchQuery: search.setSearchQuery,
     currentPage,
     setCurrentPage,
-    pageFileInfos: activeListing.pageFileInfos,
+    pageFileInfos,
+    refresh,
     totalPages: activeListing.totalPages,
     usePaging: activeListing.usePaging,
     extForCard,

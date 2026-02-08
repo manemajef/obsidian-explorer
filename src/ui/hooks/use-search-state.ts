@@ -8,10 +8,11 @@ interface UseSearchStateOptions {
   app: App;
   settings: BlockSettings;
   getAllFiles: () => Promise<TFile[]>;
+  tick: number;
 }
 
 export function useSearchState(options: UseSearchStateOptions) {
-  const { app, settings, getAllFiles } = options;
+  const { app, settings, getAllFiles, tick } = options;
 
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +61,7 @@ export function useSearchState(options: UseSearchStateOptions) {
         // Keep current behavior: search results are ranked by recent edit.
         sortBy: "edited",
       }),
-    [app, allFiles, settings, debouncedQuery, pagination.page],
+    [app, allFiles, settings, debouncedQuery, pagination.page, tick],
   );
 
   usePaginationBounds(pagination.page, pagination.setPage, listing.totalPages);
