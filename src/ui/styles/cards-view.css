@@ -26,6 +26,7 @@
   /* box-shadow: var(--explorer-card-shadow); */
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
+  /* padding-inline-end: var(--explorer-space-1) !important; */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -115,6 +116,9 @@
 
 .explorer-card-ext .tags-container {
   max-height: 1em !important;
+}
+.is-mobile .explorer-card .tags-container {
+  flex-direction: column !important;
 }
 
 .explorer-card-exts .explorer-badge {

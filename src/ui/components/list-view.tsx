@@ -45,7 +45,7 @@ export function ListView(props: {
               />
               {showTags && (
                 <div className="tags-container flex-scroll">
-                  {fileInfo.tags?.map((t) => (
+                  {fileInfo.tagsToDisplay?.map((t) => (
                     <Badge variant="tag">{t}</Badge>
                   ))}
                 </div>

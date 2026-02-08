@@ -5,7 +5,6 @@ import { diffDays } from "../../utils/helpers";
 import { isFolderNote } from "../../utils/file-utils";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
-import Bar from "./ui/bar";
 
 export function CardsView(props: {
   app: App;
@@ -41,7 +40,8 @@ export function CardsView(props: {
                 />
               </span>
               {/* <Bar.Spring /> */}
-              <Bar.Item />
+              {/* <Bar.Item /> */}
+              <span style={{ width: ".5em" }} />
 
               <span className="explorer-card-exts">
                 <div className="tags-container flex-strech">
@@ -49,7 +49,9 @@ export function CardsView(props: {
                     <Badge variant="pin" />
                   )}
                   {showTags &&
-                    fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                    fileInfo.tagsToDisplay?.map((t) => (
+                      <Badge variant="tag">{t}</Badge>
+                    ))}
                 </div>
 
                 {fileInfo.file.extension !== "md" &&

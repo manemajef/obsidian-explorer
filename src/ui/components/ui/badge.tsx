@@ -13,7 +13,7 @@ export function Badge(props: {
   if (variant === "pin") {
     return (
       <span className={`explorer-badge pin ${className ?? ""}`}>
-        <Icon name="heart" />
+        <Icon name="pin" />
       </span>
     );
   }
