@@ -1,3 +1,4 @@
+import React from "react";
 import { FileInfo } from "src/types";
 import { Badge } from "./badge";
 

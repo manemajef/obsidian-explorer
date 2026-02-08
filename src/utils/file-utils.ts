@@ -1,6 +1,5 @@
 import { App, getAllTags, TFile, TFolder } from "obsidian";
 import { FileInfo } from "../types";
-const TAGS_PIN = false;
 /**
  * Check if a file is a folder note (foldername/foldername.md pattern)
  */
@@ -26,8 +25,7 @@ export function getFolderNoteForFolder(
  */
 export function isPinned(app: App, file: TFile): boolean {
   const fm = app.metadataCache.getFileCache(file)?.frontmatter;
-  const tags = getFileTags(app, file);
-  return fm?.pin;
+  return fm?.pin === true;
 }
 
 function getFileTags(app: App, file: TFile): string[] {
@@ -37,7 +35,7 @@ function getFileTags(app: App, file: TFile): string[] {
   //return getAllTags(cache)?.map((t) => rmHashTag(t)) ?? [];
 }
 function togglePin(app: App, file: TFile): void {
-  app.fileManager.processFrontMatter(file, (frontmatter) => {
+  void app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
     if (isPinned(app, file)) {
       delete frontmatter["pin"];
     } else {
