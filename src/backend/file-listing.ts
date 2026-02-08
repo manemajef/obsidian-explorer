@@ -6,6 +6,7 @@ import { ComputeFileListingInput, ComputeFileListingOutput } from "./contracts";
 function applyFileVisibilityRules(
   files: ComputeFileListingInput["files"],
   settings: BlockSettings,
+  currPath: string,
 ) {
   if (settings.onlyNotes) {
     return files.filter((f) => f.extension === "md");
@@ -17,15 +18,15 @@ function applyFileVisibilityRules(
     );
   }
 
-  return files;
+  return files.filter((f) => f.path !== currPath);
 }
 
 export function computeFileListing(
   input: ComputeFileListingInput,
 ): ComputeFileListingOutput {
   const { app, files, settings, query, page, sortBy } = input;
-
-  const visibleFiles = applyFileVisibilityRules(files, settings);
+  const currPath = app.workspace.getActiveFile()?.path ?? "";
+  const visibleFiles = applyFileVisibilityRules(files, settings, currPath);
   const sortedFiles = sortFiles(app, visibleFiles, sortBy);
   const queriedFiles = query
     ? filterFiles(app, sortedFiles, query)

@@ -4,6 +4,7 @@ import { FileInfo } from "../../types";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
+import { Pin } from "./ui/pin";
 const FANCY_LIST = false;
 
 export function ListView(props: {
@@ -43,14 +44,16 @@ export function ListView(props: {
                     : `${fileInfo.file.basename}.${fileInfo.file.extension}`
                 }
               />
-              {showTags && (
-                <div className="tags-container flex-scroll">
-                  {fileInfo.tagsToDisplay?.map((t) => (
-                    <Badge variant="tag">{t}</Badge>
-                  ))}
-                  {fileInfo.isPinned && <Badge variant="pin" />}
-                </div>
-              )}
+
+              <div
+                className="tags-container flex-scroll"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {showTags &&
+                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                {<Pin fileInfo={fileInfo} />}
+              </div>
+
               {fileInfo.file.extension !== "md" && (
                 <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
               )}

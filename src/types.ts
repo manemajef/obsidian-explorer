@@ -4,8 +4,9 @@ export interface FileInfo {
   file: TFile;
   description?: string;
   tags?: string[];
-  tagsToDisplay?: string[];
+  // tagsToDisplay?: string[];
   isPinned?: boolean;
+  togglePin: () => void;
 }
 
 export interface FolderInfo {

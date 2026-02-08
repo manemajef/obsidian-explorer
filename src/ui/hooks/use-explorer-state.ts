@@ -1,8 +1,14 @@
 import { useCallback, useMemo } from "react";
 import { App, TFile } from "obsidian";
 import { BlockSettings } from "../../settings/schema";
-import { computeFileListing, resolveCardFooterMode } from "../../backend/file-listing";
-import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
+import {
+  computeFileListing,
+  resolveCardFooterMode,
+} from "../../backend/file-listing";
+import {
+  usePaginationBounds,
+  usePaginationState,
+} from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
 
 interface UseExplorerStateOptions {

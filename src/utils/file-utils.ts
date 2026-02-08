@@ -1,6 +1,6 @@
 import { App, getAllTags, TFile, TFolder } from "obsidian";
 import { FileInfo } from "../types";
-const TAGS_PIN = true;
+const TAGS_PIN = false;
 /**
  * Check if a file is a folder note (foldername/foldername.md pattern)
  */
@@ -24,30 +24,28 @@ export function getFolderNoteForFolder(
 /**
  * Get file metadata from frontmatter cache
  */
+export function isPinned(app: App, file: TFile): boolean {
+  const fm = app.metadataCache.getFileCache(file)?.frontmatter;
+  const tags = getFileTags(app, file);
+  return fm?.pin;
+}
 
 function getFileTags(app: App, file: TFile): string[] {
-  const rmHashTag = (s: string): string => s.replace(/^#+\s*/g, "");
-  // const normalizeTag = (tag: unknown): string => rmHashTag(String(tag)).trim();
   const cache = app.metadataCache.getFileCache(file);
   if (!cache) return [];
-  return getAllTags(cache)?.map((t) => rmHashTag(t)) ?? [];
-
-  // const tags: string[] = [];
-  // const fmTags: unknown = cache.frontmatter?.tags;
-
-  // if (Array.isArray(fmTags)) {
-  //   tags.push(...fmTags.map(normalizeTag));
-  // } else if (fmTags != null) {
-  //   tags.push(normalizeTag(fmTags));
-  // }
-
-  // cache.tags?.forEach((t) => {
-  //   if (!t?.tag) return;
-  //   tags.push(normalizeTag(t.tag));
-  // });
-
-  // return Array.from(new Set(tags)).filter((t) => t.length > 0);
+  return getAllTags(cache)?.map((t) => t.replace(/^#+\s*/g, "")) ?? [];
+  //return getAllTags(cache)?.map((t) => rmHashTag(t)) ?? [];
 }
+function togglePin(app: App, file: TFile): void {
+  app.fileManager.processFrontMatter(file, (frontmatter) => {
+    if (isPinned(app, file)) {
+      delete frontmatter["pin"];
+    } else {
+      frontmatter["pin"] = true;
+    }
+  });
+}
+
 export function getFileInfo(app: App, file: TFile): FileInfo {
   const cache = app.metadataCache.getFileCache(file);
   const frontmatter = cache?.frontmatter;
@@ -58,25 +56,17 @@ export function getFileInfo(app: App, file: TFile): FileInfo {
       | string
       | undefined,
     tags: tags,
-    tagsToDisplay: TAGS_PIN
-      ? tags.filter((t) => !["pin", "fav"].contains(t))
-      : tags,
-    isPinned: frontmatter?.pin === true || frontmatter?.fav === true,
+    // tagsToDisplay: TAGS_PIN
+    //   ? tags.filter((t) => !["pin", "fav"].contains(t))
+    //   : tags,
+    isPinned: isPinned(app, file),
+    togglePin: () => togglePin(app, file),
   };
 }
 
 /**
  * Check if a file is pinned via frontmatter
  */
-export function isPinned(app: App, file: TFile): boolean {
-  const fm = app.metadataCache.getFileCache(file)?.frontmatter;
-  const tags = getFileTags(app, file);
-  return (
-    fm?.pin === true ||
-    fm?.fav === true ||
-    (TAGS_PIN && tags.some((t) => ["pin", "fav"].contains(t)))
-  );
-}
 
 /**
  * Sort TFiles by the given sort option, with pinned files first
