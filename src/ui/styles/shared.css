@@ -272,3 +272,6 @@ a.headless-link:hover {
 .justify-end {
   justify-content: end;
 }
+.display-none {
+  display: none;
+}

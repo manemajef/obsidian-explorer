@@ -35,13 +35,16 @@ function getFileTags(app: App, file: TFile): string[] {
   //return getAllTags(cache)?.map((t) => rmHashTag(t)) ?? [];
 }
 function togglePin(app: App, file: TFile): void {
-  void app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
-    if (isPinned(app, file)) {
-      delete frontmatter["pin"];
-    } else {
-      frontmatter["pin"] = true;
-    }
-  });
+  void app.fileManager.processFrontMatter(
+    file,
+    (frontmatter: Record<string, unknown>) => {
+      if (isPinned(app, file)) {
+        delete frontmatter["pin"];
+      } else {
+        frontmatter["pin"] = true;
+      }
+    },
+  );
 }
 
 export function getFileInfo(app: App, file: TFile): FileInfo {
