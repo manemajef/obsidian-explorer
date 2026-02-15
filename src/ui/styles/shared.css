@@ -197,7 +197,14 @@ a.headless-link:hover {
   text-decoration: none !important;
 }
 
+a.text-normal {
+  color: var(--text-normal) !important;
+}
 /*  */
+.text-normal {
+  color: var(--text-normal) !important;
+}
+
 .rounded-md {
   border-radius: var(--explorer-radius-md);
 }

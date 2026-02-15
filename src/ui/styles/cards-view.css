@@ -12,61 +12,30 @@
 
 .is-mobile .explorer-notes-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-
  /* grid-template-columns: repeat(auto-fit, minmax(1px, 1fr));  */
   /* gap: var(--explorer-space-4) !important; */
 }
 
 .explorer-card {
-  /* background: var(--explorer-glass-gradient), var(--explorer-glass-tint);  */
-  /* background-color: var(--explorer-glass-tint) !important; */
- /* background-image: var(--explorer-glass-gradient) !important; */
- background-color: var(--explorer-glass-gradient);
   border: var(--explorer-card-border);
-  /* box-shadow: var(--explorer-card-shadow); */
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
-  /* padding-inline-end: var(--explorer-space-1) !important; */
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
 }
-.theme-dark .explorer-card {
-  background: var(--explorer-glass-gradient), var(--explorer-glass-tint); 
-  background-color: var(--explorer-glass-tint) !important;
-  background-image: var(--explorer-glass-gradient) !important;
-  /* box-shadow: none; */
- 
-
-}
-.theme-dark .explorer-card:hover {
-   background-color: var(--explorer-bg-interactive-hover) !important;
-    border: 1px solid var(--background-modifier-border-hover);
-
-}
 
 .explorer-card:hover {
-  border: 1px solid var(--background-modifier-border-hover);
-  background-color: var(--explorer-bg-interactive-hover);
-   background: var(--explorer-glass-gradient), var(--explorer-glass-tint); 
-  background-color: var(--explorer-glass-tint) !important;
-   background-image: var(--explorer-glass-gradient) !important;
+    border: 1px solid var(--background-modifier-border-hover);
+}
+.explorer-card-header a {
+  color: var(--text-normal) !important;
+  font-weight: var(--font-semibold);
 
 }
-.explorer-card a {
-  color: var(--text-accent) !important;
-}
 
-/* .is-mobile .explorer-card {
-  display: flex;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--explorer-space-3);
-  --explorer-surface-radius: 0.5em;
-} */
 
 .explorer-card:hover {
   --explorer-surface-border: var(--explorer-card-border-hover);
@@ -87,9 +56,6 @@
   gap: var(--explorer-space-1);
 }
 
-.explorer-card-exts:hover {
-  /* opacity: 0.9 !important; */
-}
 
 .explorer-card-exts svg {
   max-height: 0.9em;
