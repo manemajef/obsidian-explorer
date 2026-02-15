@@ -102,6 +102,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 files={pageFileInfos}
                 extForCard={extForCard}
                 showTags={effectiveSettings.showTags}
+                onOpenFolderNote={onOpenFolderNote}
               />
             )}
             {effectiveSettings.view === "list" && (

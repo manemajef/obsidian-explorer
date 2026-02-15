@@ -1,5 +1,5 @@
 import React from "react";
-import { App, TFile } from "obsidian";
+import { App, TFolder } from "obsidian";
 import { FileInfo } from "../../types";
 import { diffDays } from "../../utils/helpers";
 import { isFolderNote } from "../../utils/file-utils";
@@ -7,14 +7,18 @@ import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
 
+type OpenFolderNote = (folder: TFolder, newLeaf: boolean) => void;
+
 export function CardsView(props: {
   app: App;
   sourcePath: string;
   files: FileInfo[];
   extForCard: string;
   showTags: boolean;
+  onOpenFolderNote: OpenFolderNote;
 }): React.JSX.Element {
-  const { app, sourcePath, files, extForCard, showTags } = props;
+  const { app, sourcePath, files, extForCard, showTags, onOpenFolderNote } =
+    props;
 
   return (
     <>
@@ -38,6 +42,7 @@ export function CardsView(props: {
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
+                  className="text-normal"
                 />
               </span>
               {/* <Bar.Spring /> */}
@@ -64,10 +69,9 @@ export function CardsView(props: {
             </div>
             <div className="explorer-card-footer">
               <CardFooter
-                app={app}
-                sourcePath={sourcePath}
                 fileInfo={fileInfo}
                 extForCard={extForCard}
+                onOpenFolderNote={onOpenFolderNote}
               />
             </div>
           </div>
@@ -78,12 +82,11 @@ export function CardsView(props: {
 }
 
 function CardFooter(props: {
-  app: App;
-  sourcePath: string;
   fileInfo: FileInfo;
   extForCard: string;
+  onOpenFolderNote: OpenFolderNote;
 }): React.JSX.Element | null {
-  const { app, sourcePath, fileInfo, extForCard } = props;
+  const { fileInfo, extForCard, onOpenFolderNote } = props;
 
   switch (extForCard) {
     case "ctime":
@@ -91,24 +94,19 @@ function CardFooter(props: {
     case "mtime":
       return <span>{diffDays(fileInfo.file.stat.mtime)}</span>;
     case "folder": {
-      const folder = isFolderNote(fileInfo.file)
-        ? fileInfo.file.parent?.parent
-        : fileInfo.file.parent;
+      const folder = fileInfo.file.parent;
       if (!folder) return null;
-      const folderNotePath = `${folder.path}/${folder.name}.md`;
-      const folderNote = app.vault.getAbstractFileByPath(folderNotePath);
-      if (folderNote instanceof TFile) {
-        return (
-          <InternalLink
-            app={app}
-            sourcePath={sourcePath}
-            path={folderNotePath}
-            text={folder.name}
-            // onClick={}
-          />
-        );
-      }
-      return <span>{folder.name}</span>;
+      return (
+        <span
+          className="link text-normal hover-underline"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenFolderNote(folder, e.ctrlKey || e.metaKey);
+          }}
+        >
+          {folder.name}
+        </span>
+      );
     }
     case "desc":
       if (!fileInfo.description) return null;
