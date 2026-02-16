@@ -49,11 +49,6 @@
   color: var(--color-red);
 }
 
-.cancel-search-btn:hover {
-  opacity: 1;
-  background: var(--background-modifier-hover);
-}
-
 /* ===== Breadcrumbs (shelved — kept for future use) ===== */
 .explorer-breadcrumbs {
   display: flex;

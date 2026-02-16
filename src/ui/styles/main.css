@@ -34,6 +34,7 @@
 
   /* Motion */
   --explorer-hover-scale: 1.05;
+  --explorer-hover-transition: 0.15s ease;
 
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
@@ -46,6 +47,43 @@
   --explorer-card-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
 
   scroll-margin-top: 10em;
+}
+
+.explorer-container :where(
+    a,
+    button,
+    .explorer-card,
+    .explorer-folder-card,
+    .paging-label,
+    .explorer-badge,
+    .link-normal,
+    .link-headless,
+    .faded-interactive
+  ) {
+  transition:
+    color var(--explorer-hover-transition),
+    background-color var(--explorer-hover-transition),
+    border-color var(--explorer-hover-transition),
+    opacity var(--explorer-hover-transition),
+    transform var(--explorer-hover-transition),
+    box-shadow var(--explorer-hover-transition),
+    text-decoration-color var(--explorer-hover-transition);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explorer-container :where(
+      a,
+      button,
+      .explorer-card,
+      .explorer-folder-card,
+      .paging-label,
+      .explorer-badge,
+      .link-normal,
+      .link-headless,
+      .faded-interactive
+    ) {
+    transition: none !important;
+  }
 }
 
 .theme-dark .explorer-container {

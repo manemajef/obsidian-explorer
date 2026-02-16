@@ -39,7 +39,7 @@ export const GlassItem = forwardRef<HTMLButtonElement, GlassItemProps>(
       ref={ref}
       type="button"
       className={cx(
-        "clickable-icon glass glass-item circle hover-scale",
+        "clickable-icon clickable-icon-normal glass glass-item circle hover-scale",
         active && "glass-item--active",
         className,
       )}
@@ -82,7 +82,7 @@ export const GlassGroupItem = forwardRef<HTMLButtonElement, GlassGroupItemProps>
       ref={ref}
       type="button"
       className={cx(
-        "clickable-icon glass-group-item",
+        "clickable-icon clickable-icon-normal glass-group-item",
         active && "glass-group-item--active",
         className,
       )}

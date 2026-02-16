@@ -4,7 +4,6 @@
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: var(--explorer-space-1) var(--explorer-space-2);
   --explorer-glass-shine-opacity: 0;
 }
 
@@ -17,14 +16,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.6;
   padding: var(--explorer-space-1) var(--explorer-space-3);
   border-radius: var(--explorer-radius-pill);
   cursor: pointer;
-}
-
-.paging-label:hover {
-  background-color: var(--background-primary-alt);
 }
 
 .paging-label.paging-dots {
@@ -41,7 +35,6 @@
 }
 
 .paging-label.active-page {
-  border: 1px solid var(--background-modifier-border-hover);
   opacity: 1;
   color: var(--text-accent);
 }

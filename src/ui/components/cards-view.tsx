@@ -25,7 +25,7 @@ export function CardsView(props: {
       {files.map((fileInfo) => (
         <div key={fileInfo.file.path}>
           <div
-            className="explorer-card"
+            className="explorer-card border radius-md border-hover pad-base"
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               void app.workspace.openLinkText(
@@ -42,14 +42,14 @@ export function CardsView(props: {
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
-                  className="text-normal"
+                  className="link-normal font-semibold"
                 />
               </span>
               {/* <Bar.Spring /> */}
               {/* <Bar.Item /> */}
               <span style={{ width: ".5em" }} />
 
-              <div className="explorer-card-exts">
+              <div className="explorer-card-exts tone-dim">
                 <div
                   className="tags-container flex-strech"
                   onClick={(e) => e.stopPropagation()}
@@ -58,16 +58,22 @@ export function CardsView(props: {
                     <Pin fileInfo={fileInfo} />
                   )}
                   {showTags &&
-                    fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                    fileInfo.tags?.map((t) => (
+                      <Badge variant="tag" className="faded-interactive">
+                        {t}
+                      </Badge>
+                    ))}
                 </div>
 
                 {fileInfo.file.extension !== "md" &&
                 !isFolderNote(fileInfo.file) ? (
-                  <Badge variant="ext">{fileInfo.file.extension}</Badge>
+                  <Badge variant="ext" className="faded-interactive">
+                    {fileInfo.file.extension}
+                  </Badge>
                 ) : null}
               </div>
             </div>
-            <div className="explorer-card-footer">
+            <div className="explorer-card-footer tone-muted">
               <CardFooter
                 fileInfo={fileInfo}
                 extForCard={extForCard}
@@ -98,7 +104,7 @@ function CardFooter(props: {
       if (!folder) return null;
       return (
         <span
-          className="link text-normal hover-underline"
+          className="link-normal faded-interactive"
           onClick={(e) => {
             e.stopPropagation();
             onOpenFolderNote(folder, e.ctrlKey || e.metaKey);

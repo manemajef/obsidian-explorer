@@ -1,5 +1,6 @@
 @import "./main.css";
 @import "./shared.css";
+@import "./utils.css";
 @import "./folder-view.css";
 @import "./cards-view.css";
 @import "./list-view.css";

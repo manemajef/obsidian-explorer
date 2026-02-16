@@ -5,6 +5,66 @@
 
 ---
 
+## 2026-02-15 - Pagination Label Subcomponents
+
+**Task:** Reduce repeated pagination label markup/classes by extracting local subcomponents in `pagination.tsx`.
+**Files:**
+- `src/ui/components/pagination.tsx` — added `PageNav`, `PageNum`, `PageDots`, and centralized class constants for paging labels
+- `styles.css` — build output update
+
+---
+
+## 2026-02-15 - Spacing Utilities (Curated)
+
+**Task:** Replace the large spacing matrix with a small curated padding utility set that covers common explorer patterns.
+**Files:**
+- `src/ui/styles/utils.css` — removed `p-/m-` matrix and added curated classes: `pad-base`, `pad-compact`, `pad-compact-wide`, `pad-comfy`, `pad-roomy`, `pad-inline-compact`
+- `src/ui/components/cards-view.tsx`, `src/ui/styles/cards-view.css` — card padding moved to utility (`pad-base`)
+- `src/ui/components/pagination.tsx`, `src/ui/styles/pagination.css` — pagination container padding moved to utility (`pad-compact`)
+- `styles.css` — build output update
+
+---
+
+## 2026-02-15 - Utility Radius/Surface Classes Apply Direct Styles
+
+**Task:** Make radius/surface utility classes apply concrete CSS properties (not only `--explorer-surface-*` vars), and move card/folder radius-border decisions into TSX utility classNames.
+**Files:**
+- `src/ui/styles/utils.css` — `radius-*`, `pill`, `circle`, `border-glass`, `shadow-glass` now apply direct CSS props; `no-shine` strengthened for `.glass::after`
+- `src/ui/components/cards-view.tsx`, `src/ui/styles/cards-view.css` — card border/radius moved to TSX utilities (`border radius-md border-hover`)
+- `src/ui/components/folder-view.tsx`, `src/ui/styles/folder-view.css` — folder card radius moved to TSX utility (`radius-lg`) with explicit mobile override
+- `styles.css` — build output update
+
+---
+
+## 2026-02-15 - Border Utility Classes
+
+**Task:** Add reusable border utility classes (default, strong, interactive hover) and apply them to pagination/card hover behavior.
+**Files:**
+- `src/ui/styles/utils.css` — added `border`, `border-hover`, `border-strong`
+- `src/ui/components/pagination.tsx`, `src/ui/styles/pagination.css` — pagination now uses utility borders instead of explicit component border rules
+- `src/ui/components/cards-view.tsx` — switched card hover to `border-hover`
+- `styles.css` — build output update
+
+---
+
+## 2026-02-15 - Utility Vocabulary Layer (`utils.css`)
+
+**Task:** Introduce a controlled utility-first class vocabulary for explorer UI styling (hover, radiuses, surfaces, opacity tiers, and link/clickable overrides), and reduce component CSS literals.
+**Files:**
+- `src/ui/styles/utils.css` — new utility layer (foundation, shading, interaction, hierarchy link classes)
+- `src/ui/styles/shared.css` — removed moved utility definitions; kept shared primitives
+- `src/ui/styles/index.css` — imports `utils.css`
+- `src/ui/components/cards-view.tsx`, `src/ui/styles/cards-view.css` — switched to utility-driven link/hover/opacity styling
+- `src/ui/components/folder-view.tsx`, `src/ui/styles/folder-view.css` — switched surface tint + link styling to utilities
+- `src/ui/components/pagination.tsx`, `src/ui/styles/pagination.css` — switched label opacity/hover background to utility classes
+- `src/ui/components/search.tsx`, `src/ui/styles/action-bar.css` — moved cancel button hover behavior to utilities
+- `src/ui/components/ui/glass.tsx` — added `clickable-icon-normal` utility class
+- `src/ui/styles/main.css`, `styles.css` — build output updates
+
+Details → `notes/changes/2026-02-15-utility-vocabulary-layer.md`
+
+---
+
 ## 2026-02-06 - CSS Refactor + Glass Overhaul
 
 **Task:** Unify glass system, rename tokens, remove `useGlass`, add utilities, and align CSS/view naming.

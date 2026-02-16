@@ -3,6 +3,44 @@ import { App } from "obsidian";
 import { Icon } from "./shared";
 import { Group } from "./ui/layout";
 
+const PAGING_LABEL_BASE = "paging-label tone-muted hover-bg-primary-alt";
+const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
+const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
+
+function PageNav(props: {
+  icon: "chevron-left" | "chevron-right";
+  onClick: () => void;
+}): React.JSX.Element {
+  const { icon, onClick } = props;
+  return (
+    <span className={PAGING_ICON_CLASS} onClick={onClick}>
+      <Icon name={icon} />
+    </span>
+  );
+}
+
+function PageNum(props: {
+  value: number;
+  active?: boolean;
+  onClick?: () => void;
+}): React.JSX.Element {
+  const { value, active = false, onClick } = props;
+  const activeClass = active ? " active-page border-strong" : "";
+  return (
+    <span className={`${PAGING_NUM_CLASS}${activeClass}`} onClick={onClick}>
+      {value}
+    </span>
+  );
+}
+
+function PageDots(): React.JSX.Element {
+  return (
+    <span className={`${PAGING_LABEL_BASE} paging-dots`}>
+      <Icon name="ellipsis" />
+    </span>
+  );
+}
+
 export function Pagination(props: {
   app: App;
   currentPage: number;
@@ -25,80 +63,47 @@ export function Pagination(props: {
 
   return (
     <Group justify="center">
-      <div className="paging-control glass pill">
-        <span
-          className="paging-label paging-icon"
+      <div className="paging-control radius-pill border border-hover pad-compact">
+        <PageNav
+          icon="chevron-left"
           onClick={() => {
             if (currentPage > 0) onPageChange(currentPage - 1);
           }}
-        >
-          <Icon name="chevron-left" />
-        </span>
+        />
 
         <div className="paging-control-nums">
           {page !== 0 ? (
-            <span
-              className="paging-num paging-label"
-              onClick={() => onPageChange(0)}
-            >
-              1
-            </span>
+            <PageNum value={1} onClick={() => onPageChange(0)} />
           ) : null}
 
-          {useLeftDots ? (
-            <span className="paging-label paging-dots">
-              <Icon name="ellipsis" />
-            </span>
-          ) : null}
+          {useLeftDots ? <PageDots /> : null}
 
           {leftPages.map((p) => (
-            <span
-              key={p}
-              className="paging-label paging-num"
-              onClick={() => onPageChange(p)}
-            >
-              {p + 1}
-            </span>
+            <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
           ))}
 
-          <span className="paging-label active-page paging-num">
-            {page + 1}
-          </span>
+          <PageNum value={page + 1} active />
 
           {rightPages.map((p) => (
-            <span
-              key={p}
-              className="paging-label paging-num"
-              onClick={() => onPageChange(p)}
-            >
-              {p + 1}
-            </span>
+            <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
           ))}
 
-          {useRightDots ? (
-            <span className="paging-label paging-dots">
-              <Icon name="ellipsis" />
-            </span>
-          ) : null}
+          {useRightDots ? <PageDots /> : null}
 
           {page !== totalPages - 1 ? (
-            <span
-              className="paging-num paging-label"
+            <PageNum
+              value={totalPages}
               onClick={() => onPageChange(totalPages - 1)}
-            >
-              {totalPages}
-            </span>
+            />
           ) : null}
         </div>
 
-        <span
-          className="paging-label paging-icon"
+        <PageNav
+          icon="chevron-right"
           onClick={() => {
             if (currentPage < totalPages - 1) onPageChange(currentPage + 1);
           }}
-        >
-          <Icon name="chevron-right" />
-        </span>
+        />
       </div>
     </Group>
   );

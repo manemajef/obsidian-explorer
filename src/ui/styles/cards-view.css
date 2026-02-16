@@ -17,28 +17,11 @@
 }
 
 .explorer-card {
-  border: var(--explorer-card-border);
-  border-radius: var(--explorer-radius-md);
-  padding: var(--explorer-space-2);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-}
-
-.explorer-card:hover {
-    border: 1px solid var(--background-modifier-border-hover);
-}
-.explorer-card-header a {
-  color: var(--text-normal) !important;
-  font-weight: var(--font-semibold);
-
-}
-
-
-.explorer-card:hover {
-  --explorer-surface-border: var(--explorer-card-border-hover);
 }
 
 .explorer-card-header {
@@ -50,7 +33,6 @@
 }
 
 .explorer-card-exts {
-  opacity: 0.8;
   display: flex;
   align-items: flex-start;
   gap: var(--explorer-space-1);
@@ -63,21 +45,8 @@
 }
 
 .explorer-card-footer {
-  opacity: 0.5;
   font-size: 0.7em;
   margin-bottom: 0 !important;
-}
-
-.explorer-card-footer:hover {
-  opacity: 0.9 !important;
-}
-
-.explorer-card-footer a {
-  color: var(--text-normal) !important;
-}
-
-.explorer-card-footer:hover a {
-  color: var(--text-accent) !important;
 }
 
 .explorer-card-ext .tags-container {
@@ -88,12 +57,8 @@
 }
 
 .explorer-card-exts .explorer-badge {
-  opacity: .7 !important;
   display: flex;
   justify-content: center;
-}
-.explorer-card-exts .explorer-badge:hover {
-  opacity: 1 !important;
 }
 .explorer-card-exts .tag:hover {
 

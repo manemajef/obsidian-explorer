@@ -43,7 +43,7 @@ export function Search(props: {
         <GlassItem
           icon="x"
           onClick={onSearchToggle}
-          className="cancel-search-btn"
+          className="cancel-search-btn hover-bg-modifier hover-opacity-100"
         />
       </div>
     </Group>
