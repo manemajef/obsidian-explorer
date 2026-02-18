@@ -133,7 +133,14 @@ a.text-normal,
 .flex-scroll > * {
   flex: 0 0 auto;
 }
-
+.items-center {
+  align-items: center;
+}
+.flex-center {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
 /* ------------------------------------------------------------
    Surface + Shading Utilities
    ------------------------------------------------------------ */

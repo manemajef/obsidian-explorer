@@ -42,7 +42,7 @@ export function CardsView(props: {
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
-                  className="link-normal font-semibold"
+                  className="link"
                 />
               </span>
               {/* <Bar.Spring /> */}
@@ -86,7 +86,13 @@ export function CardsView(props: {
     </>
   );
 }
-
+function CardHeader(props: {
+  fileInfo: FileInfo;
+  showTags: boolean;
+}): React.JSX.Element {
+  const { fileInfo, showTags } = props;
+  return <div className="flex justify-between"></div>;
+}
 function CardFooter(props: {
   fileInfo: FileInfo;
   extForCard: string;
