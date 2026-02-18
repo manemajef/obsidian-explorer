@@ -57,14 +57,18 @@ export function CardsView(props: {
                   {fileInfo.file.extension === "md" && (
                     <Pin fileInfo={fileInfo} />
                   )}
-                  {showTags &&
-                    fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
                 </div>
 
                 {fileInfo.file.extension !== "md" &&
                 !isFolderNote(fileInfo.file) ? (
                   <Badge variant="ext">{fileInfo.file.extension}</Badge>
                 ) : null}
+              </div>
+            </div>
+            <div className="explorer-card-body">
+              <div className="explorer-card-tags-container">
+                {showTags &&
+                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
               </div>
             </div>
             <div className="explorer-card-footer">
