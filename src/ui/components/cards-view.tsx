@@ -42,7 +42,7 @@ export function CardsView(props: {
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
-                  className="text-normal"
+                  // className="text-normal"
                 />
               </span>
               {/* <Bar.Spring /> */}

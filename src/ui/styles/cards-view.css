@@ -18,6 +18,8 @@
 
 .explorer-card {
   border: var(--explorer-card-border);
+  box-shadow: var(--explorer-shadow-glass-small);
+  background: var(--explorer-bg-interactive);
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
   height: 100%;
@@ -31,8 +33,8 @@
     border: 1px solid var(--background-modifier-border-hover);
 }
 .explorer-card-header a {
-  color: var(--text-normal) !important;
-  font-weight: var(--font-semibold);
+  /* color: var(--text-normal) !important; */
+  /* font-weight: var(--font-semibold); */
 
 }
 
