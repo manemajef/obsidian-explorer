@@ -42,7 +42,7 @@ export function CardsView(props: {
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
-                  className="link"
+                  // className="text-normal"
                 />
               </span>
               {/* <Bar.Spring /> */}
@@ -57,12 +57,6 @@ export function CardsView(props: {
                   {fileInfo.file.extension === "md" && (
                     <Pin fileInfo={fileInfo} />
                   )}
-                  {showTags &&
-                    fileInfo.tags?.map((t) => (
-                      <Badge variant="tag" className="faded-interactive">
-                        {t}
-                      </Badge>
-                    ))}
                 </div>
 
                 {fileInfo.file.extension !== "md" &&
@@ -73,7 +67,13 @@ export function CardsView(props: {
                 ) : null}
               </div>
             </div>
-            <div className="explorer-card-footer tone-muted">
+            <div className="explorer-card-body">
+              <div className="explorer-card-tags-container">
+                {showTags &&
+                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+              </div>
+            </div>
+            <div className="explorer-card-footer">
               <CardFooter
                 fileInfo={fileInfo}
                 extForCard={extForCard}

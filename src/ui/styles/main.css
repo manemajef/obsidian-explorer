@@ -29,6 +29,10 @@
     0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+    --explorer-shadow-glass-small:
+    0 2px 4px rgba(0, 0, 0, 0.01),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.01);
   --explorer-glass-shine-color: rgba(255, 255, 255, 0.35);
   --explorer-glass-shine-opacity: 0;
 
@@ -45,6 +49,11 @@
   --explorer-card-border: 1px solid var(--background-modifier-border);
   --explorer-card-border-hover: 1px solid var(--background-modifier-border-hover);
   --explorer-card-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
+
+  --exolorer-bg-faint: rgba(0,0,0,0.075);
+  --explorer-bg-faint-hover: rgba(0,0,0,0.025);
+  --explorer-border-faint: rgba(0,0,0,0.2);
+  --explorer-border-faint-hover: rgba(0,0,0,0.4);
 
   scroll-margin-top: 10em;
 }
@@ -97,12 +106,20 @@
   --explorer-shadow-glass:
     0 4px 10px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    --explorer-shadow-glass-small:
+    0 2px 2px rgba(0, 0, 0, 0.08),
+    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.06);
   --explorer-glass-shine-color: rgba(255, 255, 255, 0.21);
   --explorer-glass-shine-opacity: 1;
 
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-interactive-hover: rgba(255, 255, 255, 0.05);
   --explorer-bg-alt: var(--explorer-bg-interactive);
+
+  --exolorer-bg-faint: rgba(255,255,255,255.075);
+  --explorer-bg-faint-hover: rgba(255,255,255,0.025);
+  --explorer-border-faint: rgba(255,255,255,0.2);
+  --explorer-border-faint-hover: rgba(255,255,255,0.4);
 }
 
 .is-mobile .explorer-container {

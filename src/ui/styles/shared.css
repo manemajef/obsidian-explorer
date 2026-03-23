@@ -169,8 +169,9 @@
 }
 
 .explorer-badge.tag {
-  background-color: var(--background-modifier-border) !important;
+  background-color: var(--background-modifier-border) !important; 
   border-radius: var(--explorer-radius-pill);
+  color: var(--text-muted);
 }
 
 /* ------------------------------------------------------------
