@@ -41,7 +41,14 @@ export class ExplorerBridge {
 
   async render(): Promise<void> {
     this.container.addClass("explorer-container");
-    this.container.setAttribute("dir", isRtl() ? "rtl" : "ltr");
+    const direction =
+      this.effectiveSettings.textDirection &&
+      this.effectiveSettings.textDirection !== "auto"
+        ? this.effectiveSettings.textDirection
+        : isRtl()
+          ? "rtl"
+          : "ltr";
+    this.container.setAttribute("dir", direction);
 
     const model = await this.api.buildRenderModel({
       sourcePath: this.sourcePath,

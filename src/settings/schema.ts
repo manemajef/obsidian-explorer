@@ -1,5 +1,7 @@
 export type SortBy = "newest" | "oldest" | "edited" | "name";
 export type ViewMode = "cards" | "list";
+export type DirectionMode = "rtl" | "ltr" | "auto";
+
 export type CardExt =
   | "folder"
   | "ctime"
@@ -201,6 +203,25 @@ export const BLOCK_SETTINGS_SCHEMA = {
       },
     },
   }),
+  textDirection: enumField<DirectionMode>({
+    label: "Text direction",
+    description:
+      "if set to `auto`, text directrion is based on filename language. to force `ltr`/ `rtl`, assign them",
+    blockKey: "textDirection",
+    defaultValue: "auto",
+    options: ["auto", "ltr", "rtl"],
+    optionLabels: {
+      rtl: "Right to left",
+      ltr: "Left to right",
+      auto: "Auto (based on filename)",
+    },
+    ui: {
+      surfaces: ["block"],
+      section: "behavior",
+      order: 50,
+    },
+  }),
+
   showFolders: booleanField({
     label: "Show folders",
     description: "Show folder buttons",
@@ -223,6 +244,7 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 30,
     },
   }),
+
   onlyNotes: booleanField({
     label: "Only notes",
     description: "Show only notes and PDFs",
