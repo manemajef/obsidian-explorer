@@ -19,7 +19,7 @@
 .explorer-card {
   border: var(--explorer-card-border);
   box-shadow: var(--explorer-shadow-glass-small);
-  background: var(--explorer-bg-interactive);
+  /* background: var(--explorer-bg-interactive); */
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
   height: 100%;
