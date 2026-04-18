@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 export function usePaginationState() {
   const [page, setPage] = useState(0);
@@ -7,10 +13,15 @@ export function usePaginationState() {
     setPage(0);
   }, []);
 
+  const loadMore = useCallback(() => {
+    setPage((current) => current + 1);
+  }, []);
+
   return {
     page,
     setPage,
     resetPage,
+    loadMore,
   };
 }
 

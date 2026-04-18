@@ -1,14 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
 import { BlockSettings } from "../../settings/schema";
 import {
   computeFileListing,
   resolveCardFooterMode,
 } from "../../backend/file-listing";
-import {
-  usePaginationBounds,
-  usePaginationState,
-} from "./use-pagination-state";
+import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
 
 interface UseExplorerStateOptions {
@@ -57,20 +54,65 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   });
 
   const activeListing = search.mode ? search.listing : normalListing;
+  const activePage = search.mode ? search.page : normalPagination.page;
 
-  const pageFileInfos = useMemo(
-    () =>
-      activeListing.pageFileInfos.map((fileInfo) => ({
+  const wrapPageFileInfos = useCallback(
+    (page: typeof activeListing.pageFileInfos) =>
+      page.map((fileInfo) => ({
         ...fileInfo,
         togglePin: () => {
           fileInfo.togglePin();
           setTimeout(refresh, 100);
         },
       })),
-    [activeListing.pageFileInfos, refresh],
+    [refresh],
   );
 
-  const currentPage = search.mode ? search.page : normalPagination.page;
+  const pageFileInfos = useMemo(
+    () => wrapPageFileInfos(activeListing.pageFileInfos),
+    [activeListing.pageFileInfos, wrapPageFileInfos],
+  );
+
+  const [visiblePageFileInfoChunks, setVisiblePageFileInfoChunks] = useState<
+    typeof pageFileInfos[]
+  >([]);
+  const activePageRef = useRef(activePage);
+
+  useEffect(() => {
+    activePageRef.current = activePage;
+  }, [activePage]);
+
+  const browseListingKey = useMemo(
+    () => ({
+      mode: "browse",
+      files: normalSourceFiles,
+      settings,
+    }),
+    [normalSourceFiles, settings],
+  );
+
+  const listingKey = search.mode
+    ? search.listingKey
+    : browseListingKey;
+
+  useEffect(() => {
+    setVisiblePageFileInfoChunks([]);
+    if (activePageRef.current !== 0) {
+      if (search.mode) {
+        search.setPage(0);
+      } else {
+        normalPagination.setPage(0);
+      }
+    }
+  }, [listingKey, normalPagination.setPage, search.mode, search.setPage]);
+
+  useEffect(() => {
+    setVisiblePageFileInfoChunks((current) => {
+      const next = current.slice(0, activePage);
+      next[activePage] = pageFileInfos;
+      return next;
+    });
+  }, [activePage, pageFileInfos]);
 
   const setCurrentPage = useCallback(
     (page: number) => {
@@ -83,6 +125,14 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     [search.mode, search.setPage, normalPagination.setPage],
   );
 
+  const loadMore = useCallback(() => {
+    if (search.mode) {
+      search.loadMore();
+    } else {
+      normalPagination.loadMore();
+    }
+  }, [search.mode, search.loadMore, normalPagination.loadMore]);
+
   const extForCard = useMemo(() => resolveCardFooterMode(settings), [settings]);
 
   return {
@@ -91,9 +141,12 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     isSearchLoading: search.isLoading,
     toggleSearch: search.toggleSearch,
     setSearchQuery: search.setSearchQuery,
-    currentPage,
+    currentPage: activePage,
     setCurrentPage,
     pageFileInfos,
+    visiblePageFileInfoChunks,
+    loadMore,
+    canLoadMore: activePage + 1 < activeListing.totalPages,
     refresh,
     totalPages: activeListing.totalPages,
     usePaging: activeListing.usePaging,

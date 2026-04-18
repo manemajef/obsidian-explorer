@@ -41,12 +41,38 @@ function PageDots(): React.JSX.Element {
   );
 }
 
-export function Pagination(props: {
+type PaginationProps = {
   app: App;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}): React.JSX.Element {
+};
+
+type PaginationModernProps = {
+  canLoadMore: boolean;
+  onLoadMore: () => void;
+};
+
+export function PaginationModern(
+  props: PaginationModernProps,
+): React.JSX.Element {
+  const { canLoadMore, onLoadMore } = props;
+  return (
+    <Group justify="center">
+      <button
+        type="button"
+        className="paging-load-more radius-pill border border-hover pad-compact"
+        onClick={onLoadMore}
+        disabled={!canLoadMore}
+      >
+        <span>Load more</span>
+        <Icon name="chevrons-down" className="paging-load-more-icon" />
+      </button>
+    </Group>
+  );
+}
+
+export function Pagination(props: PaginationProps): React.JSX.Element {
   const { app, currentPage, totalPages, onPageChange } = props;
   const isMobile = (app as App & { isMobile: boolean }).isMobile;
   const page = currentPage;

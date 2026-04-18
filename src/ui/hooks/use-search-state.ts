@@ -98,13 +98,24 @@ export function useSearchState(options: UseSearchStateOptions) {
     [pagination],
   );
 
+  const listingKey = useMemo(
+    () => ({
+      mode: "search",
+      debouncedQuery,
+      settings,
+    }),
+    [debouncedQuery, settings],
+  );
+
   return {
     mode: searchMode,
     query: searchQuery,
     isLoading: isSearchLoading,
     listing,
+    listingKey,
     page: pagination.page,
     setPage: pagination.setPage,
+    loadMore: pagination.loadMore,
     toggleSearch,
     setSearchQuery: handleSearchInput,
   };

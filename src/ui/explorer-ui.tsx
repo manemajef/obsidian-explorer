@@ -6,10 +6,12 @@ import { useExplorerState } from "./hooks/use-explorer-state";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
-import { Pagination } from "./components/pagination";
+import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
 import { Divider } from "./components/ui/layout";
 import { TFile } from "obsidian";
+
+const IS_PAGINATION_MODERN = true;
 
 interface ExplorerUIProps {
   app: App;
@@ -50,6 +52,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     currentPage,
     setCurrentPage,
     pageFileInfos,
+    visiblePageFileInfoChunks,
+    loadMore,
+    canLoadMore,
     totalPages,
     usePaging,
     extForCard,
@@ -60,6 +65,44 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     settings: effectiveSettings,
     getAllFiles,
   });
+
+  const useModernPagination = IS_PAGINATION_MODERN && effectiveSettings.usePagination;
+  const explorerClassName = useModernPagination
+    ? "explorer"
+    : `explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`;
+
+  const renderFiles = (files: typeof pageFileInfos) => {
+    if (effectiveSettings.view === "cards") {
+      return (
+        <CardsView
+          app={app}
+          sourcePath={sourcePath}
+          files={files}
+          extForCard={extForCard}
+          showTags={effectiveSettings.showTags}
+          onOpenFolderNote={onOpenFolderNote}
+        />
+      );
+    }
+
+    return (
+      <ListView
+        app={app}
+        sourcePath={sourcePath}
+        files={files}
+        showTags={effectiveSettings.showTags}
+      />
+    );
+  };
+
+  const renderPageChunk = (files: typeof pageFileInfos, index: number) => (
+    <div
+      key={`page-chunk-${index}`}
+      className={`explorer-page-chunk${effectiveSettings.view === "cards" ? " explorer-page-chunk--grid" : ""}`}
+    >
+      {renderFiles(files)}
+    </div>
+  );
 
   return (
     <>
@@ -92,38 +135,28 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {effectiveSettings.showNotes && (
         <div className="explorer-files-container">
-          <div
-            className={`explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`}
-          >
-            {effectiveSettings.view === "cards" && (
-              <CardsView
-                app={app}
-                sourcePath={sourcePath}
-                files={pageFileInfos}
-                extForCard={extForCard}
-                showTags={effectiveSettings.showTags}
-                onOpenFolderNote={onOpenFolderNote}
-              />
-            )}
-            {effectiveSettings.view === "list" && (
-              <ListView
-                app={app}
-                sourcePath={sourcePath}
-                files={pageFileInfos}
-                showTags={effectiveSettings.showTags}
-              />
-            )}
+          <div className={explorerClassName}>
+            {useModernPagination
+              ? visiblePageFileInfoChunks.map(renderPageChunk)
+              : renderFiles(pageFileInfos)}
           </div>
 
-          {usePaging && (
+          {usePaging && (!useModernPagination || canLoadMore) && (
             <>
               <br />
-              <Pagination
-                app={app}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
+              {useModernPagination ? (
+                <PaginationModern
+                  canLoadMore={canLoadMore}
+                  onLoadMore={loadMore}
+                />
+              ) : (
+                <Pagination
+                  app={app}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
             </>
           )}
         </div>
