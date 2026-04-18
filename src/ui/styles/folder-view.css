@@ -16,6 +16,9 @@
 
 .explorer-folder-card {
   box-sizing: border-box;
+  box-shadow: var(--explorer-shadow-glass-small);
+  background-color: var(--explorer-bg-interactive);
+  border-radius: var(--explorer-radius-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -27,12 +30,20 @@
 
 .is-mobile .explorer-folder-card {
   border-radius: 16px;
-  --explorer-surface-radius: 16px;
   padding: 1.15em 0.2em;
+}
+
+.explorer-folder-card--missing {
+  opacity: 0.7;
 }
 
 .explorer-folder-link--missing {
   color: var(--text-muted);
+}
+
+.explorer-folder-card a {
+  font-weight: var(--font-semibold);
+  color: var(--text-normal) !important;
 }
 
 /* body.theme-light .explorer-folder-card {

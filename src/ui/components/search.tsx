@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { GlassItem } from "./ui/glass";
+import { ActionItem } from "./ui/action";
 import { Group } from "./ui/layout";
 
 export function Search(props: {
@@ -8,8 +8,15 @@ export function Search(props: {
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
+  useGlass?: boolean;
 }): React.JSX.Element {
-  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
+  const {
+    searchMode,
+    searchQuery,
+    onSearchToggle,
+    onSearchInput,
+    useGlass = true,
+  } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -20,7 +27,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <GlassItem icon="search" onClick={onSearchToggle} />;
+    return <ActionItem glass={useGlass} icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -40,7 +47,8 @@ export function Search(props: {
         />
       </div>
       <div className="search-x-btn">
-        <GlassItem
+        <ActionItem
+          glass={useGlass}
           icon="x"
           onClick={onSearchToggle}
           className="cancel-search-btn hover-bg-modifier hover-opacity-100"

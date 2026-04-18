@@ -1,12 +1,19 @@
 {
-  "sortBy": "oldest",
-  "view": "list",
-  "depth": 0,
-  "pageSize": 15,
-  "onlyNotes": false,
-  "showUnsupportedFiles": false,
-  "showFolders": true,
-  "showBreadcrumbs": true,
-  "cardExt": "default",
-  "showNotes": true
+  "defaultBlockSettings": {
+    "view": "list",
+    "sortBy": "oldest",
+    "depth": 0,
+    "usePagination": true,
+    "showTags": true,
+    "pageSize": 15,
+    "showUnsupportedFiles": false,
+    "useGlass": false,
+    "cardExt": "default",
+    "textDirection": "auto",
+    "showFolders": true,
+    "showNotes": true,
+    "onlyNotes": false,
+    "showParentButton": true,
+    "showBreadcrumbs": true
+  }
 }

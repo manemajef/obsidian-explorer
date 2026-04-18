@@ -1,95 +1,29 @@
-/**
- * Glass UI components for the explorer plugin.
- * Self-contained — renders icons via Obsidian's setIcon.
- * Pair with shared.css (imported via index.css).
- */
+import { forwardRef } from "react";
 import {
-  forwardRef,
-  useEffect,
-  useRef,
-  type ReactNode,
-  type HTMLAttributes,
-} from "react";
-import { setIcon } from "obsidian";
+  ActionGroup,
+  ActionGroupItem,
+  ActionItem,
+  type ActionGroupProps,
+  type ActionGroupItemProps,
+  type ActionItemProps,
+} from "./action";
 
-/* ---- Utility ---- */
-function cx(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-/* ---- GlassIcon — renders an Obsidian icon into a span ---- */
-function GlassIcon({ name }: { name: string }) {
-  const ref = useRef<HTMLSpanElement | null>(null);
-  useEffect(() => {
-    if (ref.current) setIcon(ref.current, name);
-  }, [name]);
-  return <span ref={ref} className="glass-icon" />;
-}
-
-/* ---- GlassItem — standalone glass circle button ---- */
-export interface GlassItemProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, "children"> {
-  icon: string;
-  active?: boolean;
-}
+export type GlassItemProps = Omit<ActionItemProps, "glass">;
+export type GlassGroupProps = Omit<ActionGroupProps, "glass">;
+export type GlassGroupItemProps = Omit<ActionGroupItemProps, "glass">;
 
 export const GlassItem = forwardRef<HTMLButtonElement, GlassItemProps>(
-  ({ icon, active, className, ...props }, ref) => (
-    <button
-      ref={ref}
-      type="button"
-      className={cx(
-        "clickable-icon clickable-icon-normal glass glass-item circle hover-scale",
-        active && "glass-item--active",
-        className,
-      )}
-      {...props}
-    >
-      <GlassIcon name={icon} />
-    </button>
-  ),
+  (props, ref) => <ActionItem ref={ref} glass {...props} />,
 );
 GlassItem.displayName = "GlassItem";
 
-/* ---- GlassGroup — shared glass surface for multiple items ---- */
-export interface GlassGroupProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
-}
-
 export const GlassGroup = forwardRef<HTMLDivElement, GlassGroupProps>(
-  ({ children, className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cx("glass glass-group pill hover-scale", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  ),
+  (props, ref) => <ActionGroup ref={ref} glass {...props} />,
 );
 GlassGroup.displayName = "GlassGroup";
 
-/* ---- GlassGroupItem — flat icon button inside a group ---- */
-export interface GlassGroupItemProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, "children"> {
-  icon: string;
-  active?: boolean;
-}
-
-export const GlassGroupItem = forwardRef<HTMLButtonElement, GlassGroupItemProps>(
-  ({ icon, active, className, ...props }, ref) => (
-    <button
-      ref={ref}
-      type="button"
-      className={cx(
-        "clickable-icon clickable-icon-normal glass-group-item",
-        active && "glass-group-item--active",
-        className,
-      )}
-      {...props}
-    >
-      <GlassIcon name={icon} />
-    </button>
-  ),
-);
+export const GlassGroupItem = forwardRef<
+  HTMLButtonElement,
+  GlassGroupItemProps
+>((props, ref) => <ActionGroupItem ref={ref} {...props} />);
 GlassGroupItem.displayName = "GlassGroupItem";

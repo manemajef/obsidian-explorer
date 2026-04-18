@@ -21,6 +21,7 @@ const SECTION_ORDER: SettingsSection[] = [
   "core",
   "behavior",
   "display",
+  "appearance",
   "navigation",
 ];
 
@@ -35,6 +36,10 @@ const SECTION_META: Record<SettingsSection, SectionMeta> = {
   display: {
     title: "Default display",
     description: "Visibility defaults for new blocks.",
+  },
+  appearance: {
+    title: "Appearance",
+    description: "Plugin-wide visuals that apply to every explorer.",
   },
   navigation: {
     title: "Navigation",

@@ -11,7 +11,12 @@ export type CardExt =
   | "default";
 
 export type SettingsSurface = "plugin" | "block";
-export type SettingsSection = "core" | "behavior" | "display" | "navigation";
+export type SettingsSection =
+  | "core"
+  | "behavior"
+  | "display"
+  | "appearance"
+  | "navigation";
 
 type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
@@ -177,6 +182,17 @@ export const BLOCK_SETTINGS_SCHEMA = {
       surfaces: ["plugin"],
       section: "behavior",
       order: 20,
+    },
+  }),
+  useGlass: booleanField({
+    label: "Use glass action bar",
+    description: "Use the glass style for the action bar controls",
+    blockKey: "useGlass",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "appearance",
+      order: 10,
     },
   }),
   cardExt: enumField<CardExt>({
@@ -444,9 +460,13 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
 
   const nestedDefaults = raw.defaultBlockSettings;
   if (isRecord(nestedDefaults)) {
+    const nestedWithLegacyUseGlass =
+      typeof raw.useGlass === "boolean"
+        ? { useGlass: raw.useGlass, ...nestedDefaults }
+        : nestedDefaults;
     return {
       defaultBlockSettings: coerceBlockSettings(
-        nestedDefaults as Partial<Record<BlockSettingKey, unknown>>,
+        nestedWithLegacyUseGlass as Partial<Record<BlockSettingKey, unknown>>,
         pluginDefaults.defaultBlockSettings,
       ),
     };
