@@ -27,8 +27,10 @@ function GlassIcon({ name }: { name: string }) {
 }
 
 /* ---- GlassItem — standalone glass circle button ---- */
-export interface GlassItemProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, "children"> {
+export interface GlassItemProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  "children"
+> {
   icon: string;
   active?: boolean;
 }
@@ -70,26 +72,29 @@ export const GlassGroup = forwardRef<HTMLDivElement, GlassGroupProps>(
 GlassGroup.displayName = "GlassGroup";
 
 /* ---- GlassGroupItem — flat icon button inside a group ---- */
-export interface GlassGroupItemProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, "children"> {
+export interface GlassGroupItemProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  "children"
+> {
   icon: string;
   active?: boolean;
 }
 
-export const GlassGroupItem = forwardRef<HTMLButtonElement, GlassGroupItemProps>(
-  ({ icon, active, className, ...props }, ref) => (
-    <button
-      ref={ref}
-      type="button"
-      className={cx(
-        "clickable-icon clickable-icon-normal glass-group-item",
-        active && "glass-group-item--active",
-        className,
-      )}
-      {...props}
-    >
-      <GlassIcon name={icon} />
-    </button>
-  ),
-);
+export const GlassGroupItem = forwardRef<
+  HTMLButtonElement,
+  GlassGroupItemProps
+>(({ icon, active, className, ...props }, ref) => (
+  <button
+    ref={ref}
+    type="button"
+    className={cx(
+      "clickable-icon clickable-icon-normal glass-group-item",
+      active && "glass-group-item--active",
+      className,
+    )}
+    {...props}
+  >
+    <GlassIcon name={icon} />
+  </button>
+));
 GlassGroupItem.displayName = "GlassGroupItem";

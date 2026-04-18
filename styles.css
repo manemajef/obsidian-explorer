@@ -425,6 +425,9 @@ a.link-headless:hover {
 }
 .explorer-folder-card {
   box-sizing: border-box;
+  box-shadow: var(--explorer-shadow-glass-small);
+  background-color: var(--explorer-bg-interactive);
+  border-radius: var(--explorer-radius-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -435,11 +438,17 @@ a.link-headless:hover {
 }
 .is-mobile .explorer-folder-card {
   border-radius: 16px;
-  --explorer-surface-radius: 16px;
   padding: 1.15em 0.2em;
+}
+.explorer-folder-card--missing {
+  opacity: 0.7;
 }
 .explorer-folder-link--missing {
   color: var(--text-muted);
+}
+.explorer-folder-card a {
+  font-weight: var(--font-semibold);
+  color: var(--text-normal) !important;
 }
 
 /* src/ui/styles/cards-view.css */
@@ -726,6 +735,48 @@ a.link-headless:hover {
 .explorer-breadcrumb-dots {
   color: var(--text-faint);
   font-size: 0.85em;
+}
+.action-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
+  cursor: pointer;
+  color: var(--text-normal);
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+}
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  gap: 2px;
+  height: var(--explorer-control-size);
+  padding-inline: 3px;
+}
+.action-group-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
+  border-radius: 50%;
+  color: var(--text-normal);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+}
+.action-group-item:hover {
+  color: var(--text-normal) !important;
+}
+.action-group-item--active {
+  color: var(--text-normal);
 }
 
 /* src/ui/styles/index.css */

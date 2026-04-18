@@ -2,7 +2,7 @@
    Glass
    ------------------------------------------------------------ */
 .glass {
-  position: relative;
+  position: relative; 
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint));
   border: var(--explorer-surface-border, var(--explorer-border-glass));
