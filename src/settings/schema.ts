@@ -1,6 +1,7 @@
 export type SortBy = "newest" | "oldest" | "edited" | "name";
 export type ViewMode = "cards" | "list";
 export type DirectionMode = "rtl" | "ltr" | "auto";
+export type PaginationStyle = "classic" | "modern";
 
 export type CardExt =
   | "folder"
@@ -143,6 +144,25 @@ export const BLOCK_SETTINGS_SCHEMA = {
       surfaces: ["plugin", "block"],
       section: "core",
       order: 40,
+    },
+  }),
+  paginationStyle: enumField<PaginationStyle>({
+    label: "Pagination style",
+    description: "Choose between classic paging and load more",
+    blockKey: "paginationStyle",
+    defaultValue: "modern",
+    options: ["classic", "modern"],
+    optionLabels: {
+      classic: "Classic",
+      modern: "Load more",
+    },
+    ui: {
+      surfaces: ["plugin"],
+      section: "core",
+      order: 45,
+      labels: {
+        plugin: "Default pagination style",
+      },
     },
   }),
   showTags: booleanField({

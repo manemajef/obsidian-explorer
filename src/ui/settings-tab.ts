@@ -111,6 +111,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           void this.updateSetting(key, value as BlockSettings[typeof key]);
           if (key === "usePagination") {
             fieldRefs.get("pageSize")?.setDisabled(!value);
+            fieldRefs.get("paginationStyle")?.setDisabled(!value);
           }
         });
       });
@@ -137,7 +138,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       });
     }
 
-    if (key === "pageSize") {
+    if (key === "pageSize" || key === "paginationStyle") {
       setting.setDisabled(!settings.usePagination);
     }
 

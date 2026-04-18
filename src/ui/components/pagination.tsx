@@ -61,7 +61,7 @@ export function PaginationModern(
     <Group justify="center">
       <button
         type="button"
-        className="paging-load-more radius-pill border border-hover pad-compact"
+        className="clickable-icon paging-load-more radius-pill border border-hover pad-compact"
         onClick={onLoadMore}
         disabled={!canLoadMore}
       >

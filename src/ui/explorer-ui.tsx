@@ -11,8 +11,6 @@ import { ActionsBar } from "./components/actions-bar";
 import { Divider } from "./components/ui/layout";
 import { TFile } from "obsidian";
 
-const IS_PAGINATION_MODERN = true;
-
 interface ExplorerUIProps {
   app: App;
   sourcePath: string;
@@ -66,7 +64,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     getAllFiles,
   });
 
-  const useModernPagination = IS_PAGINATION_MODERN && effectiveSettings.usePagination;
+  const useModernPagination =
+    effectiveSettings.usePagination &&
+    effectiveSettings.paginationStyle === "modern";
   const explorerClassName = useModernPagination
     ? "explorer"
     : `explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`;

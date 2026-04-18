@@ -68,6 +68,7 @@ export class ExplorerSettingsModal extends Modal {
           this.updateSetting(key, value as BlockSettings[typeof key]);
           if (key === "usePagination") {
             fieldRefs.get("pageSize")?.setDisabled(!value);
+            fieldRefs.get("paginationStyle")?.setDisabled(!value);
           }
         });
       });
@@ -95,7 +96,7 @@ export class ExplorerSettingsModal extends Modal {
       });
     }
 
-    if (key === "pageSize") {
+    if (key === "pageSize" || key === "paginationStyle") {
       setting.setDisabled(!this.settings.usePagination);
     }
 
