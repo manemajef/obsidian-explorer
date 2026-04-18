@@ -131,11 +131,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
               onOpenFolderNote={onOpenFolderNote}
             />
             <Divider />
+            {/* <Divider /> */}
           </>
         )}
 
       {effectiveSettings.showNotes && (
         <div className="explorer-files-container">
+          <Divider />
           <div className={explorerClassName}>
             {useModernPagination
               ? visiblePageFileInfoChunks.map(renderPageChunk)
