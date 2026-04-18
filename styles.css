@@ -114,48 +114,6 @@
   mask-composite: exclude;
   pointer-events: none;
 }
-.glass-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--explorer-control-size);
-  height: var(--explorer-control-size);
-  cursor: pointer;
-  color: var(--text-normal);
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0;
-}
-.glass-group {
-  display: inline-flex;
-  align-items: center;
-  background: transparent;
-  gap: 2px;
-  height: var(--explorer-control-size);
-  padding-inline: 3px;
-}
-.glass-group-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--explorer-control-size);
-  height: var(--explorer-control-size);
-  border-radius: 50%;
-  color: var(--text-normal);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0;
-}
-.glass-group-item:hover {
-  color: var(--text-normal) !important;
-}
-.glass-group-item--active {
-  color: var(--text-normal);
-}
 .bar {
   display: flex;
   align-items: center;

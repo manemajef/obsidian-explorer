@@ -1,27 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { GlassItem } from "./ui/glass";
+import { ActionItem } from "./ui/action";
 import { Group } from "./ui/layout";
-
-type SearchItemComponent = React.ElementType<{
-  icon: string;
-  className?: string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}>;
 
 export function Search(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  ItemComponent?: SearchItemComponent;
+  useGlass?: boolean;
 }): React.JSX.Element {
   const {
     searchMode,
     searchQuery,
     onSearchToggle,
     onSearchInput,
-    ItemComponent = GlassItem,
+    useGlass = true,
   } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -33,7 +27,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <ItemComponent icon="search" onClick={onSearchToggle} />;
+    return <ActionItem glass={useGlass} icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -53,7 +47,8 @@ export function Search(props: {
         />
       </div>
       <div className="search-x-btn">
-        <ItemComponent
+        <ActionItem
+          glass={useGlass}
           icon="x"
           onClick={onSearchToggle}
           className="cancel-search-btn hover-bg-modifier hover-opacity-100"

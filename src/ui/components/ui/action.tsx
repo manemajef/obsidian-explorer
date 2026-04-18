@@ -1,7 +1,6 @@
 /**
- * Action UI components for the explorer plugin.
- * Self-contained — renders icons via Obsidian's setIcon.
- * Pair with action-bar.css (imported via index.css).
+ * Shared action controls for the explorer plugin.
+ * Toggle the glass variant with the `glass` prop.
  */
 import {
   forwardRef,
@@ -12,7 +11,7 @@ import {
 } from "react";
 import { setIcon } from "obsidian";
 
-function cx(...classes: (string | false | null | undefined)[]) {
+function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -24,21 +23,26 @@ function ActionIcon({ name }: { name: string }) {
   return <span ref={ref} className="action-icon" />;
 }
 
+type ActionItemVariantProps = {
+  icon: string;
+  active?: boolean;
+  glass?: boolean;
+};
+
 export interface ActionItemProps extends Omit<
   HTMLAttributes<HTMLButtonElement>,
   "children"
-> {
-  icon: string;
-  active?: boolean;
-}
+>,
+  ActionItemVariantProps {}
 
 export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
-  ({ icon, active, className, ...props }, ref) => (
+  ({ icon, active, glass = false, className, ...props }, ref) => (
     <button
       ref={ref}
       type="button"
-      className={cx(
+      className={cn(
         "clickable-icon clickable-icon-normal action-item circle hover-scale",
+        glass && "glass",
         active && "action-item--active",
         className,
       )}
@@ -52,13 +56,14 @@ ActionItem.displayName = "ActionItem";
 
 export interface ActionGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  glass?: boolean;
 }
 
 export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
-  ({ children, className, ...props }, ref) => (
+  ({ children, glass = false, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cx("action-group pill hover-scale", className)}
+      className={cn("action-group pill hover-scale", glass && "glass", className)}
       {...props}
     >
       {children}
@@ -82,7 +87,7 @@ export const ActionGroupItem = forwardRef<
   <button
     ref={ref}
     type="button"
-    className={cx(
+    className={cn(
       "clickable-icon clickable-icon-normal action-group-item",
       active && "action-group-item--active",
       className,
