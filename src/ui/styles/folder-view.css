@@ -45,6 +45,9 @@
   font-weight: var(--font-semibold);
   color: var(--text-normal) !important;
 }
+.theme-dark .explorer-folder-card:not(:hover) {
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
 
 /* body.theme-light .explorer-folder-card {
   --explorer-surface-tint: var(--background-primary);
