@@ -8,6 +8,7 @@ export const EXCLUDED_EXTENSIONS = [
   "svg",
   "gif",
   "webp",
+  // "excalidraw",
 ];
 
 // Content files that most users want to see (vs code files)

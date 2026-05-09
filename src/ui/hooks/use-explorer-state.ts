@@ -76,7 +76,11 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   const [visiblePageFileInfoChunks, setVisiblePageFileInfoChunks] = useState<
     typeof pageFileInfos[]
   >([]);
+  const [animatedChunkIndex, setAnimatedChunkIndex] = useState<number | null>(
+    null,
+  );
   const activePageRef = useRef(activePage);
+  const shouldAnimateNextChunkRef = useRef(false);
 
   useEffect(() => {
     activePageRef.current = activePage;
@@ -97,6 +101,8 @@ export function useExplorerState(options: UseExplorerStateOptions) {
 
   useEffect(() => {
     setVisiblePageFileInfoChunks([]);
+    setAnimatedChunkIndex(null);
+    shouldAnimateNextChunkRef.current = false;
     if (activePageRef.current !== 0) {
       if (search.mode) {
         search.setPage(0);
@@ -112,6 +118,10 @@ export function useExplorerState(options: UseExplorerStateOptions) {
       next[activePage] = pageFileInfos;
       return next;
     });
+    setAnimatedChunkIndex(
+      shouldAnimateNextChunkRef.current ? activePage : null,
+    );
+    shouldAnimateNextChunkRef.current = false;
   }, [activePage, pageFileInfos]);
 
   const setCurrentPage = useCallback(
@@ -126,6 +136,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   );
 
   const loadMore = useCallback(() => {
+    shouldAnimateNextChunkRef.current = true;
     if (search.mode) {
       search.loadMore();
     } else {
@@ -145,6 +156,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     setCurrentPage,
     pageFileInfos,
     visiblePageFileInfoChunks,
+    animatedChunkIndex,
     loadMore,
     canLoadMore: activePage + 1 < activeListing.totalPages,
     refresh,
