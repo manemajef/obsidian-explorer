@@ -119,6 +119,19 @@
   padding: 0;
 }
 
+.action-item--native {
+  border-radius: var(--explorer-radius-md);
+}
+
+.action-item--native:hover,
+.action-item--native:focus-visible {
+  color: var(--text-normal);
+}
+
+/* .action-item--glass {
+  padding: 0;
+} */
+
 .action-group {
   display: inline-flex;
   align-items: center;
@@ -127,6 +140,10 @@
   height: var(--explorer-control-size);
   padding-inline: 3px;
 } 
+
+.actions-native-shortcuts {
+  gap: var(--explorer-space-1);
+}
 
 .action-group-item {
   display: inline-flex;
