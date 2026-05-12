@@ -7,8 +7,8 @@ export function createInternalLink(
   container: HTMLElement,
   path: string,
   displayText: string,
-  app: App,
-  sourcePath: string,
+  _app: App,
+  _sourcePath: string,
   additionalClasses: string[] = [],
 ): HTMLAnchorElement {
   const link = container.createEl("a", {

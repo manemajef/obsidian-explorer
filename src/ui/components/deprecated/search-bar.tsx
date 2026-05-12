@@ -11,13 +11,14 @@ export function SearchBar(props: {
   const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const activeWindow = (window as Window & { activeWindow: Window }).activeWindow;
 
   // Focus input when search opens
   useEffect(() => {
     if (!searchMode) return;
-    const timer = setTimeout(() => inputRef.current?.focus(), 0);
-    return () => clearTimeout(timer);
-  }, [searchMode]);
+    const timer = activeWindow.setTimeout(() => inputRef.current?.focus(), 0);
+    return () => activeWindow.clearTimeout(timer);
+  }, [activeWindow, searchMode]);
 
   return (
     <div className="pages-nav">

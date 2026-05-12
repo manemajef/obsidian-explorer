@@ -13,6 +13,8 @@ interface UseSearchStateOptions {
 
 export function useSearchState(options: UseSearchStateOptions) {
   const { app, settings, getAllFiles, tick } = options;
+  const activeWindow = (window as Window & { activeWindow: Window }).activeWindow;
+  const activeDocument = (window as Window & { activeDocument: Document }).activeDocument;
 
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,9 +25,9 @@ export function useSearchState(options: UseSearchStateOptions) {
   const pagination = usePaginationState();
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 80);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+    const timer = activeWindow.setTimeout(() => setDebouncedQuery(searchQuery), 80);
+    return () => activeWindow.clearTimeout(timer);
+  }, [activeWindow, searchQuery]);
 
   useEffect(() => {
     if (!searchMode) {
@@ -72,15 +74,15 @@ export function useSearchState(options: UseSearchStateOptions) {
         setSearchQuery("");
         setDebouncedQuery("");
         pagination.resetPage();
-        setTimeout(() => {
-          document.getElementById("explorer-actions")?.scrollIntoView({
+        activeWindow.setTimeout(() => {
+          activeDocument.getElementById("explorer-actions")?.scrollIntoView({
             behavior: "smooth",
             block: "start",
           });
         }, 50);
       } else {
-        setTimeout(() => {
-          document.getElementById("explorer-searchbar")?.scrollIntoView({
+        activeWindow.setTimeout(() => {
+          activeDocument.getElementById("explorer-searchbar")?.scrollIntoView({
             behavior: "smooth",
             block: "start",
           });
@@ -88,7 +90,7 @@ export function useSearchState(options: UseSearchStateOptions) {
       }
       return !prev;
     });
-  }, [pagination]);
+  }, [activeDocument, activeWindow, pagination]);
 
   const handleSearchInput = useCallback(
     (query: string) => {

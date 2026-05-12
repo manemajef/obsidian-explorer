@@ -60,7 +60,12 @@ export function ActionsBar(props: {
       </div>
     );
   return (
-    <div id="explorer-actions">
+    <div
+      id="explorer-actions"
+      className={
+        useGlass ? "explorer-actions--glass" : "explorer-actions-native"
+      }
+    >
       <Bar>
         <Bar.Item>
           <Group gap={2} className="">
@@ -73,7 +78,11 @@ export function ActionsBar(props: {
                 }}
               />
             )}
-            <ActionItem glass={useGlass} icon="settings-2" onClick={onOpenSettings} />
+            <ActionItem
+              glass={useGlass}
+              icon="settings-2"
+              onClick={onOpenSettings}
+            />
           </Group>
         </Bar.Item>
         <Bar.Item />
@@ -91,25 +100,18 @@ export function ActionsBar(props: {
 
         <Bar.Item>
           <Group className="">
-            {!(searchMode && Platform.isMobile) && (
-              useGlass ? (
+            {!(searchMode && Platform.isMobile) &&
+              (useGlass ? (
                 <ActionGroup glass={useGlass}>
-                  <ActionGroupItem
-                    icon="folder-plus"
-                    onClick={onNewFolder}
-                  />
-                  <ActionGroupItem
-                    icon="file-plus-2"
-                    onClick={onNewNote}
-                  />
+                  <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+                  <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
                 </ActionGroup>
               ) : (
                 <Group gap={1} className="actions-native-shortcuts">
                   <ActionItem icon="folder-plus" onClick={onNewFolder} />
                   <ActionItem icon="file-plus-2" onClick={onNewNote} />
                 </Group>
-              )
-            )}
+              ))}
             <Separator />
             <Search
               searchMode={searchMode}
