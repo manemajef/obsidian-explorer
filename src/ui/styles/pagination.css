@@ -76,6 +76,9 @@
 }
 
 .explorer-page-chunk {
+}
+
+.explorer-page-chunk--animated {
   animation: explorer-page-reveal 180ms ease-out;
 }
 

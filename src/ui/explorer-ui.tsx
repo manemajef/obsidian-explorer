@@ -51,6 +51,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     setCurrentPage,
     pageFileInfos,
     visiblePageFileInfoChunks,
+    animatedChunkIndex,
     loadMore,
     canLoadMore,
     totalPages,
@@ -95,14 +96,18 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     );
   };
 
-  const renderPageChunk = (files: typeof pageFileInfos, index: number) => (
-    <div
-      key={`page-chunk-${index}`}
-      className={`explorer-page-chunk${effectiveSettings.view === "cards" ? " explorer-page-chunk--grid" : ""}`}
-    >
-      {renderFiles(files)}
-    </div>
-  );
+  const renderPageChunk = (files: typeof pageFileInfos, index: number) => {
+    const shouldAnimate = index === animatedChunkIndex;
+
+    return (
+      <div
+        key={`page-chunk-${index}`}
+        className={`explorer-page-chunk${shouldAnimate ? " explorer-page-chunk--animated" : ""}${effectiveSettings.view === "cards" ? " explorer-page-chunk--grid" : ""}`}
+      >
+        {renderFiles(files)}
+      </div>
+    );
+  };
 
   return (
     <>

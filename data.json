@@ -4,6 +4,7 @@
     "sortBy": "oldest",
     "depth": 0,
     "usePagination": true,
+    "paginationStyle": "modern",
     "showTags": true,
     "pageSize": 15,
     "showUnsupportedFiles": false,

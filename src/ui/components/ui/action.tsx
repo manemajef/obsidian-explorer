@@ -41,8 +41,8 @@ export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
       ref={ref}
       type="button"
       className={cn(
-        "clickable-icon clickable-icon-normal action-item circle hover-scale",
-        glass && "glass",
+        "clickable-icon clickable-icon-normal action-item",
+        glass ? "action-item--glass circle hover-scale glass" : "action-item--native",
         active && "action-item--active",
         className,
       )}
@@ -63,7 +63,11 @@ export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
   ({ children, glass = false, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("action-group pill hover-scale", glass && "glass", className)}
+      className={cn(
+        "action-group",
+        glass && "action-group--glass pill hover-scale glass",
+        className,
+      )}
       {...props}
     >
       {children}

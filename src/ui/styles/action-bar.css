@@ -110,14 +110,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: .5em;
+  opacity: .7;
+}
+
+.explorer-action-items--glass .action-item:hover {
+  opacity: 1;
+}
+.explorer-action-items--glass .action-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
   cursor: pointer;
   color: var(--text-normal);
   appearance: none;
   -webkit-appearance: none;
-  padding: 0;
+  /* padding: 3px; */
 }
+
+
+/* .action-item--native {
+  border-radius: var(--explorer-radius-md);
+}
+
+.action-item--native:hover,
+.action-item--native:focus-visible {
+  color: var(--text-normal);
+} */
+
+/* .action-item--glass {
+  padding: 0;
+} */
 
 .action-group {
   display: inline-flex;
@@ -127,6 +152,10 @@
   height: var(--explorer-control-size);
   padding-inline: 3px;
 } 
+
+.actions-native-shortcuts {
+  gap: var(--explorer-space-1);
+}
 
 .action-group-item {
   display: inline-flex;

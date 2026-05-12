@@ -19,7 +19,7 @@
   box-shadow: var(--explorer-shadow-glass-small);
   background-color: var(--explorer-bg-interactive);
   border-radius: var(--explorer-radius-lg);
-  cursor: pointer;
+  /* cursor: pointer; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,6 +44,9 @@
 .explorer-folder-card a {
   font-weight: var(--font-semibold);
   color: var(--text-normal) !important;
+}
+.theme-dark .explorer-folder-card:not(:hover) {
+  border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 /* body.theme-light .explorer-folder-card {
