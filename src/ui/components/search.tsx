@@ -19,13 +19,12 @@ export function Search(props: {
   } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const activeWindow = (window as Window & { activeWindow: Window }).activeWindow;
 
   useEffect(() => {
     if (!searchMode) return;
-    const timer = activeWindow.setTimeout(() => inputRef.current?.focus(), 50);
-    return () => activeWindow.clearTimeout(timer);
-  }, [activeWindow, searchMode]);
+    const timer = window.setTimeout(() => inputRef.current?.focus(), 50);
+    return () => window.clearTimeout(timer);
+  }, [searchMode]);
 
   if (!searchMode) {
     return <ActionItem glass={useGlass} icon="search" onClick={onSearchToggle} />;
