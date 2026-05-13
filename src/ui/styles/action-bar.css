@@ -5,6 +5,10 @@
   padding-bottom: var(--explorer-space-2);
 }
 
+.explorer-actions--glass {
+  margin-top: 1.5em; 
+}
+
 .is-mobile #explorer-actions {
   padding-bottom: var(--explorer-space-4) !important;
 }
@@ -160,7 +164,7 @@
   color: var(--text-normal);
   background: transparent;
   border: none;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: all 0.2s ease;
   appearance: none;
   -webkit-appearance: none;

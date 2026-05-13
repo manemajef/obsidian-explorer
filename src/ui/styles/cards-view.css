@@ -28,11 +28,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition:  0.2s;
   /* cursor: pointer; */
 }
 
 .explorer-card:hover {
     border: 1px solid var(--background-modifier-border-hover);
+    /* box-shadow: inset; */
+
+
 }
 /* .explorer-card-header a {
   /* color: var(--text-normal) !important; */
