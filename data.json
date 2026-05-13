@@ -7,13 +7,13 @@
     "paginationStyle": "modern",
     "showTags": true,
     "pageSize": 15,
-    "showUnsupportedFiles": false,
-    "useGlass": false,
+    "showUnsupportedFiles": true,
+    "useGlass": true,
     "cardExt": "default",
     "textDirection": "auto",
     "showFolders": true,
     "showNotes": true,
-    "onlyNotes": false,
+    "onlyNotes": true,
     "showParentButton": true,
     "showBreadcrumbs": true
   }

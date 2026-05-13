@@ -18,8 +18,6 @@ interface UseExplorerStateOptions {
 
 export function useExplorerState(options: UseExplorerStateOptions) {
   const { app, depthFiles, folderNotes, settings, getAllFiles } = options;
-  const activeWindow = (window as Window & { activeWindow: Window }).activeWindow;
-
   const [tick, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
@@ -63,10 +61,10 @@ export function useExplorerState(options: UseExplorerStateOptions) {
         ...fileInfo,
         togglePin: () => {
           fileInfo.togglePin();
-          activeWindow.setTimeout(refresh, 100);
+          window.setTimeout(refresh, 100);
         },
       })),
-    [activeWindow, refresh],
+    [refresh],
   );
 
   const pageFileInfos = useMemo(

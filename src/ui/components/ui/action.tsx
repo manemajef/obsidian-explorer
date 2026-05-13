@@ -29,11 +29,10 @@ type ActionItemVariantProps = {
   glass?: boolean;
 };
 
-export interface ActionItemProps extends Omit<
-  HTMLAttributes<HTMLButtonElement>,
-  "children"
->,
-  ActionItemVariantProps {}
+export interface ActionItemProps
+  extends
+    Omit<HTMLAttributes<HTMLButtonElement>, "children">,
+    ActionItemVariantProps {}
 
 export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
   ({ icon, active, glass = false, className, ...props }, ref) => (
@@ -41,8 +40,9 @@ export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
       ref={ref}
       type="button"
       className={cn(
-        "clickable-icon clickable-icon-normal action-item",
-        glass ? "action-item--glass circle hover-scale glass" : "action-item--native",
+        glass
+          ? "action-item action-item--glass clickable-icon-normal circle hover-scale glass"
+          : "action-item--native clickable-icon clickable-icon-normal",
         active && "action-item--active",
         className,
       )}
