@@ -19,7 +19,6 @@ export function Search(props: {
   } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-
   useEffect(() => {
     if (!searchMode) return;
     const timer = window.setTimeout(() => inputRef.current?.focus(), 50);

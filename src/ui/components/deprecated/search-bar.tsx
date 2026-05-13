@@ -11,7 +11,6 @@ export function SearchBar(props: {
   const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-
   // Focus input when search opens
   useEffect(() => {
     if (!searchMode) return;

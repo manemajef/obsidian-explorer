@@ -18,7 +18,6 @@ interface UseExplorerStateOptions {
 
 export function useExplorerState(options: UseExplorerStateOptions) {
   const { app, depthFiles, folderNotes, settings, getAllFiles } = options;
-
   const [tick, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
