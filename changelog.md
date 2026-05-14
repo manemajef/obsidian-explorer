@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-05-14 - Version 1.1.4
+
+**Release:** Add command palette support for basic functionality, polish UI, and general optimization.
+**Files:**
+- `main.ts` — registered command palette commands for inserting explorer blocks and creating explorer folders
+- `src/ui/components/list-view.tsx`, `src/ui/styles/list-view.css` — mobile list rewritten as a dedicated note-row variant
+- `src/ui/components/actions-bar.tsx`, `src/ui/components/search.tsx`, `src/ui/components/ui/action.tsx` — action bar and glass control cleanup
+- `src/ui/styles/action-bar.css`, `src/ui/styles/search.css`, `src/ui/styles/shared.css`, `src/ui/styles/main.css` — reduced UI/CSS coupling and normalized glass behavior
+- `src/ui/styles/utils.css` — removed; component-owned styling now lives with each UI unit
+
+---
+
 ## 2026-02-15 - Pagination Label Subcomponents
 
 **Task:** Reduce repeated pagination label markup/classes by extracting local subcomponents in `pagination.tsx`.
