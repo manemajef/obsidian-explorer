@@ -68,6 +68,7 @@
   /* background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint)); */
   /* box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass)); */
+  color: var(--text-muted) !important;
   font-weight: var(--font-medium);
   /* border: var(--explorer-border-glass); */
 }
