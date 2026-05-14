@@ -218,7 +218,7 @@
   transition: 0.15s;
 }
 .theme-dark .explorer-folder-card:not(:hover) {
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.02);
 }
 .is-mobile .explorer-folder-card {
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
