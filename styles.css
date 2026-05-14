@@ -231,7 +231,8 @@
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
-  border-color: var(--background-modifier-border-hover);
+  border-color: var(--background-modifier-border);
+  box-shadow: var(--explorer-shadow-glass-strong);
 }
 .is-mobile .explorer-folder-card {
   border-radius: 16px;
