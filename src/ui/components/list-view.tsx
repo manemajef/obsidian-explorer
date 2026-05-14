@@ -66,7 +66,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
   const { app, sourcePath, files, showTags } = props;
 
   return (
-    <div className="explorer-mobile-list">
+    <div className="explorer-mobile-list glass-surface">
       {files.map((fileInfo, i) => (
         <div key={fileInfo.file.path} className="explorer-mobile-list-item">
           <InternalLink

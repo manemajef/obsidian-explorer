@@ -25,28 +25,15 @@
   justify-content: center;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
+  --explorer-surface-radius: 50%;
+  --explorer-surface-hover-scale: var(--explorer-hover-scale);
   appearance: none;
   -webkit-appearance: none;
   padding: 0;
 }
 
 .explorer-container.use-glass .action-item {
-  border-radius: 50%;
   color: var(--text-normal);
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-}
-
-.explorer-container.use-glass .action-item:hover,
-.explorer-container.use-glass .action-item:focus-visible,
-.explorer-container.use-glass .action-group:hover,
-.explorer-container.use-glass .action-group:focus-within {
-  transform: scale(var(--explorer-hover-scale));
-  z-index: 10;
 }
 
 .explorer-container:not(.use-glass) .action-item {
@@ -69,16 +56,8 @@
   gap: 2px;
   height: var(--explorer-control-size);
   padding-inline: 3px;
-}
-
-.explorer-container.use-glass .action-group {
-  border-radius: var(--explorer-radius-pill);
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
+  --explorer-surface-radius: var(--explorer-radius-pill);
+  --explorer-surface-hover-scale: var(--explorer-hover-scale);
 }
 
 .explorer-container:not(.use-glass) .action-group {

@@ -5,7 +5,6 @@
   --explorer-space-3: 0.75em;
   --explorer-space-4: 1em;
   --explorer-space-5: 1.5em;
-  --explorer-space-5-5: 1.75em;
   --explorer-space-6: 2em;
   --explorer-radius-sm: 4px;
   --explorer-radius-md: 6px;
@@ -30,19 +29,8 @@
   --explorer-hover-scale: 1.05;
   --explorer-hover-transition: 0.15s ease;
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
-  --explorer-bg-interactive-hover: rgba(0, 0, 0, 0.1);
   --explorer-bg-alt: rgba(0,0,0,0.02);
   --explorer-card-border: 1px solid var(--background-modifier-border);
-  --explorer-card-border-hover: 1px solid var(--background-modifier-border-hover);
-  --explorer-card-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
-  --exolorer-bg-faint: rgba(0,0,0,0.075);
-  --explorer-bg-faint-hover: rgba(0,0,0,0.025);
-  --explorer-border-faint: rgba(0,0,0,0.2);
-  --explorer-border-faint-hover: rgba(0,0,0,0.4);
-  --exlorer-glass-backgroubd: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  --explorer-glass-border: var(--explorer-surface-border, var(--explorer-border-glass));
-  --exolorer-glass-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-  --explorer-glass-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
   scroll-margin-top: 10em;
 }
 .explorer-container :where(a, button, .explorer-card, .explorer-folder-card, .paging-label, .explorer-badge) {
@@ -74,12 +62,7 @@
   --explorer-glass-shine-color: rgba(255, 255, 255, 0.21);
   --explorer-glass-shine-opacity: 1;
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
-  --explorer-bg-interactive-hover: rgba(255, 255, 255, 0.05);
   --explorer-bg-alt: var(--explorer-bg-interactive);
-  --exolorer-bg-faint: rgba(255,255,255,255.075);
-  --explorer-bg-faint-hover: rgba(255,255,255,0.025);
-  --explorer-border-faint: rgba(255,255,255,0.2);
-  --explorer-border-faint-hover: rgba(255,255,255,0.4);
 }
 .is-mobile .explorer-container {
   --explorer-control-size: 42px;
@@ -90,18 +73,24 @@
 }
 
 /* src/ui/styles/shared.css */
-.glass {
+.explorer-container.use-glass .glass-surface {
   position: relative;
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
   border: var(--explorer-surface-border, var(--explorer-border-glass));
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
   border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
   background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
   background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.glass::after {
+.explorer-container.use-glass .glass-surface:hover,
+.explorer-container.use-glass .glass-surface:focus-visible,
+.explorer-container.use-glass .glass-surface:focus-within {
+  transform: scale(var(--explorer-surface-hover-scale, var(--explorer-hover-scale)));
+  z-index: 10;
+}
+.explorer-container.use-glass .glass-surface--shine::after {
   content: "";
   position: absolute;
   inset: -1px;
@@ -221,13 +210,17 @@
   border: 1px solid rgba(255, 255, 255, 0.02);
 }
 .is-mobile .explorer-folder-card {
+  --explorer-surface-radius: 16px;
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
   background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
   border: var(--explorer-border-glass-strong);
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass-strong));
 }
-.is-mobile.theme-dark .explorer-folder-card {
-  background-color: rgba(264, 264, 264, 0.05);
+.theme-dark.is-mobile .explorer-folder-card,
+.is-mobile .theme-dark .explorer-folder-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--explorer-shadow-glass-small);
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
@@ -235,7 +228,7 @@
   box-shadow: var(--explorer-shadow-glass-strong);
 }
 .is-mobile .explorer-folder-card {
-  border-radius: 16px;
+  border-radius: var(--explorer-surface-radius);
   padding: 1.15em 0.2em;
 }
 .explorer-folder-card--missing {
@@ -391,13 +384,10 @@
 .explorer-mobile-list {
   margin-top: var(--explorer-space-3);
   padding-bottom: var(--explorer-space-2);
+  --explorer-surface-radius: 1em;
+  --explorer-surface-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
-}
-.explorer-container.use-glass .explorer-mobile-list {
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 .explorer-mobile-list-item {
   padding: var(--explorer-space-1) var(--explorer-space-4);
@@ -512,11 +502,9 @@
   gap: var(--explorer-space-2);
   margin-inline: auto;
   min-width: 11rem;
-  padding: var(--explorer-space-2) var(--explorer-space-4);
+  padding: var(--explorer-space-3) var(--explorer-space-4);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
-  background: var(--explorer-glass-background);
-  box-shadow: var(--explorer-glass-shadow);
   font-weight: var(--font-medium);
 }
 .paging-load-more:hover,
@@ -583,25 +571,14 @@
   justify-content: center;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
+  --explorer-surface-radius: 50%;
+  --explorer-surface-hover-scale: var(--explorer-hover-scale);
   appearance: none;
   -webkit-appearance: none;
   padding: 0;
 }
 .explorer-container.use-glass .action-item {
-  border-radius: 50%;
   color: var(--text-normal);
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-}
-.explorer-container.use-glass .action-item:hover,
-.explorer-container.use-glass .action-item:focus-visible,
-.explorer-container.use-glass .action-group:hover,
-.explorer-container.use-glass .action-group:focus-within {
-  transform: scale(var(--explorer-hover-scale));
-  z-index: 10;
 }
 .explorer-container:not(.use-glass) .action-item {
   border-radius: var(--explorer-radius-md);
@@ -620,14 +597,8 @@
   gap: 2px;
   height: var(--explorer-control-size);
   padding-inline: 3px;
-}
-.explorer-container.use-glass .action-group {
-  border-radius: var(--explorer-radius-pill);
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
+  --explorer-surface-radius: var(--explorer-radius-pill);
+  --explorer-surface-hover-scale: var(--explorer-hover-scale);
 }
 .explorer-container:not(.use-glass) .action-group {
   padding-inline: 0;

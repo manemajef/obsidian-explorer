@@ -1,20 +1,24 @@
-/* ------------------------------------------------------------
-   Glass
-   ------------------------------------------------------------ */
-.glass {
-  position: relative; 
+.explorer-container.use-glass .glass-surface {
+  position: relative;
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint));
   border: var(--explorer-surface-border, var(--explorer-border-glass));
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
   border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
   background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
   background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.glass::after {
+.explorer-container.use-glass .glass-surface:hover,
+.explorer-container.use-glass .glass-surface:focus-visible,
+.explorer-container.use-glass .glass-surface:focus-within {
+  transform: scale(var(--explorer-surface-hover-scale, var(--explorer-hover-scale)));
+  z-index: 10;
+}
+
+.explorer-container.use-glass .glass-surface--shine::after {
   content: "";
   position: absolute;
   inset: -1px;

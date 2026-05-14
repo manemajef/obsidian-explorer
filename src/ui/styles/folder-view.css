@@ -41,7 +41,7 @@
 }
 
 .is-mobile .explorer-folder-card {
-
+  --explorer-surface-radius: 16px;
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint));
   /* background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important; */
@@ -54,11 +54,12 @@
  
 
 }
-.is-mobile.theme-dark  .explorer-folder-card {
+.theme-dark.is-mobile .explorer-folder-card,
+.is-mobile .theme-dark .explorer-folder-card {
   /* background: var(--interactive-normal); */
-  background-color: rgba(264,264,264,0.05);
-  /* box-shadow: var(--input-shadow); */
-  /* border: none; */
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--explorer-shadow-glass-small);
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
@@ -67,7 +68,7 @@
 }
 
 .is-mobile .explorer-folder-card {
-  border-radius: 16px;
+  border-radius: var(--explorer-surface-radius);
   padding: 1.15em 0.2em;
   /* border: 1px solid var(--text-normal) !important; */
 }

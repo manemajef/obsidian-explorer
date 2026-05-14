@@ -26,6 +26,7 @@ function ActionIcon({ name }: { name: string }) {
 type ActionItemVariantProps = {
   icon: string;
   active?: boolean;
+  shine?: boolean;
 };
 
 export interface ActionItemProps
@@ -34,12 +35,13 @@ export interface ActionItemProps
     ActionItemVariantProps {}
 
 export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
-  ({ icon, active, className, ...props }, ref) => (
+  ({ icon, active, shine = true, className, ...props }, ref) => (
     <button
       ref={ref}
       type="button"
       className={cn(
-        "action-item clickable-icon",
+        "action-item clickable-icon glass-surface",
+        shine && "glass-surface--shine",
         active && "action-item--active",
         className,
       )}
@@ -53,13 +55,18 @@ ActionItem.displayName = "ActionItem";
 
 export interface ActionGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  shine?: boolean;
 }
 
 export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
-  ({ children, className, ...props }, ref) => (
+  ({ children, shine = true, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("action-group", className)}
+      className={cn(
+        "action-group glass-surface",
+        shine && "glass-surface--shine",
+        className,
+      )}
       {...props}
     >
       {children}

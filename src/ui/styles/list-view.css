@@ -36,17 +36,11 @@
 .explorer-mobile-list {
   margin-top: var(--explorer-space-3);
   padding-bottom: var(--explorer-space-2);
+  --explorer-surface-radius: 1em;
+  --explorer-surface-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   /* border: 1px solid var(--background-modifier-border); */
-    border-radius: 1em;
-
-}
-
-.explorer-container.use-glass .explorer-mobile-list {
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
+  border-radius: 1em;
 }
 
 .explorer-mobile-list-item {
