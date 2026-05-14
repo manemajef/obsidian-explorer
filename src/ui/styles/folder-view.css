@@ -17,9 +17,13 @@
 .explorer-folder-card {
   box-sizing: border-box;
   box-shadow: var(--explorer-shadow-glass-small);
+  /* box-shadow: var(--input-shadow); */
   background-color: var(--explorer-bg-interactive);
+  /* background-color: var(--interactive-normal); */
   border-radius: var(--explorer-radius-lg);
-  border: 1px solid var(--background-modifier-border);
+  border: var(--explorer-border-glass);
+
+
   /* cursor: pointer; */
   display: flex;
   align-items: center;
@@ -29,6 +33,33 @@
   transition: 0.15s;
 }
 
+
+.theme-dark .explorer-folder-card:not(:hover) {
+  border: 1px solid rgba(255, 255, 255, 0.05); 
+  /* border: 1px solid var(--background-modifier-border); */
+
+}
+
+.is-mobile .explorer-folder-card {
+
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint));
+  /* background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important; */
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  /* border: var(--explorer-surface-border, var(--explorer-border-glass-strong)); */
+  border: var(--explorer-border-glass-strong);
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass-strong));
+  /* box-shadow: var(--explorer-shadow-glass); */
+
+ 
+
+}
+.is-mobile.theme-dark  .explorer-folder-card {
+  /* background: var(--interactive-normal); */
+  background-color: rgba(264,264,264,0.05);
+  /* box-shadow: var(--input-shadow); */
+  /* border: none; */
+}
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
   border-color: var(--background-modifier-border-hover);
@@ -37,6 +68,7 @@
 .is-mobile .explorer-folder-card {
   border-radius: 16px;
   padding: 1.15em 0.2em;
+  /* border: 1px solid var(--text-normal) !important; */
 }
 
 .explorer-folder-card--missing {
@@ -58,9 +90,7 @@
   text-decoration: none !important;
 }
 
-.theme-dark .explorer-folder-card:not(:hover) {
-  border: 1px solid rgba(255, 255, 255, 0.02);
-}
+
 
 /* body.theme-light .explorer-folder-card {
   --explorer-surface-tint: var(--background-primary);

@@ -76,7 +76,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             app={app}
             sourcePath={sourcePath}
             path={fileInfo.file.path}
-            className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""}`}
+            className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""} ${i >= files.length - 1 ? "explorer-mobile-note-last" : ""}`}
           >
             <div className="explorer-mobile-note__header">
               <span className="explorer-mobile-note__title">
