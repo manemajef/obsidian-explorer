@@ -2,35 +2,25 @@ import { Plugin } from "obsidian";
 import {
   normalizePluginSettings,
   PluginSettings,
+  resolveBlockSettings,
 } from "./src/settings/schema";
-import { ExplorerBridge } from "./src/plugin/explorer";
-import { ExplorerAPI } from "./src/backend/explorer-api";
+import { renderExplorerBlock } from "./src/plugin/explorer";
+import { parseSettings } from "./src/block-settings";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 
 export default class ExplorerPlugin extends Plugin {
   settings: PluginSettings;
-  private api: ExplorerAPI;
 
   async onload() {
     await this.loadSettings();
-    this.api = new ExplorerAPI(this.app);
     this.addSettingTab(new ExplorerSettingsTab(this.app, this));
 
     this.registerMarkdownCodeBlockProcessor(
       "explorer",
       async (source, el, ctx) => {
-        const effectiveSettings = this.api.resolveSettingsFromSource(
-          source,
-          this.settings.defaultBlockSettings,
-        );
-        const bridge = new ExplorerBridge(
-          this.app,
-          el,
-          this.settings.defaultBlockSettings,
-          effectiveSettings,
-          ctx,
-        );
-        await bridge.render();
+        const defaults = this.settings.defaultBlockSettings;
+        const effective = resolveBlockSettings(defaults, parseSettings(source));
+        await renderExplorerBlock(this.app, el, ctx, defaults, effective);
       },
     );
   }

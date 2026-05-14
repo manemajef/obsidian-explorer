@@ -1,24 +1,41 @@
-import { SUPPORTED_EXTENSIONS } from "../constants";
-import { BlockSettings } from "../settings/schema";
-import { filterFiles, getFileInfo, sortFiles } from "../utils/file-utils";
-import { ComputeFileListingInput, ComputeFileListingOutput } from "./contracts";
+import { App, TFile } from "obsidian";
+import { FileInfo } from "./types";
+import { BlockSettings } from "./settings/schema";
+import { filterFiles, getFileInfo, sortFiles } from "./utils/file-utils";
 
-function applyFileVisibilityRules(
-  files: ComputeFileListingInput["files"],
+export interface ComputeFileListingInput {
+  app: App;
+  files: TFile[];
+  settings: BlockSettings;
+  query: string;
+  page: number;
+  sortBy: BlockSettings["sortBy"];
+}
+
+export interface ComputeFileListingOutput {
+  pageFiles: TFile[];
+  pageFileInfos: FileInfo[];
+  totalPages: number;
+  usePaging: boolean;
+}
+
+/**
+ * Per-block visibility: onlyNotes narrows to notes+PDFs, and the file
+ * containing the block is always excluded from its own listing.
+ * Plugin-level visibility (showUnsupportedFiles) is applied earlier in FolderIndex.
+ */
+function applyBlockVisibility(
+  files: TFile[],
   settings: BlockSettings,
   currPath: string,
-) {
+): TFile[] {
+  const withoutSelf = files.filter((f) => f.path !== currPath);
   if (settings.onlyNotes) {
-    return files.filter((f) => f.extension === "md");
-  }
-
-  if (!settings.showUnsupportedFiles) {
-    return files.filter((f) =>
-      SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()),
+    return withoutSelf.filter(
+      (f) => f.extension === "md" || f.extension === "pdf",
     );
   }
-
-  return files.filter((f) => f.path !== currPath);
+  return withoutSelf;
 }
 
 export function computeFileListing(
@@ -26,7 +43,7 @@ export function computeFileListing(
 ): ComputeFileListingOutput {
   const { app, files, settings, query, page, sortBy } = input;
   const currPath = app.workspace.getActiveFile()?.path ?? "";
-  const visibleFiles = applyFileVisibilityRules(files, settings, currPath);
+  const visibleFiles = applyBlockVisibility(files, settings, currPath);
   const sortedFiles = sortFiles(app, visibleFiles, sortBy);
   const queriedFiles = query
     ? filterFiles(app, sortedFiles, query)
@@ -57,6 +74,5 @@ export function resolveCardFooterMode(settings: BlockSettings): string {
   if (settings.cardExt !== "default") {
     return settings.cardExt;
   }
-
   return settings.depth > 0 ? "folder" : "ctime";
 }

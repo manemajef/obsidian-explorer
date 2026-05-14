@@ -5,10 +5,10 @@ import {
   TFile,
   TFolder,
 } from "obsidian";
-import { BlockSettings } from "../../settings/schema";
-import { FOLDERNOTE_TEMPLATE } from "../../constants";
+import { BlockSettings } from "./settings/schema";
+import { FOLDERNOTE_TEMPLATE } from "./constants";
 import { serializeSettings } from "./block-settings";
-import { promptForName } from "../../ui/modals/prompt-modal";
+import { promptForName } from "./ui/modals/prompt-modal";
 
 
 // ===== HELPERS =====

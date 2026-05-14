@@ -4,7 +4,7 @@ import {
   BlockSettingKey,
   BlockSettings,
   DEFAULT_BLOCK_SETTINGS,
-} from "../../settings/schema";
+} from "./settings/schema";
 
 const BLOCK_KEY_TO_SETTING_KEY: Record<string, BlockSettingKey> =
   BLOCK_SETTING_KEYS.reduce(
@@ -42,14 +42,6 @@ function parseValue<K extends BlockSettingKey>(
   return undefined;
 }
 
-function setOverride<K extends BlockSettingKey>(
-  target: Partial<BlockSettings>,
-  key: K,
-  value: BlockSettings[K],
-): void {
-  target[key] = value;
-}
-
 function formatValue<K extends BlockSettingKey>(
   key: K,
   value: BlockSettings[K],
@@ -78,7 +70,7 @@ export function parseSettings(source: string): Partial<BlockSettings> {
 
     const parsed = parseValue(settingKey, value.trim());
     if (parsed !== undefined) {
-      setOverride(overrides, settingKey, parsed);
+      (overrides as Record<BlockSettingKey, unknown>)[settingKey] = parsed;
     }
   }
 
@@ -95,10 +87,7 @@ export function serializeSettings(
   const lines: string[] = [];
 
   for (const key of BLOCK_SETTING_KEYS) {
-    if (settings[key] === defaultSettings[key]) {
-      continue;
-    }
-
+    if (settings[key] === defaultSettings[key]) continue;
     const blockKey = BLOCK_SETTINGS_SCHEMA[key].blockKey;
     lines.push(`${blockKey}: ${formatValue(key, settings[key])}`);
   }

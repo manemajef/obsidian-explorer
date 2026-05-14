@@ -1,128 +1,112 @@
 import React from "react";
-import { createRoot, Root } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import {
   App,
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
+  TFile,
 } from "obsidian";
 import { BlockSettings } from "../settings/schema";
 import { isRtl } from "../utils/helpers";
 import { ExplorerUI } from "../ui/explorer-ui";
 import { ExplorerSettingsModal } from "../ui/modals/settings-modal";
-import { ExplorerAPI } from "../backend/explorer-api";
+import { FolderIndex } from "../folder-index";
+import {
+  openOrCreateFolderNote,
+  promptAndCreateFolder,
+  promptAndCreateNote,
+  updateExplorerBlock,
+} from "../vault-actions";
 
-export class ExplorerBridge {
-  private app: App;
-  private container: HTMLElement;
-  private blockDefaults: BlockSettings;
-  private effectiveSettings: BlockSettings;
-  private ctx: MarkdownPostProcessorContext;
-  private sourcePath: string;
-  private reactRoot: Root | null = null;
-  private api: ExplorerAPI;
-  private refreshQueued = false;
-
-  constructor(
-    app: App,
-    container: HTMLElement,
-    blockDefaults: BlockSettings,
-    effectiveSettings: BlockSettings,
-    ctx: MarkdownPostProcessorContext,
-  ) {
-    this.app = app;
-    this.container = container;
-    this.blockDefaults = blockDefaults;
-    this.effectiveSettings = effectiveSettings;
-    this.ctx = ctx;
-    this.sourcePath = ctx.sourcePath;
-    this.api = new ExplorerAPI(app);
-    this.bindVaultRefresh();
+function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
+  if (settings.textDirection && settings.textDirection !== "auto") {
+    return settings.textDirection;
   }
+  return isRtl() ? "rtl" : "ltr";
+}
 
-  async render(): Promise<void> {
-    this.container.addClass("explorer-container");
-    const direction =
-      this.effectiveSettings.textDirection &&
-      this.effectiveSettings.textDirection !== "auto"
-        ? this.effectiveSettings.textDirection
-        : isRtl()
-          ? "rtl"
-          : "ltr";
-    this.container.setAttribute("dir", direction);
+export async function renderExplorerBlock(
+  app: App,
+  container: HTMLElement,
+  ctx: MarkdownPostProcessorContext,
+  blockDefaults: BlockSettings,
+  initialSettings: BlockSettings,
+): Promise<void> {
+  container.addClass("explorer-container");
 
-    const model = await this.api.buildRenderModel({
-      sourcePath: this.sourcePath,
-      settings: this.effectiveSettings,
-    });
+  const reactRoot = createRoot(container);
+  let effectiveSettings = initialSettings;
+  let refreshQueued = false;
 
-    if (!model) {
-      this.renderReact(<p>No active file or folder</p>);
-      return;
-    }
-
-    const folderPath = model.folder.path;
-    this.renderReact(
-      <ExplorerUI
-        app={this.app}
-        sourcePath={this.sourcePath}
-        folder={model.folder}
-        effectiveSettings={this.effectiveSettings}
-        folderInfos={model.folderInfos}
-        depthFiles={model.depthFiles}
-        folderNotes={model.folderNotes}
-        getAllFiles={model.getAllFiles}
-        onOpenSettings={() => this.openSettings()}
-        onOpenFolderNote={(folder, newLeaf) =>
-          void this.api.openFolderNote(folder, this.sourcePath, newLeaf)
-        }
-        onNewFolder={() => void this.api.promptAndCreateFolder(folderPath)}
-        onNewNote={() => void this.api.promptAndCreateNote(folderPath)}
-      />,
-    );
-  }
-
-  private renderReact(node: React.ReactElement): void {
-    if (!this.reactRoot) {
-      this.reactRoot = createRoot(this.container);
-    }
-    this.reactRoot.render(node);
-  }
-
-  private queueRefresh = (): void => {
-    if (this.refreshQueued) {
-      return;
-    }
-    this.refreshQueued = true;
+  const queueRefresh = (): void => {
+    if (refreshQueued) return;
+    refreshQueued = true;
     window.requestAnimationFrame(() => {
-      this.refreshQueued = false;
-      void this.render();
+      refreshQueued = false;
+      void render();
     });
   };
 
-  private bindVaultRefresh(): void {
-    const child = new MarkdownRenderChild(this.container);
-    child.registerEvent(this.app.vault.on("create", () => this.queueRefresh()));
-    child.registerEvent(this.app.vault.on("delete", () => this.queueRefresh()));
-    child.registerEvent(this.app.vault.on("rename", () => this.queueRefresh()));
-    this.ctx.addChild(child);
-  }
+  const child = new MarkdownRenderChild(container);
+  child.registerEvent(app.vault.on("create", queueRefresh));
+  child.registerEvent(app.vault.on("delete", queueRefresh));
+  child.registerEvent(app.vault.on("rename", queueRefresh));
+  ctx.addChild(child);
 
-  private openSettings(): void {
-    new ExplorerSettingsModal(
-      this.app,
-      this.effectiveSettings,
-      (newSettings) => {
-        this.effectiveSettings = newSettings;
-        void this.api
-          .updateBlockSettings({
-            container: this.container,
-            ctx: this.ctx,
-            sourcePath: this.sourcePath,
-            defaultSettings: this.blockDefaults,
-            settings: newSettings,
-          })
-          .then(() => this.render());
-      },
-    ).open();
-  }
+  const openSettings = (): void => {
+    new ExplorerSettingsModal(app, effectiveSettings, (newSettings) => {
+      effectiveSettings = newSettings;
+      void updateExplorerBlock(
+        app,
+        container,
+        ctx,
+        ctx.sourcePath,
+        blockDefaults,
+        newSettings,
+      ).then(render);
+    }).open();
+  };
+
+  const render = async (): Promise<void> => {
+    container.setAttribute("dir", resolveDirection(effectiveSettings));
+
+    const blockFile = app.vault.getAbstractFileByPath(ctx.sourcePath);
+    if (!(blockFile instanceof TFile) || !blockFile.parent) {
+      reactRoot.render(<p>No active file or folder</p>);
+      return;
+    }
+
+    const folder = blockFile.parent;
+    const folderIndex = new FolderIndex(app, folder);
+    await folderIndex.loadToDepth(effectiveSettings.depth);
+
+    const depthFiles = folderIndex.getFilesToDisplay(effectiveSettings);
+    let cachedAllFiles: TFile[] | null = null;
+    const getAllFiles = async (): Promise<TFile[]> => {
+      if (cachedAllFiles) return cachedAllFiles;
+      cachedAllFiles = await folderIndex.getAllContent();
+      return cachedAllFiles;
+    };
+
+    reactRoot.render(
+      <ExplorerUI
+        app={app}
+        sourcePath={ctx.sourcePath}
+        folder={folder}
+        effectiveSettings={effectiveSettings}
+        folderInfos={folderIndex.folders}
+        depthFiles={depthFiles}
+        folderNotes={folderIndex.folderNotes}
+        getAllFiles={getAllFiles}
+        onOpenSettings={openSettings}
+        onOpenFolderNote={(f, newLeaf) =>
+          void openOrCreateFolderNote(app, f, ctx.sourcePath, newLeaf)
+        }
+        onNewFolder={() => void promptAndCreateFolder(app, folder.path)}
+        onNewNote={() => void promptAndCreateNote(app, folder.path)}
+      />,
+    );
+  };
+
+  await render();
 }
