@@ -10,21 +10,39 @@ A file‑explorer view for Obsidian that displays folder contents directly insid
 - Navigate folders directly from within notes
 - Built-in support for folder notes
 - Sorting by name, creation date, or modification time
-- No coding required (Optional GUI-based configuration for explorer code blocks)
+- No coding required (GUI-based configuration with optional code configuration for techincal users)
 - Fast, scoped search within the current folder (no vault-wide queries)
 - Pagination for large folders
 - Strong mobile support
+- Modern UI, togglable liquid glass
 - Built-in RTL support (Hebrew and Arabic)
 
 ## Usage
 
-Add an `explorer` code block to any note:
+### Appending Explorer view to an existing folder note
+
+Open command pallate and choose `Explorer: insert explorer code block`
+which will append an `explorer` code block to any note:
 
 ````markdown
 ```explorer
 
 ```
 ````
+You can also do this manually if you prefer.
+
+### Creating a new folder with an Explorer folder note inside
+
+open command palate and choose `Explorer: create explorer folder in current note folder` which will:
+
+1. create a new folder in current directory 
+2. append the explorer code block (the explorer view) to the new folder-note of the folder 
+3. open the view for you
+
+
+
+
+
 
 This will display the contents of the current folder with default settings.
 
