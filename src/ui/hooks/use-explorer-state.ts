@@ -4,7 +4,7 @@ import { BlockSettings } from "../../settings/schema";
 import {
   computeFileListing,
   resolveCardFooterMode,
-} from "../../file-listing";
+} from "../../vault/file-listing";
 import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
 

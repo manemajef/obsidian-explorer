@@ -1,8 +1,7 @@
 import React from "react";
 import { App, TFolder } from "obsidian";
 import { FileInfo } from "../../types";
-import { diffDays } from "../../utils/helpers";
-import { isFolderNote } from "../../utils/file-utils";
+import { diffDays, isFolderNote } from "../../vault/file-utils";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";

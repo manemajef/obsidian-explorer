@@ -4,7 +4,7 @@ import {
   BlockSettingKey,
   BlockSettings,
   DEFAULT_BLOCK_SETTINGS,
-} from "./settings/schema";
+} from "./schema";
 
 const BLOCK_KEY_TO_SETTING_KEY: Record<string, BlockSettingKey> =
   BLOCK_SETTING_KEYS.reduce(

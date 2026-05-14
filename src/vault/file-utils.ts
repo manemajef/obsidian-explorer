@@ -1,5 +1,39 @@
 import { App, getAllTags, TFile, TFolder } from "obsidian";
 import { FileInfo } from "../types";
+
+/**
+ * Check if text contains RTL characters (Hebrew/Arabic)
+ */
+export function isRtl(text?: string): boolean {
+  let checkText = text || "";
+  if (!checkText) {
+    const activeFile = (
+      window as unknown as {
+        app?: { workspace?: { getActiveFile?: () => TFile | null } };
+      }
+    ).app?.workspace?.getActiveFile?.();
+    checkText = activeFile?.basename || "";
+  }
+  const rtlRegex = /[\u0590-\u05FF\u0600-\u06FF]/;
+  return rtlRegex.test(checkText);
+}
+
+/**
+ * Format timestamp as relative time string
+ */
+export function diffDays(timestamp: number): string {
+  const now = Date.now();
+  const diffMs = now - timestamp;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+  if (days < 365) return `${Math.floor(days / 30)} months ago`;
+  return `${Math.floor(days / 365)} years ago`;
+}
+
 /**
  * Check if a file is a folder note (foldername/foldername.md pattern)
  */
@@ -21,7 +55,7 @@ export function getFolderNoteForFolder(
 }
 
 /**
- * Get file metadata from frontmatter cache
+ * Check if a file is pinned via frontmatter
  */
 export function isPinned(app: App, file: TFile): boolean {
   const fm = app.metadataCache.getFileCache(file)?.frontmatter;
@@ -32,8 +66,8 @@ function getFileTags(app: App, file: TFile): string[] {
   const cache = app.metadataCache.getFileCache(file);
   if (!cache) return [];
   return getAllTags(cache)?.map((t) => t.replace(/^#+\s*/g, "")) ?? [];
-  //return getAllTags(cache)?.map((t) => rmHashTag(t)) ?? [];
 }
+
 function togglePin(app: App, file: TFile): void {
   void app.fileManager.processFrontMatter(
     file,
@@ -57,17 +91,10 @@ export function getFileInfo(app: App, file: TFile): FileInfo {
       | string
       | undefined,
     tags: tags,
-    // tagsToDisplay: TAGS_PIN
-    //   ? tags.filter((t) => !["pin", "fav"].contains(t))
-    //   : tags,
     isPinned: isPinned(app, file),
     togglePin: () => togglePin(app, file),
   };
 }
-
-/**
- * Check if a file is pinned via frontmatter
- */
 
 /**
  * Sort TFiles by the given sort option, with pinned files first
@@ -133,6 +160,7 @@ export function filterFiles(app: App, files: TFile[], query: string): TFile[] {
 
   // Plain text search: name or path
   return files.filter(
-    (f) => f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q),
+    (f) =>
+      f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q),
   );
 }

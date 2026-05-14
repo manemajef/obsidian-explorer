@@ -1,7 +1,7 @@
 import { App, TFile } from "obsidian";
-import { FileInfo } from "./types";
-import { BlockSettings } from "./settings/schema";
-import { filterFiles, getFileInfo, sortFiles } from "./utils/file-utils";
+import { FileInfo } from "../types";
+import { BlockSettings } from "../settings/schema";
+import { filterFiles, getFileInfo, sortFiles } from "./file-utils";
 
 export interface ComputeFileListingInput {
   app: App;
@@ -31,9 +31,7 @@ function applyBlockVisibility(
 ): TFile[] {
   const withoutSelf = files.filter((f) => f.path !== currPath);
   if (settings.onlyNotes) {
-    return withoutSelf.filter(
-      (f) => f.extension === "md" || f.extension === "pdf",
-    );
+    return withoutSelf.filter((f) => f.extension === "md");
   }
   return withoutSelf;
 }

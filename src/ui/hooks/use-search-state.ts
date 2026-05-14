@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
 import { BlockSettings } from "../../settings/schema";
-import { computeFileListing } from "../../file-listing";
+import { computeFileListing } from "../../vault/file-listing";
 import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 
 interface UseSearchStateOptions {

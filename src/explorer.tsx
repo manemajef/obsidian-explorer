@@ -6,17 +6,17 @@ import {
   MarkdownRenderChild,
   TFile,
 } from "obsidian";
-import { BlockSettings } from "../settings/schema";
-import { isRtl } from "../utils/helpers";
-import { ExplorerUI } from "../ui/explorer-ui";
-import { ExplorerSettingsModal } from "../ui/modals/settings-modal";
-import { FolderIndex } from "../folder-index";
+import { BlockSettings } from "./settings/schema";
+import { isRtl } from "./vault/file-utils";
+import { ExplorerUI } from "./ui/explorer-ui";
+import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
+import { FolderIndex } from "./vault/folder-index";
 import {
   openOrCreateFolderNote,
   promptAndCreateFolder,
   promptAndCreateNote,
   updateExplorerBlock,
-} from "../vault-actions";
+} from "./vault/actions";
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   if (settings.textDirection && settings.textDirection !== "auto") {

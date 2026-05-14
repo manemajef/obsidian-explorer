@@ -1,8 +1,36 @@
 import { App, TFile, TFolder } from "obsidian";
-import { FolderInfo } from "./types";
-import { BlockSettings } from "./settings/schema";
-import { EXCLUDED_EXTENSIONS, SUPPORTED_EXTENSIONS } from "./constants";
-import { isFolderNote, getFolderNoteForFolder } from "./utils/file-utils";
+import { FolderInfo } from "../types";
+import { BlockSettings } from "../settings/schema";
+import { isFolderNote, getFolderNoteForFolder } from "./file-utils";
+
+// Extensions to always exclude (images, data files)
+const EXCLUDED_EXTENSIONS = [
+  "json",
+  "png",
+  "jpeg",
+  "jpg",
+  "svg",
+  "gif",
+  "webp",
+];
+
+// Content files that most users want to see (vs code files)
+const SUPPORTED_EXTENSIONS = [
+  "md",
+  "pdf",
+  "canvas",
+  "docx",
+  "doc",
+  "pptx",
+  "ppt",
+  "xlsx",
+  "xls",
+  "csv",
+  "txt",
+  "rtf",
+  "html",
+  "epub",
+];
 
 // Yield to the browser every CHUNK_SIZE files during a full walk so large
 // vaults don't freeze the UI when search mode loads everything.

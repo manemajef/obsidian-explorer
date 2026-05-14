@@ -1,126 +1,125 @@
-# Explorer plugin developer guide
+# Explorer Plugin Developer Guide
 
-This plugin renders a custom explorer UI inside an Obsidian markdown code block:
+Renders a folder explorer UI inside an Obsidian markdown code block.
 
-````
-```explorer
-... optional per-block overrides ...
-````
+## Structure
 
+```
+src/
+├── explorer.tsx           # Entry: block renderer, vault event listeners
+├── types.ts               # FileInfo, FolderInfo
+│
+├── settings/
+│   ├── schema.ts          # Settings types, defaults, validation, UI metadata
+│   └── block-parser.ts    # Parse/serialize block syntax
+│
+├── vault/
+│   ├── folder-index.ts    # Folder traversal, file indexing
+│   ├── file-listing.ts    # Sort, filter, paginate file lists
+│   ├── file-utils.ts      # File metadata, pin state, RTL detection
+│   └── actions.ts         # Create files/folders, update blocks
+│
+└── ui/
+    ├── explorer-ui.tsx    # Main React component
+    ├── settings-tab.ts    # Plugin settings tab
+    ├── render-setting-field.ts  # Shared settings field renderer
+    ├── components/        # React components
+    │   ├── ui/            # Atomic: badge, action, bar, layout, pin
+    │   └── *.tsx          # Feature: actions-bar, cards-view, list-view, etc.
+    ├── hooks/             # React state hooks
+    └── modals/            # Obsidian modals
+```
 
+## Functionality Location
 
-It uses a React UI, but keeps data/Obsidian operations inside a view class.
+| Feature | Location | Notes |
+|---------|----------|-------|
+| Block registration | `main.ts` | Registers `explorer` code block processor |
+| Block rendering | `explorer.tsx` | Creates React root, vault listeners, settings modal |
+| Folder traversal | `vault/folder-index.ts` | `FolderIndex` class, BFS with depth control |
+| File visibility | `vault/folder-index.ts` | `showUnsupportedFiles` filter (plugin-level) |
+| File visibility | `vault/file-listing.ts` | `onlyNotes`, exclude-self filter (block-level) |
+| Sorting | `vault/file-utils.ts` | `sortFiles()` — pinned first, then by criteria |
+| Search/filter | `vault/file-utils.ts` | `filterFiles()` — text, #tag, @foldernote |
+| Pagination | `vault/file-listing.ts` | `computeFileListing()` slices by page |
+| Pin state | `vault/file-utils.ts` | `isPinned()`, `togglePin()` via frontmatter |
+| Create files | `vault/actions.ts` | `createFolderWithNote()`, `createNewNote()` |
+| Update block | `vault/actions.ts` | `updateExplorerBlock()` modifies markdown |
+| Settings schema | `settings/schema.ts` | All settings defined here, UI auto-generates |
+| Block syntax parse | `settings/block-parser.ts` | `parseSettings()`, `serializeSettings()` |
+| React state | `ui/hooks/use-explorer-state.ts` | Orchestrates pagination, search, listings |
+| Search state | `ui/hooks/use-search-state.ts` | Search mode, debounce, lazy file loading |
 
-## Quick map
+## File Filtering Pipeline
 
-- Entry point
-  - `main.ts` registers the `explorer` code block and wires plugin settings.
+Files pass through filters in this order:
 
-- UI view (state + data flow)
-  - `src/ui/explorer-view.tsx` owns state, indexes files, filters/sorts, and renders React UI.
-  - `src/ui/explorer-ui.tsx` is the top-level React layout, composed from smaller components.
+1. **Exclusion** (`vault/folder-index.ts:shouldIncludeFile`)
+   - Excludes folder notes (same name as parent folder)
+   - Excludes image/data extensions: json, png, jpeg, jpg, svg, gif, webp
 
-- React components
-- `src/ui/components/*.tsx`
-    - `actions-bar.tsx`, `search.tsx`, `pagination.tsx`, `cards-view.tsx`, `list-view.tsx`, `folder-view.tsx`
-    - `shared.tsx` contains `InternalLink` (Obsidian-safe link) and `Icon` helpers.
+2. **Supported files** (`vault/folder-index.ts:getFilesToDisplay`)
+   - If `showUnsupportedFiles=false`: only md, pdf, canvas, docx, pptx, xlsx, csv, txt, rtf, html, epub
 
-- Services / data
-  - `src/services/folder-index.ts` builds the folder/file index and supports nested depth.
-  - `src/services/settings-parser.ts` parses/serializes code block settings.
+3. **Block visibility** (`vault/file-listing.ts:applyBlockVisibility`)
+   - Always excludes the file containing the block (self)
+   - If `onlyNotes=true`: only md and pdf files pass
 
-- Utilities
-  - `src/utils/file-utils.ts`, `src/utils/helpers.ts`, `src/utils/link-utils.ts`
+4. **Sorting** (`vault/file-utils.ts:sortFiles`)
+   - Pinned files first (frontmatter `pin: true`)
+   - Then by sortBy: newest, oldest, edited, name
 
-- Settings UI
-  - `src/ui/settings-tab.ts` is the plugin settings tab (global defaults).
-  - `src/ui/modals/settings-modal.ts` is the per-block settings modal.
+5. **Search filter** (`vault/file-utils.ts:filterFiles`)
+   - `#tag` — matches frontmatter tags
+   - `@name` — matches folder notes only
+   - Plain text — matches filename or path
 
-- Styling
-  - `styles.css`
+6. **Pagination** (`vault/file-listing.ts:computeFileListing`)
+   - Slices to current page if `usePagination=true`
 
-## Runtime flow
+## Data Flow
 
-1) `main.ts` loads saved plugin defaults, registers `ExplorerSettingsTab`, and registers the `explorer` code block.
-2) On render, code block settings are parsed and merged over plugin defaults (effective settings).
-3) `ExplorerView.render()`:
-   - finds the active file and parent folder
-   - builds a `FolderIndex` for the folder
-   - derives filtered/sorted/paged file lists
-   - renders the React UI into the code block container
-4) UI actions call back into `ExplorerView` to update state and re-render.
+1. `main.ts` registers `explorer` code block processor
+2. Block source parsed → `settings/block-parser.ts:parseSettings()`
+3. Settings merged: plugin defaults + block overrides → `schema.ts:resolveBlockSettings()`
+4. `explorer.tsx` indexes folder → `vault/folder-index.ts:FolderIndex`
+5. React renders → `ui/explorer-ui.tsx` uses `hooks/use-explorer-state.ts`
+6. Hook computes display list → `vault/file-listing.ts:computeFileListing()`
 
-## Key data flow
+## Settings System
 
-- Per-block overrides: `src/services/settings-parser.ts`
-- Default settings: `DEFAULT_SETTINGS` in `src/constants.ts`
-- Merge order: plugin defaults -> code block overrides (effective settings used by `ExplorerView`).
+All settings defined in `settings/schema.ts:BLOCK_SETTINGS_SCHEMA`. Each setting declares:
+- `kind`: boolean, number, or enum
+- `defaultValue`, `blockKey` (syntax name)
+- `ui`: which surfaces (plugin/block), section, order, labels
 
-## Settings
+Adding a setting: add to `BLOCK_SETTINGS_SCHEMA` — UI generates automatically.
 
-There are two layers:
+**Hardcoded dependency:** `usePagination` enables/disables `pageSize` and `paginationStyle` fields (`ui/render-setting-field.ts:34-37`).
 
-- Global defaults (Obsidian Settings → plugin tab): `src/ui/settings-tab.ts`
-- Per-block overrides (code block or modal): `src/services/settings-parser.ts` and `src/ui/modals/settings-modal.ts`
+## Patterns & Rules
 
-The per-block modal updates the source markdown block via `ExplorerView.updateSourceBlock()`.
-`ExplorerView` renders using the merged effective settings.
+**Vault isolation:** All vault read/write in `vault/`. UI never imports from `obsidian` for file operations.
 
-## React UI notes
+**React ownership:** React owns DOM inside block container. Never use `container.createEl()` elsewhere.
 
-- React owns the DOM inside the code block container.
-- `ExplorerView` keeps state and passes data + callbacks as props.
-- Obsidian icons are rendered via `Icon` in `src/ui/components/shared.tsx`.
-- Obsidian internal links must use `InternalLink` to preserve correct behavior.
+**Internal links:** Use `InternalLink` component (`ui/components/shared.tsx`) for proper Obsidian link behavior and context menus.
 
-## Folder indexing
+**Settings flow:** Schema is single source of truth. Parse/serialize/validate/UI all derive from it.
 
-- `FolderIndex.loadImmediate()` indexes direct children.
-- `FolderIndex.loadToDepth()` pulls nested files into `nestedFiles`.
-- `getFilesToDisplay()` switches between immediate or nested based on `settings.depth`.
+**State hooks:** `use-explorer-state.ts` orchestrates, delegates to `use-search-state.ts` and `use-pagination-state.ts`.
+
+**Modern pagination:** "Load more" accumulates page chunks with animation. Classic pagination shows single page.
 
 ## Search
 
-- Search is local and filters the current file list.
-- The search bar is toggled from the top actions bar and is always available.
-- Special prefixes:
-  - `#tag` searches tags
-  - `@folder` searches folder notes
-
-## Prompt flows
-
-- New folder: `ExplorerView.promptNewFolder()`
-  - ensures folder exists
-  - creates folder note if missing
-  - opens the folder note
-- New note: `ExplorerView.createNewNote()`
+- Debounced 80ms (`use-search-state.ts`)
+- Lazy loads all files on first search activation
+- Results sorted by last edited (hardcoded in search mode)
+- Prefixes: `#tag`, `@foldernote`, plain text
 
 ## Build
 
-- `npm run build` -> `tsc` (type check) then `esbuild` bundle
-- `esbuild.config.mjs` bundles `main.ts` to `main.js`
-
-## Where to change things
-
-- UI layout / visuals: `src/ui/explorer-ui.tsx` and `src/ui/components/*.tsx`
-- Data rules (sorting/filtering/paging): `src/ui/explorer-view.tsx`
-- Folder indexing: `src/services/folder-index.ts`
-- Settings parsing: `src/services/settings-parser.ts`
-- Styling: `styles.css`
-
-## Common modifications
-
-- Add a new setting:
-  1) Update `ExplorerSettings` in `src/types.ts`
-  2) Add default in `src/constants.ts`
-  3) Add parse/serialize in `src/services/settings-parser.ts`
-  4) Add UI to `src/ui/settings-tab.ts` and/or `src/ui/modals/settings-modal.ts`
-  5) Use it in `ExplorerView` or components
-
-- Add new UI component:
-  - Create a new `src/ui/components/*.tsx` file and import it in `src/ui/explorer-ui.tsx`.
-
-## Gotchas
-
-- React owns the container; don’t call `container.createEl` from elsewhere.
-- `InternalLink` is required for proper Obsidian link behavior and context menus.
+```bash
+npm run build    # tsc + esbuild → main.js, styles.css
+```

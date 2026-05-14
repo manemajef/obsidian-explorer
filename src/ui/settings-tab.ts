@@ -1,16 +1,14 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import ExplorerPlugin from "../../main";
 import {
-  BLOCK_SETTINGS_SCHEMA,
   BlockSettingKey,
   BlockSettings,
   SettingsSection,
   createDefaultPluginSettings,
-  getEnumOptionLabel,
   getSettingKeysForSurface,
-  getSettingLabel,
   getSettingSection,
 } from "../settings/schema";
+import { renderSettingField } from "./render-setting-field";
 
 type SectionMeta = {
   title: string;
@@ -79,7 +77,14 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       }
 
       for (const key of sectionKeys) {
-        this.renderField(containerEl, key, settings, fieldRefs);
+        renderSettingField(
+          containerEl,
+          key,
+          settings,
+          "plugin",
+          (k, v) => this.updateSetting(k, v),
+          fieldRefs,
+        );
       }
     }
 
@@ -90,59 +95,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         this.display();
       });
     });
-  }
-
-  private renderField(
-    container: HTMLElement,
-    key: BlockSettingKey,
-    settings: BlockSettings,
-    fieldRefs: Map<BlockSettingKey, Setting>,
-  ): void {
-    const field = BLOCK_SETTINGS_SCHEMA[key];
-    const setting = new Setting(container).setName(getSettingLabel(key, "plugin"));
-
-    if (field.description) {
-      setting.setDesc(field.description);
-    }
-
-    if (field.kind === "boolean") {
-      setting.addToggle((toggle) => {
-        toggle.setValue(settings[key] as boolean).onChange((value) => {
-          void this.updateSetting(key, value as BlockSettings[typeof key]);
-          if (key === "usePagination") {
-            fieldRefs.get("pageSize")?.setDisabled(!value);
-            fieldRefs.get("paginationStyle")?.setDisabled(!value);
-          }
-        });
-      });
-    } else if (field.kind === "number") {
-      setting.addSlider((slider) => {
-        slider
-          .setLimits(field.min, field.max, field.step ?? 1)
-          .setValue(settings[key] as number)
-          .setDynamicTooltip()
-          .onChange((value) => {
-            void this.updateSetting(key, value as BlockSettings[typeof key]);
-          });
-      });
-    } else {
-      setting.addDropdown((dropdown) => {
-        for (const option of field.options) {
-          dropdown.addOption(option, getEnumOptionLabel(key, option));
-        }
-        dropdown
-          .setValue(settings[key] as string)
-          .onChange((value) => {
-            void this.updateSetting(key, value as BlockSettings[typeof key]);
-          });
-      });
-    }
-
-    if (key === "pageSize" || key === "paginationStyle") {
-      setting.setDisabled(!settings.usePagination);
-    }
-
-    fieldRefs.set(key, setting);
   }
 
   private async updateSetting<K extends keyof BlockSettings>(

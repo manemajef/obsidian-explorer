@@ -5,6 +5,31 @@
 
 ---
 
+## 2026-05-14 - Directory Restructure + Settings Deduplication
+
+**Task:** Simplify codebase structure for single-maintainer sustainability.
+
+**Changes:**
+- Extracted shared `renderSettingField()` from duplicated code in settings-tab.ts and settings-modal.ts
+- Reorganized flat src/ files into domain directories:
+  - `vault/` — folder-index, file-listing, file-utils, actions (all vault interaction)
+  - `settings/` — schema, block-parser (settings domain)
+  - `ui/` — unchanged (React components, hooks, modals)
+- Merged `utils/file-utils.ts` + `utils/helpers.ts` → `vault/file-utils.ts`
+- Deleted dead code: `utils/link-utils.ts` (unused)
+- Inlined constants where used (no separate constants.ts)
+- Renamed: `block-settings.ts` → `settings/block-parser.ts`, `vault-actions.ts` → `vault/actions.ts`
+- Moved `plugin/explorer.tsx` → `src/explorer.tsx`
+
+**Files:**
+- New: `src/vault/`, `src/ui/render-setting-field.ts`
+- Deleted: `src/plugin/`, `src/utils/`, `src/constants.ts`, old flat files
+- Modified: `main.ts`, all files with updated imports
+
+**Result:** 28 files (was 30), clearer domain boundaries, ~90 lines deduplication removed.
+
+---
+
 ## 2026-02-15 - Pagination Label Subcomponents
 
 **Task:** Reduce repeated pagination label markup/classes by extracting local subcomponents in `pagination.tsx`.
