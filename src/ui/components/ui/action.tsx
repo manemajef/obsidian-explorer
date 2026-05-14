@@ -1,6 +1,6 @@
 /**
  * Shared action controls for the explorer plugin.
- * Toggle the glass variant with the `glass` prop.
+ * Visual mode is controlled by the root explorer container classes.
  */
 import {
   forwardRef,
@@ -26,7 +26,6 @@ function ActionIcon({ name }: { name: string }) {
 type ActionItemVariantProps = {
   icon: string;
   active?: boolean;
-  glass?: boolean;
 };
 
 export interface ActionItemProps
@@ -35,14 +34,12 @@ export interface ActionItemProps
     ActionItemVariantProps {}
 
 export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
-  ({ icon, active, glass = false, className, ...props }, ref) => (
+  ({ icon, active, className, ...props }, ref) => (
     <button
       ref={ref}
       type="button"
       className={cn(
-        glass
-          ? "action-item action-item--glass glass clickable-icon"
-          : "action-item action-item--native clickable-icon",
+        "action-item clickable-icon",
         active && "action-item--active",
         className,
       )}
@@ -56,18 +53,13 @@ ActionItem.displayName = "ActionItem";
 
 export interface ActionGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  glass?: boolean;
 }
 
 export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
-  ({ children, glass = false, className, ...props }, ref) => (
+  ({ children, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        "action-group",
-        glass && "action-group--glass glass",
-        className,
-      )}
+      className={cn("action-group", className)}
       {...props}
     >
       {children}

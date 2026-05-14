@@ -91,7 +91,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         app={app}
         sourcePath={sourcePath}
         files={files}
-        useGlass={effectiveSettings.useGlass}
         showTags={effectiveSettings.showTags}
       />
     );
@@ -113,7 +112,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   return (
     <>
       <ActionsBar
-        useGlass={effectiveSettings.useGlass}
         showParentButton={effectiveSettings.showParentButton}
         onOpenSettings={onOpenSettings}
         onNewFolder={onNewFolder}

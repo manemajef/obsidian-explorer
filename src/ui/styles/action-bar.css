@@ -5,7 +5,7 @@
   padding-bottom: var(--explorer-space-2);
 }
 
-.explorer-actions--glass {
+.explorer-container.use-glass #explorer-actions {
   margin-top: var(--explorer-space-5);
 }
 
@@ -19,44 +19,46 @@
   padding-bottom: var(--explorer-space-4);
 }
 
-.action-item--glass {
-  border-radius: 50%;
+.action-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
-  color: var(--text-normal);
   appearance: none;
   -webkit-appearance: none;
+  padding: 0;
+}
+
+.explorer-container.use-glass .action-item {
+  border-radius: 50%;
+  color: var(--text-normal);
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint));
   background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
   background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
   border: var(--explorer-surface-border, var(--explorer-border-glass));
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-  padding: 0;
 }
 
-.action-item--glass:hover,
-.action-item--glass:focus-visible,
-.action-group--glass:hover,
-.action-group--glass:focus-within {
+.explorer-container.use-glass .action-item:hover,
+.explorer-container.use-glass .action-item:focus-visible,
+.explorer-container.use-glass .action-group:hover,
+.explorer-container.use-glass .action-group:focus-within {
   transform: scale(var(--explorer-hover-scale));
   z-index: 10;
 }
 
-.action-item--native {
+.explorer-container:not(.use-glass) .action-item {
   border-radius: var(--explorer-radius-md);
-  /* color: var(--text-faint); */
-  /* opacity: .7; */
 }
-.is-mobile .action-item--native {
+
+.is-mobile .explorer-container:not(.use-glass) .action-item {
   color: var(--text-normal);
 }
 
-.action-item--native:hover,
-.action-item--native:focus-visible {
+.explorer-container:not(.use-glass) .action-item:hover,
+.explorer-container:not(.use-glass) .action-item:focus-visible {
   color: var(--text-normal);
   opacity: 1;
 }
@@ -69,11 +71,18 @@
   padding-inline: 3px;
 }
 
-.action-group--glass {
+.explorer-container.use-glass .action-group {
   border-radius: var(--explorer-radius-pill);
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  border: var(--explorer-surface-border, var(--explorer-border-glass));
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 
-.actions-native-shortcuts {
+.explorer-container:not(.use-glass) .action-group {
+  padding-inline: 0;
   gap: var(--explorer-space-1);
 }
 
@@ -87,11 +96,14 @@
   color: var(--text-normal);
   background: transparent;
   border: none;
-  /* cursor: pointer; */
   transition: all 0.2s ease;
   appearance: none;
   -webkit-appearance: none;
   padding: 0;
+}
+
+.explorer-container:not(.use-glass) .action-group-item {
+  border-radius: var(--explorer-radius-md);
 }
 
 .action-group-item:hover {

@@ -11,7 +11,6 @@ type ListViewProps = {
   sourcePath: string;
   files: FileInfo[];
   showTags: boolean;
-  useGlass: boolean;
 };
 
 export function ListView(props: ListViewProps): React.JSX.Element {
@@ -64,12 +63,10 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 }
 
 const MobileListView = (props: ListViewProps): React.JSX.Element => {
-  const { app, sourcePath, files, showTags, useGlass } = props;
+  const { app, sourcePath, files, showTags } = props;
 
   return (
-    <div
-      className={`explorer-mobile-list${useGlass ? " explorer-mobile-list--glass" : ""}`}
-    >
+    <div className="explorer-mobile-list">
       {files.map((fileInfo, i) => (
         <div key={fileInfo.file.path} className="explorer-mobile-list-item">
           <InternalLink
