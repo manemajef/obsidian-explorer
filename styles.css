@@ -425,9 +425,6 @@
   height: 1px;
   background-color: var(--background-modifier-border);
 }
-.explorer-mobile-note:active {
-  background-color: var(--explorer-bg-interactive-hover);
-}
 .explorer-mobile-note:focus-visible {
   outline: 1px solid var(--background-modifier-border-hover);
   outline-offset: 0.35em;

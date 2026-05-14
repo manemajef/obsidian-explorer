@@ -7,13 +7,20 @@
 
 ## 2026-05-14 - Version 1.1.4
 
-**Release:** Add command palette support for basic functionality, polish UI, and general optimization.
+**Release:** Add command palette support, directory restructure, and UI polish.
+
+**Features:**
+- Command palette: insert explorer blocks, create explorer folders
+- Directory restructure for maintainability (vault/, settings/, ui/)
+
 **Files:**
-- `main.ts` — registered command palette commands for inserting explorer blocks and creating explorer folders
-- `src/ui/components/list-view.tsx`, `src/ui/styles/list-view.css` — mobile list rewritten as a dedicated note-row variant
-- `src/ui/components/actions-bar.tsx`, `src/ui/components/search.tsx`, `src/ui/components/ui/action.tsx` — action bar and glass control cleanup
-- `src/ui/styles/action-bar.css`, `src/ui/styles/search.css`, `src/ui/styles/shared.css`, `src/ui/styles/main.css` — reduced UI/CSS coupling and normalized glass behavior
-- `src/ui/styles/utils.css` — removed; component-owned styling now lives with each UI unit
+- `main.ts` — command palette commands, updated imports
+- `src/vault/` — new directory for all vault interaction
+- `src/settings/block-parser.ts` — renamed from block-settings.ts
+- `src/ui/render-setting-field.ts` — extracted shared settings renderer
+- `src/ui/components/list-view.tsx` — mobile list rewritten
+- `src/ui/styles/*` — reduced CSS coupling, removed utils.css
+- Deleted: `src/plugin/`, `src/utils/`, `src/constants.ts`, `src/backend/`
 
 ---
 

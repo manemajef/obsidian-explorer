@@ -303,18 +303,6 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 10,
     },
   }),
-  // Kept in schema for parser compatibility, hidden from current UIs.
-  showBreadcrumbs: booleanField({
-    label: "Show breadcrumbs",
-    description: "Show path navigation",
-    blockKey: "showBreadcrumbs",
-    defaultValue: true,
-    ui: {
-      surfaces: [],
-      section: "display",
-      order: 99,
-    },
-  }),
 } as const;
 
 type InferSettingValue<T> =
@@ -474,42 +462,13 @@ export function resolveBlockSettings(
 export function normalizePluginSettings(raw: unknown): PluginSettings {
   const pluginDefaults = createDefaultPluginSettings();
 
-  if (!isRecord(raw)) {
-    return pluginDefaults;
-  }
-
-  const nestedDefaults = raw.defaultBlockSettings;
-  if (isRecord(nestedDefaults)) {
-    const nestedWithLegacyUseGlass =
-      typeof raw.useGlass === "boolean"
-        ? { useGlass: raw.useGlass, ...nestedDefaults }
-        : nestedDefaults;
-    return {
-      defaultBlockSettings: coerceBlockSettings(
-        nestedWithLegacyUseGlass as Partial<Record<BlockSettingKey, unknown>>,
-        pluginDefaults.defaultBlockSettings,
-      ),
-    };
-  }
-
-  // Backward compatibility: pre-refactor saved data was a flat settings object.
-  const legacy: Partial<Record<BlockSettingKey, unknown>> = {};
-  let hasLegacyValue = false;
-
-  for (const key of BLOCK_SETTING_KEYS) {
-    if (key in raw) {
-      legacy[key] = raw[key];
-      hasLegacyValue = true;
-    }
-  }
-
-  if (!hasLegacyValue) {
+  if (!isRecord(raw) || !isRecord(raw.defaultBlockSettings)) {
     return pluginDefaults;
   }
 
   return {
     defaultBlockSettings: coerceBlockSettings(
-      legacy,
+      raw.defaultBlockSettings as Partial<Record<BlockSettingKey, unknown>>,
       pluginDefaults.defaultBlockSettings,
     ),
   };
