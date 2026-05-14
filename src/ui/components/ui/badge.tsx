@@ -7,7 +7,7 @@ export function Badge(props: {
   variant: BadgeVariant;
   className?: string;
   children?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }): React.JSX.Element {
   const { variant, className, children, onClick } = props;
 

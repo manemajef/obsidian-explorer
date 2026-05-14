@@ -5,6 +5,15 @@ import { Badge } from "./badge";
 export function Pin(props: { fileInfo: FileInfo }): React.JSX.Element {
   const { fileInfo } = props;
   if (fileInfo.isPinned)
-    return <Badge onClick={() => fileInfo.togglePin()} variant="pin" />;
+    return (
+      <Badge
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          fileInfo.togglePin();
+        }}
+        variant="pin"
+      />
+    );
   return <span hidden />;
 }
