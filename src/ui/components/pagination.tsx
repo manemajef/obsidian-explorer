@@ -64,7 +64,7 @@ export function PaginationModern(
         onClick={onLoadMore}
         disabled={!canLoadMore}
       >
-        <span>Load more</span>
+        <span className="load-more-text">Load more</span>
         <Icon name="chevrons-down" className="paging-load-more-icon" />
       </button>
     </Group>

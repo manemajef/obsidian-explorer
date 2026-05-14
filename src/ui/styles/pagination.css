@@ -1,6 +1,6 @@
 /* ===== Pagination ===== */
 .paging-control {
-  direction: ltr !important;
+  direction: ltr;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -31,7 +31,7 @@
 }
 
 .paging-label.paging-dots {
-  padding: 0 !important;
+  padding: 0;
   cursor: default;
 }
 
@@ -55,7 +55,7 @@
   justify-content: space-around;
 }
 
-.paging-load-more {
+.explorer-container .paging-load-more {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -68,19 +68,34 @@
   /* background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
     var(--explorer-surface-tint, var(--explorer-glass-tint)); */
   /* box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass)); */
-  color: var(--text-muted) !important;
+  /* color: var(--text-muted); */
   font-weight: var(--font-medium);
   /* border: var(--explorer-border-glass); */
+}
+
+.explorer-container button.paging-load-more,
+.explorer-container button.paging-load-more span {
+  /* color: var(--text-muted); */
+}
+.explorer-container .load-more-text {
+  color: var(--text-muted);
 }
 /* .theme-dark .paging-load-more {
   border: var(--explorer-border-glass);
 } */
 
-.paging-load-more:hover,
-.paging-load-more:focus-visible {
+.explorer-container .paging-load-more:hover,
+.explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
   background: var(--background-secondary);
   border-color: var(--background-modifier-border-hover);
+}
+
+.explorer-container button.paging-load-more:hover,
+.explorer-container button.paging-load-more:hover span,
+.explorer-container button.paging-load-more:focus-visible,
+.explorer-container button.paging-load-more:focus-visible span {
+  color: var(--text-normal);
 }
 
 .paging-load-more:disabled {

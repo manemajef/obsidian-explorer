@@ -33,8 +33,8 @@ export default class ExplorerPlugin extends Plugin {
 
   private registerCommands(): void {
     this.addCommand({
-      id: "insert-explorer-code-block",
-      name: "Insert explorer code block",
+      id: "insetrt-code-block",
+      name: "Insert code block",
       checkCallback: (checking: boolean) => {
         const view = this.app.workspace.getActiveViewOfType(MarkdownView);
         const file = view?.file;
@@ -52,8 +52,8 @@ export default class ExplorerPlugin extends Plugin {
     });
 
     this.addCommand({
-      id: "create-explorer-folder-in-current-folder",
-      name: "Create explorer folder in current note folder",
+      id: "create-folder-in-current-folder",
+      name: "Create folder in current note folder",
       checkCallback: (checking: boolean) => {
         const activeFile = this.app.workspace.getActiveFile();
         const basePath = activeFile?.parent?.path;

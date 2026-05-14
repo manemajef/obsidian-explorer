@@ -82,7 +82,9 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           key,
           settings,
           "plugin",
-          (k, v) => this.updateSetting(k, v),
+          (k, v) => {
+            void this.updateSetting(k, v);
+          },
           fieldRefs,
         );
       }

@@ -77,9 +77,9 @@
       .explorer-card,
       .explorer-folder-card,
       .paging-label,
-      .explorer-badge
-    ) {
-    transition: none !important;
+    .explorer-badge
+  ) {
+    transition: none;
   }
 }
 

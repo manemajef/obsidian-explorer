@@ -32,7 +32,7 @@
   padding: 0;
 }
 
-.explorer-container.use-glass .action-item, .explorer-container.use-glass .action-item {
+.explorer-container.use-glass .action-item {
   color: var(--text-normal);
 }
 
@@ -65,10 +65,6 @@
   gap: var(--explorer-space-1);
 }
 
-.explorer-container.use-glass .explorer-container .action-group .clickable-icon {
-  color: var(--text-normal);
-}
-
 .explorer-container.use-glass .clickable-icon {
   color: var(--text-normal);
 }
@@ -95,7 +91,7 @@
 }
 
 .action-group-item:hover {
-  color: var(--text-normal) !important;
+  color: var(--text-normal);
 }
 
 .action-group-item--active {

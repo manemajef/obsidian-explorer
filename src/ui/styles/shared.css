@@ -5,10 +5,20 @@
   border: var(--explorer-surface-border, var(--explorer-border-glass));
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
   border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.explorer-container.use-glass button.glass-surface,
+.explorer-container.use-glass .action-group.glass-surface {
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
+  border: var(--explorer-surface-border, var(--explorer-border-glass));
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 
 .explorer-container.use-glass .glass-surface:hover,
@@ -33,8 +43,8 @@
     var(--explorer-glass-shine-color) 100%
   );
   -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(#ffffff 0 0) content-box,
+    linear-gradient(#ffffff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -101,14 +111,9 @@
 .explorer-badge.pin {
   display: inline-flex;
   align-items: center;
-  
-  /* border: 1px solid var(--background-modifier-border); */
   border-radius: 50%;
-
-  display: flex;
-  justify-content: flex-end !important;
+  justify-content: flex-end;
   padding: .25em .25em;
-  /* margin-right: 0.3em; */
   color: var(--color-red);
   flex:0;
 }
@@ -125,7 +130,7 @@
 }
 
 .explorer-badge.tag {
-  background-color: var(--background-modifier-border) !important; 
+  background-color: var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
   color: var(--text-muted);
 }
@@ -133,12 +138,14 @@
 /* ------------------------------------------------------------
    Links
    ------------------------------------------------------------ */
-.explorer-container a {
-  text-decoration: none !important;
+.explorer-container a,
+.explorer-container a.internal-link {
+  text-decoration: none;
 }
 
-.explorer-container a:hover {
-  text-decoration: underline !important;
+.explorer-container a:hover,
+.explorer-container a.internal-link:hover {
+  text-decoration: underline;
 }
 
 .explorer-container a,

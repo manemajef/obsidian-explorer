@@ -45,7 +45,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .explorer-container :where(a, button, .explorer-card, .explorer-folder-card, .paging-label, .explorer-badge) {
-    transition: none !important;
+    transition: none;
   }
 }
 .theme-dark .explorer-container {
@@ -79,10 +79,18 @@
   border: var(--explorer-surface-border, var(--explorer-border-glass));
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
   border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.explorer-container.use-glass button.glass-surface,
+.explorer-container.use-glass .action-group.glass-surface {
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
+  border: var(--explorer-surface-border, var(--explorer-border-glass));
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 .explorer-container.use-glass .glass-surface:hover,
 .explorer-container.use-glass .glass-surface:focus-visible,
@@ -98,7 +106,7 @@
   padding: 1px;
   opacity: var(--explorer-glass-shine-opacity);
   background: linear-gradient(135deg, var(--explorer-glass-shine-color) 0%, transparent 35%, transparent 65%, var(--explorer-glass-shine-color) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -151,8 +159,7 @@
   display: inline-flex;
   align-items: center;
   border-radius: 50%;
-  display: flex;
-  justify-content: flex-end !important;
+  justify-content: flex-end;
   padding: .25em .25em;
   color: var(--color-red);
   flex: 0;
@@ -165,15 +172,17 @@
   opacity: 0.7;
 }
 .explorer-badge.tag {
-  background-color: var(--background-modifier-border) !important;
+  background-color: var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
   color: var(--text-muted);
 }
-.explorer-container a {
-  text-decoration: none !important;
+.explorer-container a,
+.explorer-container a.internal-link {
+  text-decoration: none;
 }
-.explorer-container a:hover {
-  text-decoration: underline !important;
+.explorer-container a:hover,
+.explorer-container a.internal-link:hover {
+  text-decoration: underline;
 }
 .explorer-container a,
 .explorer-container a * {
@@ -189,9 +198,6 @@
 .is-mobile .explorer-folders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-}
-.is-mobile .explorer-folder-card {
-  max-width: 140px !important;
 }
 .explorer-folder-card {
   box-sizing: border-box;
@@ -210,11 +216,14 @@
   border: 1px solid rgba(255, 255, 255, 0.02);
 }
 .is-mobile .explorer-folder-card {
+  max-width: 140px;
   --explorer-surface-radius: 16px;
   background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
   border: var(--explorer-border-glass-strong);
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass-strong));
+  border-radius: var(--explorer-surface-radius);
+  padding: 1.15em 0.2em;
 }
 .theme-dark.is-mobile .explorer-folder-card,
 .is-mobile .theme-dark .explorer-folder-card {
@@ -227,24 +236,22 @@
   border-color: var(--background-modifier-border);
   box-shadow: var(--explorer-shadow-glass-strong);
 }
-.is-mobile .explorer-folder-card {
-  border-radius: var(--explorer-surface-radius);
-  padding: 1.15em 0.2em;
-}
 .explorer-folder-card--missing {
   opacity: 0.7;
 }
 .explorer-folder-link--missing {
   color: var(--text-muted);
 }
-.explorer-folder-link {
+.explorer-container a.explorer-folder-link,
+.explorer-container a.explorer-folder-link.internal-link {
   font-weight: var(--font-semibold);
-  color: var(--text-normal) !important;
-  text-decoration: none !important;
+  color: var(--text-normal);
+  text-decoration: none;
   cursor: pointer;
 }
-.explorer-folder-link:hover {
-  text-decoration: none !important;
+.explorer-container a.explorer-folder-link:hover,
+.explorer-container a.explorer-folder-link.internal-link:hover {
+  text-decoration: none;
 }
 
 /* src/ui/styles/cards-view.css */
@@ -304,15 +311,17 @@
 .explorer-card-footer {
   opacity: 0.5;
   font-size: 0.7em;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
   margin-top: var(--explorer-space-1);
   padding-top: .5em;
 }
-.explorer-card-footer a {
-  color: var(--text-normal) !important;
+.explorer-container .explorer-card-footer a,
+.explorer-container .explorer-card-footer a.internal-link {
+  color: var(--text-normal);
 }
-.explorer-card-footer:hover a {
-  color: var(--text-accent) !important;
+.explorer-container .explorer-card-footer:hover a,
+.explorer-container .explorer-card-footer:hover a.internal-link {
+  color: var(--text-accent);
 }
 .explorer-card-body {
   padding-top: var(--explorer-space-2);
@@ -323,12 +332,12 @@
   flex-wrap: wrap;
 }
 .explorer-card-exts .explorer-badge {
-  opacity: .7 !important;
+  opacity: .7;
   display: flex;
   justify-content: center;
 }
 .explorer-card-exts .explorer-badge:hover {
-  opacity: 1 !important;
+  opacity: 1;
 }
 .explorer-card-ext-badge,
 .explorer-card-folder-link {
@@ -338,15 +347,15 @@
 .explorer-card-ext-badge:focus-visible,
 .explorer-card-folder-link:hover,
 .explorer-card-folder-link:focus-visible {
-  opacity: 1 !important;
+  opacity: 1;
 }
-.explorer-card-folder-link {
-  color: var(--text-normal) !important;
-  text-decoration: none !important;
+.explorer-container .explorer-card-folder-link {
+  color: var(--text-normal);
+  text-decoration: none;
   cursor: pointer;
 }
-.explorer-card-folder-link:hover {
-  text-decoration: underline !important;
+.explorer-container .explorer-card-folder-link:hover {
+  text-decoration: underline;
 }
 .explorer-card-exts .explorer-badge.pin svg {
   transform: scale(1.3);
@@ -362,8 +371,9 @@
 .explorer-list:hover {
   border-radius: var(--explorer-radius-sm);
 }
-.explorer-list.pinned a {
-  color: var(--color-red) !important;
+.explorer-container .explorer-list.pinned a,
+.explorer-container .explorer-list.pinned a.internal-link {
+  color: var(--color-red);
 }
 .explorer-list-tags {
   display: flex;
@@ -393,19 +403,21 @@
   padding: var(--explorer-space-1) var(--explorer-space-4);
 }
 .explorer-mobile-list-item-last {
-  border: none !important;
+  border: none;
 }
-.explorer-mobile-note {
+.explorer-container a.explorer-mobile-note,
+.explorer-container a.explorer-mobile-note.internal-link {
   display: flex;
   flex-direction: column;
   gap: var(--explorer-space-2);
   padding-top: var(--explorer-space-4);
   padding-bottom: var(--explorer-space-2);
   border-bottom: 1px solid var(--background-modifier-border);
-  color: var(--text-normal) !important;
-  text-decoration: none !important;
+  color: var(--text-normal);
+  text-decoration: none;
 }
-.explorer-mobile-note-last {
+.explorer-container a.explorer-mobile-note-last,
+.explorer-container a.explorer-mobile-note-last.internal-link {
   border-bottom: none;
 }
 .explorer-mobile-note.pinned .explorer-mobile-note__title {
@@ -448,7 +460,7 @@
 
 /* src/ui/styles/pagination.css */
 .paging-control {
-  direction: ltr !important;
+  direction: ltr;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -475,7 +487,7 @@
   background-color: var(--background-primary-alt);
 }
 .paging-label.paging-dots {
-  padding: 0 !important;
+  padding: 0;
   cursor: default;
 }
 .paging-icon {
@@ -495,7 +507,7 @@
   display: flex;
   justify-content: space-around;
 }
-.paging-load-more {
+.explorer-container .paging-load-more {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -505,14 +517,25 @@
   padding: var(--explorer-space-3) var(--explorer-space-4);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
-  color: var(--text-muted) !important;
   font-weight: var(--font-medium);
 }
-.paging-load-more:hover,
-.paging-load-more:focus-visible {
+.explorer-container button.paging-load-more,
+.explorer-container button.paging-load-more span {
+}
+.explorer-container .load-more-text {
+  color: var(--text-muted);
+}
+.explorer-container .paging-load-more:hover,
+.explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
   background: var(--background-secondary);
   border-color: var(--background-modifier-border-hover);
+}
+.explorer-container button.paging-load-more:hover,
+.explorer-container button.paging-load-more:hover span,
+.explorer-container button.paging-load-more:focus-visible,
+.explorer-container button.paging-load-more:focus-visible span {
+  color: var(--text-normal);
 }
 .paging-load-more:disabled {
   cursor: default;
@@ -578,7 +601,6 @@
   -webkit-appearance: none;
   padding: 0;
 }
-.explorer-container.use-glass .action-item,
 .explorer-container.use-glass .action-item {
   color: var(--text-normal);
 }
@@ -606,9 +628,6 @@
   padding-inline: 0;
   gap: var(--explorer-space-1);
 }
-.explorer-container.use-glass .explorer-container .action-group .clickable-icon {
-  color: var(--text-normal);
-}
 .explorer-container.use-glass .clickable-icon {
   color: var(--text-normal);
 }
@@ -630,7 +649,7 @@
   border-radius: var(--explorer-radius-md);
 }
 .action-group-item:hover {
-  color: var(--text-normal) !important;
+  color: var(--text-normal);
 }
 .action-group-item--active {
   color: var(--text-normal);
@@ -672,7 +691,7 @@
 .cancel-search-btn:hover,
 .cancel-search-btn:focus-visible {
   background-color: var(--background-modifier-hover);
-  opacity: 1 !important;
+  opacity: 1;
 }
 .is-mobile .explorer-search {
   width: 100%;

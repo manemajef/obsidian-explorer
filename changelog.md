@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-05-14 - Version 1.1.5
+
+**Release:** polish mobile ui and general performence improvement
+
+**Highlights:**
+- glass styling refactor moved mode ownership to the plugin root and split base surfaces from optional shine overlays
+- mobile list, folder cards, action controls, and pagination styling were retuned to preserve intended visuals while reducing prop/CSS coupling
+- source warnings addressed for command naming/IDs and async settings callbacks
+- release workflow now includes GitHub build provenance attestation for release assets
+
+---
+
 ## 2026-05-14 - Version 1.1.4
 
 **Release:** Add command palette support, directory restructure, and UI polish.
@@ -21,6 +33,27 @@
 - `src/ui/components/list-view.tsx` — mobile list rewritten
 - `src/ui/styles/*` — reduced CSS coupling, removed utils.css
 - Deleted: `src/plugin/`, `src/utils/`, `src/constants.ts`, `src/backend/`
+
+---
+
+## 2026-05-14 - Glass Surface Refactor
+
+**Task:** Move glass mode ownership to the plugin root, normalize action-bar markup, split base glass surfaces from optional shine overlays, and prune dead CSS tokens.
+
+**Files:**
+- `src/explorer.tsx` — root container now toggles `.use-glass`
+- `src/ui/explorer-ui.tsx` — removed `useGlass` prop threading into action/list views
+- `src/ui/components/actions-bar.tsx`, `src/ui/components/search.tsx`, `src/ui/components/list-view.tsx` — stable markup/classes, glass mode handled by CSS
+- `src/ui/components/ui/action.tsx` — action primitives now use `glass-surface`; optional `shine` flag adds `glass-surface--shine`
+- `src/ui/styles/shared.css` — shared glass contract moved to `.glass-surface`; specular overlay limited to `.glass-surface--shine`
+- `src/ui/styles/action-bar.css` — action layout keeps geometry tokens, no longer owns the glass effect itself
+- `src/ui/styles/list-view.css`, `src/ui/styles/folder-view.css` — larger surfaces tuned with per-component border/shadow overrides instead of action-style shine
+- `src/ui/styles/main.css`, `src/ui/styles/pagination.css` — removed dead/misspelled token proxies and fixed pagination to use the real surface/glass tokens
+
+**Notes:**
+- `glass-surface` is now the shared baseline for background/border/shadow.
+- `glass-surface--shine` is opt-in and intended mainly for small glossy controls.
+- Richer large surfaces should use stronger border/shadow tuning, not the action-button `::after` highlight.
 
 ---
 

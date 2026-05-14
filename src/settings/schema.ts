@@ -283,7 +283,7 @@ export const BLOCK_SETTINGS_SCHEMA = {
 
   onlyNotes: booleanField({
     label: "Only notes",
-    description: "Show only notes and PDFs",
+    description: "Show only Markdown notes",
     blockKey: "onlyNotes",
     defaultValue: false,
     ui: {
