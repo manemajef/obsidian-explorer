@@ -121,8 +121,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         searchMode={searchMode}
         searchQuery={searchQuery}
         onSearchInput={setSearchQuery}
-        app={app}
-        sourcePath={sourcePath}
         folder={folder}
         onOpenFolderNote={onOpenFolderNote}
       />
@@ -159,7 +157,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 />
               ) : (
                 <Pagination
-                  app={app}
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={setCurrentPage}

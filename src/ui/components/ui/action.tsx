@@ -41,8 +41,8 @@ export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
       type="button"
       className={cn(
         glass
-          ? "action-item action-item--glass clickable-icon-normal circle hover-scale glass"
-          : "action-item--native clickable-icon clickable-icon-normal",
+          ? "action-item action-item--glass glass clickable-icon"
+          : "action-item action-item--native clickable-icon",
         active && "action-item--active",
         className,
       )}
@@ -65,7 +65,7 @@ export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
       ref={ref}
       className={cn(
         "action-group",
-        glass && "action-group--glass pill hover-scale glass",
+        glass && "action-group--glass glass",
         className,
       )}
       {...props}
@@ -92,7 +92,7 @@ export const ActionGroupItem = forwardRef<
     ref={ref}
     type="button"
     className={cn(
-      "clickable-icon clickable-icon-normal action-group-item",
+      "clickable-icon action-group-item",
       active && "action-group-item--active",
       className,
     )}

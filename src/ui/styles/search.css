@@ -1,0 +1,53 @@
+/* ===== Search ===== */
+.explorer-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.explorer-search__input {
+  min-width: 0;
+}
+
+.explorer-search__input input {
+  min-width: 250px;
+  padding: var(--explorer-space-5) 3em var(--explorer-space-5)
+    var(--explorer-space-4);
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: var(--explorer-radius-pill);
+  color: var(--text-muted);
+}
+
+.explorer-search__clear {
+  position: absolute;
+  inset-inline-end: var(--explorer-space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-search-btn {
+  color: var(--color-red);
+}
+
+.cancel-search-btn:hover,
+.cancel-search-btn:focus-visible {
+  background-color: var(--background-modifier-hover);
+  opacity: 1 !important;
+}
+
+.is-mobile .explorer-search {
+  width: 100%;
+}
+
+.is-mobile .explorer-search__input,
+.is-mobile .explorer-search__input input {
+  min-width: 100%;
+}
+
+.is-mobile .explorer-search__clear {
+  position: static;
+  margin-inline-start: var(--explorer-space-2);
+}

@@ -1,26 +1,6 @@
 import React, {
-  createContext,
-  useContext,
-  useLayoutEffect,
-  useRef,
-  useState,
   PropsWithChildren,
 } from "react";
-// import "./bar.css";
-
-/* ────────────────────────────────
-   Context
-──────────────────────────────── */
-
-type BarContextValue = {
-  width: number;
-};
-
-const BarContext = createContext<BarContextValue | null>(null);
-
-export function useBar() {
-  return useContext(BarContext);
-}
 
 /* ────────────────────────────────
    Bar
@@ -31,26 +11,10 @@ type BarProps = PropsWithChildren<{
 }>;
 
 export function Bar({ children, className }: BarProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-
-  useLayoutEffect(() => {
-    if (!ref.current) return;
-
-    const obs = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width);
-    });
-
-    obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-
   return (
-    <BarContext.Provider value={{ width }}>
-      <div ref={ref} className={`bar ${className ?? ""}`}>
-        {children}
-      </div>
-    </BarContext.Provider>
+    <div className={`bar ${className ?? ""}`}>
+      {children}
+    </div>
   );
 }
 

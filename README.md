@@ -145,7 +145,6 @@ The search bar supports special prefixes. Use the search icon in the top bar to 
 The plugin recognizes folder notes (files named `foldername/foldername.md`) and:
 
 - Uses them for folder navigation
-- Shows them in breadcrumbs
 - Filters them correctly from file listings
 
 ### Pinned Files

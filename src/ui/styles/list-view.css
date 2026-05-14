@@ -14,6 +14,20 @@
   color: var(--color-red) !important;
 }
 
+.explorer-list-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  border-radius: var(--explorer-radius-pill);
+  justify-content: flex-start;
+  margin-inline-start: 0.5em;
+  gap: 0.25em;
+}
+
+.explorer-list-tags > * {
+  flex: 0 0 auto;
+}
+
 .explorer-list-container {
   --explorer-surface-radius: var(--explorer-radius-md);
   --explorer-surface-border: none;

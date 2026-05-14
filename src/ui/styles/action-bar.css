@@ -1,116 +1,25 @@
 /* ===== Actions Bar ===== */
 #explorer-actions {
-  direction: ltr !important;
+  direction: ltr;
   margin-bottom: var(--explorer-space-4);
   padding-bottom: var(--explorer-space-2);
 }
 
 .explorer-actions--glass {
-  margin-top: 1.5em; 
+  margin-top: var(--explorer-space-5);
+}
+
+.explorer-actions-start,
+.explorer-actions-controls,
+.explorer-actions-end {
+  min-width: 0;
 }
 
 .is-mobile #explorer-actions {
-  padding-bottom: var(--explorer-space-4) !important;
+  padding-bottom: var(--explorer-space-4);
 }
 
-/* ===== Search ===== */
-.actions-search {
-  position: relative;
-  gap: 0;
-}
-
-.is-mobile .actions-search {
-  min-width: 100% !important;
-}
-
-.search-x-btn {
-  position: absolute;
-  inset-inline-end: var(--explorer-space-1);
-  top: auto;
-  bottom: auto;
-}
-
-.is-mobile .search-x-btn {
-  position: static !important;
-  margin-inline-start: var(--explorer-space-2);
-}
-
-.actions-search-input input {
-  min-width: 250px;
-  padding: var(--explorer-space-5) 3em var(--explorer-space-5)
-    var(--explorer-space-4);
-  background-color: var(--background-primary);
-  border: 1px solid var(--background-modifier-border-hover);
-  border-radius: var(--explorer-radius-pill);
-  color: var(--text-muted);
-}
-
-.is-mobile .actions-search-input input {
-  min-width: 100% !important;
-}
-
-.cancel-search-btn {
-  color: var(--color-red);
-}
-
-/* ===== Breadcrumbs (shelved — kept for future use) ===== */
-.explorer-breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
-  font-size: 0.8em;
-  overflow: hidden;
-  white-space: nowrap;
-  min-width: 0;
-  flex: 1;
-  justify-content: start;
-}
-
-.explorer-breadcrumb-home {
-  display: flex;
-  align-items: center;
-  color: var(--text-faint) !important;
-  cursor: pointer;
-}
-
-.breadcrumbs-home-icon {
-  font-size: 0.8em !important;
-}
-
-.explorer-breadcrumb-home:hover {
-  color: var(--text-muted) !important;
-}
-
-.explorer-breadcrumbs span {
-  display: inline-flex;
-  align-items: center;
-}
-
-.explorer-breadcrumb-sep {
-  display: flex;
-  align-items: center;
-  color: var(--text-faint);
-  font-size: 0.85em;
-}
-
-.explorer-breadcrumb-link {
-  color: var(--text-faint) !important;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.explorer-breadcrumb-link:hover {
-  color: var(--text-muted) !important;
-  text-decoration: underline;
-}
-
-.explorer-breadcrumb-dots {
-  color: var(--text-faint);
-  font-size: 0.85em;
-}
-
-
-.explorer-actions--glass .action-item {
+.action-item--glass {
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -118,21 +27,32 @@
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
   color: var(--text-normal);
-}
-
-.action-item--glass {
   appearance: none;
   -webkit-appearance: none;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint));
+  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint)) !important;
+  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
+  border: var(--explorer-surface-border, var(--explorer-border-glass));
+  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
   padding: 0;
+}
+
+.action-item--glass:hover,
+.action-item--glass:focus-visible,
+.action-group--glass:hover,
+.action-group--glass:focus-within {
+  transform: scale(var(--explorer-hover-scale));
+  z-index: 10;
 }
 
 .action-item--native {
   border-radius: var(--explorer-radius-md);
   /* color: var(--text-faint); */
-  opacity: .7;
+  /* opacity: .7; */
+}
+.is-mobile .action-item--native {
+  color: var(--text-normal);
 }
 
 .action-item--native:hover,
@@ -144,11 +64,14 @@
 .action-group {
   display: inline-flex;
   align-items: center;
-  background: transparent;
   gap: 2px;
   height: var(--explorer-control-size);
   padding-inline: 3px;
-} 
+}
+
+.action-group--glass {
+  border-radius: var(--explorer-radius-pill);
+}
 
 .actions-native-shortcuts {
   gap: var(--explorer-space-1);
@@ -177,4 +100,10 @@
 
 .action-group-item--active {
   color: var(--text-normal);
+}
+
+.explorer-actions-mobile-search .bar-item,
+.explorer-actions-mobile-search .bar-spring,
+.explorer-actions-end .bar-item {
+  min-width: 0;
 }

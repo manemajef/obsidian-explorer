@@ -21,14 +21,14 @@ export function FolderButtons(props: {
         return (
           <div
             key={folderNotePath}
-            className={`explorer-folder-card border border-hover${isMissing ? " explorer-folder-card--missing" : ""}`}
+            className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""}`}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
             }}
           >
             <a
-              className={`internal-link link-headless font-semibold explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
+              className={`internal-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
               data-href={folderNotePath}
               href={folderNotePath}
               data-tooltip-position="top"

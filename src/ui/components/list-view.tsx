@@ -46,7 +46,7 @@ export function ListView(props: {
               />
 
               <div
-                className="tags-container flex-scroll"
+                className="explorer-list-tags"
                 onClick={(e) => e.stopPropagation()}
               >
                 {showTags &&

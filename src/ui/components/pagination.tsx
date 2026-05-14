@@ -1,9 +1,9 @@
 import React from "react";
-import { App } from "obsidian";
+import { Platform } from "obsidian";
 import { Icon } from "./shared";
 import { Group } from "./ui/layout";
 
-const PAGING_LABEL_BASE = "paging-label tone-muted hover-bg-primary-alt";
+const PAGING_LABEL_BASE = "paging-label";
 const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
 const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
 
@@ -25,7 +25,7 @@ function PageNum(props: {
   onClick?: () => void;
 }): React.JSX.Element {
   const { value, active = false, onClick } = props;
-  const activeClass = active ? " active-page border-strong" : "";
+  const activeClass = active ? " active-page" : "";
   return (
     <span className={`${PAGING_NUM_CLASS}${activeClass}`} onClick={onClick}>
       {value}
@@ -42,7 +42,6 @@ function PageDots(): React.JSX.Element {
 }
 
 type PaginationProps = {
-  app: App;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -61,7 +60,7 @@ export function PaginationModern(
     <Group justify="center">
       <button
         type="button"
-        className="clickable-icon paging-load-more radius-pill border border-hover pad-compact"
+        className="clickable-icon paging-load-more"
         onClick={onLoadMore}
         disabled={!canLoadMore}
       >
@@ -73,8 +72,8 @@ export function PaginationModern(
 }
 
 export function Pagination(props: PaginationProps): React.JSX.Element {
-  const { app, currentPage, totalPages, onPageChange } = props;
-  const isMobile = (app as App & { isMobile: boolean }).isMobile;
+  const { currentPage, totalPages, onPageChange } = props;
+  const isMobile = Platform.isMobile;
   const page = currentPage;
 
   const useLeftDots = isMobile ? page > 1 : page > 2;
@@ -89,7 +88,7 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
 
   return (
     <Group justify="center">
-      <div className="paging-control radius-pill border border-hover pad-compact">
+      <div className="paging-control">
         <PageNav
           icon="chevron-left"
           onClick={() => {

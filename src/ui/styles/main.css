@@ -64,10 +64,7 @@
     .explorer-card,
     .explorer-folder-card,
     .paging-label,
-    .explorer-badge,
-    .link-normal,
-    .link-headless,
-    .faded-interactive
+    .explorer-badge
   ) {
   transition:
     color var(--explorer-hover-transition),
@@ -86,10 +83,7 @@
       .explorer-card,
       .explorer-folder-card,
       .paging-label,
-      .explorer-badge,
-      .link-normal,
-      .link-headless,
-      .faded-interactive
+      .explorer-badge
     ) {
     transition: none !important;
   }

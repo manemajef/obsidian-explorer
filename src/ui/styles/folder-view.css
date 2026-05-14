@@ -19,6 +19,7 @@
   box-shadow: var(--explorer-shadow-glass-small);
   background-color: var(--explorer-bg-interactive);
   border-radius: var(--explorer-radius-lg);
+  border: 1px solid var(--background-modifier-border);
   /* cursor: pointer; */
   display: flex;
   align-items: center;
@@ -26,6 +27,11 @@
   padding: 0.8em var(--explorer-space-6);
   font-size: 0.9em;
   transition: 0.15s;
+}
+
+.explorer-folder-card:hover,
+.explorer-folder-card:focus-within {
+  border-color: var(--background-modifier-border-hover);
 }
 
 .is-mobile .explorer-folder-card {
@@ -41,10 +47,17 @@
   color: var(--text-muted);
 }
 
-.explorer-folder-card a {
+.explorer-folder-link {
   font-weight: var(--font-semibold);
   color: var(--text-normal) !important;
+  text-decoration: none !important;
+  cursor: pointer;
 }
+
+.explorer-folder-link:hover {
+  text-decoration: none !important;
+}
+
 .theme-dark .explorer-folder-card:not(:hover) {
   border: 1px solid rgba(255, 255, 255, 0.02);
 }
