@@ -69,6 +69,7 @@ export async function renderExplorerBlock(
 
   const render = async (): Promise<void> => {
     container.setAttribute("dir", resolveDirection(effectiveSettings));
+    container.toggleClass("use-glass", effectiveSettings.useGlass);
 
     const blockFile = app.vault.getAbstractFileByPath(ctx.sourcePath);
     if (!(blockFile instanceof TFile) || !blockFile.parent) {

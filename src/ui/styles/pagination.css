@@ -1,6 +1,6 @@
 /* ===== Pagination ===== */
 .paging-control {
-  direction: ltr !important;
+  direction: ltr;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -31,7 +31,7 @@
 }
 
 .paging-label.paging-dots {
-  padding: 0 !important;
+  padding: 0;
   cursor: default;
 }
 
@@ -55,29 +55,47 @@
   justify-content: space-around;
 }
 
-.paging-load-more {
+.explorer-container .paging-load-more {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--explorer-space-2);
   margin-inline: auto;
   min-width: 11rem;
-  padding: var(--explorer-space-2) var(--explorer-space-4);
+  padding: var(--explorer-space-3) var(--explorer-space-4);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
-  /* background: var(--background-primary-alt); */
-  background: var(--explorer-glass-background);
-  box-shadow: var(--explorer-glass-shadow);
-  /* color: var(--text-normal); */
+  /* background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
+    var(--explorer-surface-tint, var(--explorer-glass-tint)); */
+  /* box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass)); */
+  /* color: var(--text-muted); */
   font-weight: var(--font-medium);
-  /* box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04); */
+  /* border: var(--explorer-border-glass); */
 }
 
-.paging-load-more:hover,
-.paging-load-more:focus-visible {
+.explorer-container button.paging-load-more,
+.explorer-container button.paging-load-more span {
+  /* color: var(--text-muted); */
+}
+.explorer-container .load-more-text {
+  color: var(--text-muted);
+}
+/* .theme-dark .paging-load-more {
+  border: var(--explorer-border-glass);
+} */
+
+.explorer-container .paging-load-more:hover,
+.explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
   background: var(--background-secondary);
   border-color: var(--background-modifier-border-hover);
+}
+
+.explorer-container button.paging-load-more:hover,
+.explorer-container button.paging-load-more:hover span,
+.explorer-container button.paging-load-more:focus-visible,
+.explorer-container button.paging-load-more:focus-visible span {
+  color: var(--text-normal);
 }
 
 .paging-load-more:disabled {
@@ -122,4 +140,3 @@
     transform: translateY(0);
   }
 }
-

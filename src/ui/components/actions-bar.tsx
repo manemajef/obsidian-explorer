@@ -16,7 +16,6 @@ export function ActionsBar(props: {
   onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
   folder: TFolder;
   showParentButton: boolean;
-  useGlass: boolean;
 }): React.JSX.Element {
   const {
     onOpenSettings,
@@ -29,7 +28,6 @@ export function ActionsBar(props: {
     onOpenFolderNote,
     folder,
     showParentButton,
-    useGlass,
   } = props;
   const parent = folder?.parent;
   if (Platform.isMobile && searchMode)
@@ -43,7 +41,6 @@ export function ActionsBar(props: {
               searchQuery={searchQuery}
               onSearchToggle={onSearchToggle}
               onSearchInput={onSearchInput}
-              useGlass={useGlass}
             />
           </Bar.Item>
           <Bar.Spring />
@@ -51,29 +48,19 @@ export function ActionsBar(props: {
       </div>
     );
   return (
-    <div
-      id="explorer-actions"
-      className={
-        useGlass ? "explorer-actions--glass" : "explorer-actions-native"
-      }
-    >
+    <div id="explorer-actions">
       <Bar>
         <Bar.Item>
           <Group gap={2} className="explorer-actions-start">
             {parent && showParentButton && (
               <ActionItem
-                glass={useGlass}
                 icon="undo-2"
                 onClick={() => {
                   if (parent) onOpenFolderNote(parent, false);
                 }}
               />
             )}
-            <ActionItem
-              glass={useGlass}
-              icon="settings-2"
-              onClick={onOpenSettings}
-            />
+            <ActionItem icon="settings-2" onClick={onOpenSettings} />
           </Group>
         </Bar.Item>
 
@@ -81,25 +68,18 @@ export function ActionsBar(props: {
 
         <Bar.Item className="explorer-actions-end">
           <Group className="explorer-actions-controls">
-            {!(searchMode && Platform.isMobile) &&
-              (useGlass ? (
-                <ActionGroup glass={useGlass}>
-                  <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-                  <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
-                </ActionGroup>
-              ) : (
-                <Group gap={1} className="actions-native-shortcuts">
-                  <ActionItem icon="folder-plus" onClick={onNewFolder} />
-                  <ActionItem icon="file-plus-2" onClick={onNewNote} />
-                </Group>
-              ))}
+            {!(searchMode && Platform.isMobile) && (
+              <ActionGroup>
+                <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+                <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
+              </ActionGroup>
+            )}
             <Separator />
             <Search
               searchMode={searchMode}
               searchQuery={searchQuery}
               onSearchToggle={onSearchToggle}
               onSearchInput={onSearchInput}
-              useGlass={useGlass}
             />
           </Group>
         </Bar.Item>

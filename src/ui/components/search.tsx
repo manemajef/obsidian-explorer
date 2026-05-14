@@ -7,15 +7,8 @@ export function Search(props: {
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  useGlass?: boolean;
 }): React.JSX.Element {
-  const {
-    searchMode,
-    searchQuery,
-    onSearchToggle,
-    onSearchInput,
-    useGlass = true,
-  } = props;
+  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -25,7 +18,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <ActionItem glass={useGlass} icon="search" onClick={onSearchToggle} />;
+    return <ActionItem icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -46,7 +39,6 @@ export function Search(props: {
       </div>
       <div className="explorer-search__clear">
         <ActionItem
-          glass={useGlass}
           icon="x"
           onClick={onSearchToggle}
           className="cancel-search-btn"

@@ -73,17 +73,19 @@
 .explorer-card-footer {
   opacity: 0.5;
   font-size: 0.7em;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
   margin-top: var(--explorer-space-1);
   padding-top: .5em;
 }
 
-.explorer-card-footer a {
-  color: var(--text-normal) !important;
+.explorer-container .explorer-card-footer a,
+.explorer-container .explorer-card-footer a.internal-link {
+  color: var(--text-normal);
 }
 
-.explorer-card-footer:hover a {
-  color: var(--text-accent) !important;
+.explorer-container .explorer-card-footer:hover a,
+.explorer-container .explorer-card-footer:hover a.internal-link {
+  color: var(--text-accent);
 }
 
 .explorer-card-body {
@@ -96,12 +98,12 @@
 }
 
 .explorer-card-exts .explorer-badge {
-  opacity: .7 !important;
+  opacity: .7;
   display: flex;
   justify-content: center;
 }
 .explorer-card-exts .explorer-badge:hover {
-  opacity: 1 !important;
+  opacity: 1;
 }
 /* .explorer-card-exts .tag:hover {
 
@@ -115,17 +117,17 @@
 .explorer-card-ext-badge:focus-visible,
 .explorer-card-folder-link:hover,
 .explorer-card-folder-link:focus-visible {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
-.explorer-card-folder-link {
-  color: var(--text-normal) !important;
-  text-decoration: none !important;
+.explorer-container .explorer-card-folder-link {
+  color: var(--text-normal);
+  text-decoration: none;
   cursor: pointer;
 }
 
-.explorer-card-folder-link:hover {
-  text-decoration: underline !important;
+.explorer-container .explorer-card-folder-link:hover {
+  text-decoration: underline;
 }
 
 .explorer-card-exts .explorer-badge.pin svg {

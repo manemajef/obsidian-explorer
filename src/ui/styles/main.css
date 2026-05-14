@@ -5,7 +5,6 @@
   --explorer-space-3: 0.75em;
   --explorer-space-4: 1em;
   --explorer-space-5: 1.5em;
-  --explorer-space-5-5: 1.75em;
   --explorer-space-6: 2em;
 
   /* Radius scale */
@@ -44,28 +43,10 @@
 
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
-  --explorer-bg-interactive-hover: rgba(0, 0, 0, 0.1);
   --explorer-bg-alt: rgba(0,0,0,0.02);
 
   /* Cards */
   --explorer-card-border: 1px solid var(--background-modifier-border);
-  --explorer-card-border-hover: 1px solid var(--background-modifier-border-hover);
-  --explorer-card-shadow: 0 0 6px rgba(0, 0, 0, 0.01);
-
-  --exolorer-bg-faint: rgba(0,0,0,0.075);
-  --explorer-bg-faint-hover: rgba(0,0,0,0.025);
-  --explorer-border-faint: rgba(0,0,0,0.2);
-  --explorer-border-faint-hover: rgba(0,0,0,0.4);
-
-  /* glass surfaces */
-  --exlorer-glass-backgroubd:  var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  --explorer-glass-border: var(--explorer-surface-border, var(--explorer-border-glass));
-  --exolorer-glass-shadow:  var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-  --explorer-glass-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient)) !important;
-
-  
-    
 
 
   scroll-margin-top: 10em;
@@ -96,9 +77,9 @@
       .explorer-card,
       .explorer-folder-card,
       .paging-label,
-      .explorer-badge
-    ) {
-    transition: none !important;
+    .explorer-badge
+  ) {
+    transition: none;
   }
 }
 
@@ -126,13 +107,7 @@
   --explorer-glass-shine-opacity: 1;
 
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
-  --explorer-bg-interactive-hover: rgba(255, 255, 255, 0.05);
   --explorer-bg-alt: var(--explorer-bg-interactive);
-
-  --exolorer-bg-faint: rgba(255,255,255,255.075);
-  --explorer-bg-faint-hover: rgba(255,255,255,0.025);
-  --explorer-border-faint: rgba(255,255,255,0.2);
-  --explorer-border-faint-hover: rgba(255,255,255,0.4);
 }
 
 .is-mobile .explorer-container {
