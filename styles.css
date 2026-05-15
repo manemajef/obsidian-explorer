@@ -234,7 +234,7 @@
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
   border-color: var(--background-modifier-border);
-  box-shadow: var(--explorer-shadow-glass-strong);
+  box-shadow: var(--explorer-shadow-glass);
 }
 .explorer-folder-card--missing {
   opacity: 0.7;
