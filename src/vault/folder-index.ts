@@ -30,6 +30,7 @@ const SUPPORTED_EXTENSIONS = [
   "rtf",
   "html",
   "epub",
+  "base",
 ];
 
 // Yield to the browser every CHUNK_SIZE files during a full walk so large
