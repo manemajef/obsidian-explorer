@@ -4,6 +4,8 @@ A file‑explorer view for Obsidian that displays folder contents directly insid
 
 ![](/assets/main.jpg)
 
+Available in [Obsidian plugin store](https://community.obsidian.md/plugins/explorer)
+
 ### Features
 
 - Card and list views for browsing folder contents
