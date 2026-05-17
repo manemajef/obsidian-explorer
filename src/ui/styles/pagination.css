@@ -87,7 +87,8 @@
 .explorer-container .paging-load-more:hover,
 .explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
-  background: var(--background-secondary);
+  /* background: var(--background-secondary); */
+  background: unset;
   border-color: var(--background-modifier-border-hover);
 }
 
@@ -95,7 +96,7 @@
 .explorer-container button.paging-load-more:hover span,
 .explorer-container button.paging-load-more:focus-visible,
 .explorer-container button.paging-load-more:focus-visible span {
-  color: var(--text-normal);
+  /* color: var(--text-normal); */
 }
 
 .paging-load-more:disabled {

@@ -267,24 +267,28 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 .explorer-card {
-  border: var(--explorer-card-border);
-  box-shadow: var(--explorer-shadow-glass-small);
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
+  margin: 0 1px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: 0.2s;
+  background-color: var(--bases-cards-background);
+  box-shadow: var(--bases-cards-shadow);
+  border-radius: var(--bases-cards-radius);
+  transition: box-shadow var(--anim-duration-fast) ease-in-out;
 }
 .explorer-card:hover {
-  border: 1px solid var(--background-modifier-border-hover);
+  box-shadow: var(--bases-cards-shadow-hover);
 }
 .explorer-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex: 1;
+  margin-bottom: .5em;
 }
 .explorer-card-exts {
   opacity: 0.8;
@@ -308,12 +312,12 @@
   max-height: 0.9em;
   max-width: 0.9em;
 }
+.explorer-cards-row {
+  margin: var(--explorer-space-1) 0;
+}
 .explorer-card-footer {
   opacity: 0.5;
   font-size: 0.7em;
-  margin-bottom: 0;
-  margin-top: var(--explorer-space-1);
-  padding-top: .5em;
 }
 .explorer-container .explorer-card-footer a,
 .explorer-container .explorer-card-footer a.internal-link {
@@ -330,6 +334,10 @@
   display: flex;
   gap: var(--explorer-space-2);
   flex-wrap: wrap;
+  margin-top: var(--explorer-space-2);
+  font-size: 0.9em;
+}
+.explorer-card-tags-container .value-list-item-tag {
 }
 .explorer-card-exts .explorer-badge {
   opacity: .7;
@@ -528,14 +536,13 @@
 .explorer-container .paging-load-more:hover,
 .explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
-  background: var(--background-secondary);
+  background: unset;
   border-color: var(--background-modifier-border-hover);
 }
 .explorer-container button.paging-load-more:hover,
 .explorer-container button.paging-load-more:hover span,
 .explorer-container button.paging-load-more:focus-visible,
 .explorer-container button.paging-load-more:focus-visible span {
-  color: var(--text-normal);
 }
 .paging-load-more:disabled {
   cursor: default;

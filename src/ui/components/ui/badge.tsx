@@ -21,6 +21,13 @@ export function Badge(props: {
       </span>
     );
   }
+  if (variant == "tag") {
+    return (
+      <span className="value-list-item value-list-item-tag">
+        <a className="tag">{children}</a>
+      </span>
+    );
+  }
 
   return (
     <span

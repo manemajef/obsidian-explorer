@@ -35,14 +35,14 @@ export function CardsView(props: {
             }}
           >
             <div className="explorer-card-header">
-              <span>
+              <div>
                 <InternalLink
                   app={app}
                   sourcePath={sourcePath}
                   path={fileInfo.file.path}
                   text={fileInfo.file.basename}
                 />
-              </span>
+              </div>
               {/* <Bar.Spring /> */}
               {/* <Bar.Item /> */}
               <span style={{ width: ".5em" }} />
@@ -65,13 +65,18 @@ export function CardsView(props: {
                 ) : null}
               </div>
             </div>
-            <div className="explorer-card-body">
-              <div className="explorer-card-tags-container">
-                {showTags &&
-                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+
+            {showTags && (fileInfo.tags?.length ?? 0) > 0 && (
+              <div className="explorer-card-tags-container explorer-cards-row">
+                {fileInfo.tags?.map((t) => (
+                  <Badge key={t} variant="tag">
+                    {t}
+                  </Badge>
+                ))}
               </div>
-            </div>
-            <div className="explorer-card-footer">
+            )}
+
+            <div className="explorer-card-footer explorer-cards-row">
               <CardFooter
                 fileInfo={fileInfo}
                 extForCard={extForCard}
@@ -126,3 +131,23 @@ function CardFooter(props: {
 
   return null;
 }
+
+// export function CardsViewBase(props: {
+//   app: App;
+//   sourcePath: string;
+//   files: FileInfo[];
+//   extForCard: string;
+//   showTags: boolean;
+//   onOpenFolderNote: OpenFolderNote;
+// }): React.JSX.Element {
+//   const { app, sourcePath, files, extForCard, showTags, onOpenFolderNote } =
+//     props;
+
+//   return (
+//     <div className="bases-cards-group">
+//       {files.map((f) => (
+//         <div className="bases-cards-item"></div>
+//       ))}
+//     </div>
+//   );
+// }

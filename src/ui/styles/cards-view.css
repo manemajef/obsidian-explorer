@@ -19,28 +19,46 @@
 }
 
 .explorer-card {
-  border: var(--explorer-card-border);
-  box-shadow: var(--explorer-shadow-glass-small);
+  /* border: var(--explorer-card-border); */
+  /* box-shadow: var(--explorer-shadow-glass-small); */
   /* background: var(--explorer-bg-interactive); */
   border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
+  /* padding: var(--size-4-2) 0 var(--size-2-1); */
+  margin: 0 1px;
+
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition:  0.2s;
+  background-color: var(--bases-cards-background);
+  box-shadow: var(--bases-cards-shadow);
+  border-radius: var(--bases-cards-radius);
+      transition: box-shadow var(--anim-duration-fast) ease-in-out;
+
+
+
+
+
+
+  
   /* cursor: pointer; */
 }
 
 .explorer-card:hover {
-  border: 1px solid var(--background-modifier-border-hover);
+  /* border: 1px solid var(--background-modifier-border-hover); */
+  box-shadow: var(--bases-cards-shadow-hover);
 }
 
 .explorer-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  /* font-weight: calc(var(--font-weight) + var(--bold-modifier)); */
+
   flex: 1;
+  margin-bottom: .5em;
 }
 
 .explorer-card-exts {
@@ -70,12 +88,21 @@
   max-width: 0.9em;
 }
 
+.explorer-cards-row {
+  /* border: 1px solid red; */
+  /* margin: .2em 0; */
+margin: var(--explorer-space-1) 0;
+
+
+
+}
+
 .explorer-card-footer {
   opacity: 0.5;
   font-size: 0.7em;
-  margin-bottom: 0;
-  margin-top: var(--explorer-space-1);
-  padding-top: .5em;
+  /* margin-bottom: 0; */
+  /* margin-top: var(--explorer-space-1); */
+  /* padding-top: .5em; */
 }
 
 .explorer-container .explorer-card-footer a,
@@ -92,10 +119,16 @@
   padding-top: var(--explorer-space-2);
 }
 .explorer-card-tags-container {
-  display: flex; 
+  /* border: 1px solid red; */
+  display: flex;
   gap: var(--explorer-space-2);
   flex-wrap: wrap;
+  margin-top: var(--explorer-space-2);
+  font-size: 0.9em;
 }
+.explorer-card-tags-container .value-list-item-tag {
+}
+
 
 .explorer-card-exts .explorer-badge {
   opacity: .7;
