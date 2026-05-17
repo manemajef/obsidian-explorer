@@ -32,50 +32,47 @@ src/
 
 ## Functionality Location
 
-| Feature | Location | Notes |
-|---------|----------|-------|
-| Block registration | `main.ts` | Registers `explorer` code block processor |
-| Block rendering | `explorer.tsx` | Creates React root, vault listeners, settings modal |
-| Folder traversal | `vault/folder-index.ts` | `FolderIndex` class, BFS with depth control |
-| File visibility | `vault/folder-index.ts` | `showUnsupportedFiles` filter (plugin-level) |
-| File visibility | `vault/file-listing.ts` | `onlyNotes`, exclude-self filter (block-level) |
-| Sorting | `vault/file-utils.ts` | `sortFiles()` — pinned first, then by criteria |
-| Search/filter | `vault/file-utils.ts` | `filterFiles()` — text, #tag, @foldernote |
-| Pagination | `vault/file-listing.ts` | `computeFileListing()` slices by page |
-| Pin state | `vault/file-utils.ts` | `isPinned()`, `togglePin()` via frontmatter |
-| Create files | `vault/actions.ts` | `createFolderWithNote()`, `createNewNote()` |
-| Update block | `vault/actions.ts` | `updateExplorerBlock()` modifies markdown |
-| Settings schema | `settings/schema.ts` | All settings defined here, UI auto-generates |
-| Block syntax parse | `settings/block-parser.ts` | `parseSettings()`, `serializeSettings()` |
-| React state | `ui/hooks/use-explorer-state.ts` | Orchestrates pagination, search, listings |
-| Search state | `ui/hooks/use-search-state.ts` | Search mode, debounce, lazy file loading |
+
+| Feature            | Location                         | Notes                                               |
+| ------------------ | -------------------------------- | --------------------------------------------------- |
+| Block registration | `main.ts`                        | Registers `explorer` code block processor           |
+| Block rendering    | `explorer.tsx`                   | Creates React root, vault listeners, settings modal |
+| Folder traversal   | `vault/folder-index.ts`          | `FolderIndex` class, BFS with depth control         |
+| File visibility    | `vault/folder-index.ts`          | `showUnsupportedFiles` filter (plugin-level)        |
+| File visibility    | `vault/file-listing.ts`          | `onlyNotes`, exclude-self filter (block-level)      |
+| Sorting            | `vault/file-utils.ts`            | `sortFiles()` — pinned first, then by criteria      |
+| Search/filter      | `vault/file-utils.ts`            | `filterFiles()` — text, #tag, @foldernote           |
+| Pagination         | `vault/file-listing.ts`          | `computeFileListing()` slices by page               |
+| Pin state          | `vault/file-utils.ts`            | `isPinned()`, `togglePin()` via frontmatter         |
+| Create files       | `vault/actions.ts`               | `createFolderWithNote()`, `createNewNote()`         |
+| Update block       | `vault/actions.ts`               | `updateExplorerBlock()` modifies markdown           |
+| Settings schema    | `settings/schema.ts`             | All settings defined here, UI auto-generates        |
+| Block syntax parse | `settings/block-parser.ts`       | `parseSettings()`, `serializeSettings()`            |
+| React state        | `ui/hooks/use-explorer-state.ts` | Orchestrates pagination, search, listings           |
+| Search state       | `ui/hooks/use-search-state.ts`   | Search mode, debounce, lazy file loading            |
+
 
 ## File Filtering Pipeline
 
 Files pass through filters in this order:
 
 1. **Exclusion** (`vault/folder-index.ts:shouldIncludeFile`)
-   - Excludes folder notes (same name as parent folder)
-   - Excludes image/data extensions: json, png, jpeg, jpg, svg, gif, webp
-
+  - Excludes folder notes (same name as parent folder)
+  - Excludes image/data extensions: json, png, jpeg, jpg, svg, gif, webp
 2. **Supported files** (`vault/folder-index.ts:getFilesToDisplay`)
-   - If `showUnsupportedFiles=false`: only md, pdf, canvas, docx, pptx, xlsx, csv, txt, rtf, html, epub
-
+  - If `showUnsupportedFiles=false`: only md, pdf, canvas, docx, pptx, xlsx, csv, txt, rtf, html, epub
 3. **Block visibility** (`vault/file-listing.ts:applyBlockVisibility`)
-   - Always excludes the file containing the block (self)
-   - If `onlyNotes=true`: only md and pdf files pass
-
+  - Always excludes the file containing the block (self)
+  - If `onlyNotes=true`: only md and pdf files pass
 4. **Sorting** (`vault/file-utils.ts:sortFiles`)
-   - Pinned files first (frontmatter `pin: true`)
-   - Then by sortBy: newest, oldest, edited, name
-
+  - Pinned files first (frontmatter `pin: true`)
+  - Then by sortBy: newest, oldest, edited, name
 5. **Search filter** (`vault/file-utils.ts:filterFiles`)
-   - `#tag` — matches frontmatter tags
-   - `@name` — matches folder notes only
-   - Plain text — matches filename or path
-
+  - `#tag` — matches frontmatter tags
+  - `@name` — matches folder notes only
+  - Plain text — matches filename or path
 6. **Pagination** (`vault/file-listing.ts:computeFileListing`)
-   - Slices to current page if `usePagination=true`
+  - Slices to current page if `usePagination=true`
 
 ## Data Flow
 
@@ -89,6 +86,7 @@ Files pass through filters in this order:
 ## Settings System
 
 All settings defined in `settings/schema.ts:BLOCK_SETTINGS_SCHEMA`. Each setting declares:
+
 - `kind`: boolean, number, or enum
 - `defaultValue`, `blockKey` (syntax name)
 - `ui`: which surfaces (plugin/block), section, order, labels
@@ -116,31 +114,29 @@ Adding a setting: add to `BLOCK_SETTINGS_SCHEMA` — UI generates automatically.
 The explorer styling model is now split into three layers:
 
 1. **Root mode**
-   - `explorer.tsx` toggles `.use-glass` on the block root.
-   - Glass mode is owned by the root container, not threaded through general TSX props.
-
+  - `explorer.tsx` toggles `.use-glass` on the block root.
+  - Glass mode is owned by the root container, not threaded through general TSX props.
 2. **Shared surface contract**
-   - `.glass-surface` in `src/ui/styles/shared.css` provides the base glass treatment:
-     background, border, box-shadow, radius via `--explorer-surface-radius`, and optional hover scale via `--explorer-surface-hover-scale`.
-   - `.glass-surface--shine` adds the specular `::after` overlay.
-   - Do not assume every glass surface should have shine. Large containers usually should not.
-
+  - `.glass-surface` in `src/ui/styles/shared.css` provides the base glass treatment:
+   background, border, box-shadow, radius via `--explorer-surface-radius`, and optional hover scale via `--explorer-surface-hover-scale`.
+  - `.glass-surface--shine` adds the specular `::after` overlay.
+  - Do not assume every glass surface should have shine. Large containers usually should not.
 3. **Component tuning**
-   - Feature CSS files set local surface override tokens such as:
-     `--explorer-surface-radius`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-tint`, `--explorer-surface-hover-scale`.
-   - Action controls use `glass-surface--shine`.
-   - Larger surfaces like folder cards and mobile list containers should usually rely on border/shadow tuning instead of the shine overlay.
+  - Feature CSS files set local surface override tokens such as:
+   `--explorer-surface-radius`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-tint`, `--explorer-surface-hover-scale`.
+  - Action controls use `glass-surface--shine`.
+  - Larger surfaces like folder cards and mobile list containers should usually rely on border/shadow tuning instead of the shine overlay.
 
 ### Token Guidance
 
 Keep tokens in `src/ui/styles/main.css` small and intentional.
 
 - Foundation tokens:
-  `--explorer-space-*`, `--explorer-radius-*`, `--explorer-control-size`, `--explorer-hover-*`
+`--explorer-space-`*, `--explorer-radius-*`, `--explorer-control-size`, `--explorer-hover-*`
 - Glass theme tokens:
-  `--explorer-glass-gradient`, `--explorer-glass-tint`, `--explorer-border-glass`, `--explorer-border-glass-strong`, `--explorer-shadow-glass*`, `--explorer-glass-shine-*`
+`--explorer-glass-gradient`, `--explorer-glass-tint`, `--explorer-border-glass`, `--explorer-border-glass-strong`, `--explorer-shadow-glass*`, `--explorer-glass-shine-*`
 - Surface override tokens:
-  `--explorer-surface-gradient`, `--explorer-surface-tint`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-radius`, `--explorer-surface-hover-scale`
+`--explorer-surface-gradient`, `--explorer-surface-tint`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-radius`, `--explorer-surface-hover-scale`
 
 Avoid reintroducing proxy variables that simply mirror another token once, especially misspelled or build-only aliases.
 
@@ -165,3 +161,4 @@ Those larger surfaces should get their richness from stronger border/shadow stac
 ```bash
 npm run build    # tsc + esbuild → main.js, styles.css
 ```
+

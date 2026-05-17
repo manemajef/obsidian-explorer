@@ -171,7 +171,7 @@ export const BLOCK_SETTINGS_SCHEMA = {
     blockKey: "showTags",
     defaultValue: true,
     ui: {
-      surfaces: ["plugin", "block"],
+      surfaces: ["block"],
       section: "core",
       order: 25,
     },
