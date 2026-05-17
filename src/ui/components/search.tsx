@@ -35,6 +35,12 @@ export function Search(props: {
           }
           value={searchQuery}
           onChange={(e) => onSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== "Escape") return;
+            e.preventDefault();
+            e.stopPropagation();
+            onSearchToggle();
+          }}
         />
       </div>
       <div className="explorer-search__clear">

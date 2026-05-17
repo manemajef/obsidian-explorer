@@ -5,7 +5,10 @@ import {
   computeFileListing,
   resolveCardFooterMode,
 } from "../../vault/file-listing";
-import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
+import {
+  usePaginationBounds,
+  usePaginationState,
+} from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
 
 interface UseExplorerStateOptions {
@@ -73,7 +76,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   );
 
   const [visiblePageFileInfoChunks, setVisiblePageFileInfoChunks] = useState<
-    typeof pageFileInfos[]
+    (typeof pageFileInfos)[]
   >([]);
   const [animatedChunkIndex, setAnimatedChunkIndex] = useState<number | null>(
     null,
@@ -94,9 +97,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     [normalSourceFiles, settings],
   );
 
-  const listingKey = search.mode
-    ? search.listingKey
-    : browseListingKey;
+  const listingKey = search.mode ? search.listingKey : browseListingKey;
 
   useEffect(() => {
     setVisiblePageFileInfoChunks([]);
