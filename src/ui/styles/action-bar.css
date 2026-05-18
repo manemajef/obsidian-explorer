@@ -87,7 +87,6 @@
 
 .explorer-container:not(.use-glass) .action-group-item {
   border-radius: var(--explorer-radius-md);
-  /* color: var(--text-normal) !important; */
 }
 
 .action-group-item:hover {

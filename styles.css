@@ -288,7 +288,7 @@
   justify-content: space-between;
   align-items: flex-start;
   flex: 1;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 .explorer-card-exts {
   opacity: 0.8;
@@ -340,7 +340,7 @@
 .explorer-card-tags-container .value-list-item-tag {
 }
 .explorer-card-exts .explorer-badge {
-  opacity: .7;
+  opacity: 0.7;
   display: flex;
   justify-content: center;
 }
