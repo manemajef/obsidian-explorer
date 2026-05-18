@@ -131,23 +131,3 @@ function CardFooter(props: {
 
   return null;
 }
-
-// export function CardsViewBase(props: {
-//   app: App;
-//   sourcePath: string;
-//   files: FileInfo[];
-//   extForCard: string;
-//   showTags: boolean;
-//   onOpenFolderNote: OpenFolderNote;
-// }): React.JSX.Element {
-//   const { app, sourcePath, files, extForCard, showTags, onOpenFolderNote } =
-//     props;
-
-//   return (
-//     <div className="bases-cards-group">
-//       {files.map((f) => (
-//         <div className="bases-cards-item"></div>
-//       ))}
-//     </div>
-//   );
-// }

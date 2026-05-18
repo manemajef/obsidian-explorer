@@ -108,10 +108,13 @@
   /* border: 1px solid red; */
   display: flex;
   gap: var(--explorer-space-2);
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }
+
 
 
 .explorer-card-exts .explorer-badge {
