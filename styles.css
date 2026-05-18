@@ -267,14 +267,12 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 .explorer-card {
-  border-radius: var(--explorer-radius-md);
   padding: var(--explorer-space-2);
   margin: 0 1px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: 0.2s;
   background-color: var(--bases-cards-background);
   box-shadow: var(--bases-cards-shadow);
   border-radius: var(--bases-cards-radius);

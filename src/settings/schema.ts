@@ -468,7 +468,7 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function hasOwn(source: Record<string, unknown>, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(source, key);
+  return key in source;
 }
 
 function coerceLegacyBoolean(value: unknown): boolean | undefined {
@@ -648,7 +648,7 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
 
   return {
     defaultBlockSettings: coerceBlockSettings(
-      raw.defaultBlockSettings as Record<string, unknown>,
+      raw.defaultBlockSettings,
       pluginDefaults.defaultBlockSettings,
     ),
   };
