@@ -4,6 +4,7 @@ import {
   BlockSettingKey,
   BlockSettings,
   SettingsSection,
+  getSettingSurfaces,
   createDefaultPluginSettings,
   getSettingKeysForSurface,
   getSettingSection,
@@ -16,11 +17,17 @@ type SectionMeta = {
 };
 
 const SECTION_ORDER: SettingsSection[] = [
-  "core",
-  "behavior",
-  "display",
-  "appearance",
   "navigation",
+  "appearance",
+  "behavior",
+  "core",
+  "display",
+];
+
+const DEFAULT_BLOCK_SECTION_ORDER: SettingsSection[] = [
+  "core",
+  "display",
+  "behavior",
 ];
 
 const SECTION_META: Record<SettingsSection, SectionMeta> = {
@@ -44,6 +51,24 @@ const SECTION_META: Record<SettingsSection, SectionMeta> = {
   },
 };
 
+function compareBySection(
+  a: BlockSettingKey,
+  b: BlockSettingKey,
+  sectionOrder: SettingsSection[],
+): number {
+  const aSection = getSettingSection(a);
+  const bSection = getSettingSection(b);
+  const sectionDiff =
+    sectionOrder.indexOf(aSection) - sectionOrder.indexOf(bSection);
+
+  if (sectionDiff !== 0) {
+    return sectionDiff;
+  }
+
+  const orderedKeys = getSettingKeysForSurface("plugin");
+  return orderedKeys.indexOf(a) - orderedKeys.indexOf(b);
+}
+
 // Global plugin defaults UI (Obsidian settings tab).
 export class ExplorerSettingsTab extends PluginSettingTab {
   plugin: ExplorerPlugin;
@@ -59,10 +84,18 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     const settings = this.plugin.settings.defaultBlockSettings;
     const keys = getSettingKeysForSurface("plugin");
+    const pluginOnlyKeys = keys.filter(
+      (key) => !getSettingSurfaces(key).includes("block"),
+    );
+    const defaultBlockKeys = keys
+      .filter((key) => getSettingSurfaces(key).includes("block"))
+      .sort((a, b) => compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER));
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
     for (const section of SECTION_ORDER) {
-      const sectionKeys = keys.filter((key) => getSettingSection(key) === section);
+      const sectionKeys = pluginOnlyKeys.filter(
+        (key) => getSettingSection(key) === section,
+      );
       if (sectionKeys.length === 0) {
         continue;
       }
@@ -90,10 +123,35 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       }
     }
 
+    if (defaultBlockKeys.length > 0) {
+      const meta = SECTION_META.core;
+      new Setting(containerEl).setName(meta.title).setHeading();
+      if (meta.description) {
+        containerEl.createEl("p", {
+          text: meta.description,
+          cls: "setting-item-description",
+        });
+      }
+
+      for (const key of defaultBlockKeys) {
+        renderSettingField(
+          containerEl,
+          key,
+          settings,
+          "plugin",
+          (k, v) => {
+            void this.updateSetting(k, v);
+          },
+          fieldRefs,
+        );
+      }
+    }
+
     new Setting(containerEl).addButton((button) => {
       button.setButtonText("Reset all to defaults").onClick(async () => {
         this.plugin.settings = createDefaultPluginSettings();
         await this.plugin.saveSettings();
+        this.plugin.refreshExplorerBlocks();
         this.display();
       });
     });
@@ -105,5 +163,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
   ) {
     this.plugin.settings.defaultBlockSettings[key] = value;
     await this.plugin.saveSettings();
+    this.plugin.refreshExplorerBlocks();
   }
 }

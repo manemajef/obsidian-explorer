@@ -135,11 +135,16 @@ You can override these settings per block. Keys not listed here are ignored.
 | `sortBy`      | `newest`, `oldest`, `edited`, `name`                  |
 | `view`        | `cards`, `list`                                       |
 | `depth`       | `0-10`                                                |
+| `paginationStyle` | `modern`, `classic`, `none`                      |
 | `pageSize`    | `6-100`                                               |
-| `onlyNotes`   | `true`, `false`                                       |
 | `showFolders` | `true`, `false`                                       |
+| `showTags`    | `true`, `false`                                       |
 | `cardExt`     | `folder`, `ctime`, `mtime`, `desc`, `none`, `default` |
-| `showNotes`   | `true`, `false`                                       |
+| `displayedNotes` | `supported`, `markdown`, `all`, `none`            |
+| `textDirection` | `auto`, `ltr`, `rtl`                               |
+
+`displayedNotes: "supported"` shows Markdown, PDF, and Base files. `"all"`
+shows every file that Explorer does not explicitly exclude.
 
 ### View Modes
 

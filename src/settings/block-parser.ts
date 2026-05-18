@@ -4,43 +4,11 @@ import {
   BlockSettingKey,
   BlockSettings,
   DEFAULT_BLOCK_SETTINGS,
+  coercePartialBlockSettings,
+  getBlockSettingsOverrides,
+  getSettingKeyForBlockKey,
+  isLegacySettingBlockKey,
 } from "./schema";
-
-const BLOCK_KEY_TO_SETTING_KEY: Record<string, BlockSettingKey> =
-  BLOCK_SETTING_KEYS.reduce(
-    (acc, key) => {
-      acc[BLOCK_SETTINGS_SCHEMA[key].blockKey] = key;
-      return acc;
-    },
-    {} as Record<string, BlockSettingKey>,
-  );
-
-function parseValue<K extends BlockSettingKey>(
-  key: K,
-  rawValue: string,
-): BlockSettings[K] | undefined {
-  const field = BLOCK_SETTINGS_SCHEMA[key];
-
-  if (field.kind === "boolean") {
-    if (rawValue === "true") return true as BlockSettings[K];
-    if (rawValue === "false") return false as BlockSettings[K];
-    return undefined;
-  }
-
-  if (field.kind === "number") {
-    const parsed = Number.parseInt(rawValue, 10);
-    if (Number.isNaN(parsed) || parsed < field.min || parsed > field.max) {
-      return undefined;
-    }
-    return parsed as BlockSettings[K];
-  }
-
-  if (field.options.includes(rawValue as never)) {
-    return rawValue as BlockSettings[K];
-  }
-
-  return undefined;
-}
 
 function formatValue<K extends BlockSettingKey>(
   key: K,
@@ -53,11 +21,17 @@ function formatValue<K extends BlockSettingKey>(
   return String(value);
 }
 
+function parseScalar(rawValue: string): string | boolean {
+  if (rawValue === "true") return true;
+  if (rawValue === "false") return false;
+  return rawValue;
+}
+
 /**
  * Parse per-block settings from explorer code block source text.
  */
 export function parseSettings(source: string): Partial<BlockSettings> {
-  const overrides: Partial<BlockSettings> = {};
+  const overrides: Record<string, unknown> = {};
   const lines = source.trim().split("\n");
 
   for (const line of lines) {
@@ -65,16 +39,15 @@ export function parseSettings(source: string): Partial<BlockSettings> {
     if (!match) continue;
 
     const [, blockKey, value] = match;
-    const settingKey = BLOCK_KEY_TO_SETTING_KEY[blockKey];
-    if (!settingKey) continue;
-
-    const parsed = parseValue(settingKey, value.trim());
-    if (parsed !== undefined) {
-      (overrides as Record<BlockSettingKey, unknown>)[settingKey] = parsed;
+    const settingKey = getSettingKeyForBlockKey(blockKey);
+    if (settingKey) {
+      overrides[settingKey] = parseScalar(value.trim());
+    } else if (isLegacySettingBlockKey(blockKey)) {
+      overrides[blockKey] = parseScalar(value.trim());
     }
   }
 
-  return overrides;
+  return coercePartialBlockSettings(overrides);
 }
 
 /**
@@ -85,9 +58,10 @@ export function serializeSettings(
   defaultSettings: BlockSettings = DEFAULT_BLOCK_SETTINGS,
 ): string {
   const lines: string[] = [];
+  const overrides = getBlockSettingsOverrides(settings, defaultSettings);
 
   for (const key of BLOCK_SETTING_KEYS) {
-    if (settings[key] === defaultSettings[key]) continue;
+    if (!(key in overrides)) continue;
     const blockKey = BLOCK_SETTINGS_SCHEMA[key].blockKey;
     lines.push(`${blockKey}: ${formatValue(key, settings[key])}`);
   }

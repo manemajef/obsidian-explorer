@@ -5,6 +5,19 @@
 
 ---
 
+## 2026-05-18 - Version 1.1.6
+
+**Release:** clearer settings and UI polish
+
+**Highlights:**
+- card view now better matches Obsidian Bases cards
+- tags in cards are now clickable
+- settings are clearer and more compact
+- search is improved and can now be closed with Escape
+- general UI polish for folders and pagination
+
+---
+
 ## 2026-05-14 - Version 1.1.5
 
 **Release:** polish mobile ui and general performence improvement

@@ -337,8 +337,6 @@
   margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }
-.explorer-card-tags-container .value-list-item-tag {
-}
 .explorer-card-exts .explorer-badge {
   opacity: 0.7;
   display: flex;

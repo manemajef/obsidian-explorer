@@ -6,6 +6,7 @@ import {
   SettingsSurface,
   getEnumOptionLabel,
   getSettingLabel,
+  isPaginationEnabled,
 } from "../settings/schema";
 
 /**
@@ -31,10 +32,6 @@ export function renderSettingField(
     setting.addToggle((toggle) => {
       toggle.setValue(settings[key] as boolean).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
-        if (key === "usePagination") {
-          fieldRefs.get("pageSize")?.setDisabled(!value);
-          fieldRefs.get("paginationStyle")?.setDisabled(!value);
-        }
       });
     });
   } else if (field.kind === "number") {
@@ -54,12 +51,17 @@ export function renderSettingField(
       }
       dropdown.setValue(settings[key] as string).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
+        if (key === "paginationStyle") {
+          fieldRefs
+            .get("pageSize")
+            ?.setDisabled(value === "none");
+        }
       });
     });
   }
 
-  if (key === "pageSize" || key === "paginationStyle") {
-    setting.setDisabled(!settings.usePagination);
+  if (key === "pageSize") {
+    setting.setDisabled(!isPaginationEnabled(settings));
   }
 
   fieldRefs.set(key, setting);

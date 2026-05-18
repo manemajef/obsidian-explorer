@@ -1,37 +1,14 @@
 import { App, TFile, TFolder } from "obsidian";
 import { FolderInfo } from "../types";
 import { BlockSettings } from "../settings/schema";
-import { isFolderNote, getFolderNoteForFolder } from "./file-utils";
-
-// Extensions to always exclude (images, data files)
-const EXCLUDED_EXTENSIONS = [
-  "json",
-  "png",
-  "jpeg",
-  "jpg",
-  "svg",
-  "gif",
-  "webp",
-];
-
-// Content files that most users want to see (vs code files)
-const SUPPORTED_EXTENSIONS = [
-  "md",
-  "pdf",
-  "canvas",
-  "docx",
-  "doc",
-  "pptx",
-  "ppt",
-  "xlsx",
-  "xls",
-  "csv",
-  "txt",
-  "rtf",
-  "html",
-  "epub",
-  "base",
-];
+import {
+  getFolderNoteForFolder,
+  isFolderNote,
+} from "./file-utils";
+import {
+  filterDisplayedFiles,
+  isExcludedExplorerFile,
+} from "./file-display-policy";
 
 // Yield to the browser every CHUNK_SIZE files during a full walk so large
 // vaults don't freeze the UI when search mode loads everything.
@@ -64,16 +41,9 @@ export class FolderIndex {
     return this.walkFolder(null, false, true);
   }
 
-  /**
-   * Apply plugin-level visibility (showUnsupportedFiles).
-   * Per-block visibility (onlyNotes, exclude-self) is applied later in file-listing.
-   */
   getFilesToDisplay(settings: BlockSettings): TFile[] {
     const files = settings.depth > 0 ? this.nestedFiles : this.files;
-    if (settings.showUnsupportedFiles) return files;
-    return files.filter((f) =>
-      SUPPORTED_EXTENSIONS.includes(f.extension.toLowerCase()),
-    );
+    return filterDisplayedFiles(files, settings.displayedNotes);
   }
 
   private loadImmediate(): void {
@@ -100,7 +70,7 @@ export class FolderIndex {
 
   private shouldIncludeFile(file: TFile): boolean {
     if (isFolderNote(file)) return false;
-    return !EXCLUDED_EXTENSIONS.includes(file.extension.toLowerCase());
+    return !isExcludedExplorerFile(file);
   }
 
   /**

@@ -1,7 +1,11 @@
 import React from "react";
 import { App, TFolder } from "obsidian";
 import { FolderInfo } from "../types";
-import { BlockSettings } from "../settings/schema";
+import {
+  BlockSettings,
+  isPaginationEnabled,
+  shouldDisplayNotes,
+} from "../settings/schema";
 import { useExplorerState } from "./hooks/use-explorer-state";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
@@ -66,7 +70,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   });
 
   const useModernPagination =
-    effectiveSettings.usePagination &&
+    isPaginationEnabled(effectiveSettings) &&
     effectiveSettings.paginationStyle === "modern";
   const explorerClassName = useModernPagination
     ? "explorer"
@@ -137,7 +141,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           </>
         )}
 
-      {effectiveSettings.showNotes && (
+      {shouldDisplayNotes(effectiveSettings) && (
         <div className="explorer-files-container">
           <Divider />
           <div className={explorerClassName}>

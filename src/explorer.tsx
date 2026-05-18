@@ -6,7 +6,11 @@ import {
   MarkdownRenderChild,
   TFile,
 } from "obsidian";
-import { BlockSettings } from "./settings/schema";
+import {
+  BlockSettings,
+  getBlockSettingsOverrides,
+  resolveBlockSettings,
+} from "./settings/schema";
 import { isRtl } from "./vault/file-utils";
 import { ExplorerUI } from "./ui/explorer-ui";
 import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
@@ -29,19 +33,26 @@ export async function renderExplorerBlock(
   app: App,
   container: HTMLElement,
   ctx: MarkdownPostProcessorContext,
-  blockDefaults: BlockSettings,
-  initialSettings: BlockSettings,
+  getBlockDefaults: () => BlockSettings,
+  initialOverrides: Partial<BlockSettings>,
+  registerRefresh?: (refresh: () => void) => () => void,
 ): Promise<void> {
   container.addClass("explorer-container");
 
   const reactRoot = createRoot(container);
-  let effectiveSettings = initialSettings;
+  let blockOverrides = { ...initialOverrides };
+  let effectiveSettings = resolveBlockSettings(
+    getBlockDefaults(),
+    blockOverrides,
+  );
   let refreshQueued = false;
+  let isUnmounted = false;
 
   const queueRefresh = (): void => {
-    if (refreshQueued) return;
+    if (refreshQueued || isUnmounted) return;
     refreshQueued = true;
     window.requestAnimationFrame(() => {
+      if (isUnmounted) return;
       refreshQueued = false;
       void render();
     });
@@ -51,11 +62,20 @@ export async function renderExplorerBlock(
   child.registerEvent(app.vault.on("create", queueRefresh));
   child.registerEvent(app.vault.on("delete", queueRefresh));
   child.registerEvent(app.vault.on("rename", queueRefresh));
+  child.register(() => {
+    isUnmounted = true;
+    reactRoot.unmount();
+  });
+  if (registerRefresh) {
+    child.register(registerRefresh(queueRefresh));
+  }
   ctx.addChild(child);
 
   const openSettings = (): void => {
     new ExplorerSettingsModal(app, effectiveSettings, (newSettings) => {
       effectiveSettings = newSettings;
+      const blockDefaults = getBlockDefaults();
+      blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
       void updateExplorerBlock(
         app,
         container,
@@ -68,6 +88,7 @@ export async function renderExplorerBlock(
   };
 
   const render = async (): Promise<void> => {
+    effectiveSettings = resolveBlockSettings(getBlockDefaults(), blockOverrides);
     container.setAttribute("dir", resolveDirection(effectiveSettings));
     container.toggleClass("use-glass", effectiveSettings.useGlass);
 

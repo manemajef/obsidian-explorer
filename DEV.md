@@ -38,8 +38,9 @@ src/
 | Block registration | `main.ts`                        | Registers `explorer` code block processor           |
 | Block rendering    | `explorer.tsx`                   | Creates React root, vault listeners, settings modal |
 | Folder traversal   | `vault/folder-index.ts`          | `FolderIndex` class, BFS with depth control         |
-| File visibility    | `vault/folder-index.ts`          | `showUnsupportedFiles` filter (plugin-level)        |
-| File visibility    | `vault/file-listing.ts`          | `onlyNotes`, exclude-self filter (block-level)      |
+| File visibility    | `vault/file-display-policy.ts`   | Excluded extensions and `displayedNotes` policy     |
+| File visibility    | `vault/folder-index.ts`          | First-pass `displayedNotes` filter                  |
+| File visibility    | `vault/file-listing.ts`          | Search/self `displayedNotes` filter                 |
 | Sorting            | `vault/file-utils.ts`            | `sortFiles()` — pinned first, then by criteria      |
 | Search/filter      | `vault/file-utils.ts`            | `filterFiles()` — text, #tag, @foldernote           |
 | Pagination         | `vault/file-listing.ts`          | `computeFileListing()` slices by page               |
@@ -58,12 +59,15 @@ Files pass through filters in this order:
 
 1. **Exclusion** (`vault/folder-index.ts:shouldIncludeFile`)
   - Excludes folder notes (same name as parent folder)
-  - Excludes image/data extensions: json, png, jpeg, jpg, svg, gif, webp
-2. **Supported files** (`vault/folder-index.ts:getFilesToDisplay`)
-  - If `showUnsupportedFiles=false`: only md, pdf, canvas, docx, pptx, xlsx, csv, txt, rtf, html, epub
-3. **Block visibility** (`vault/file-listing.ts:applyBlockVisibility`)
+  - Excludes image extensions: png, jpeg, jpg
+2. **Displayed notes** (`vault/folder-index.ts:getFilesToDisplay`)
+  - `supported`: md, pdf, base
+  - `markdown`: only md files
+  - `all`: every file that is not excluded by step 1
+  - `none`: hides the notes list
+3. **Search/self visibility** (`vault/file-listing.ts:applyBlockVisibility`)
   - Always excludes the file containing the block (self)
-  - If `onlyNotes=true`: only md and pdf files pass
+  - Reapplies `displayedNotes` for search results, which walk the full subtree directly
 4. **Sorting** (`vault/file-utils.ts:sortFiles`)
   - Pinned files first (frontmatter `pin: true`)
   - Then by sortBy: newest, oldest, edited, name
@@ -72,7 +76,7 @@ Files pass through filters in this order:
   - `@name` — matches folder notes only
   - Plain text — matches filename or path
 6. **Pagination** (`vault/file-listing.ts:computeFileListing`)
-  - Slices to current page if `usePagination=true`
+  - Slices to current page unless `paginationStyle=none`
 
 ## Data Flow
 
@@ -93,7 +97,7 @@ All settings defined in `settings/schema.ts:BLOCK_SETTINGS_SCHEMA`. Each setting
 
 Adding a setting: add to `BLOCK_SETTINGS_SCHEMA` — UI generates automatically.
 
-**Hardcoded dependency:** `usePagination` enables/disables `pageSize` and `paginationStyle` fields (`ui/render-setting-field.ts:34-37`).
+**Hardcoded dependency:** `paginationStyle=none` disables the `pageSize` field (`ui/render-setting-field.ts`).
 
 ## Patterns & Rules
 
@@ -161,4 +165,3 @@ Those larger surfaces should get their richness from stronger border/shadow stac
 ```bash
 npm run build    # tsc + esbuild → main.js, styles.css
 ```
-

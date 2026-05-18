@@ -2,7 +2,6 @@ import { Editor, MarkdownView, Plugin, TFile } from "obsidian";
 import {
   normalizePluginSettings,
   PluginSettings,
-  resolveBlockSettings,
 } from "./src/settings/schema";
 import { renderExplorerBlock } from "./src/explorer";
 import { parseSettings } from "./src/settings/block-parser";
@@ -10,9 +9,11 @@ import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import { promptAndCreateFolder } from "./src/vault/actions";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
+type ExplorerRefresh = () => void;
 
 export default class ExplorerPlugin extends Plugin {
   settings: PluginSettings;
+  private explorerRefreshers = new Set<ExplorerRefresh>();
 
   async onload() {
     await this.loadSettings();
@@ -22,9 +23,14 @@ export default class ExplorerPlugin extends Plugin {
     this.registerMarkdownCodeBlockProcessor(
       "explorer",
       async (source, el, ctx) => {
-        const defaults = this.settings.defaultBlockSettings;
-        const effective = resolveBlockSettings(defaults, parseSettings(source));
-        await renderExplorerBlock(this.app, el, ctx, defaults, effective);
+        await renderExplorerBlock(
+          this.app,
+          el,
+          ctx,
+          () => this.settings.defaultBlockSettings,
+          parseSettings(source),
+          (refresh) => this.registerExplorerRefresh(refresh),
+        );
       },
     );
   }
@@ -102,5 +108,16 @@ export default class ExplorerPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
+  }
+
+  refreshExplorerBlocks(): void {
+    for (const refresh of Array.from(this.explorerRefreshers)) {
+      refresh();
+    }
+  }
+
+  private registerExplorerRefresh(refresh: ExplorerRefresh): () => void {
+    this.explorerRefreshers.add(refresh);
+    return () => this.explorerRefreshers.delete(refresh);
   }
 }

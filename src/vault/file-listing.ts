@@ -1,7 +1,11 @@
 import { App, TFile } from "obsidian";
 import { FileInfo } from "../types";
-import { BlockSettings } from "../settings/schema";
+import {
+  BlockSettings,
+  isPaginationEnabled,
+} from "../settings/schema";
 import { filterFiles, getFileInfo, sortFiles } from "./file-utils";
+import { filterDisplayedFiles } from "./file-display-policy";
 
 export interface ComputeFileListingInput {
   app: App;
@@ -20,9 +24,9 @@ export interface ComputeFileListingOutput {
 }
 
 /**
- * Per-block visibility: onlyNotes narrows to notes+PDFs, and the file
- * containing the block is always excluded from its own listing.
- * Plugin-level visibility (showUnsupportedFiles) is applied earlier in FolderIndex.
+ * The file containing the block is always excluded from its own listing.
+ * Search mode also needs displayed-notes filtering because it walks the full
+ * subtree directly.
  */
 function applyBlockVisibility(
   files: TFile[],
@@ -30,10 +34,7 @@ function applyBlockVisibility(
   currPath: string,
 ): TFile[] {
   const withoutSelf = files.filter((f) => f.path !== currPath);
-  if (settings.onlyNotes) {
-    return withoutSelf.filter((f) => f.extension === "md");
-  }
-  return withoutSelf;
+  return filterDisplayedFiles(withoutSelf, settings.displayedNotes);
 }
 
 export function computeFileListing(
@@ -47,7 +48,7 @@ export function computeFileListing(
     ? filterFiles(app, sortedFiles, query)
     : sortedFiles;
 
-  if (!settings.usePagination) {
+  if (!isPaginationEnabled(settings)) {
     return {
       pageFiles: queriedFiles,
       pageFileInfos: queriedFiles.map((f) => getFileInfo(app, f)),
