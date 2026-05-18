@@ -42,12 +42,13 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                 }
               />
 
-              <div
-                className="explorer-list-tags"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="explorer-list-tags">
                 {showTags &&
-                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                  fileInfo.tags?.map((t) => (
+                    <Badge key={t} variant="tag">
+                      {t}
+                    </Badge>
+                  ))}
                 {<Pin fileInfo={fileInfo} />}
               </div>
 
@@ -95,7 +96,11 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             <div className="explorer-mobile-note__footer">
               <div className="explorer-mobile-note__tags">
                 {showTags &&
-                  fileInfo.tags?.map((t) => <Badge variant="tag">{t}</Badge>)}
+                  fileInfo.tags?.map((t) => (
+                    <Badge key={t} variant="tag">
+                      {t}
+                    </Badge>
+                  ))}
               </div>
               <Pin fileInfo={fileInfo} />
             </div>
