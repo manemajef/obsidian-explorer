@@ -2,7 +2,7 @@
 .explorer-list {
   padding: 0.4em var(--explorer-space-1);
   list-style: none;
-  margin-inline-start: var(--explorer-space-4);
+  /* margin-inline-start: var(--explorer-space-4); */
   font-size: 0.9em;
 }
 

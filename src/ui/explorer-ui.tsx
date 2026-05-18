@@ -96,6 +96,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         sourcePath={sourcePath}
         files={files}
         showTags={effectiveSettings.showTags}
+        showListBullets={effectiveSettings.showListBullets}
       />
     );
   };

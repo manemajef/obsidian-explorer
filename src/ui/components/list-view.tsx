@@ -11,6 +11,7 @@ type ListViewProps = {
   sourcePath: string;
   files: FileInfo[];
   showTags: boolean;
+  showListBullets: boolean;
 };
 
 export function ListView(props: ListViewProps): React.JSX.Element {
@@ -22,14 +23,21 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     return <MobileListView {...props} />;
   }
 
-  const { app, sourcePath, showTags } = props;
+  const { app, sourcePath, showTags, showListBullets } = props;
 
   return (
     <div className="explorer-list-container">
       {files.map((fileInfo, i) => (
         <div key={fileInfo.file.path} className="list-item-container">
-          <li className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}>
-            <span className="list-bullet" />
+          <li
+            className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
+            style={{
+              marginInlineStart: showListBullets
+                ? "var(--explorer-space-4)"
+                : "none",
+            }}
+          >
+            {showListBullets && <span className="list-bullet" />}
             <Group justify="between">
               <InternalLink
                 app={app}

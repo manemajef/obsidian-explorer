@@ -209,6 +209,17 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 10,
     },
   }),
+  showListBullets: booleanField({
+    label: "Use bullets in lists",
+    description: "display lists with bullets, turn off for plain lists",
+    blockKey: "showListBullets",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "appearance",
+      order: 11,
+    },
+  }),
   cardExt: enumField<CardExt>({
     label: "Card footer",
     description: "What to show on card footer",
