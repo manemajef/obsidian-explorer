@@ -220,6 +220,16 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 11,
     },
   }),
+  ShowIconsInCards: booleanField({
+    label: "Show icons in cards view",
+    blockKey: "showIconsInCards",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "appearance",
+      order: 12,
+    },
+  }),
   cardExt: enumField<CardExt>({
     label: "Card footer",
     description: "What to show on card footer",

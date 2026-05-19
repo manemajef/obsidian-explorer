@@ -2,7 +2,7 @@ import React from "react";
 import { App, TFolder } from "obsidian";
 import { FileInfo } from "../../types";
 import { diffDays, isFolderNote } from "../../vault/file-utils";
-import { InternalLink } from "./shared";
+import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
 
@@ -14,10 +14,18 @@ export function CardsView(props: {
   files: FileInfo[];
   extForCard: string;
   showTags: boolean;
+  showIconsInCards: boolean;
   onOpenFolderNote: OpenFolderNote;
 }): React.JSX.Element {
-  const { app, sourcePath, files, extForCard, showTags, onOpenFolderNote } =
-    props;
+  const {
+    app,
+    sourcePath,
+    files,
+    extForCard,
+    showTags,
+    showIconsInCards,
+    onOpenFolderNote,
+  } = props;
 
   return (
     <>
@@ -81,6 +89,7 @@ export function CardsView(props: {
                 fileInfo={fileInfo}
                 extForCard={extForCard}
                 onOpenFolderNote={onOpenFolderNote}
+                showIconsInCards={showIconsInCards}
               />
             </div>
           </div>
@@ -93,9 +102,10 @@ export function CardsView(props: {
 function CardFooter(props: {
   fileInfo: FileInfo;
   extForCard: string;
+  showIconsInCards: boolean;
   onOpenFolderNote: OpenFolderNote;
 }): React.JSX.Element | null {
-  const { fileInfo, extForCard, onOpenFolderNote } = props;
+  const { fileInfo, extForCard, showIconsInCards, onOpenFolderNote } = props;
 
   switch (extForCard) {
     case "ctime":
@@ -113,6 +123,10 @@ function CardFooter(props: {
             onOpenFolderNote(folder, e.ctrlKey || e.metaKey);
           }}
         >
+          {showIconsInCards && (
+            <Icon name="folder-closed" className="explorer-card-folder-icon" />
+          )}
+
           {folder.name}
         </span>
       );

@@ -85,6 +85,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           files={files}
           extForCard={extForCard}
           showTags={effectiveSettings.showTags}
+          showIconsInCards={effectiveSettings.ShowIconsInCards}
           onOpenFolderNote={onOpenFolderNote}
         />
       );
