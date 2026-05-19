@@ -10,10 +10,10 @@
   border-radius: var(--explorer-radius-sm);
 }
 
-.explorer-container .explorer-list.pinned a,
-.explorer-container .explorer-list.pinned a.internal-link {
-  color: var(--color-red);
-}
+/* .explorer-container .explorer-list.pinned a, */
+/* .explorer-container .explorer-list.pinned a.internal-link { */
+/*   color: var(--color-red); */
+/* } */
 
 .explorer-list-tags {
   display: flex;
@@ -69,9 +69,9 @@
 .explorer-container a.explorer-mobile-note-last.internal-link {
   border-bottom: none;
 }
-.explorer-mobile-note.pinned .explorer-mobile-note__title {
-  color: var(--color-red);
-}
+/* .explorer-mobile-note.pinned .explorer-mobile-note__title { */
+/*   color: var(--color-red); */
+/* } */
 
 .explorer-mobile-note__header,
 .explorer-mobile-note__footer {

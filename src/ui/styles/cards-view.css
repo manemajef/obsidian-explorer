@@ -52,7 +52,7 @@
 }
 
 .explorer-card-exts {
-  opacity: 0.8;
+  opacity: .8;
   display: flex;
   align-items: flex-start;
   gap: var(--explorer-space-1);
@@ -67,6 +67,8 @@
   gap: 0.25em;
   max-height: 5.75em;
   overflow-y: auto;
+  transform: scale(1.1);
+
 }
 
 .explorer-card-pin-slot > * {
@@ -120,7 +122,7 @@
 
 
 .explorer-card-exts .explorer-badge {
-  opacity: 0.7;
+  /* opacity: 0.7; */
   display: flex;
   justify-content: center;
 }
@@ -132,7 +134,7 @@
 } */
 .explorer-card-ext-badge,
 .explorer-card-folder-link {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .explorer-card-ext-badge:hover,
