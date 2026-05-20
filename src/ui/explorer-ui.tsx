@@ -1,11 +1,7 @@
 import React from "react";
-import { App, TFolder } from "obsidian";
-import { FolderInfo } from "../types";
-import {
-  BlockSettings,
-  isPaginationEnabled,
-  shouldDisplayNotes,
-} from "../settings/schema";
+import { App, TFile, TFolder } from "obsidian";
+import { FileInfo, FolderInfo } from "../types";
+import { BlockSettings, shouldDisplayNotes } from "../settings/schema";
 import { useExplorerState } from "./hooks/use-explorer-state";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
@@ -13,7 +9,6 @@ import { ListView } from "./components/list-view";
 import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
 import { Divider } from "./components/ui/layout";
-import { TFile } from "obsidian";
 
 interface ExplorerUIProps {
   app: App;
@@ -46,22 +41,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     onOpenFolderNote,
   } = props;
 
-  const {
-    searchMode,
-    searchQuery,
-    toggleSearch,
-    setSearchQuery,
-    currentPage,
-    setCurrentPage,
-    pageFileInfos,
-    visiblePageFileInfoChunks,
-    animatedChunkIndex,
-    loadMore,
-    canLoadMore,
-    totalPages,
-    usePaging,
-    extForCard,
-  } = useExplorerState({
+  const explorerState = useExplorerState({
     app,
     depthFiles,
     folderNotes,
@@ -69,14 +49,21 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     getAllFiles,
   });
 
-  const useModernPagination =
-    isPaginationEnabled(effectiveSettings) &&
-    effectiveSettings.paginationStyle === "modern";
-  const explorerClassName = useModernPagination
-    ? "explorer"
-    : `explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`;
+  const {
+    searchMode,
+    searchQuery,
+    toggleSearch,
+    setSearchQuery,
+    visibleFiles,
+    canLoadMore,
+    loadMore,
+    paginationKind,
+    extForCard,
+  } = explorerState;
 
-  const renderFiles = (files: typeof pageFileInfos) => {
+  const explorerClassName = `explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`;
+
+  const renderFiles = (files: FileInfo[]) => {
     if (effectiveSettings.view === "cards") {
       return (
         <CardsView
@@ -102,18 +89,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     );
   };
 
-  const renderPageChunk = (files: typeof pageFileInfos, index: number) => {
-    const shouldAnimate = index === animatedChunkIndex;
-
-    return (
-      <div
-        key={`page-chunk-${index}`}
-        className={`explorer-page-chunk${shouldAnimate ? " explorer-page-chunk--animated" : ""}${effectiveSettings.view === "cards" ? " explorer-page-chunk--grid" : ""}`}
-      >
-        {renderFiles(files)}
-      </div>
-    );
-  };
+  const showLoadMore = paginationKind === "load-more" && canLoadMore;
+  const classicPagination =
+    explorerState.paginationKind === "classic" && explorerState.totalPages > 1
+      ? explorerState
+      : null;
 
   return (
     <>
@@ -145,26 +125,22 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {shouldDisplayNotes(effectiveSettings) && (
         <div className="explorer-files-container">
-          <Divider />
-          <div className={explorerClassName}>
-            {useModernPagination
-              ? visiblePageFileInfoChunks.map(renderPageChunk)
-              : renderFiles(pageFileInfos)}
-          </div>
+          {/* <Divider /> */}
+          <div className={explorerClassName}>{renderFiles(visibleFiles)}</div>
 
-          {usePaging && (!useModernPagination || canLoadMore) && (
+          {(showLoadMore || classicPagination) && (
             <>
               <br />
-              {useModernPagination ? (
+              {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}
                   onLoadMore={loadMore}
                 />
               ) : (
                 <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
+                  currentPage={classicPagination?.currentPage ?? 0}
+                  totalPages={classicPagination?.totalPages ?? 1}
+                  onPageChange={classicPagination?.setPage ?? (() => undefined)}
                 />
               )}
             </>

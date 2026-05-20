@@ -50,6 +50,9 @@
   pointer-events: none;
 }
 
+/* .theme-dark .explorer-container.use-glass .glass-surfac {
+  background-color: rgba(200,200,200,0.1);
+} */
 /* ------------------------------------------------------------
    Layout helpers
    ------------------------------------------------------------ */

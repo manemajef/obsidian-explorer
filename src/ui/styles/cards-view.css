@@ -8,11 +8,13 @@
 
 .explorer-notes-grid {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: var(--explorer-space-3);
   /* margin-top: var(--explorer-space-4); */
   /* margin-top: 4em; */
 }
 
 .is-mobile .explorer-notes-grid {
+
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 
 }

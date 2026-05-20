@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { App, TFile } from "obsidian";
+import { FileInfo } from "../../types";
 import { BlockSettings } from "../../settings/schema";
 import {
   computeFileListing,
   resolveCardFooterMode,
 } from "../../vault/file-listing";
 import {
-  usePaginationBounds,
-  usePaginationState,
+  useClassicPagination,
+  useIncrementalReveal,
 } from "./use-pagination-state";
 import { useSearchState } from "./use-search-state";
 
@@ -19,33 +20,28 @@ interface UseExplorerStateOptions {
   getAllFiles: () => Promise<TFile[]>;
 }
 
+type ExplorerMode = "browse" | "search";
+type PaginationKind = "classic" | "load-more" | "none";
+
 export function useExplorerState(options: UseExplorerStateOptions) {
   const { app, depthFiles, folderNotes, settings, getAllFiles } = options;
   const [tick, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
-  const normalPagination = usePaginationState();
-  const normalSourceFiles = useMemo(() => {
+  const sourceFiles = useMemo(() => {
     return settings.showFolders ? depthFiles : [...folderNotes, ...depthFiles];
   }, [depthFiles, folderNotes, settings.showFolders]);
 
-  const normalListing = useMemo(
+  const browseListing = useMemo(
     () =>
       computeFileListing({
         app,
-        files: normalSourceFiles,
+        files: sourceFiles,
         settings,
         query: "",
-        page: normalPagination.page,
         sortBy: settings.sortBy,
       }),
-    [app, normalSourceFiles, settings, normalPagination.page, tick],
-  );
-
-  usePaginationBounds(
-    normalPagination.page,
-    normalPagination.setPage,
-    normalListing.totalPages,
+    [app, sourceFiles, settings, settings.sortBy, tick],
   );
 
   const search = useSearchState({
@@ -55,94 +51,43 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     tick,
   });
 
-  const activeListing = search.mode ? search.listing : normalListing;
-  const activePage = search.mode ? search.page : normalPagination.page;
+  const mode: ExplorerMode = search.mode ? "search" : "browse";
+  const paginationMode =
+    mode === "search" ? "load-more" : settings.paginationStyle;
+  const paginationKind: PaginationKind =
+    paginationMode === "modern" ? "load-more" : paginationMode;
+  const activeListing = mode === "search" ? search.listing : browseListing;
 
-  const wrapPageFileInfos = useCallback(
-    (page: typeof activeListing.pageFileInfos) =>
-      page.map((fileInfo) => ({
-        ...fileInfo,
-        togglePin: () => {
-          fileInfo.togglePin();
-          window.setTimeout(refresh, 100);
-        },
-      })),
-    [refresh],
+  const visibleFileInfos = useMemo(
+    () => wrapFileInfos(activeListing.fileInfos, refresh),
+    [activeListing.fileInfos, refresh],
   );
 
-  const pageFileInfos = useMemo(
-    () => wrapPageFileInfos(activeListing.pageFileInfos),
-    [activeListing.pageFileInfos, wrapPageFileInfos],
+  const classicPagination = useClassicPagination(
+    visibleFileInfos,
+    settings.pageSize,
+  );
+  const incrementalReveal = useIncrementalReveal(
+    visibleFileInfos,
+    settings.pageSize,
   );
 
-  const [visiblePageFileInfoChunks, setVisiblePageFileInfoChunks] = useState<
-    (typeof pageFileInfos)[]
-  >([]);
-  const [animatedChunkIndex, setAnimatedChunkIndex] = useState<number | null>(
-    null,
-  );
-  const activePageRef = useRef(activePage);
-  const shouldAnimateNextChunkRef = useRef(false);
-
-  useEffect(() => {
-    activePageRef.current = activePage;
-  }, [activePage]);
-
-  const browseListingKey = useMemo(
-    () => ({
-      mode: "browse",
-      files: normalSourceFiles,
-      settings,
-    }),
-    [normalSourceFiles, settings],
-  );
-
-  const listingKey = search.mode ? search.listingKey : browseListingKey;
-
-  useEffect(() => {
-    setVisiblePageFileInfoChunks([]);
-    setAnimatedChunkIndex(null);
-    shouldAnimateNextChunkRef.current = false;
-    if (activePageRef.current !== 0) {
-      if (search.mode) {
-        search.setPage(0);
-      } else {
-        normalPagination.setPage(0);
-      }
+  const pagination = useMemo(() => {
+    if (paginationKind === "classic") {
+      return classicPagination;
     }
-  }, [listingKey, normalPagination.setPage, search.mode, search.setPage]);
 
-  useEffect(() => {
-    setVisiblePageFileInfoChunks((current) => {
-      const next = current.slice(0, activePage);
-      next[activePage] = pageFileInfos;
-      return next;
-    });
-    setAnimatedChunkIndex(
-      shouldAnimateNextChunkRef.current ? activePage : null,
-    );
-    shouldAnimateNextChunkRef.current = false;
-  }, [activePage, pageFileInfos]);
-
-  const setCurrentPage = useCallback(
-    (page: number) => {
-      if (search.mode) {
-        search.setPage(page);
-      } else {
-        normalPagination.setPage(page);
-      }
-    },
-    [search.mode, search.setPage, normalPagination.setPage],
-  );
-
-  const loadMore = useCallback(() => {
-    shouldAnimateNextChunkRef.current = true;
-    if (search.mode) {
-      search.loadMore();
-    } else {
-      normalPagination.loadMore();
+    if (paginationKind === "load-more") {
+      return incrementalReveal;
     }
-  }, [search.mode, search.loadMore, normalPagination.loadMore]);
+
+    return {
+      visibleFiles: visibleFileInfos,
+      canLoadMore: false,
+      loadMore: () => undefined,
+      paginationKind,
+    };
+  }, [classicPagination, incrementalReveal, paginationKind, visibleFileInfos]);
 
   const extForCard = useMemo(() => resolveCardFooterMode(settings), [settings]);
 
@@ -152,16 +97,21 @@ export function useExplorerState(options: UseExplorerStateOptions) {
     isSearchLoading: search.isLoading,
     toggleSearch: search.toggleSearch,
     setSearchQuery: search.setSearchQuery,
-    currentPage: activePage,
-    setCurrentPage,
-    pageFileInfos,
-    visiblePageFileInfoChunks,
-    animatedChunkIndex,
-    loadMore,
-    canLoadMore: activePage + 1 < activeListing.totalPages,
     refresh,
-    totalPages: activeListing.totalPages,
-    usePaging: activeListing.usePaging,
     extForCard,
+    ...pagination,
   };
+}
+
+function wrapFileInfos(
+  files: FileInfo[],
+  refresh: () => void,
+): FileInfo[] {
+  return files.map((fileInfo) => ({
+    ...fileInfo,
+    togglePin: () => {
+      fileInfo.togglePin();
+      window.setTimeout(refresh, 100);
+    },
+  }));
 }

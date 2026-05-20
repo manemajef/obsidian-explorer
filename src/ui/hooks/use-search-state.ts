@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { App, TFile } from "obsidian";
 import { BlockSettings } from "../../settings/schema";
 import { computeFileListing } from "../../vault/file-listing";
-import { usePaginationBounds, usePaginationState } from "./use-pagination-state";
 
 interface UseSearchStateOptions {
   app: App;
@@ -21,7 +20,6 @@ export function useSearchState(options: UseSearchStateOptions) {
   const [allFiles, setAllFiles] = useState<TFile[] | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const loadingRef = useRef(false);
-  const pagination = usePaginationState();
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(searchQuery), 80);
@@ -58,21 +56,17 @@ export function useSearchState(options: UseSearchStateOptions) {
         files: allFiles ?? [],
         settings,
         query: debouncedQuery,
-        page: pagination.page,
         // Keep current behavior: search results are ranked by recent edit.
         sortBy: "edited",
       }),
-    [app, allFiles, settings, debouncedQuery, pagination.page, tick],
+    [app, allFiles, settings, debouncedQuery, tick],
   );
-
-  usePaginationBounds(pagination.page, pagination.setPage, listing.totalPages);
 
   const toggleSearch = useCallback(() => {
     setSearchMode((prev) => {
       if (prev) {
         setSearchQuery("");
         setDebouncedQuery("");
-        pagination.resetPage();
         window.setTimeout(() => {
           activeDocument.getElementById("explorer-actions")?.scrollIntoView({
             behavior: "smooth",
@@ -89,23 +83,13 @@ export function useSearchState(options: UseSearchStateOptions) {
       }
       return !prev;
     });
-  }, [activeDocument, pagination]);
+  }, [activeDocument]);
 
   const handleSearchInput = useCallback(
     (query: string) => {
       setSearchQuery(query);
-      pagination.resetPage();
     },
-    [pagination],
-  );
-
-  const listingKey = useMemo(
-    () => ({
-      mode: "search",
-      debouncedQuery,
-      settings,
-    }),
-    [debouncedQuery, settings],
+    [],
   );
 
   return {
@@ -113,10 +97,6 @@ export function useSearchState(options: UseSearchStateOptions) {
     query: searchQuery,
     isLoading: isSearchLoading,
     listing,
-    listingKey,
-    page: pagination.page,
-    setPage: pagination.setPage,
-    loadMore: pagination.loadMore,
     toggleSearch,
     setSearchQuery: handleSearchInput,
   };

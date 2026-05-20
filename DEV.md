@@ -15,7 +15,7 @@ src/
 │
 ├── vault/
 │   ├── folder-index.ts    # Folder traversal, file indexing
-│   ├── file-listing.ts    # Sort, filter, paginate file lists
+│   ├── file-listing.ts    # Sort and filter file lists
 │   ├── file-utils.ts      # File metadata, pin state, RTL detection
 │   └── actions.ts         # Create files/folders, update blocks
 │
@@ -43,7 +43,7 @@ src/
 | File visibility    | `vault/file-listing.ts`          | Search/self `displayedNotes` filter                 |
 | Sorting            | `vault/file-utils.ts`            | `sortFiles()` — pinned first, then by criteria      |
 | Search/filter      | `vault/file-utils.ts`            | `filterFiles()` — text, #tag, @foldernote           |
-| Pagination         | `vault/file-listing.ts`          | `computeFileListing()` slices by page               |
+| Pagination         | `ui/hooks/use-pagination-state.ts` | `useClassicPagination()` slices pages; `useIncrementalReveal()` handles load-more |
 | Pin state          | `vault/file-utils.ts`            | `isPinned()`, `togglePin()` via frontmatter         |
 | Create files       | `vault/actions.ts`               | `createFolderWithNote()`, `createNewNote()`         |
 | Update block       | `vault/actions.ts`               | `updateExplorerBlock()` modifies markdown           |
@@ -75,8 +75,9 @@ Files pass through filters in this order:
   - `#tag` — matches frontmatter tags
   - `@name` — matches folder notes only
   - Plain text — matches filename or path
-6. **Pagination** (`vault/file-listing.ts:computeFileListing`)
-  - Slices to current page unless `paginationStyle=none`
+6. **Pagination** (`ui/hooks/use-pagination-state.ts`)
+  - Search mode always uses load-more
+  - Browse mode uses load-more for `modern`, page buttons for `classic`, and no slicing for `none`
 
 ## Data Flow
 
@@ -111,7 +112,7 @@ Adding a setting: add to `BLOCK_SETTINGS_SCHEMA` — UI generates automatically.
 
 **State hooks:** `use-explorer-state.ts` orchestrates, delegates to `use-search-state.ts` and `use-pagination-state.ts`.
 
-**Modern pagination:** "Load more" accumulates page chunks with animation. Classic pagination shows single page.
+**Modern pagination:** Search always uses load-more. Browse mode uses load-more for `modern`, page buttons for `classic`, and no slicing for `none`.
 
 ## Styling Architecture
 
