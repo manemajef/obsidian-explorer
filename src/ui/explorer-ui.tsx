@@ -131,6 +131,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
           {(showLoadMore || classicPagination) && (
             <>
+              <Divider />
+              <Divider />
               {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}
