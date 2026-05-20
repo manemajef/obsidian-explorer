@@ -154,9 +154,6 @@
   min-height: 0.5em;
   margin: var(--explorer-space-2) 0;
 }
-.explorer-files-container {
-  margin-top: var(--explorer-space-2);
-}
 .is-mobile .explorer-files-container {
   margin-top: var(--explorer-space-4);
 }
@@ -211,6 +208,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--explorer-space-4);
+}
+.explorer-folders-view {
+  margin-top: var(--explorer-space-3);
 }
 .is-mobile .explorer-folders-grid {
   display: grid;
@@ -272,14 +272,13 @@
 }
 
 /* src/ui/styles/cards-view.css */
-.explorer-grid {
+.explorer-cards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--explorer-space-3);
 }
-.explorer-notes-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  margin-top: var(--explorer-space-3);
+.explorer-cards-view {
+  margin-top: var(--explorer-space-4);
 }
 .is-mobile .explorer-notes-grid {
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -575,8 +574,6 @@
 /* src/ui/styles/action-bar.css */
 #explorer-actions {
   direction: ltr;
-  margin-bottom: var(--explorer-space-4);
-  padding-bottom: var(--explorer-space-2);
 }
 .explorer-container.use-glass #explorer-actions {
   margin-top: var(--explorer-space-5);

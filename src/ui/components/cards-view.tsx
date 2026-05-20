@@ -28,74 +28,76 @@ export function CardsView(props: {
   } = props;
 
   return (
-    <>
-      {files.map((fileInfo) => (
-        <div key={fileInfo.file.path}>
-          <div
-            className="explorer-card"
-            onClick={(e) => {
-              if ((e.target as HTMLElement).closest("a")) return;
-              void app.workspace.openLinkText(
-                fileInfo.file.path,
-                sourcePath,
-                false,
-              );
-            }}
-          >
-            <div className="explorer-card-header">
-              <div>
-                <InternalLink
-                  app={app}
-                  sourcePath={sourcePath}
-                  path={fileInfo.file.path}
-                  text={fileInfo.file.basename}
+    <div className="explorer-cards-view">
+      <div className="explorer-cards-grid">
+        {files.map((fileInfo) => (
+          <div key={fileInfo.file.path}>
+            <div
+              className="explorer-card"
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest("a")) return;
+                void app.workspace.openLinkText(
+                  fileInfo.file.path,
+                  sourcePath,
+                  false,
+                );
+              }}
+            >
+              <div className="explorer-card-header">
+                <div>
+                  <InternalLink
+                    app={app}
+                    sourcePath={sourcePath}
+                    path={fileInfo.file.path}
+                    text={fileInfo.file.basename}
+                  />
+                </div>
+                {/* <Bar.Spring /> */}
+                {/* <Bar.Item /> */}
+                <span style={{ width: ".5em" }} />
+
+                <div className="explorer-card-exts">
+                  <div
+                    className="explorer-card-pin-slot"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {fileInfo.file.extension === "md" && (
+                      <Pin fileInfo={fileInfo} />
+                    )}
+                  </div>
+
+                  {fileInfo.file.extension !== "md" &&
+                  !isFolderNote(fileInfo.file) ? (
+                    <Badge variant="ext" className="explorer-card-ext-badge">
+                      {fileInfo.file.extension}
+                    </Badge>
+                  ) : null}
+                </div>
+              </div>
+
+              {showTags && (fileInfo.tags?.length ?? 0) > 0 && (
+                <div className="explorer-card-tags-container explorer-cards-row">
+                  {fileInfo.tags?.map((t) => (
+                    <Badge key={t} variant="tag">
+                      {t}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              <div className="explorer-card-footer explorer-cards-row">
+                <CardFooter
+                  fileInfo={fileInfo}
+                  extForCard={extForCard}
+                  onOpenFolderNote={onOpenFolderNote}
+                  showIconsInCards={showIconsInCards}
                 />
               </div>
-              {/* <Bar.Spring /> */}
-              {/* <Bar.Item /> */}
-              <span style={{ width: ".5em" }} />
-
-              <div className="explorer-card-exts">
-                <div
-                  className="explorer-card-pin-slot"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {fileInfo.file.extension === "md" && (
-                    <Pin fileInfo={fileInfo} />
-                  )}
-                </div>
-
-                {fileInfo.file.extension !== "md" &&
-                !isFolderNote(fileInfo.file) ? (
-                  <Badge variant="ext" className="explorer-card-ext-badge">
-                    {fileInfo.file.extension}
-                  </Badge>
-                ) : null}
-              </div>
-            </div>
-
-            {showTags && (fileInfo.tags?.length ?? 0) > 0 && (
-              <div className="explorer-card-tags-container explorer-cards-row">
-                {fileInfo.tags?.map((t) => (
-                  <Badge key={t} variant="tag">
-                    {t}
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            <div className="explorer-card-footer explorer-cards-row">
-              <CardFooter
-                fileInfo={fileInfo}
-                extForCard={extForCard}
-                onOpenFolderNote={onOpenFolderNote}
-                showIconsInCards={showIconsInCards}
-              />
             </div>
           </div>
-        </div>
-      ))}
-    </>
+        ))}
+      </div>
+    </div>
   );
 }
 

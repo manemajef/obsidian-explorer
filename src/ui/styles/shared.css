@@ -94,9 +94,9 @@
   margin: var(--explorer-space-2) 0;
 }
 
-.explorer-files-container {
+/* .explorer-files-container {
   margin-top: var(--explorer-space-2);
-}
+} */
 
 .is-mobile .explorer-files-container {
   margin-top: var(--explorer-space-4);

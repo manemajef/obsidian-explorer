@@ -32,6 +32,7 @@
 .explorer-list-container {
   --explorer-surface-radius: var(--explorer-radius-md);
   --explorer-surface-border: none;
+  /* margin-top: var(--explorer-space-2); */
 }
 
 .explorer-mobile-list {

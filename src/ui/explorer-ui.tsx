@@ -61,7 +61,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     extForCard,
   } = explorerState;
 
-  const explorerClassName = `explorer ${effectiveSettings.view === "cards" ? "explorer-notes-grid explorer-grid" : ""}`;
+  const explorerClassName = `${effectiveSettings.view === "cards" ? "explorer-cards-view" : "explorer-list-view"}`;
 
   const renderFiles = (files: FileInfo[]) => {
     if (effectiveSettings.view === "cards") {
@@ -114,23 +114,23 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         folderInfos.length > 0 &&
         !searchMode && (
           <>
+            <Divider />
+            {/* <Divider /> */}
             <FolderButtons
               folderInfos={folderInfos}
               onOpenFolderNote={onOpenFolderNote}
             />
-            <Divider />
-            {/* <Divider /> */}
           </>
         )}
 
       {shouldDisplayNotes(effectiveSettings) && (
         <div className="explorer-files-container">
-          {/* <Divider /> */}
-          <div className={explorerClassName}>{renderFiles(visibleFiles)}</div>
+          <Divider />
+
+          <div>{renderFiles(visibleFiles)}</div>
 
           {(showLoadMore || classicPagination) && (
             <>
-              <br />
               {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}

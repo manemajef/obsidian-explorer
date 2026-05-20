@@ -9,7 +9,7 @@ export function FolderButtons(props: {
   const { folderInfos, onOpenFolderNote } = props;
 
   return (
-    <div className="explorer-folders-grid">
+    <div className="explorer-folders-grid explorer-folders-view">
       {folderInfos.map((folderInfo) => {
         const existingNote = folderInfo.folderNote;
         const isMissing = !existingNote;
