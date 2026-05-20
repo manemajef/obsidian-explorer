@@ -109,9 +109,7 @@
 }
 
 
-.theme-dark.is-mobile .explorer-container,
-.is-mobile.theme-dark .explorer-container,
-.is-mobile .theme-dark .explorer-container {
+.theme-dark.is-mobile .explorer-container {
   --explorer-glass-background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.05) 0%,

@@ -57,9 +57,7 @@
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
 }
-.theme-dark.is-mobile .explorer-container,
-.is-mobile.theme-dark .explorer-container,
-.is-mobile .theme-dark .explorer-container {
+.theme-dark.is-mobile .explorer-container {
   --explorer-glass-background: linear-gradient( 145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.04) 100% ), rgba(255, 255, 255, 0.001);
 }
 .is-mobile .explorer-container {
@@ -229,8 +227,11 @@
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
-  border-color: var(--background-modifier-border);
   box-shadow: var(--explorer-shadow-glass);
+}
+.theme-dark .explorer-folder-card:hover {
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .explorer-folder-card--missing {
   opacity: 0.7;

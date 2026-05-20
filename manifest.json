@@ -1,7 +1,7 @@
 {
 	"id": "explorer",
 	"name": "Explorer",
-	"version": "1.1.9",
+	"version": "1.1.10",
 	"minAppVersion": "1.4.4",
 	"description": "A file explorer view with card and list views. Displays folder contents with sorting, pagination, and search.",
 	"author": "manemajef",
