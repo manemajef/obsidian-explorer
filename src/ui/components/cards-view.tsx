@@ -27,6 +27,9 @@ export function CardsView(props: {
     onOpenFolderNote,
   } = props;
 
+  const currentFolderPath =
+    app.vault.getAbstractFileByPath(sourcePath)?.parent?.path ?? null;
+
   return (
     <div className="explorer-cards-view">
       <div className="explorer-cards-grid">
@@ -91,6 +94,7 @@ export function CardsView(props: {
                   extForCard={extForCard}
                   onOpenFolderNote={onOpenFolderNote}
                   showIconsInCards={showIconsInCards}
+                  currentFolderPath={currentFolderPath}
                 />
               </div>
             </div>
@@ -106,8 +110,15 @@ function CardFooter(props: {
   extForCard: string;
   showIconsInCards: boolean;
   onOpenFolderNote: OpenFolderNote;
+  currentFolderPath: string | null;
 }): React.JSX.Element | null {
-  const { fileInfo, extForCard, showIconsInCards, onOpenFolderNote } = props;
+  const {
+    fileInfo,
+    extForCard,
+    showIconsInCards,
+    onOpenFolderNote,
+    currentFolderPath,
+  } = props;
 
   switch (extForCard) {
     case "ctime":
@@ -116,7 +127,8 @@ function CardFooter(props: {
       return <span>{diffDays(fileInfo.file.stat.mtime)}</span>;
     case "folder": {
       const folder = fileInfo.file.parent;
-      if (!folder) return null;
+      if (!folder || !folder.name) return null;
+      if (folder.path === currentFolderPath) return null;
       return (
         <span
           className="explorer-card-folder-link"

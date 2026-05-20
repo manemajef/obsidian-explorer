@@ -36,6 +36,12 @@
   border-radius: 1em;
 }
 
+.theme-dark .explorer-container.use-glass .explorer-mobile-list {
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+}
+
 .explorer-mobile-list-item {
   padding: var(--explorer-space-1) var(--explorer-space-4);
 }

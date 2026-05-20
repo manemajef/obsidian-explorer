@@ -96,6 +96,7 @@
   opacity: .9;
   flex-wrap: nowrap;
   overflow-x: auto;
+  overflow-y: hidden;
   margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }

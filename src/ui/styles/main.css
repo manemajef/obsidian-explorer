@@ -90,7 +90,7 @@
   --explorer-glass-background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.01) 0%,
-    rgba(255, 255, 255, 0.004) 100%
+    rgba(255, 255, 255, 0.01) 100%
   ),
     rgba(255, 255, 255, 0.01);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
@@ -99,13 +99,25 @@
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
   --explorer-glass-shine: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.21) 0%,
+    rgba(255, 255, 255, 0.15) 0%,
     transparent 35%,
     transparent 65%,
-    rgba(255, 255, 255, 0.21) 100%
+    rgba(255, 255, 255, 0.15) 100%
   );
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
+}
+
+
+.theme-dark.is-mobile .explorer-container,
+.is-mobile.theme-dark .explorer-container,
+.is-mobile .theme-dark .explorer-container {
+  --explorer-glass-background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  ),
+    rgba(255, 255, 255, 0.001);
 }
 
 .is-mobile .explorer-container {
