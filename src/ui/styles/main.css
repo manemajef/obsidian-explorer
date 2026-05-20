@@ -50,6 +50,17 @@
 
 
   scroll-margin-top: 10em;
+  /* Live Preview renders inside CodeMirror, whose text cursor can otherwise leak into the block. */
+  cursor: default;
+}
+
+.explorer-container :where(input, textarea, [contenteditable="true"]) {
+  cursor: text;
+}
+
+
+.explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
+  cursor: default;
 }
 
 .explorer-container :where(
@@ -82,7 +93,9 @@
     transition: none;
   }
 }
-
+.markdown-source-view.mod-cm6 .explorer-container {
+  padding-inline: 2px;
+}
 .theme-dark .explorer-container {
   --explorer-glass-gradient: linear-gradient(
     145deg,
