@@ -1,35 +1,22 @@
 /* ===== Note Cards ===== */
 .explorer-cards-grid {
   display: grid;
-  /* grid-template-columns: 1fr 1fr 1fr; */
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-
   gap: var(--explorer-space-3);
-  /* margin-top: 2em; */
 }
-
-
 
 .explorer-cards-view {
   margin-top: var(--explorer-space-4);
-
 }
 
 .is-mobile .explorer-notes-grid {
-
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-
 }
 
 .explorer-card {
-  /* border: var(--explorer-card-border); */
-  /* box-shadow: var(--explorer-shadow-glass-small); */
-  /* background: var(--explorer-bg-interactive); */
   padding: var(--explorer-space-2);
   padding-bottom: var(--explorer-space-1);
-  /* padding: var(--size-4-2) 0 var(--size-2-1); */
   margin: 0 1px;
-
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -41,7 +28,6 @@
 }
 
 .explorer-card:hover {
-  /* border: 1px solid var(--background-modifier-border-hover); */
   box-shadow: var(--bases-cards-shadow-hover);
 }
 
@@ -49,8 +35,6 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  /* font-weight: calc(var(--font-weight) + var(--bold-modifier)); */
-
   flex: 1;
   margin-bottom: 0.5em;
 }
@@ -72,7 +56,6 @@
   max-height: 5.75em;
   overflow-y: auto;
   transform: scale(1.1);
-
 }
 
 .explorer-card-pin-slot > * {
@@ -85,17 +68,12 @@
 }
 
 .explorer-cards-row {
-  /* border: 1px solid red; */
-  /* margin: .2em 0; */
   margin: var(--explorer-space-1) 0;
 }
 
 .explorer-card-footer {
   opacity: 0.5;
   font-size: 0.7em;
-  /* margin-bottom: 0; */
-  /* margin-top: var(--explorer-space-1); */
-  /* padding-top: .5em; */
 }
 
 .explorer-container .explorer-card-footer a,
@@ -111,31 +89,26 @@
 .explorer-card-body {
   padding-top: var(--explorer-space-2);
 }
+
 .explorer-card-tags-container {
-  /* border: 1px solid red; */
   display: flex;
   gap: var(--explorer-space-2);
   opacity: .9;
-  /* flex-wrap: wrap; */
   flex-wrap: nowrap;
   overflow-x: auto;
   margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }
 
-
-
 .explorer-card-exts .explorer-badge {
-  /* opacity: 0.7; */
   display: flex;
   justify-content: center;
 }
+
 .explorer-card-exts .explorer-badge:hover {
   opacity: 1;
 }
-/* .explorer-card-exts .tag:hover {
 
-} */
 .explorer-card-ext-badge,
 .explorer-card-folder-link {
   opacity: 0.8;
@@ -156,7 +129,6 @@
   gap: var(--explorer-space-1);
   align-items: center;
   max-width: max-content;
-
 }
 
 .explorer-container .explorer-card-folder-link:hover {

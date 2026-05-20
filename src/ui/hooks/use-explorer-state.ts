@@ -103,10 +103,7 @@ export function useExplorerState(options: UseExplorerStateOptions) {
   };
 }
 
-function wrapFileInfos(
-  files: FileInfo[],
-  refresh: () => void,
-): FileInfo[] {
+function wrapFileInfos(files: FileInfo[], refresh: () => void): FileInfo[] {
   return files.map((fileInfo) => ({
     ...fileInfo,
     togglePin: () => {

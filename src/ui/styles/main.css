@@ -16,26 +16,19 @@
   /* Control sizes */
   --explorer-control-size: 32px;
 
-  /* Glass effect tuning */
-  --explorer-glass-gradient: linear-gradient(
+  /* Glass surfaces */
+  --explorer-glass-background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.32) 0%,
     rgba(255, 255, 255, 0.01) 100%
-  );
-  --explorer-glass-tint: rgba(0, 0, 0, 0.01);
+  ),
+    rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
-  --explorer-border-glass-strong: var(--explorer-border-glass);
   --explorer-shadow-glass:
     0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-    --explorer-shadow-glass-small:
-    0 2px 4px rgba(0, 0, 0, 0.01),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.01);
-  --explorer-glass-shine-color: rgba(255, 255, 255, 0.35);
-  --explorer-shadow-glass-strong: var(--explorer-shadow-glass);
-  --explorer-glass-shine-opacity: 0;
+  --explorer-glass-shine: transparent;
 
   /* Motion */
   --explorer-hover-scale: 1.05;
@@ -43,11 +36,7 @@
 
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
-  --explorer-bg-alt: rgba(0,0,0,0.02);
-
-  /* Cards */
-  --explorer-card-border: 1px solid var(--background-modifier-border);
-
+  --explorer-bg-alt: rgba(0, 0, 0, 0.02);
 
   scroll-margin-top: 10em;
   /* Live Preview renders inside CodeMirror, whose text cursor can otherwise leak into the block. */
@@ -57,7 +46,6 @@
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
   cursor: text;
 }
-
 
 .explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
@@ -88,37 +76,34 @@
       .explorer-card,
       .explorer-folder-card,
       .paging-label,
-    .explorer-badge
-  ) {
+      .explorer-badge
+    ) {
     transition: none;
   }
 }
+
 .markdown-source-view.mod-cm6 .explorer-container {
   padding-inline: 2px;
 }
+
 .theme-dark .explorer-container {
-  --explorer-glass-gradient: linear-gradient(
+  --explorer-glass-background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.01) 0%,
     rgba(255, 255, 255, 0.004) 100%
-  );
-  --explorer-glass-tint: rgba(255, 255, 255, 0.01);
+  ),
+    rgba(255, 255, 255, 0.01);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
-    --explorer-border-glass-strong: 1px solid rgba(255, 255, 255, 0.1);
-
   --explorer-shadow-glass:
     0 4px 10px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-    --explorer-shadow-glass-strong: 
-  0 .5px 0 rgba(255,255,255,0.2) inset,
-  0 -1px 0 rgba(0,0,0,0.4) inset,
-  0 6px 16px rgba(0,0,0,0.35);
-    --explorer-shadow-glass-small:
-    0 2px 2px rgba(0, 0, 0, 0.08),
-    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-glass-shine-color: rgba(255, 255, 255, 0.21);
-  --explorer-glass-shine-opacity: 1;
-
+  --explorer-glass-shine: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.21) 0%,
+    transparent 35%,
+    transparent 65%,
+    rgba(255, 255, 255, 0.21) 100%
+  );
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
 }

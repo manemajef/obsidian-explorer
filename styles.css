@@ -11,26 +11,17 @@
   --explorer-radius-lg: 0.8em;
   --explorer-radius-pill: 999px;
   --explorer-control-size: 32px;
-  --explorer-glass-gradient: linear-gradient( 135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.01) 100% );
-  --explorer-glass-tint: rgba(0, 0, 0, 0.01);
+  --explorer-glass-background: linear-gradient( 135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.01) 100% ), rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
-  --explorer-border-glass-strong: var(--explorer-border-glass);
   --explorer-shadow-glass:
     0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-  --explorer-shadow-glass-small:
-    0 2px 4px rgba(0, 0, 0, 0.01),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.01);
-  --explorer-glass-shine-color: rgba(255, 255, 255, 0.35);
-  --explorer-shadow-glass-strong: var(--explorer-shadow-glass);
-  --explorer-glass-shine-opacity: 0;
+  --explorer-glass-shine: transparent;
   --explorer-hover-scale: 1.05;
   --explorer-hover-transition: 0.15s ease;
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
-  --explorer-bg-alt: rgba(0,0,0,0.02);
-  --explorer-card-border: 1px solid var(--background-modifier-border);
+  --explorer-bg-alt: rgba(0, 0, 0, 0.02);
   scroll-margin-top: 10em;
   cursor: default;
 }
@@ -59,18 +50,10 @@
   padding-inline: 2px;
 }
 .theme-dark .explorer-container {
-  --explorer-glass-gradient: linear-gradient( 145deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.004) 100% );
-  --explorer-glass-tint: rgba(255, 255, 255, 0.01);
+  --explorer-glass-background: linear-gradient( 145deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.004) 100% ), rgba(255, 255, 255, 0.01);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
-  --explorer-border-glass-strong: 1px solid rgba(255, 255, 255, 0.1);
   --explorer-shadow-glass: 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-shadow-glass-strong:
-    0 .5px 0 rgba(255,255,255,0.2) inset,
-    0 -1px 0 rgba(0,0,0,0.4) inset,
-    0 6px 16px rgba(0,0,0,0.35);
-  --explorer-shadow-glass-small: 0 2px 2px rgba(0, 0, 0, 0.08), inset 0 0.5px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-glass-shine-color: rgba(255, 255, 255, 0.21);
-  --explorer-glass-shine-opacity: 1;
+  --explorer-glass-shine: linear-gradient( 135deg, rgba(255, 255, 255, 0.21) 0%, transparent 35%, transparent 65%, rgba(255, 255, 255, 0.21) 100% );
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
 }
@@ -85,27 +68,17 @@
 /* src/ui/styles/shared.css */
 .explorer-container.use-glass .glass-surface {
   position: relative;
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-  border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
+  background: var(--explorer-glass-background);
+  border: var(--explorer-border-glass);
+  box-shadow: var(--explorer-shadow-glass);
+  border-radius: var(--explorer-glass-radius, var(--explorer-radius-md));
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.explorer-container.use-glass button.glass-surface,
-.explorer-container.use-glass .action-group.glass-surface {
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 .explorer-container.use-glass .glass-surface:hover,
 .explorer-container.use-glass .glass-surface:focus-visible,
 .explorer-container.use-glass .glass-surface:focus-within {
-  transform: scale(var(--explorer-surface-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
   z-index: 10;
 }
 .explorer-container.use-glass .glass-surface--shine::after {
@@ -114,8 +87,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  opacity: var(--explorer-glass-shine-opacity);
-  background: linear-gradient(135deg, var(--explorer-glass-shine-color) 0%, transparent 35%, transparent 65%, var(--explorer-glass-shine-color) 100%);
+  background: var(--explorer-glass-shine);
   -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -218,7 +190,10 @@
 }
 .explorer-folder-card {
   box-sizing: border-box;
-  box-shadow: var(--explorer-shadow-glass-small);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.01),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.01);
   background-color: var(--explorer-bg-interactive);
   border-radius: var(--explorer-radius-lg);
   border: var(--explorer-border-glass);
@@ -229,24 +204,25 @@
   font-size: 0.9em;
   transition: 0.15s;
 }
+.theme-dark .explorer-folder-card {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08), inset 0 0.5px 0 0 rgba(255, 255, 255, 0.06);
+}
 .theme-dark .explorer-folder-card:not(:hover) {
   border: 1px solid rgba(255, 255, 255, 0.02);
 }
 .is-mobile .explorer-folder-card {
   max-width: 140px;
-  --explorer-surface-radius: 16px;
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)), var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
-  border: var(--explorer-border-glass-strong);
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass-strong));
-  border-radius: var(--explorer-surface-radius);
+  background: var(--explorer-glass-background);
+  border: var(--explorer-border-glass);
+  box-shadow: var(--explorer-shadow-glass);
+  border-radius: 16px;
   padding: 1.15em 0.2em;
 }
 .theme-dark.is-mobile .explorer-folder-card,
 .is-mobile .theme-dark .explorer-folder-card {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: var(--explorer-shadow-glass-small);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08), inset 0 0.5px 0 0 rgba(255, 255, 255, 0.06);
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
@@ -417,14 +393,13 @@
   flex: 0 0 auto;
 }
 .explorer-list-container {
-  --explorer-surface-radius: var(--explorer-radius-md);
-  --explorer-surface-border: none;
+  border-radius: var(--explorer-radius-md);
 }
 .explorer-mobile-list {
   margin-top: var(--explorer-space-3);
   padding-bottom: var(--explorer-space-2);
-  --explorer-surface-radius: 1em;
-  --explorer-surface-hover-scale: 1;
+  --explorer-glass-radius: 1em;
+  --explorer-glass-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
 }
@@ -490,7 +465,6 @@
   display: flex;
   align-items: stretch;
   justify-content: center;
-  --explorer-glass-shine-opacity: 0;
   padding: var(--explorer-space-1) var(--explorer-space-2);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
@@ -545,9 +519,6 @@
   border-radius: var(--explorer-radius-pill);
   font-weight: var(--font-medium);
 }
-.explorer-container button.paging-load-more,
-.explorer-container button.paging-load-more span {
-}
 .explorer-container .load-more-text {
   color: var(--text-muted);
 }
@@ -556,11 +527,6 @@
   color: var(--text-normal);
   background: unset;
   border-color: var(--background-modifier-border-hover);
-}
-.explorer-container button.paging-load-more:hover,
-.explorer-container button.paging-load-more:hover span,
-.explorer-container button.paging-load-more:focus-visible,
-.explorer-container button.paging-load-more:focus-visible span {
 }
 .paging-load-more:disabled {
   cursor: default;
@@ -592,8 +558,8 @@
   justify-content: center;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
-  --explorer-surface-radius: 50%;
-  --explorer-surface-hover-scale: var(--explorer-hover-scale);
+  --explorer-glass-radius: 50%;
+  --explorer-glass-hover-scale: var(--explorer-hover-scale);
   appearance: none;
   -webkit-appearance: none;
   padding: 0;
@@ -618,8 +584,8 @@
   gap: 2px;
   height: var(--explorer-control-size);
   padding-inline: 3px;
-  --explorer-surface-radius: var(--explorer-radius-pill);
-  --explorer-surface-hover-scale: var(--explorer-hover-scale);
+  --explorer-glass-radius: var(--explorer-radius-pill);
+  --explorer-glass-hover-scale: var(--explorer-hover-scale);
 }
 .explorer-container:not(.use-glass) .action-group {
   padding-inline: 0;

@@ -123,12 +123,12 @@ The explorer styling model is now split into three layers:
   - Glass mode is owned by the root container, not threaded through general TSX props.
 2. **Shared surface contract**
   - `.glass-surface` in `src/ui/styles/shared.css` provides the base glass treatment:
-   background, border, box-shadow, radius via `--explorer-surface-radius`, and optional hover scale via `--explorer-surface-hover-scale`.
+   background, border, box-shadow, radius via `--explorer-glass-radius`, and optional hover scale via `--explorer-glass-hover-scale`.
   - `.glass-surface--shine` adds the specular `::after` overlay.
   - Do not assume every glass surface should have shine. Large containers usually should not.
 3. **Component tuning**
-  - Feature CSS files set local surface override tokens such as:
-   `--explorer-surface-radius`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-tint`, `--explorer-surface-hover-scale`.
+  - Feature CSS files should set concrete component styles first.
+  - Use the two local glass knobs only when a component participates in `.glass-surface`: `--explorer-glass-radius` and `--explorer-glass-hover-scale`.
   - Action controls use `glass-surface--shine`.
   - Larger surfaces like folder cards and mobile list containers should usually rely on border/shadow tuning instead of the shine overlay.
 
@@ -139,9 +139,9 @@ Keep tokens in `src/ui/styles/main.css` small and intentional.
 - Foundation tokens:
 `--explorer-space-`*, `--explorer-radius-*`, `--explorer-control-size`, `--explorer-hover-*`
 - Glass theme tokens:
-`--explorer-glass-gradient`, `--explorer-glass-tint`, `--explorer-border-glass`, `--explorer-border-glass-strong`, `--explorer-shadow-glass*`, `--explorer-glass-shine-*`
-- Surface override tokens:
-`--explorer-surface-gradient`, `--explorer-surface-tint`, `--explorer-surface-border`, `--explorer-surface-shadow`, `--explorer-surface-radius`, `--explorer-surface-hover-scale`
+`--explorer-glass-background`, `--explorer-border-glass`, `--explorer-shadow-glass`, `--explorer-glass-shine`
+- Local glass knobs:
+`--explorer-glass-radius`, `--explorer-glass-hover-scale`
 
 Avoid reintroducing proxy variables that simply mirror another token once, especially misspelled or build-only aliases.
 

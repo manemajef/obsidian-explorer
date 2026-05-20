@@ -1,30 +1,17 @@
 .explorer-container.use-glass .glass-surface {
   position: relative;
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
-  border-radius: var(--explorer-surface-radius, var(--explorer-radius-md));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
+  background: var(--explorer-glass-background);
+  border: var(--explorer-border-glass);
+  box-shadow: var(--explorer-shadow-glass);
+  border-radius: var(--explorer-glass-radius, var(--explorer-radius-md));
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.explorer-container.use-glass button.glass-surface,
-.explorer-container.use-glass .action-group.glass-surface {
-  background: var(--explorer-surface-gradient, var(--explorer-glass-gradient)),
-    var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-color: var(--explorer-surface-tint, var(--explorer-glass-tint));
-  background-image: var(--explorer-surface-gradient, var(--explorer-glass-gradient));
-  border: var(--explorer-surface-border, var(--explorer-border-glass));
-  box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 
 .explorer-container.use-glass .glass-surface:hover,
 .explorer-container.use-glass .glass-surface:focus-visible,
 .explorer-container.use-glass .glass-surface:focus-within {
-  transform: scale(var(--explorer-surface-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
   z-index: 10;
 }
 
@@ -34,14 +21,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  opacity: var(--explorer-glass-shine-opacity);
-  background: linear-gradient(
-    135deg,
-    var(--explorer-glass-shine-color) 0%,
-    transparent 35%,
-    transparent 65%,
-    var(--explorer-glass-shine-color) 100%
-  );
+  background: var(--explorer-glass-shine);
   -webkit-mask:
     linear-gradient(#ffffff 0 0) content-box,
     linear-gradient(#ffffff 0 0);
@@ -49,10 +29,6 @@
   mask-composite: exclude;
   pointer-events: none;
 }
-
-/* .theme-dark .explorer-container.use-glass .glass-surfac {
-  background-color: rgba(200,200,200,0.1);
-} */
 /* ------------------------------------------------------------
    Layout helpers
    ------------------------------------------------------------ */
@@ -94,10 +70,6 @@
   margin: var(--explorer-space-2) 0;
 }
 
-/* .explorer-files-container {
-  margin-top: var(--explorer-space-2);
-} */
-
 .is-mobile .explorer-files-container {
   margin-top: var(--explorer-space-4);
 }
@@ -132,25 +104,10 @@
 
 .explorer-badge.ext {
   opacity: 0.6;
-  /* border: var(--explorer-border-glass); */
-
-  /* old settings */
-  /* old settings */
-
-  /* border-radius: var(--explorer-radius-pill); */
-  /* background: var(--background-modifier-border); */
-  /* box-shadow: var(--explorer-shadow-glass); */
-  /* border: 1px solid var(--background-modifier-border); */
-
 }
-/* .theme-dark .explorer-badge.ext {
-  background-color: var(--background-modifier-border);
-
-} */
 
 .explorer-badge.ext-filled {
   background: var(--background-primary-alt);
-  /* border-radius: var(--explorer-radius-pill); */
   border: var(--explorer-border-glass);
   opacity: 0.7;
 }
