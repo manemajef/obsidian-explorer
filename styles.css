@@ -131,6 +131,15 @@
   min-height: 0;
   flex: 0 0 auto;
 }
+.explorer-divider.divider-sm {
+  height: var(--explorer-space-4);
+}
+.explorer-divider.divider-md {
+  height: var(--explorer-space-6);
+}
+.explorer-divider.divider-lg {
+  height: calc(var(--explorer-space-4) + var(--explorer-space-4));
+}
 .explorer-badge {
   font-size: 0.7em;
   border-radius: var(--explorer-radius-md);

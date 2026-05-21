@@ -61,26 +61,18 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     extForCard,
   } = explorerState;
 
-  const isMobile = Platform.isMobile;
   const showFolders =
     effectiveSettings.showFolders && folderInfos.length > 0 && !searchMode;
   const showNotes = shouldDisplayNotes(effectiveSettings);
   const isCardsView = effectiveSettings.view === "cards";
 
-  // Divider sizes use the same 0.25em unit as Group and Stack gaps.
-  const actionTopDividerSize = 6;
-  const folderDividerSize = isMobile ? 13 : 9;
-  const filesDividerSize = isMobile
-    ? showFolders
-      ? isCardsView
-        ? 14
-        : 13
-      : isCardsView
-        ? 18
-        : 17
-    : isCardsView
-      ? 10
-      : 6;
+  const filesDividerSize =
+    isCardsView || Platform.isMobile
+      ? "lg"
+      : !Platform.isMobile && folderInfos.length <= 0
+        ? "sm"
+        : "md";
+  const folderDivider = Platform.isMobile ? "md" : "lg";
 
   const renderFiles = (files: FileInfo[]) => {
     if (effectiveSettings.view === "cards") {
@@ -113,12 +105,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     explorerState.paginationKind === "classic" && explorerState.totalPages > 1
       ? explorerState
       : null;
-  const paginationDividerSize = showLoadMore ? 8 : 6;
-  const showActionsTrailingDivider = isMobile && !showFolders && !showNotes;
+  const paginationDividerSize = showLoadMore ? "md" : "sm";
 
   return (
     <>
-      {effectiveSettings.useGlass && <Divider size={actionTopDividerSize} />}
+      {effectiveSettings.useGlass && <Divider size="sm" />}
 
       <ActionsBar
         showParentButton={effectiveSettings.showParentButton}
@@ -133,11 +124,10 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onOpenFolderNote={onOpenFolderNote}
       />
 
-      {showActionsTrailingDivider && <Divider size={4} />}
-
       {showFolders && (
         <>
-          <Divider size={folderDividerSize} />
+          <Divider size={folderDivider} />
+
           <FolderButtons
             folderInfos={folderInfos}
             onOpenFolderNote={onOpenFolderNote}
@@ -148,6 +138,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {showNotes && (
         <div className="explorer-files-container">
           <Divider size={filesDividerSize} />
+          {/* <Divider size=  /> */}
 
           <div>{renderFiles(visibleFiles)}</div>
 

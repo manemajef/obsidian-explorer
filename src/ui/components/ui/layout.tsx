@@ -58,14 +58,13 @@ export function Separator(props: { className?: string }): React.JSX.Element {
 
 export function Divider(props: {
   className?: string;
-  size?: number;
+  size?: "sm" | "md" | "lg";
 }): React.JSX.Element {
-  const { className, size = 6 } = props;
+  const { className, size = "sm" } = props;
 
   return (
     <div
-      className={`explorer-divider ${className ?? ""}`}
-      style={{ height: `${size * 0.25}em` }}
+      className={`explorer-divider divider-${size} ${className ?? ""}`}
     />
   );
 }

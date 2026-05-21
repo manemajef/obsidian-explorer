@@ -70,6 +70,42 @@
   flex: 0 0 auto;
 }
 
+.explorer-divider.divider-sm {
+  height: var(--explorer-space-4);
+}
+
+.explorer-divider.divider-md {
+  height: var(--explorer-space-6);
+}
+
+.explorer-divider.divider-lg {
+  height: calc(var(--explorer-space-4) + var(--explorer-space-4));
+}
+
+/* .explorer-divider.divider-sm {
+  height: var(--explorer-space-5);
+}
+
+.explorer-divider.divider-md {
+  height: calc(var(--explorer-space-5) + var(--explorer-space-3));
+}
+
+.explorer-divider.divider-lg {
+  height: calc(var(--explorer-space-6) + var(--explorer-space-2));
+}
+
+.is-mobile .explorer-divider.divider-sm {
+  height: calc(var(--explorer-space-3) + var(--explorer-space-4));
+}
+
+.is-mobile .explorer-divider.divider-md {
+  height: calc(var(--explorer-space-6) + var(--explorer-space-5));
+}
+
+.is-mobile .explorer-divider.divider-lg {
+  height: calc(var(--explorer-space-6) + var(--explorer-space-6));
+} */
+
 /* ------------------------------------------------------------
    Badges
    ------------------------------------------------------------ */
