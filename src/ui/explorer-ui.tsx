@@ -1,5 +1,5 @@
 import React from "react";
-import { App, TFile, TFolder } from "obsidian";
+import { App, Platform, TFile, TFolder } from "obsidian";
 import { FileInfo, FolderInfo } from "../types";
 import { BlockSettings, shouldDisplayNotes } from "../settings/schema";
 import { useExplorerState } from "./hooks/use-explorer-state";
@@ -61,7 +61,26 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     extForCard,
   } = explorerState;
 
-  const explorerClassName = `${effectiveSettings.view === "cards" ? "explorer-cards-view" : "explorer-list-view"}`;
+  const isMobile = Platform.isMobile;
+  const showFolders =
+    effectiveSettings.showFolders && folderInfos.length > 0 && !searchMode;
+  const showNotes = shouldDisplayNotes(effectiveSettings);
+  const isCardsView = effectiveSettings.view === "cards";
+
+  // Divider sizes use the same 0.25em unit as Group and Stack gaps.
+  const actionTopDividerSize = 6;
+  const folderDividerSize = isMobile ? 13 : 9;
+  const filesDividerSize = isMobile
+    ? showFolders
+      ? isCardsView
+        ? 14
+        : 13
+      : isCardsView
+        ? 18
+        : 17
+    : isCardsView
+      ? 10
+      : 6;
 
   const renderFiles = (files: FileInfo[]) => {
     if (effectiveSettings.view === "cards") {
@@ -94,9 +113,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     explorerState.paginationKind === "classic" && explorerState.totalPages > 1
       ? explorerState
       : null;
+  const paginationDividerSize = showLoadMore ? 8 : 6;
+  const showActionsTrailingDivider = isMobile && !showFolders && !showNotes;
 
   return (
     <>
+      {effectiveSettings.useGlass && <Divider size={actionTopDividerSize} />}
+
       <ActionsBar
         showParentButton={effectiveSettings.showParentButton}
         onOpenSettings={onOpenSettings}
@@ -110,29 +133,27 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onOpenFolderNote={onOpenFolderNote}
       />
 
-      {effectiveSettings.showFolders &&
-        folderInfos.length > 0 &&
-        !searchMode && (
-          <>
-            <Divider />
-            {/* <Divider /> */}
-            <FolderButtons
-              folderInfos={folderInfos}
-              onOpenFolderNote={onOpenFolderNote}
-            />
-          </>
-        )}
+      {showActionsTrailingDivider && <Divider size={4} />}
 
-      {shouldDisplayNotes(effectiveSettings) && (
+      {showFolders && (
+        <>
+          <Divider size={folderDividerSize} />
+          <FolderButtons
+            folderInfos={folderInfos}
+            onOpenFolderNote={onOpenFolderNote}
+          />
+        </>
+      )}
+
+      {showNotes && (
         <div className="explorer-files-container">
-          <Divider />
+          <Divider size={filesDividerSize} />
 
           <div>{renderFiles(visibleFiles)}</div>
 
           {(showLoadMore || classicPagination) && (
             <>
-              <Divider />
-              {/* <Divider /> */}
+              <Divider size={paginationDividerSize} />
               {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}

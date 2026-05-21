@@ -3,20 +3,11 @@
   direction: ltr;
 }
 
-.explorer-container.use-glass #explorer-actions {
-  margin-top: var(--explorer-space-5);
-}
-
 .explorer-actions-start,
 .explorer-actions-controls,
 .explorer-actions-end {
   min-width: 0;
 }
-
-.is-mobile #explorer-actions {
-  padding-bottom: var(--explorer-space-4);
-}
-
 
 .action-item {
   display: inline-flex;

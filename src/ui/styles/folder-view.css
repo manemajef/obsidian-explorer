@@ -5,10 +5,6 @@
   gap: var(--explorer-space-4);
 }
 
-.explorer-folders-view {
-  margin-top: var(--explorer-space-3);
-}
-
 .is-mobile .explorer-folders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));

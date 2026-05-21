@@ -5,11 +5,7 @@
   gap: var(--explorer-space-3);
 }
 
-.explorer-cards-view {
-  margin-top: var(--explorer-space-4);
-}
-
-.is-mobile .explorer-notes-grid {
+.is-mobile .explorer-cards-grid {
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
@@ -25,6 +21,11 @@
   box-shadow: var(--bases-cards-shadow);
   border-radius: var(--bases-cards-radius);
   transition: box-shadow var(--anim-duration-fast) ease-in-out;
+}
+
+.is-mobile .explorer-card {
+  /* box-shadow: var(--explorer-shadow-glass); */
+  /* border: var(--explorer-border-glass); */
 }
 
 .explorer-card:hover {

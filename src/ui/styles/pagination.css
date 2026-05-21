@@ -61,7 +61,6 @@
   gap: var(--explorer-space-2);
   margin-inline: auto;
   min-width: 11rem;
-  margin-top: var(--explorer-space-2);
   padding: var(--explorer-space-3) var(--explorer-space-4);
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);

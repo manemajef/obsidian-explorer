@@ -66,12 +66,8 @@
 .explorer-divider {
   display: block;
   width: 100%;
-  min-height: 0.5em;
-  margin: var(--explorer-space-2) 0;
-}
-
-.is-mobile .explorer-files-container {
-  margin-top: var(--explorer-space-4);
+  min-height: 0;
+  flex: 0 0 auto;
 }
 
 /* ------------------------------------------------------------

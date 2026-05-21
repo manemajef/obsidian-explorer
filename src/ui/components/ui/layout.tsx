@@ -56,6 +56,16 @@ export function Separator(props: { className?: string }): React.JSX.Element {
   return <div className={`explorer-separator ${props.className ?? ""}`} />;
 }
 
-export function Divider(props: { className?: string }): React.JSX.Element {
-  return <div className={`explorer-divider ${props.className ?? ""}`} />;
+export function Divider(props: {
+  className?: string;
+  size?: number;
+}): React.JSX.Element {
+  const { className, size = 6 } = props;
+
+  return (
+    <div
+      className={`explorer-divider ${className ?? ""}`}
+      style={{ height: `${size * 0.25}em` }}
+    />
+  );
 }

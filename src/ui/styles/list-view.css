@@ -28,7 +28,6 @@
 }
 
 .explorer-mobile-list {
-  margin-top: var(--explorer-space-3);
   padding-bottom: var(--explorer-space-2);
   --explorer-glass-radius: 1em;
   --explorer-glass-hover-scale: 1;
