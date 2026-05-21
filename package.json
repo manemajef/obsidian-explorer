@@ -1,11 +1,12 @@
 {
 	"name": "obsidian-explorer",
-	"version": "1.1.10",
+	"version": "1.1.11",
 	"description": "A file explorer view for Obsidian",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"lint:css": "stylelint \"src/ui/styles/**/*.css\""
 	},
 	"keywords": [
 		"obsidian",
@@ -28,6 +29,8 @@
 		"eslint": "^9.39.2",
 		"eslint-plugin-obsidianmd": "^0.1.9",
 		"obsidian": "latest",
+		"stylelint": "^17.12.0",
+		"stylelint-config-standard": "^40.0.0",
 		"tslib": "2.4.0",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.54.0"

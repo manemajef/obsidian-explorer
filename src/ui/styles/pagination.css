@@ -77,7 +77,7 @@
   box-shadow: var(--explorer-shadow-glass);
 }
 
-.theme-dark .explorer-container.use-glass .paging-load-more {
+.theme-dark:not(.is-mobile) .explorer-container.use-glass .paging-load-more {
   border-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
@@ -94,13 +94,13 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-.theme-dark .explorer-container.use-glass .paging-load-more {
+.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more {
   background: rgba(255, 255, 255, 0.018);
-  border-color: rgba(255, 255, 255, 0.055);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  border: var(--explorer-border-glass);
+  box-shadow: var(--explorer-shadow-glass);
 }
 
-.theme-dark .explorer-container.use-glass .paging-load-more:hover,
+.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:hover,
 .theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:focus-visible {
   background: rgba(255, 255, 255, 0.028);
   border-color: rgba(255, 255, 255, 0.09);

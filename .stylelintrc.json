@@ -1,0 +1,24 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "alpha-value-notation": null,
+    "color-function-notation": null,
+    "color-function-alias-notation": null,
+    "color-hex-length": null,
+    "property-no-vendor-prefix": null,
+    "comment-empty-line-before": null,
+    "rule-empty-line-before": null,
+    "custom-property-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "import-notation": null,
+    "shorthand-property-no-redundant-values": null,
+    "declaration-property-value-keyword-no-deprecated": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "no-duplicate-selectors": true,
+    "declaration-block-no-duplicate-properties": [true, { "ignore": ["consecutive-duplicates-with-different-values"] }]
+  },
+  "ignoreFiles": ["styles.css", "node_modules/**", "main.js"]
+}
