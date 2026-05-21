@@ -60,6 +60,12 @@ function resolveParentNavigationTarget(
   homePageSettings: HomePageSettings,
   sourcePath = "",
 ): ParentNavigationTarget {
+  const homePagePath = resolveHomePagePath(app, homePageSettings);
+  const currentPath = sourcePath || app.workspace.getActiveFile()?.path;
+  if (homePagePath && currentPath === homePagePath) {
+    return null;
+  }
+
   const currentFolder = getCurrentFolder(app, sourcePath);
   const parent = currentFolder?.parent;
   if (!parent || parent.isRoot()) {
@@ -74,7 +80,9 @@ export function canGoToParentFolderNote(
   homePageSettings: HomePageSettings,
   sourcePath = "",
 ): boolean {
-  return resolveParentNavigationTarget(app, homePageSettings, sourcePath) !== null;
+  return (
+    resolveParentNavigationTarget(app, homePageSettings, sourcePath) !== null
+  );
 }
 
 // ===== BLOCK OPERATIONS =====
