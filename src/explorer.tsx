@@ -8,6 +8,7 @@ import {
 } from "obsidian";
 import {
   BlockSettings,
+  PluginSettings,
   getBlockSettingsOverrides,
   resolveBlockSettings,
 } from "./settings/schema";
@@ -16,6 +17,8 @@ import { ExplorerUI } from "./ui/explorer-ui";
 import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
 import { FolderIndex } from "./vault/folder-index";
 import {
+  canGoToParentFolderNote,
+  goToParentFolderNote,
   openOrCreateFolderNote,
   promptAndCreateFolder,
   promptAndCreateNote,
@@ -34,6 +37,7 @@ export async function renderExplorerBlock(
   container: HTMLElement,
   ctx: MarkdownPostProcessorContext,
   getBlockDefaults: () => BlockSettings,
+  getPluginSettings: () => PluginSettings,
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
 ): Promise<void> {
@@ -114,15 +118,32 @@ export async function renderExplorerBlock(
       <ExplorerUI
         app={app}
         sourcePath={ctx.sourcePath}
-        folder={folder}
         effectiveSettings={effectiveSettings}
         folderInfos={folderIndex.folders}
         depthFiles={depthFiles}
         folderNotes={folderIndex.folderNotes}
         getAllFiles={getAllFiles}
+        showParentNavigation={
+          effectiveSettings.showParentButton &&
+          canGoToParentFolderNote(app, getPluginSettings(), ctx.sourcePath)
+        }
         onOpenSettings={openSettings}
+        onGoToParent={(newLeaf) =>
+          void goToParentFolderNote(
+            app,
+            getPluginSettings(),
+            ctx.sourcePath,
+            newLeaf,
+          )
+        }
         onOpenFolderNote={(f, newLeaf) =>
-          void openOrCreateFolderNote(app, f, ctx.sourcePath, newLeaf)
+          void openOrCreateFolderNote(
+            app,
+            f,
+            ctx.sourcePath,
+            newLeaf,
+            getPluginSettings(),
+          )
         }
         onNewFolder={() => void promptAndCreateFolder(app, folder.path)}
         onNewNote={() => void promptAndCreateNote(app, folder.path)}

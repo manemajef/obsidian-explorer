@@ -345,6 +345,8 @@ export type BlockSettingKey = keyof BlockSettings;
 
 export interface PluginSettings {
   defaultBlockSettings: BlockSettings;
+  useHomePage: boolean;
+  homePageName: string;
 }
 
 export const BLOCK_SETTING_KEYS = Object.keys(
@@ -451,6 +453,8 @@ export const DEFAULT_BLOCK_SETTINGS: BlockSettings =
 export function createDefaultPluginSettings(): PluginSettings {
   return {
     defaultBlockSettings: createDefaultBlockSettings(),
+    useHomePage: true,
+    homePageName: "",
   };
 }
 
@@ -663,14 +667,24 @@ export function resolveBlockSettings(
 export function normalizePluginSettings(raw: unknown): PluginSettings {
   const pluginDefaults = createDefaultPluginSettings();
 
-  if (!isRecord(raw) || !isRecord(raw.defaultBlockSettings)) {
+  if (!isRecord(raw)) {
     return pluginDefaults;
   }
 
   return {
-    defaultBlockSettings: coerceBlockSettings(
-      raw.defaultBlockSettings,
-      pluginDefaults.defaultBlockSettings,
-    ),
+    defaultBlockSettings: isRecord(raw.defaultBlockSettings)
+      ? coerceBlockSettings(
+          raw.defaultBlockSettings,
+          pluginDefaults.defaultBlockSettings,
+        )
+      : pluginDefaults.defaultBlockSettings,
+    useHomePage:
+      typeof raw.useHomePage === "boolean"
+        ? raw.useHomePage
+        : pluginDefaults.useHomePage,
+    homePageName:
+      typeof raw.homePageName === "string"
+        ? raw.homePageName
+        : pluginDefaults.homePageName,
   };
 }

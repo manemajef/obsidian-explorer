@@ -2,34 +2,32 @@ import React from "react";
 import { Search } from "./search";
 import { ActionItem, ActionGroup, ActionGroupItem } from "./ui/action";
 import { Group, Separator } from "./ui/layout";
-import { Platform, TFolder } from "obsidian";
+import { Platform } from "obsidian";
 import { Bar } from "./ui/bar";
 
 export function ActionsBar(props: {
   onOpenSettings: () => void;
+  onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
   onNewNote: () => void;
   onSearchToggle: () => void;
   searchMode: boolean;
   searchQuery: string;
   onSearchInput: (query: string) => void;
-  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
-  folder: TFolder;
-  showParentButton: boolean;
+  showParentNavigation: boolean;
 }): React.JSX.Element {
   const {
     onOpenSettings,
+    onGoToParent,
     onNewFolder,
     onNewNote,
     searchMode,
     searchQuery,
     onSearchToggle,
     onSearchInput,
-    onOpenFolderNote,
-    folder,
-    showParentButton,
+    showParentNavigation,
   } = props;
-  const parent = folder?.parent;
+
   if (Platform.isMobile && searchMode)
     return (
       <div id="explorer-actions" className="explorer-actions-mobile-search">
@@ -52,11 +50,11 @@ export function ActionsBar(props: {
       <Bar>
         <Bar.Item>
           <Group gap={2} className="explorer-actions-start">
-            {parent && showParentButton && (
+            {showParentNavigation && (
               <ActionItem
                 icon="undo-2"
                 onClick={() => {
-                  if (parent) onOpenFolderNote(parent, false);
+                  onGoToParent(false);
                 }}
               />
             )}

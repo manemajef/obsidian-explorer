@@ -13,13 +13,14 @@ import { Divider } from "./components/ui/layout";
 interface ExplorerUIProps {
   app: App;
   sourcePath: string;
-  folder: TFolder;
   effectiveSettings: BlockSettings;
   folderInfos: FolderInfo[];
   depthFiles: TFile[];
   folderNotes: TFile[];
   getAllFiles: () => Promise<TFile[]>;
+  showParentNavigation: boolean;
   onOpenSettings: () => void;
+  onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
   onNewNote: () => void;
   onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
@@ -29,13 +30,14 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const {
     app,
     sourcePath,
-    folder,
     effectiveSettings,
     folderInfos,
     depthFiles,
     folderNotes,
     getAllFiles,
+    showParentNavigation,
     onOpenSettings,
+    onGoToParent,
     onNewFolder,
     onNewNote,
     onOpenFolderNote,
@@ -112,16 +114,15 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {effectiveSettings.useGlass && <Divider size="sm" />}
 
       <ActionsBar
-        showParentButton={effectiveSettings.showParentButton}
+        showParentNavigation={showParentNavigation}
         onOpenSettings={onOpenSettings}
+        onGoToParent={onGoToParent}
         onNewFolder={onNewFolder}
         onNewNote={onNewNote}
         onSearchToggle={toggleSearch}
         searchMode={searchMode}
         searchQuery={searchQuery}
         onSearchInput={setSearchQuery}
-        folder={folder}
-        onOpenFolderNote={onOpenFolderNote}
       />
 
       {showFolders && (

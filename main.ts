@@ -6,7 +6,12 @@ import {
 import { renderExplorerBlock } from "./src/explorer";
 import { parseSettings } from "./src/settings/block-parser";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
-import { promptAndCreateFolder } from "./src/vault/actions";
+import {
+  canGoToParentFolderNote,
+  goToParentFolderNote,
+  openHomePage,
+  promptAndCreateFolder,
+} from "./src/vault/actions";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -28,6 +33,7 @@ export default class ExplorerPlugin extends Plugin {
           el,
           ctx,
           () => this.settings.defaultBlockSettings,
+          () => this.settings,
           parseSettings(source),
           (refresh) => this.registerExplorerRefresh(refresh),
         );
@@ -70,6 +76,42 @@ export default class ExplorerPlugin extends Plugin {
 
         if (!checking) {
           void promptAndCreateFolder(this.app, basePath);
+        }
+
+        return true;
+      },
+    });
+
+    this.addCommand({
+      id: "go-to-homepage",
+      name: "Go to homepage",
+      checkCallback: (checking: boolean) => {
+        if (!this.settings.useHomePage) {
+          return false;
+        }
+
+        if (!checking) {
+          const activeFile = this.app.workspace.getActiveFile();
+          void openHomePage(this.app, this.settings, activeFile?.path ?? "");
+        }
+
+        return true;
+      },
+    });
+
+    this.addCommand({
+      id: "go-to-parent-folder",
+      name: "Go to parent folder",
+      checkCallback: (checking: boolean) => {
+        const activeFile = this.app.workspace.getActiveFile();
+        const sourcePath = activeFile?.path ?? "";
+
+        if (!canGoToParentFolderNote(this.app, this.settings, sourcePath)) {
+          return false;
+        }
+
+        if (!checking) {
+          void goToParentFolderNote(this.app, this.settings, sourcePath);
         }
 
         return true;

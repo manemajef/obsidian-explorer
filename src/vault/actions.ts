@@ -5,11 +5,18 @@ import {
   TFile,
   TFolder,
 } from "obsidian";
-import { BlockSettings } from "../settings/schema";
+import { BlockSettings, PluginSettings } from "../settings/schema";
 import { serializeSettings } from "../settings/block-parser";
 import { promptForName } from "../ui/modals/prompt-modal";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
+const HOME_PAGE_TEMPLATE =
+  '```explorer\nview: "cards"\nsortBy: "edited"\ndepth: 10\npageSize: 21\n```\n';
+export type HomePageSettings = Pick<
+  PluginSettings,
+  "useHomePage" | "homePageName"
+>;
+type ParentNavigationTarget = TFolder | "home" | null;
 
 // ===== HELPERS =====
 
@@ -19,6 +26,55 @@ function formatExplorerBlock(
 ): string {
   const yaml = serializeSettings(settings, defaultSettings);
   return yaml ? `\`\`\`explorer\n${yaml}\n\`\`\`` : "```explorer\n```";
+}
+
+function resolveHomePagePath(
+  app: App,
+  settings: HomePageSettings,
+): string | null {
+  if (!settings.useHomePage) return null;
+
+  const configuredName = settings.homePageName.trim();
+  const noteName = configuredName || app.vault.getName();
+  const basename = noteName.replace(/\.md$/i, "");
+
+  if (!basename || basename.includes("/") || basename.includes("\\")) {
+    return null;
+  }
+
+  return `${basename}.md`;
+}
+
+function getCurrentFolder(app: App, sourcePath = ""): TFolder | null {
+  const sourceFile = sourcePath
+    ? app.vault.getAbstractFileByPath(sourcePath)
+    : app.workspace.getActiveFile();
+  const currentFile =
+    sourceFile instanceof TFile ? sourceFile : app.workspace.getActiveFile();
+
+  return currentFile?.parent ?? null;
+}
+
+function resolveParentNavigationTarget(
+  app: App,
+  homePageSettings: HomePageSettings,
+  sourcePath = "",
+): ParentNavigationTarget {
+  const currentFolder = getCurrentFolder(app, sourcePath);
+  const parent = currentFolder?.parent;
+  if (!parent || parent.isRoot()) {
+    return homePageSettings.useHomePage ? "home" : null;
+  }
+
+  return parent;
+}
+
+export function canGoToParentFolderNote(
+  app: App,
+  homePageSettings: HomePageSettings,
+  sourcePath = "",
+): boolean {
+  return resolveParentNavigationTarget(app, homePageSettings, sourcePath) !== null;
 }
 
 // ===== BLOCK OPERATIONS =====
@@ -134,9 +190,13 @@ export async function openOrCreateFolderNote(
   folder: TFolder,
   sourcePath = "",
   newLeaf = false,
+  homePageSettings: HomePageSettings = {
+    useHomePage: true,
+    homePageName: "",
+  },
 ): Promise<void> {
   if (folder.isRoot()) {
-    void app.workspace.openLinkText("Home.md", sourcePath, newLeaf);
+    await openHomePage(app, homePageSettings, sourcePath, newLeaf);
     return;
   }
   const parent = folder.parent;
@@ -164,5 +224,74 @@ export async function openOrCreateFolderNote(
     void app.workspace.openLinkText(created.path, sourcePath, newLeaf);
   } catch (err) {
     new Notice(`Failed to create folder note: ${err}`);
+  }
+}
+
+export async function goToParentFolderNote(
+  app: App,
+  homePageSettings: HomePageSettings,
+  sourcePath = "",
+  newLeaf = false,
+): Promise<void> {
+  const target = resolveParentNavigationTarget(
+    app,
+    homePageSettings,
+    sourcePath,
+  );
+
+  if (target === "home") {
+    await openHomePage(app, homePageSettings, sourcePath, newLeaf);
+    return;
+  }
+
+  if (!target) {
+    return;
+  }
+
+  await openOrCreateFolderNote(
+    app,
+    target,
+    sourcePath,
+    newLeaf,
+    homePageSettings,
+  );
+}
+
+export async function openHomePage(
+  app: App,
+  settings: HomePageSettings,
+  sourcePath = "",
+  newLeaf = false,
+): Promise<void> {
+  const configuredName = settings.homePageName.trim();
+  if (
+    settings.useHomePage &&
+    (configuredName.includes("/") || configuredName.includes("\\"))
+  ) {
+    new Notice("Homepage name must be a root note name, not a path.");
+    return;
+  }
+
+  const homePagePath = resolveHomePagePath(app, settings);
+  if (!homePagePath) {
+    return;
+  }
+
+  const existing = app.vault.getAbstractFileByPath(homePagePath);
+  if (existing instanceof TFile) {
+    await app.workspace.openLinkText(existing.path, sourcePath, newLeaf);
+    return;
+  }
+
+  if (existing) {
+    new Notice(`Homepage path is not a note: ${homePagePath}`);
+    return;
+  }
+
+  try {
+    const created = await app.vault.create(homePagePath, HOME_PAGE_TEMPLATE);
+    await app.workspace.openLinkText(created.path, sourcePath, newLeaf);
+  } catch (err) {
+    new Notice(`Failed to create homepage: ${err}`);
   }
 }

@@ -109,6 +109,10 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       }
 
+      if (section === "navigation") {
+        this.renderHomePageSettings(containerEl);
+      }
+
       for (const key of sectionKeys) {
         renderSettingField(
           containerEl,
@@ -164,5 +168,38 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     this.plugin.settings.defaultBlockSettings[key] = value;
     await this.plugin.saveSettings();
     this.plugin.refreshExplorerBlocks();
+  }
+
+  private renderHomePageSettings(containerEl: HTMLElement): void {
+    new Setting(containerEl)
+      .setName("Use homepage")
+      .setDesc("Open a root homepage when navigating above a root folder note.")
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this.plugin.settings.useHomePage)
+          .onChange(async (value) => {
+            this.plugin.settings.useHomePage = value;
+            await this.plugin.saveSettings();
+            this.plugin.refreshExplorerBlocks();
+            this.display();
+          });
+      });
+
+    if (!this.plugin.settings.useHomePage) {
+      return;
+    }
+
+    new Setting(containerEl)
+      .setName("Homepage name")
+      .setDesc("Root note name. Leave empty to use the vault name.")
+      .addText((text) => {
+        text
+          .setPlaceholder(this.app.vault.getName())
+          .setValue(this.plugin.settings.homePageName)
+          .onChange(async (value) => {
+            this.plugin.settings.homePageName = value;
+            await this.plugin.saveSettings();
+          });
+      });
   }
 }
