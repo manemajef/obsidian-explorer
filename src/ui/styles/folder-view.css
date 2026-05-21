@@ -34,6 +34,8 @@
   border: var(--explorer-border-glass);
   box-shadow: var(--explorer-shadow-glass);
 
+  /* box-shadow: var(--input-shadow); */
+
     /* border: none;
     box-shadow: var(--input-shadow); */
 }

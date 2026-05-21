@@ -73,12 +73,13 @@
 
 .explorer-container.use-glass .paging-load-more {
   border: var(--explorer-border-glass);
-  box-shadow: var(--explorer-shadow-glass);
+  /* box-shadow: var(--explorer-shadow-glass); */
+  /* background: var(--explorer-glass-background); */
 }
 
 .theme-dark:not(.is-mobile) .explorer-container.use-glass .paging-load-more {
-  border-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); */
 }
 
 .explorer-container .paging-load-more:hover,

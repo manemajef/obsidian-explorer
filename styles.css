@@ -412,10 +412,9 @@
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
 }
-.theme-dark .explorer-container.use-glass .explorer-mobile-list {
-  background: rgba(255, 255, 255, 0.018);
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+.use-glass .explorer-mobile-list {
+  border: var(--explorer-border-glass);
+  background: var(--explorer-glass-background);
 }
 .explorer-mobile-list-item {
   padding: var(--explorer-space-1) var(--explorer-space-4);
@@ -538,11 +537,9 @@
 }
 .explorer-container.use-glass .paging-load-more {
   border: var(--explorer-border-glass);
-  box-shadow: var(--explorer-shadow-glass);
 }
 .theme-dark:not(.is-mobile) .explorer-container.use-glass .paging-load-more {
-  border-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 .explorer-container .paging-load-more:hover,
 .explorer-container .paging-load-more:focus-visible {
