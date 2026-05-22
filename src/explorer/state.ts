@@ -3,6 +3,7 @@ import { TFile } from "obsidian";
 import { FileInfo } from "../types";
 import { ExplorerModel } from "./model";
 import { buildExplorerListing, resolveCardFooterMode } from "./listing";
+import { getFileInfo } from "./file-utils";
 
 type PaginationKind = "classic" | "load-more" | "none";
 
@@ -10,14 +11,18 @@ export function useExplorerState(model: ExplorerModel) {
   const { app, settings } = model;
   const [tick, setTick] = useState(0);
   const refresh = useCallback(() => setTick((t) => t + 1), []);
+
   const sourceFiles = useMemo(
+    // jf not showing folder buttons show folder notes in files list
     () =>
       settings.showFolders
         ? model.files
         : [...model.folderNotes, ...model.files],
     [model.files, model.folderNotes, settings.showFolders],
   );
+
   const browseListing = useMemo(
+    // build fileInfo for listed files
     () =>
       buildExplorerListing({
         app,
@@ -35,26 +40,28 @@ export function useExplorerState(model: ExplorerModel) {
     : settings.paginationStyle === "modern"
       ? "load-more"
       : settings.paginationStyle;
-  const activeFiles = search.mode
-    ? search.listing.fileInfos
-    : browseListing.fileInfos;
-  const visibleFileInfos = useMemo(
-    () => withPinRefresh(activeFiles, refresh),
-    [activeFiles, refresh],
-  );
-  const classic = useClassicPagination(visibleFileInfos, settings.pageSize);
-  const loadMore = useIncrementalReveal(visibleFileInfos, settings.pageSize);
+  const activeFiles = search.mode ? search.listing : browseListing;
+  const classic = useClassicPagination(activeFiles, settings.pageSize);
+  const loadMore = useIncrementalReveal(activeFiles, settings.pageSize);
   const pagination =
-    paginationKind === "classic"
+    paginationKind == "classic"
       ? classic
-      : paginationKind === "load-more"
+      : paginationKind == "load-more"
         ? loadMore
         : {
-            visibleFiles: visibleFileInfos,
+            visibleFiles: activeFiles,
             canLoadMore: false,
             loadMore: () => undefined,
             paginationKind,
           };
+  const visibleFiles = useMemo(
+    () =>
+      withPinRefresh(
+        pagination.visibleFiles.map((f) => getFileInfo(app, f)),
+        refresh,
+      ),
+    [app, pagination.visibleFiles, refresh],
+  );
 
   return {
     searchMode: search.mode,
@@ -65,6 +72,7 @@ export function useExplorerState(model: ExplorerModel) {
     refresh,
     extForCard: resolveCardFooterMode(settings),
     ...pagination,
+    visibleFiles, // overide the TFile[] visibleFiles array from pagination to a FileInfo[] array
   };
 }
 
@@ -131,7 +139,7 @@ function useSearchState(model: ExplorerModel, tick: number) {
   return { mode, query, isLoading, listing, toggle, setQuery };
 }
 
-function useClassicPagination(files: FileInfo[], pageSize: number) {
+function useClassicPagination(files: TFile[], pageSize: number) {
   const size = Math.max(1, pageSize);
   const [currentPage, setPage] = useState(0);
   const fileSignature = useFileSignature(files);
@@ -156,7 +164,7 @@ function useClassicPagination(files: FileInfo[], pageSize: number) {
   };
 }
 
-function useIncrementalReveal(files: FileInfo[], pageSize: number) {
+function useIncrementalReveal(files: TFile[], pageSize: number) {
   const size = Math.max(1, pageSize);
   const [visibleCount, setVisibleCount] = useState(size);
   const fileSignature = useFileSignature(files);
@@ -171,9 +179,9 @@ function useIncrementalReveal(files: FileInfo[], pageSize: number) {
   };
 }
 
-function useFileSignature(files: FileInfo[]): string {
+function useFileSignature(files: TFile[]): string {
   return useMemo(
-    () => files.map((fileInfo) => fileInfo.file.path).join("\0"),
+    () => files.map((fileInfo) => fileInfo.path).join("\0"),
     [files],
   );
 }

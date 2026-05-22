@@ -13,10 +13,7 @@ const WALK_CHUNK_SIZE = 200;
 const EXCLUDED_EXTENSIONS = ["png", "jpeg", "jpg"];
 const DEFAULT_DISPLAY_EXTENSIONS = ["md", "pdf", "base"];
 
-export interface ExplorerListing {
-  files: TFile[];
-  fileInfos: FileInfo[];
-}
+export type ExplorerListing = TFile[];
 
 export class FolderIndex {
   readonly folder: TFolder;
@@ -33,11 +30,13 @@ export class FolderIndex {
   }
 
   async loadToDepth(depth: number): Promise<void> {
+    // if loading not just direct children of folder, use BFS to list the depth levels
     this.loadImmediate();
     if (depth > 0) this.nestedFiles = await this.walkFolder(depth, true, false);
   }
 
   async getAllContent(): Promise<TFile[]> {
+    // load all sub files without depth limit
     return this.walkFolder(null, false, true);
   }
 
@@ -49,6 +48,7 @@ export class FolderIndex {
   }
 
   private loadImmediate(): void {
+    // Load direct children of folder immediately.
     this.files = [];
     this.folders = [];
     this.folderNotes = [];
@@ -63,11 +63,12 @@ export class FolderIndex {
       }
     }
 
-    this.nestedFiles = [...this.files];
+    this.nestedFiles = [...this.files]; // direct files are a subset of nestedfiles
   }
 
   private async walkFolder(
-    depth: number | null,
+    // BFS loading sub folders content
+    depth: number | null, // null means no depth limit
     includeFolderNotesAtFirstLevel: boolean,
     yieldToBrowser: boolean,
   ): Promise<TFile[]> {
@@ -107,6 +108,8 @@ export class FolderIndex {
 }
 
 export function buildExplorerListing(input: {
+  // prepare listing for ui:
+  // //apply visibility rules, remove source file, sort according to block setting, if a query exists apply to filter
   app: App;
   files: TFile[];
   settings: BlockSettings;
@@ -120,12 +123,12 @@ export function buildExplorerListing(input: {
     settings.displayedNotes,
   );
   const sortedFiles = sortFiles(app, visibleFiles, sortBy);
-  const queriedFiles = query ? filterFiles(app, sortedFiles, query) : sortedFiles;
+  const queriedFiles = query
+    ? // if query === "" then ignore and just return sorted files
+      filterFiles(app, sortedFiles, query)
+    : sortedFiles;
 
-  return {
-    files: queriedFiles,
-    fileInfos: queriedFiles.map((file) => getFileInfo(app, file)),
-  };
+  return queriedFiles;
 }
 
 export function resolveCardFooterMode(settings: BlockSettings): string {
@@ -142,6 +145,7 @@ function isExcludedExplorerFile(file: TFile): boolean {
 }
 
 function filterDisplayedFiles(
+  // file visibility rules
   files: TFile[],
   displayedNotes: DisplayedNotes,
 ): TFile[] {
@@ -151,7 +155,9 @@ function filterDisplayedFiles(
     case "none":
       return [];
     case "markdown":
-      return visibleFiles.filter((file) => file.extension.toLowerCase() === "md");
+      return visibleFiles.filter(
+        (file) => file.extension.toLowerCase() === "md",
+      );
     case "supported":
       return visibleFiles.filter((file) =>
         DEFAULT_DISPLAY_EXTENSIONS.includes(file.extension.toLowerCase()),
