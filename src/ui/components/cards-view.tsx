@@ -1,7 +1,8 @@
 import React from "react";
-import { App, TFolder } from "obsidian";
+import { TFolder } from "obsidian";
 import { FileInfo } from "../../types";
-import { diffDays, isFolderNote } from "../../vault/file-utils";
+import { ExplorerModel } from "../../explorer/model";
+import { diffDays, isFolderNote } from "../../explorer/file-utils";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
@@ -9,26 +10,13 @@ import { Pin } from "./ui/pin";
 type OpenFolderNote = (folder: TFolder, newLeaf: boolean) => void;
 
 export function CardsView(props: {
-  app: App;
-  sourcePath: string;
+  model: ExplorerModel;
   files: FileInfo[];
   extForCard: string;
-  showTags: boolean;
-  showIconsInCards: boolean;
   onOpenFolderNote: OpenFolderNote;
 }): React.JSX.Element {
-  const {
-    app,
-    sourcePath,
-    files,
-    extForCard,
-    showTags,
-    showIconsInCards,
-    onOpenFolderNote,
-  } = props;
-
-  const currentFolderPath =
-    app.vault.getAbstractFileByPath(sourcePath)?.parent?.path ?? null;
+  const { model, files, extForCard, onOpenFolderNote } = props;
+  const { app, settings, sourcePath } = model;
 
   return (
     <div className="explorer-cards-view">
@@ -49,8 +37,6 @@ export function CardsView(props: {
               <div className="explorer-card-header">
                 <div>
                   <InternalLink
-                    app={app}
-                    sourcePath={sourcePath}
                     path={fileInfo.file.path}
                     text={fileInfo.file.basename}
                   />
@@ -78,7 +64,7 @@ export function CardsView(props: {
                 </div>
               </div>
 
-              {showTags && (fileInfo.tags?.length ?? 0) > 0 && (
+              {settings.showTags && (fileInfo.tags?.length ?? 0) > 0 && (
                 <div className="explorer-card-tags-container explorer-cards-row">
                   {fileInfo.tags?.map((t) => (
                     <Badge key={t} variant="tag">
@@ -93,8 +79,8 @@ export function CardsView(props: {
                   fileInfo={fileInfo}
                   extForCard={extForCard}
                   onOpenFolderNote={onOpenFolderNote}
-                  showIconsInCards={showIconsInCards}
-                  currentFolderPath={currentFolderPath}
+                  showIconsInCards={settings.ShowIconsInCards}
+                  currentFolderPath={model.folder.path}
                 />
               </div>
             </div>
@@ -110,7 +96,7 @@ function CardFooter(props: {
   extForCard: string;
   showIconsInCards: boolean;
   onOpenFolderNote: OpenFolderNote;
-  currentFolderPath: string | null;
+  currentFolderPath: string;
 }): React.JSX.Element | null {
   const {
     fileInfo,

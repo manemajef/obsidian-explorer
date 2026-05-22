@@ -1,17 +1,15 @@
 import React from "react";
-import { App, Platform } from "obsidian";
+import { Platform } from "obsidian";
 import { FileInfo } from "../../types";
+import { ExplorerModel } from "../../explorer/model";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
 
 type ListViewProps = {
-  app: App;
-  sourcePath: string;
+  model: ExplorerModel;
   files: FileInfo[];
-  showTags: boolean;
-  showListBullets: boolean;
 };
 
 export function ListView(props: ListViewProps): React.JSX.Element {
@@ -23,7 +21,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     return <MobileListView {...props} />;
   }
 
-  const { app, sourcePath, showTags, showListBullets } = props;
+  const { settings } = props.model;
 
   return (
     <div className="explorer-list-container">
@@ -32,16 +30,14 @@ export function ListView(props: ListViewProps): React.JSX.Element {
           <li
             className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
             style={{
-              marginInlineStart: showListBullets
+              marginInlineStart: settings.showListBullets
                 ? "var(--explorer-space-4)"
                 : "none",
             }}
           >
-            {showListBullets && <span className="list-bullet" />}
+            {settings.showListBullets && <span className="list-bullet" />}
             <Group justify="between">
               <InternalLink
-                app={app}
-                sourcePath={sourcePath}
                 path={fileInfo.file.path}
                 text={
                   fileInfo.file.extension === "md"
@@ -51,7 +47,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
               />
 
               <div className="explorer-list-tags">
-                {showTags &&
+                {settings.showTags &&
                   fileInfo.tags?.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}
@@ -72,15 +68,14 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 }
 
 const MobileListView = (props: ListViewProps): React.JSX.Element => {
-  const { app, sourcePath, files, showTags } = props;
+  const { model, files } = props;
+  const { settings } = model;
 
   return (
     <div className="explorer-mobile-list ">
       {files.map((fileInfo, i) => (
         <div key={fileInfo.file.path} className="explorer-mobile-list-item">
           <InternalLink
-            app={app}
-            sourcePath={sourcePath}
             path={fileInfo.file.path}
             className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""} ${i >= files.length - 1 ? "explorer-mobile-note-last" : ""}`}
           >
@@ -103,7 +98,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
 
             <div className="explorer-mobile-note__footer">
               <div className="explorer-mobile-note__tags">
-                {showTags &&
+                {settings.showTags &&
                   fileInfo.tags?.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}

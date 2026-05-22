@@ -199,7 +199,7 @@ When contributing:
 
 - Keep behavior folder-note focused
 - Prefer plugin settings for global behavior and block settings for per-view display
-- Keep UI components thin and put reusable vault/navigation behavior in `src/vault/actions.ts`
+- Keep UI components thin; Explorer behavior lives in `src/explorer/` by feature
 - Run `npm run build` before submitting changes
 
 ## License

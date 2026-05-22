@@ -1,17 +1,17 @@
 import { Editor, MarkdownView, Plugin, TFile } from "obsidian";
 import {
   normalizePluginSettings,
+  parseSettings,
   PluginSettings,
-} from "./src/settings/schema";
+} from "./src/explorer/settings";
 import { renderExplorerBlock } from "./src/explorer";
-import { parseSettings } from "./src/settings/block-parser";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import {
   canGoToParentFolderNote,
   goToParentFolderNote,
   openHomePage,
-  promptAndCreateFolder,
-} from "./src/vault/actions";
+} from "./src/explorer/navigation";
+import { promptAndCreateFolder } from "./src/explorer/create";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -104,14 +104,15 @@ export default class ExplorerPlugin extends Plugin {
       name: "Go to parent folder",
       checkCallback: (checking: boolean) => {
         const activeFile = this.app.workspace.getActiveFile();
-        const sourcePath = activeFile?.path ?? "";
 
-        if (!canGoToParentFolderNote(this.app, this.settings, sourcePath)) {
+        if (!canGoToParentFolderNote(this.app, this.settings, activeFile)) {
           return false;
         }
 
         if (!checking) {
-          void goToParentFolderNote(this.app, this.settings, sourcePath);
+          void goToParentFolderNote(this.app, this.settings, {
+            currentFile: activeFile,
+          });
         }
 
         return true;

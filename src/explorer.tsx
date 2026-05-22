@@ -4,26 +4,18 @@ import {
   App,
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
-  TFile,
 } from "obsidian";
 import {
   BlockSettings,
   PluginSettings,
   getBlockSettingsOverrides,
   resolveBlockSettings,
-} from "./settings/schema";
-import { isRtl } from "./vault/file-utils";
+} from "./explorer/settings";
+import { isRtl } from "./explorer/file-utils";
 import { ExplorerUI } from "./ui/explorer-ui";
 import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
-import { FolderIndex } from "./vault/folder-index";
-import {
-  canGoToParentFolderNote,
-  goToParentFolderNote,
-  openOrCreateFolderNote,
-  promptAndCreateFolder,
-  promptAndCreateNote,
-  updateExplorerBlock,
-} from "./vault/actions";
+import { buildExplorerModel } from "./explorer/model";
+import { updateExplorerBlock } from "./explorer/block-update";
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   if (settings.textDirection && settings.textDirection !== "auto") {
@@ -92,62 +84,26 @@ export async function renderExplorerBlock(
   };
 
   const render = async (): Promise<void> => {
-    effectiveSettings = resolveBlockSettings(getBlockDefaults(), blockOverrides);
+    effectiveSettings = resolveBlockSettings(
+      getBlockDefaults(),
+      blockOverrides,
+    );
     container.setAttribute("dir", resolveDirection(effectiveSettings));
     container.toggleClass("use-glass", effectiveSettings.useGlass);
 
-    const blockFile = app.vault.getAbstractFileByPath(ctx.sourcePath);
-    if (!(blockFile instanceof TFile) || !blockFile.parent) {
+    const model = await buildExplorerModel({
+      app,
+      sourcePath: ctx.sourcePath,
+      settings: effectiveSettings,
+      pluginSettings: getPluginSettings(),
+    });
+    if (!model) {
       reactRoot.render(<p>No active file or folder</p>);
       return;
     }
 
-    const folder = blockFile.parent;
-    const folderIndex = new FolderIndex(app, folder);
-    await folderIndex.loadToDepth(effectiveSettings.depth);
-
-    const depthFiles = folderIndex.getFilesToDisplay(effectiveSettings);
-    let cachedAllFiles: TFile[] | null = null;
-    const getAllFiles = async (): Promise<TFile[]> => {
-      if (cachedAllFiles) return cachedAllFiles;
-      cachedAllFiles = await folderIndex.getAllContent();
-      return cachedAllFiles;
-    };
-
     reactRoot.render(
-      <ExplorerUI
-        app={app}
-        sourcePath={ctx.sourcePath}
-        effectiveSettings={effectiveSettings}
-        folderInfos={folderIndex.folders}
-        depthFiles={depthFiles}
-        folderNotes={folderIndex.folderNotes}
-        getAllFiles={getAllFiles}
-        showParentNavigation={
-          effectiveSettings.showParentButton &&
-          canGoToParentFolderNote(app, getPluginSettings(), ctx.sourcePath)
-        }
-        onOpenSettings={openSettings}
-        onGoToParent={(newLeaf) =>
-          void goToParentFolderNote(
-            app,
-            getPluginSettings(),
-            ctx.sourcePath,
-            newLeaf,
-          )
-        }
-        onOpenFolderNote={(f, newLeaf) =>
-          void openOrCreateFolderNote(
-            app,
-            f,
-            ctx.sourcePath,
-            newLeaf,
-            getPluginSettings(),
-          )
-        }
-        onNewFolder={() => void promptAndCreateFolder(app, folder.path)}
-        onNewNote={() => void promptAndCreateNote(app, folder.path)}
-      />,
+      <ExplorerUI model={model} onOpenSettings={openSettings} />,
     );
   };
 

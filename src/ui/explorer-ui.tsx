@@ -1,8 +1,15 @@
 import React from "react";
-import { App, Platform, TFile, TFolder } from "obsidian";
-import { FileInfo, FolderInfo } from "../types";
-import { BlockSettings, shouldDisplayNotes } from "../settings/schema";
-import { useExplorerState } from "./hooks/use-explorer-state";
+import { Platform, TFolder } from "obsidian";
+import { FileInfo } from "../types";
+import { shouldDisplayNotes } from "../explorer/settings";
+import { ExplorerModel } from "../explorer/model";
+import { useExplorerState } from "../explorer/state";
+import {
+  canGoToParentFolderNote,
+  goToParentFolderNote,
+  openOrCreateFolderNote,
+} from "../explorer/navigation";
+import { promptAndCreateFolder, promptAndCreateNote } from "../explorer/create";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
@@ -11,45 +18,22 @@ import { ActionsBar } from "./components/actions-bar";
 import { Divider } from "./components/ui/layout";
 
 interface ExplorerUIProps {
-  app: App;
-  sourcePath: string;
-  effectiveSettings: BlockSettings;
-  folderInfos: FolderInfo[];
-  depthFiles: TFile[];
-  folderNotes: TFile[];
-  getAllFiles: () => Promise<TFile[]>;
-  showParentNavigation: boolean;
+  model: ExplorerModel;
   onOpenSettings: () => void;
-  onGoToParent: (newLeaf: boolean) => void;
-  onNewFolder: () => void;
-  onNewNote: () => void;
-  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
-  const {
-    app,
-    sourcePath,
-    effectiveSettings,
-    folderInfos,
-    depthFiles,
-    folderNotes,
-    getAllFiles,
-    showParentNavigation,
-    onOpenSettings,
-    onGoToParent,
-    onNewFolder,
-    onNewNote,
-    onOpenFolderNote,
-  } = props;
-
-  const explorerState = useExplorerState({
-    app,
-    depthFiles,
-    folderNotes,
-    settings: effectiveSettings,
-    getAllFiles,
-  });
+  const { model, onOpenSettings } = props;
+  const { app, settings } = model;
+  const explorerState = useExplorerState(model);
+  const onOpenFolderNote = (folder: TFolder, newLeaf: boolean) =>
+    void openOrCreateFolderNote(
+      app,
+      folder,
+      model.pluginSettings,
+      model.sourcePath,
+      newLeaf,
+    );
 
   const {
     searchMode,
@@ -64,42 +48,31 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   } = explorerState;
 
   const showFolders =
-    effectiveSettings.showFolders && folderInfos.length > 0 && !searchMode;
-  const showNotes = shouldDisplayNotes(effectiveSettings);
-  const isCardsView = effectiveSettings.view === "cards";
+    settings.showFolders && model.folders.length > 0 && !searchMode;
+  const showNotes = shouldDisplayNotes(settings);
+  const isCardsView = settings.view === "cards";
 
   const filesDividerSize =
     isCardsView || Platform.isMobile
       ? "lg"
-      : !Platform.isMobile && folderInfos.length <= 0
+      : !Platform.isMobile && model.folders.length <= 0
         ? "sm"
         : "md";
   const folderDivider = Platform.isMobile ? "md" : "lg";
 
   const renderFiles = (files: FileInfo[]) => {
-    if (effectiveSettings.view === "cards") {
+    if (settings.view === "cards") {
       return (
         <CardsView
-          app={app}
-          sourcePath={sourcePath}
+          model={model}
           files={files}
           extForCard={extForCard}
-          showTags={effectiveSettings.showTags}
-          showIconsInCards={effectiveSettings.ShowIconsInCards}
           onOpenFolderNote={onOpenFolderNote}
         />
       );
     }
 
-    return (
-      <ListView
-        app={app}
-        sourcePath={sourcePath}
-        files={files}
-        showTags={effectiveSettings.showTags}
-        showListBullets={effectiveSettings.showListBullets}
-      />
-    );
+    return <ListView model={model} files={files} />;
   };
 
   const showLoadMore = paginationKind === "load-more" && canLoadMore;
@@ -111,14 +84,22 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
   return (
     <>
-      {effectiveSettings.useGlass && <Divider size="sm" />}
+      {settings.useGlass && <Divider size="sm" />}
 
       <ActionsBar
-        showParentNavigation={showParentNavigation}
+        showParentNavigation={
+          settings.showParentButton &&
+          canGoToParentFolderNote(app, model.pluginSettings, model.blockFile)
+        }
         onOpenSettings={onOpenSettings}
-        onGoToParent={onGoToParent}
-        onNewFolder={onNewFolder}
-        onNewNote={onNewNote}
+        onGoToParent={(newLeaf) =>
+          void goToParentFolderNote(app, model.pluginSettings, {
+            currentFile: model.blockFile,
+            newLeaf,
+          })
+        }
+        onNewFolder={() => void promptAndCreateFolder(app, model.folder.path)}
+        onNewNote={() => void promptAndCreateNote(app, model.folder.path)}
         onSearchToggle={toggleSearch}
         searchMode={searchMode}
         searchQuery={searchQuery}
@@ -130,7 +111,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           <Divider size={folderDivider} />
 
           <FolderButtons
-            folderInfos={folderInfos}
+            folderInfos={model.folders}
             onOpenFolderNote={onOpenFolderNote}
           />
         </>
@@ -139,7 +120,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {showNotes && (
         <div className="explorer-files-container">
           <Divider size={filesDividerSize} />
-          {/* <Divider size=  /> */}
 
           <div>{renderFiles(visibleFiles)}</div>
 

@@ -3,7 +3,7 @@ import {
   BlockSettingKey,
   BlockSettings,
   getSettingKeysForSurface,
-} from "../../settings/schema";
+} from "../../explorer/settings";
 import { renderSettingField } from "../render-setting-field";
 
 // Per-block settings UI (applies to a single explorer code block).

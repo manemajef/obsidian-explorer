@@ -688,3 +688,47 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
         : pluginDefaults.homePageName,
   };
 }
+
+function formatBlockValue<K extends BlockSettingKey>(
+  key: K,
+  value: BlockSettings[K],
+): string {
+  return BLOCK_SETTINGS_SCHEMA[key].kind === "enum"
+    ? `"${String(value)}"`
+    : String(value);
+}
+
+function parseBlockScalar(rawValue: string): string | boolean {
+  if (rawValue === "true") return true;
+  if (rawValue === "false") return false;
+  return rawValue;
+}
+
+export function parseSettings(source: string): Partial<BlockSettings> {
+  const overrides: Record<string, unknown> = {};
+
+  for (const line of source.trim().split("\n")) {
+    const match = line.match(/^(\w+):\s*["']?([^"'\n]+)["']?$/);
+    if (!match) continue;
+
+    const [, blockKey, value] = match;
+    const settingKey = getSettingKeyForBlockKey(blockKey);
+    overrides[settingKey ?? blockKey] = parseBlockScalar(value.trim());
+  }
+
+  return coercePartialBlockSettings(overrides);
+}
+
+export function serializeSettings(
+  settings: BlockSettings,
+  defaultSettings: BlockSettings = DEFAULT_BLOCK_SETTINGS,
+): string {
+  const overrides = getBlockSettingsOverrides(settings, defaultSettings);
+
+  return BLOCK_SETTING_KEYS.filter((key) => key in overrides)
+    .map((key) => {
+      const blockKey = BLOCK_SETTINGS_SCHEMA[key].blockKey;
+      return `${blockKey}: ${formatBlockValue(key, settings[key])}`;
+    })
+    .join("\n");
+}

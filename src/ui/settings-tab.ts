@@ -8,7 +8,7 @@ import {
   createDefaultPluginSettings,
   getSettingKeysForSurface,
   getSettingSection,
-} from "../settings/schema";
+} from "../explorer/settings";
 import { renderSettingField } from "./render-setting-field";
 
 type SectionMeta = {

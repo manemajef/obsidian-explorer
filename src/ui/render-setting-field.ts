@@ -7,7 +7,7 @@ import {
   getEnumOptionLabel,
   getSettingLabel,
   isPaginationEnabled,
-} from "../settings/schema";
+} from "../explorer/settings";
 
 /**
  * Renders a single setting field into the container.

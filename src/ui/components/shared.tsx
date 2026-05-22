@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { App, setIcon } from "obsidian";
+import { setIcon } from "obsidian";
 
 export function InternalLink(props: {
-  app: App;
-  sourcePath: string;
   path: string;
   text?: string;
   className?: string;
