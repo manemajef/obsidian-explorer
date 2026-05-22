@@ -56,11 +56,15 @@
 
 .explorer-separator {
   min-width: 1px;
-  min-height: max-content;
+  min-height: max-content; 
   margin: 0 var(--explorer-space-5);
   border-inline-start: 1px solid var(--background-modifier-border);
   align-self: stretch;
   flex-shrink: 0;
+}
+
+.is-mobile .explorer-separator {
+  margin: .2em var(--explorer-space-5);
 }
 
 .explorer-divider {
@@ -68,6 +72,7 @@
   width: 100%;
   min-height: 0;
   flex: 0 0 auto;
+  /* border: 1px solid red; */
 }
 
 .explorer-divider.divider-sm {
@@ -82,29 +87,6 @@
   height: calc(var(--explorer-space-4) + var(--explorer-space-4));
 }
 
-/* .explorer-divider.divider-sm {
-  height: var(--explorer-space-5);
-}
-
-.explorer-divider.divider-md {
-  height: calc(var(--explorer-space-5) + var(--explorer-space-3));
-}
-
-.explorer-divider.divider-lg {
-  height: calc(var(--explorer-space-6) + var(--explorer-space-2));
-}
-
-.is-mobile .explorer-divider.divider-sm {
-  height: calc(var(--explorer-space-3) + var(--explorer-space-4));
-}
-
-.is-mobile .explorer-divider.divider-md {
-  height: calc(var(--explorer-space-6) + var(--explorer-space-5));
-}
-
-.is-mobile .explorer-divider.divider-lg {
-  height: calc(var(--explorer-space-6) + var(--explorer-space-6));
-} */
 
 /* ------------------------------------------------------------
    Badges

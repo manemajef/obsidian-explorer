@@ -1,6 +1,10 @@
 /* ===== Actions Bar ===== */
 #explorer-actions {
   direction: ltr;
+
+}
+.action-item {
+
 }
 
 .explorer-actions-start,
@@ -31,7 +35,7 @@
 }
 
 .is-mobile .explorer-container:not(.use-glass) .action-item {
-  color: var(--text-normal);
+  color: var(--text-muted);
 }
 
 .explorer-container:not(.use-glass) .action-item:hover,
@@ -39,6 +43,7 @@
   color: var(--text-normal);
   opacity: 1;
 }
+
 
 .action-group {
   display: inline-flex;

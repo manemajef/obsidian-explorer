@@ -52,13 +52,15 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const showNotes = shouldDisplayNotes(settings);
   const isCardsView = settings.view === "cards";
 
-  const filesDividerSize =
-    isCardsView || Platform.isMobile
-      ? "lg"
-      : !Platform.isMobile && model.folders.length <= 0
-        ? "sm"
-        : "md";
-  const folderDivider = Platform.isMobile ? "md" : "lg";
+  const filesDividerSize = isCardsView || Platform.isMobile ? "lg" : "sm";
+  // : !Platform.isMobile && model.folders.length <= 0
+  //   ? "sm"
+  //   : "md";
+  const folderDivider = Platform.isMobile
+    ? model.settings.useGlass
+      ? "md"
+      : "sm"
+    : "md";
 
   const renderFiles = (files: FileInfo[]) => {
     if (settings.view === "cards") {
@@ -81,11 +83,12 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       ? explorerState
       : null;
   const paginationDividerSize = showLoadMore ? "md" : "sm";
+  const TOP_DIVIDER = false;
 
   return (
     <>
-      {settings.useGlass && <Divider size="sm" />}
-
+      {/* {settings.useGlass && TOP_DIVIDER && <Divider size="sm" />} */}
+      {!Platform.isMobile && <Divider size="sm" />}
       <ActionsBar
         showParentNavigation={
           settings.showParentButton &&
@@ -108,8 +111,10 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {showFolders && (
         <>
+          {/* {!(Platform.isMobile && !model.settings.useGlass) && (
+            <Divider size={folderDivider} />
+          )} */}
           <Divider size={folderDivider} />
-
           <FolderButtons
             folderInfos={model.folders}
             onOpenFolderNote={onOpenFolderNote}

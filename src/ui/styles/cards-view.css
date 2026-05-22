@@ -3,10 +3,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--explorer-space-3);
+  margin-top: .25em;
 }
+
 
 .is-mobile .explorer-cards-grid {
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  margin-top: unset;
 }
 
 .explorer-card {
