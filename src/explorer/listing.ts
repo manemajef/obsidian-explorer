@@ -3,7 +3,6 @@ import { FolderInfo } from "../types";
 import { BlockSettings, DisplayedNotes } from "./settings";
 import {
   filterFiles,
-  getFileInfo,
   getFolderNoteForFolder,
   isFolderNote,
   sortFiles,

@@ -83,7 +83,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       ? explorerState
       : null;
   const paginationDividerSize = showLoadMore ? "md" : "sm";
-  const TOP_DIVIDER = false;
+  // const TOP_DIVIDER = false;
 
   return (
     <>
