@@ -1,5 +1,5 @@
 import { App, TFile, TFolder } from "obsidian";
-import { FileInfo, FolderInfo } from "../types";
+import { FolderInfo } from "../types";
 import { BlockSettings, DisplayedNotes } from "./settings";
 import {
   filterFiles,

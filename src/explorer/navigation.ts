@@ -1,5 +1,6 @@
 import { App, Notice, TFile, TFolder } from "obsidian";
 import { PluginSettings } from "./settings";
+import { isFolderNote } from "./file-utils";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 const HOME_PAGE_TEMPLATE =
@@ -14,8 +15,9 @@ export function canGoToParentFolderNote(
 
   const homePath = resolveHomePagePath(app, settings);
   if (homePath && currentFile.path === homePath) return false;
-
-  const parent = currentFile.parent?.parent;
+  const parent = isFolderNote(currentFile)
+    ? currentFile.parent?.parent
+    : currentFile.parent;
   return Boolean(parent && !parent.isRoot()) || settings.useHomePage;
 }
 
@@ -31,13 +33,22 @@ export async function goToParentFolderNote(
   const homePath = resolveHomePagePath(app, settings);
   if (homePath && sourcePath === homePath) return;
 
-  const parent = currentFile.parent?.parent;
+  const parent = isFolderNote(currentFile)
+    ? currentFile.parent?.parent
+    : currentFile.parent;
+
   if (!parent || parent.isRoot()) {
     await openHomePage(app, settings, sourcePath, input.newLeaf);
     return;
   }
 
-  await openOrCreateFolderNote(app, parent, settings, sourcePath, input.newLeaf);
+  await openOrCreateFolderNote(
+    app,
+    parent,
+    settings,
+    sourcePath,
+    input.newLeaf,
+  );
 }
 
 export async function openOrCreateFolderNote(
@@ -55,7 +66,9 @@ export async function openOrCreateFolderNote(
   const parentPath = folder.parent?.path;
   if (parentPath) {
     const parentNotePath =
-      parentPath === "/" ? `${folder.name}.md` : `${parentPath}/${folder.name}.md`;
+      parentPath === "/"
+        ? `${folder.name}.md`
+        : `${parentPath}/${folder.name}.md`;
     const parentNote = app.vault.getAbstractFileByPath(parentNotePath);
     if (parentNote instanceof TFile) {
       void app.workspace.openLinkText(parentNote.path, sourcePath, newLeaf);
@@ -114,11 +127,17 @@ export async function openHomePage(
   }
 }
 
-function resolveHomePagePath(app: App, settings: PluginSettings): string | null {
+function resolveHomePagePath(
+  app: App,
+  settings: PluginSettings,
+): string | null {
   if (!settings.useHomePage) return null;
 
   const configuredName = settings.homePageName.trim();
-  const basename = (configuredName || app.vault.getName()).replace(/\.md$/i, "");
+  const basename = (configuredName || app.vault.getName()).replace(
+    /\.md$/i,
+    "",
+  );
   return basename && !basename.includes("/") && !basename.includes("\\")
     ? `${basename}.md`
     : null;

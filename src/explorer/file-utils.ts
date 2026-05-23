@@ -130,37 +130,76 @@ export function sortFiles(
   return [...pinned, ...rest];
 }
 
-/**
- * Filter TFiles by search query
- * Supports: plain text, #tag, @foldernote
- */
+function sortQueryResultByRank<T>(
+  items: T[],
+  getRank: (item: T) => number,
+): T[] {
+  return items
+    .map((item, index) => ({ item, rank: getRank(item), index }))
+    .filter((entry) => entry.rank !== Infinity)
+    .sort((a, b) => a.rank - b.rank || a.index - b.index)
+    .map((entry) => entry.item);
+}
+
+function rankText(text: string, query: string): number {
+  if (text === query) return 0;
+  if (text.startsWith(query)) return 1;
+  if (text.includes(query)) return 2;
+  return Infinity;
+}
+
 export function filterFiles(app: App, files: TFile[], query: string): TFile[] {
-  if (!query) return files;
+  const q = query.trim().toLowerCase();
+  if (!q) return files;
 
-  const q = query.toLowerCase();
+  const tokens = q.split(/\s+/);
 
-  // Tag search: #tagname
-  if (q.startsWith("#")) {
-    const tag = q.slice(1);
-    return files.filter((f) => {
-      const tags = (getFileTags(app, f) || []) as string | string[];
-      const tagList = Array.isArray(tags) ? tags : [String(tags)];
-      return tagList.some((t: string) => t.toLowerCase().includes(tag));
-    });
+  return sortQueryResultByRank(files, (file) => {
+    let totalRank = 0;
+
+    for (const token of tokens) {
+      const tokenRank = getTokenRank(app, file, token);
+
+      // If any single token fails to match, the whole file is excluded
+      if (tokenRank === Infinity) return Infinity;
+      totalRank += tokenRank;
+    }
+
+    return totalRank;
+  });
+}
+
+// token matcher
+function getTokenRank(app: App, file: TFile, token: string): number {
+  if (token.startsWith("#")) {
+    return rankTagToken(app, file, token.slice(1));
   }
-
-  // Folder note search: @name
-  if (q.startsWith("@")) {
-    const term = q.slice(1);
-    return files.filter((f) => {
-      if (!isFolderNote(f)) return false;
-      return f.basename.toLowerCase().includes(term);
-    });
+  if (token.startsWith("@") && token.length > 1) {
+    return isFolderNote(file)
+      ? rankText(file.basename.toLowerCase(), token.slice(1))
+      : Infinity;
   }
+  return rankGeneralToken(file, token);
+}
 
-  // Plain text search: name or path
-  return files.filter(
-    (f) =>
-      f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q),
-  );
+function rankTagToken(app: App, file: TFile, tagQuery: string): number {
+  const fileTags = getFileTags(app, file).map((t) => t.toLowerCase());
+  let minRank = Infinity;
+
+  for (const fileTag of fileTags) {
+    // Nested tags support (e.g., #parent/child)
+    const tagParts = fileTag.split("/");
+    const partRanks = tagParts.map((part) => rankText(part, tagQuery));
+
+    minRank = Math.min(minRank, ...partRanks, rankText(fileTag, tagQuery) + 1);
+  }
+  return minRank;
+}
+
+function rankGeneralToken(file: TFile, token: string): number {
+  const fileBaseName = file.basename.toLowerCase();
+  const filePath = file.path.toLowerCase();
+
+  // Matching basename (0 penalty) or full path (1 penalty)
+  return Math.min(rankText(fileBaseName, token), rankText(filePath, token) + 1);
 }
