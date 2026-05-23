@@ -1,6 +1,16 @@
 # Explorer changelog
 
-## 1.1.12 (23-05-26)
+## 1.1.14 (23-05-25)
+### New
+- added `Explorer: toggle pin for active note`  command
+
+### Fix
+- fixed visual problems in mobile 
+- Fixed search in mobile while live editing 
+
+
+
+## 1.1.13 (23-05-26)
 
 ### Improved search:
 
