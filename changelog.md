@@ -1,0 +1,124 @@
+# Explorer changelog
+
+## 1.1.12 (23-05-26)
+
+### Improved search:
+
+-  Support multi query. For example :`#important #todo @myproject` will search for a file inside `myproject` folder that contains both `#important` and `#todo` tags. 
+- Show exact match first and then weaker matches (if query is `#work` then `#work` will show before `#homework`)
+
+### Bug fixes
+
+- fixed `Explorer: go to parent folder` command
+- fixed `go to folder` button incorrectly showing on action–bar when inside root / homepage.
+
+## 1.1.12 (21-05-26)
+
+This release improves Explorer navigation, homepage handling, and mobile UI polish.
+
+### Highlights:
+
+- Added configurable homepage navigation.
+- Homepage can be disabled, or left empty to use the vault name.
+- Missing homepages are created automatically with a useful Explorer template.
+- Added command palette actions for "Go to homepage" and "Go to parent folder".
+- Moved parent/homepage navigation into reusable vault actions so UI and future commands share the same behavior.
+- Hid parent navigation when there is no valid destination.
+- Improved layout spacing control through semantic Divider sizes.
+- Refined mobile list and glass styling.
+- Fixed the cards view mobile grid selector.
+- Updated the README with current usage, navigation, commands, configuration, development, and contributing notes.
+
+## 1.1.11 (21-05-26)
+
+fix css linting error
+
+## 1.1.10 (20-05-26)
+
+Glass is more accisble in mobile now, fixed tags vertical scroll bug and fixed folder icon showing when empty bug.
+
+## 1.1.9 (20-05-26)
+
+Improve behaviour and performance in live-preview mode, mainly fixing the cursor and margins.
+
+## 1.1.8 (19-05-26)
+
+This release focuses on UI enhancements, mainly tags ui and list view
+
+## 1.1.7 (18-05-26)
+
+Full Changelog: 1.1.6...1.1.7
+
+## 1.1.6 (18-05-26)
+
+Full Changelog: 1.1.5...1.1.6
+
+## 1.1.5 (14-05-26)
+
+polish mobile ui and general performance improvement
+
+## 1.1.4 (14-05-26)
+
+Add command palette support for basic functionality, polish UI, and general optimization.
+
+### Highlights:
+
+- adds command palette support for inserting explorer blocks and creating explorer folders
+- improves mobile list UI with a dedicated note-style mobile layout
+- cleans up action bar and glass styling behavior
+- reduces CSS over-abstraction and moves styling ownership closer to each component
+
+## 1.1.3 (13-05-26)
+
+Full Changelog: 1.1.2...1.1.3
+
+## 1.1.2 (12-05-26)
+- Raise minAppVersion to 1.4.4 for FileManager.processFrontMatter compatibility
+- Use window timer APIs to satisfy Obsidian validator guidance
+- Keep release assets aligned with repository manifest and versions.json
+
+## 1.1.1 (12-05-26)
+- Fix Obsidian compatibility checks
+- Raise minAppVersion to 1.4.0
+- Update versions.json for the new minimum supported Obsidian version
+
+## 1.1.0 (06-02-26)
+UI refresh and mobile improvements.
+
+## 1.0.1 (01-02-26)
+### What's New
+
+#### Glass UI Redesign  
+Complete visual overhaul with a glass/frosted style — buttons, action bar, folder cards, and badges all use the new aesthetic. Toggleable via the `useGlass` setting.
+
+#### Inline Search  
+Search now lives inside the action bar instead of a separate row. Faster too — debounced pipeline with no lag, flat BFS traversal across subfolders, and search by `#tag` or `@foldernote` prefixes.
+
+Atomic Component System  
+New reusable UI primitives: ActionButton, IconButton, Badge, and layout components (Group, Stack, Separator). Cleaner, more consistent look across card and list views.
+
+#### Parent Folder Button  
+Replaced breadcrumbs with a simple parent-folder navigation button. Works better on mobile.
+
+#### Pagination Opt-Out  
+New `usePagination` setting — disable it to show all files at once without page controls.
+
+#### Mobile Polish  
+Better layout on mobile devices — breadcrumbs hidden, parent button shown instead, improved touch targets.
+
+#### Other Improvements
+- Pinned files (`pin: true` / `fav: true` in frontmatter) shown at top with heart icon
+- PDF files properly hidden when `onlyNotes` is enabled
+- RTL pagination direction fix
+- CSS split into component-scoped files for maintainability
+
+## 1.0.0 (23-01-26)
+Initial release
+
+### Features:
+- Card and list view modes
+- Sorting by date, name, or last edited
+- Pagination and search
+- Folder notes support
+- RTL support
+- Pinned files
