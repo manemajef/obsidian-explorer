@@ -38,16 +38,17 @@
   opacity: 1;
 }
 
-.is-mobile .explorer-search {
-  width: 100%;
+.is-mobile .explorer-actions-mobile-search .bar-item {
+  flex: 1 1 auto;
+  width: 90%;
 }
 
+.is-mobile .explorer-search,
 .is-mobile .explorer-search__input,
 .is-mobile .explorer-search__input input {
-  min-width: 100%;
+  width: 100%;
+
 }
 
-.is-mobile .explorer-search__clear {
-  position: static;
-  margin-inline-start: var(--explorer-space-2);
-}
+
+

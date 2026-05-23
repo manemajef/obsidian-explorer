@@ -88,7 +88,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   return (
     <>
       {/* {settings.useGlass && TOP_DIVIDER && <Divider size="sm" />} */}
-      {!Platform.isMobile && <Divider size="sm" />}
+      {/* {!Platform.isMobile && <Divider size="sm" />} */}
+      <Divider size="sm" />
       <ActionsBar
         showParentNavigation={
           settings.showParentButton &&

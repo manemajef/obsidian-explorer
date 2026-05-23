@@ -33,6 +33,7 @@
   --explorer-glass-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
+  /* border: 1px solid var(--background-modifier-border); */
 }
 
 /* .theme-dark .explorer-container.use-glass .explorer-mobile-list {
