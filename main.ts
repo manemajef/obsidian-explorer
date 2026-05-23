@@ -12,6 +12,7 @@ import {
   openHomePage,
 } from "./src/explorer/navigation";
 import { promptAndCreateFolder } from "./src/explorer/create";
+import { togglePin } from "./src/explorer/file-utils";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -118,6 +119,24 @@ export default class ExplorerPlugin extends Plugin {
         return true;
       },
     });
+
+    this.addCommand({
+      id: "toggle-pin",
+      name: "Toggle pin for active note",
+      checkCallback: (checking: boolean) => {
+        const activeFile = this.app.workspace.getActiveFile();
+
+        if (!activeFile || activeFile.extension !== "md") {
+          return false;
+        }
+
+        if (!checking) {
+          togglePin(this.app, activeFile);
+        }
+
+        return true;
+      },
+    });
   }
 
   private async insertExplorerCodeBlock(
@@ -141,8 +160,12 @@ export default class ExplorerPlugin extends Plugin {
 
   private async appendExplorerCodeBlockToFile(file: TFile): Promise<void> {
     const content = await this.app.vault.read(file);
-    const separator = content.length === 0 || content.endsWith("\n") ? "" : "\n";
-    await this.app.vault.modify(file, `${content}${separator}${FOLDERNOTE_TEMPLATE}`);
+    const separator =
+      content.length === 0 || content.endsWith("\n") ? "" : "\n";
+    await this.app.vault.modify(
+      file,
+      `${content}${separator}${FOLDERNOTE_TEMPLATE}`,
+    );
   }
 
   async loadSettings(): Promise<void> {

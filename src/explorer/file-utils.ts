@@ -68,7 +68,7 @@ function getFileTags(app: App, file: TFile): string[] {
   return getAllTags(cache)?.map((t) => t.replace(/^#+\s*/g, "")) ?? [];
 }
 
-function togglePin(app: App, file: TFile): void {
+export function togglePin(app: App, file: TFile): void {
   void app.fileManager.processFrontMatter(
     file,
     (frontmatter: Record<string, unknown>) => {
