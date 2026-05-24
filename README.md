@@ -129,7 +129,7 @@ Supported block settings:
 | Setting           | Values                                                |
 | ----------------- | ----------------------------------------------------- |
 | `view`            | `cards`, `list`                                       |
-| `sortBy`          | `newest`, `oldest`, `edited`, `name`                  |
+| `sortBy`          | `newest`, `oldest`, `edited`, `name`, `nameDesc`      |
 | `depth`           | `0-10`                                                |
 | `paginationStyle` | `modern`, `classic`, `none`                           |
 | `pageSize`        | `6-100`                                               |

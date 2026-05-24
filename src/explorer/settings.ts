@@ -1,4 +1,4 @@
-export type SortBy = "newest" | "oldest" | "edited" | "name";
+export type SortBy = "newest" | "oldest" | "edited" | "name" | "nameDesc";
 export type ViewMode = "cards" | "list";
 export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
@@ -109,12 +109,13 @@ export const BLOCK_SETTINGS_SCHEMA = {
     description: "How to sort files",
     blockKey: "sortBy",
     defaultValue: "oldest",
-    options: ["newest", "oldest", "edited", "name"],
+    options: ["newest", "oldest", "edited", "name", "nameDesc"],
     optionLabels: {
       newest: "Newest",
       oldest: "Oldest",
       edited: "Last edited",
       name: "Name",
+      nameDesc: "Name (reverse)",
     },
     ui: {
       surfaces: ["plugin", "block"],

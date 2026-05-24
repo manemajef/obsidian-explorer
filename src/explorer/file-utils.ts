@@ -102,7 +102,7 @@ export function getFileInfo(app: App, file: TFile): FileInfo {
 export function sortFiles(
   app: App,
   files: TFile[],
-  sortBy: "newest" | "oldest" | "edited" | "name",
+  sortBy: "newest" | "oldest" | "edited" | "name" | "nameDesc",
 ): TFile[] {
   const pinned: TFile[] = [];
   const rest: TFile[] = [];
@@ -120,6 +120,8 @@ export function sortFiles(
         return b.stat.mtime - a.stat.mtime;
       case "name":
         return a.name.localeCompare(b.name);
+      case "nameDesc":
+        return b.name.localeCompare(a.name);
       default:
         return 0;
     }
