@@ -15,7 +15,7 @@ export function promptForName(
 
 export class ConfirmationDialog extends Modal {
   title: string;
-  message?: string;
+  message?: string | DocumentFragment;
   onConfirm: (dontShowAgain: boolean) => void | Promise<void>;
   onDontShowAgain?: () => void | Promise<void>;
 
@@ -24,7 +24,7 @@ export class ConfirmationDialog extends Modal {
     title: string,
     onConfirm: (dontShowAgain: boolean) => void | Promise<void>,
     onDontShowAgain?: () => void | Promise<void>,
-    message?: string,
+    message?: string | DocumentFragment,
   ) {
     super(app);
     this.title = title;
@@ -35,20 +35,20 @@ export class ConfirmationDialog extends Modal {
 
   onOpen() {
     const { contentEl } = this;
-    contentEl.createEl("h3", { text: this.title });
+    contentEl.empty();
+    this.modalEl.addClass("explorer-confirmation-dialog");
+    this.setTitle(this.title);
 
     if (this.message) {
-      contentEl.createEl("p", { text: this.message });
+      const messageEl = contentEl.createEl("div");
+      messageEl.setText(this.message);
     }
 
     let dontShowAgainInput: HTMLInputElement | null = null;
 
     if (this.onDontShowAgain) {
       const checkboxLabel = contentEl.createEl("label", {
-        attr: {
-          style:
-            "display: flex; align-items: center; gap: 8px; margin: 12px 0;",
-        },
+        cls: "explorer-confirmation-dialog-checkbox",
       });
 
       dontShowAgainInput = checkboxLabel.createEl("input", {
@@ -58,10 +58,7 @@ export class ConfirmationDialog extends Modal {
     }
 
     const btnContainer = contentEl.createDiv({
-      attr: {
-        style:
-          "display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;",
-      },
+      cls: "explorer-confirmation-dialog-actions",
     });
 
     const cancelBtn = btnContainer.createEl("button", { text: "Cancel" });

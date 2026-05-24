@@ -12,6 +12,17 @@ function askBeforeCreating(
   savePluginSettings: SavePluginSettings | undefined,
   onCreate: () => Promise<void>,
 ): void {
+  const message = createFragment((fragment) => {
+    fragment.appendText("The folder ");
+    fragment.createEl("code", {
+      text: folder.name,
+      cls: "explorer-dialog-folder-name",
+    });
+    fragment.appendText(
+      " doesn't have a folder note yet. Pressing Confirm will create a new folder note.",
+    );
+  });
+
   new ConfirmationDialog(
     app,
     "Create folder note?",
@@ -22,7 +33,7 @@ function askBeforeCreating(
       settings.defaultBlockSettings.askForFolderNoteCreation = false;
       await savePluginSettings?.();
     },
-    `The folder "${folder.name}" doesn't have a folder note yet. Pressing Confirm will create a new folder note.`,
+    message,
   ).open();
 }
 

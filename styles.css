@@ -710,4 +710,34 @@
   width: 100%;
 }
 
+/* src/ui/styles/modal.css */
+.explorer-confirmation-dialog {
+  padding-block: 2em;
+}
+.explorer-confirmation-dialog code {
+  padding: 0.15em 0.35em;
+  border-radius: var(--code-radius);
+  background-color: var(--code-background);
+  color: var(--code-normal);
+  font-family: var(--font-monospace);
+}
+.explorer-confirmation-dialog-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+  color: var(--text-muted);
+  line-height: var(--line-height-normal);
+}
+.explorer-confirmation-dialog-checkbox input[type=checkbox] {
+  flex: 0 0 auto;
+  margin: 0;
+}
+.explorer-confirmation-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-4);
+}
+
 /* src/ui/styles/index.css */
