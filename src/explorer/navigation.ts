@@ -1,6 +1,30 @@
 import { App, Notice, TFile, TFolder } from "obsidian";
 import { PluginSettings } from "./settings";
 import { isFolderNote } from "./file-utils";
+import { ConfirmationDialog } from "../ui/modals/prompt-modal";
+
+export type SavePluginSettings = () => void | Promise<void>;
+
+function askBeforeCreating(
+  app: App,
+  folder: TFolder,
+  settings: PluginSettings,
+  savePluginSettings: SavePluginSettings | undefined,
+  onCreate: () => Promise<void>,
+): void {
+  new ConfirmationDialog(
+    app,
+    "Create folder note?",
+    async () => {
+      await onCreate();
+    },
+    async () => {
+      settings.defaultBlockSettings.askForFolderNoteCreation = false;
+      await savePluginSettings?.();
+    },
+    `The folder "${folder.name}" doesn't have a folder note yet. Pressing Confirm will create a new folder note.`,
+  ).open();
+}
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 const HOME_PAGE_TEMPLATE =
@@ -24,7 +48,11 @@ export function canGoToParentFolderNote(
 export async function goToParentFolderNote(
   app: App,
   settings: PluginSettings,
-  input: { currentFile: TFile | null; newLeaf?: boolean },
+  input: {
+    currentFile: TFile | null;
+    newLeaf?: boolean;
+    savePluginSettings?: SavePluginSettings;
+  },
 ): Promise<void> {
   const currentFile = input.currentFile;
   if (!currentFile) return;
@@ -48,6 +76,7 @@ export async function goToParentFolderNote(
     settings,
     sourcePath,
     input.newLeaf,
+    input.savePluginSettings,
   );
 }
 
@@ -57,6 +86,7 @@ export async function openOrCreateFolderNote(
   settings: PluginSettings,
   sourcePath = "",
   newLeaf = false,
+  savePluginSettings?: SavePluginSettings,
 ): Promise<void> {
   if (folder.isRoot()) {
     await openHomePage(app, settings, sourcePath, newLeaf);
@@ -82,12 +112,21 @@ export async function openOrCreateFolderNote(
     void app.workspace.openLinkText(existing.path, sourcePath, newLeaf);
     return;
   }
-
-  try {
-    const created = await app.vault.create(folderNotePath, FOLDERNOTE_TEMPLATE);
-    void app.workspace.openLinkText(created.path, sourcePath, newLeaf);
-  } catch (err) {
-    new Notice(`Failed to create folder note: ${err}`);
+  const tryCreateNew = async (): Promise<void> => {
+    try {
+      const created = await app.vault.create(
+        folderNotePath,
+        FOLDERNOTE_TEMPLATE,
+      );
+      void app.workspace.openLinkText(created.path, sourcePath, newLeaf);
+    } catch (err) {
+      new Notice(`Failed to create folder note: ${err}`);
+    }
+  };
+  if (!settings.defaultBlockSettings.askForFolderNoteCreation) {
+    await tryCreateNew();
+  } else {
+    askBeforeCreating(app, folder, settings, savePluginSettings, tryCreateNew);
   }
 }
 

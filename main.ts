@@ -35,6 +35,7 @@ export default class ExplorerPlugin extends Plugin {
           ctx,
           () => this.settings.defaultBlockSettings,
           () => this.settings,
+          () => this.saveSettings(),
           parseSettings(source),
           (refresh) => this.registerExplorerRefresh(refresh),
         );
@@ -113,6 +114,7 @@ export default class ExplorerPlugin extends Plugin {
         if (!checking) {
           void goToParentFolderNote(this.app, this.settings, {
             currentFile: activeFile,
+            savePluginSettings: () => this.saveSettings(),
           });
         }
 

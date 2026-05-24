@@ -30,6 +30,7 @@ export async function renderExplorerBlock(
   ctx: MarkdownPostProcessorContext,
   getBlockDefaults: () => BlockSettings,
   getPluginSettings: () => PluginSettings,
+  savePluginSettings: () => void | Promise<void>,
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
 ): Promise<void> {
@@ -103,7 +104,11 @@ export async function renderExplorerBlock(
     }
 
     reactRoot.render(
-      <ExplorerUI model={model} onOpenSettings={openSettings} />,
+      <ExplorerUI
+        model={model}
+        onOpenSettings={openSettings}
+        onSavePluginSettings={savePluginSettings}
+      />,
     );
   };
 

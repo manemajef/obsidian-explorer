@@ -13,6 +13,83 @@ export function promptForName(
   });
 }
 
+export class ConfirmationDialog extends Modal {
+  title: string;
+  message?: string;
+  onConfirm: (dontShowAgain: boolean) => void | Promise<void>;
+  onDontShowAgain?: () => void | Promise<void>;
+
+  constructor(
+    app: App,
+    title: string,
+    onConfirm: (dontShowAgain: boolean) => void | Promise<void>,
+    onDontShowAgain?: () => void | Promise<void>,
+    message?: string,
+  ) {
+    super(app);
+    this.title = title;
+    this.message = message;
+    this.onConfirm = onConfirm;
+    this.onDontShowAgain = onDontShowAgain;
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.createEl("h3", { text: this.title });
+
+    if (this.message) {
+      contentEl.createEl("p", { text: this.message });
+    }
+
+    let dontShowAgainInput: HTMLInputElement | null = null;
+
+    if (this.onDontShowAgain) {
+      const checkboxLabel = contentEl.createEl("label", {
+        attr: {
+          style:
+            "display: flex; align-items: center; gap: 8px; margin: 12px 0;",
+        },
+      });
+
+      dontShowAgainInput = checkboxLabel.createEl("input", {
+        attr: { type: "checkbox" },
+      });
+      checkboxLabel.createSpan({ text: "Don't show again" });
+    }
+
+    const btnContainer = contentEl.createDiv({
+      attr: {
+        style:
+          "display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;",
+      },
+    });
+
+    const cancelBtn = btnContainer.createEl("button", { text: "Cancel" });
+    cancelBtn.addEventListener("click", () => {
+      this.close();
+    });
+
+    const confirmBtn = btnContainer.createEl("button", {
+      text: "Confirm",
+      cls: "mod-cta",
+    });
+    confirmBtn.addEventListener("click", async () => {
+      const dontShowAgain = dontShowAgainInput?.checked ?? false;
+
+      if (dontShowAgain) {
+        await this.onDontShowAgain?.();
+      }
+
+      await this.onConfirm(dontShowAgain);
+      this.close();
+    });
+  }
+
+  onClose() {
+    this.contentEl.empty();
+  }
+}
+
 export class PromptModal extends Modal {
   title: string;
   placeholder: string;

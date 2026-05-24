@@ -324,6 +324,18 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 10,
     },
   }),
+  askForFolderNoteCreation: booleanField({
+    label: "Ask before folder note creation",
+    description:
+      "display a confirmation dialog before creating new foldernote when clicking on a folder in the ui",
+    blockKey: "askForFolderNoteCreation",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 9.5,
+    },
+  }),
 } as const;
 
 type InferSettingValue<T> =

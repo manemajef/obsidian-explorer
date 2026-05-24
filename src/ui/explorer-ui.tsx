@@ -20,10 +20,11 @@ import { Divider } from "./components/ui/layout";
 interface ExplorerUIProps {
   model: ExplorerModel;
   onOpenSettings: () => void;
+  onSavePluginSettings: () => void | Promise<void>;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
-  const { model, onOpenSettings } = props;
+  const { model, onOpenSettings, onSavePluginSettings } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
   const onOpenFolderNote = (folder: TFolder, newLeaf: boolean) =>
@@ -33,6 +34,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       model.pluginSettings,
       model.sourcePath,
       newLeaf,
+      onSavePluginSettings,
     );
 
   const {
@@ -100,6 +102,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           void goToParentFolderNote(app, model.pluginSettings, {
             currentFile: model.blockFile,
             newLeaf,
+            savePluginSettings: onSavePluginSettings,
           })
         }
         onNewFolder={() => void promptAndCreateFolder(app, model.folder.path)}
