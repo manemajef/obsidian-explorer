@@ -1,5 +1,13 @@
 # Explorer changelog
 
+## 1.1.15 (24-05-26)
+
+### New
+- Added `sortBy: "nameDesc"` for reverse filename sorting, useful for date-prefixed notes like `YYYY.MM`.
+- Added a confirmation dialog before creating missing folder notes, with a persisted "Don't show again" option (can be toggled via settings)
+
+
+
 ## 1.1.14 (23-05-25)
 ### New
 - added `Explorer: toggle pin for active note`  command
