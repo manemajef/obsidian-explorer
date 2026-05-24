@@ -12,16 +12,15 @@ function askBeforeCreating(
   savePluginSettings: SavePluginSettings | undefined,
   onCreate: () => Promise<void>,
 ): void {
-  const message = createFragment((fragment) => {
-    fragment.appendText("The folder ");
-    fragment.createEl("code", {
-      text: folder.name,
-      cls: "explorer-dialog-folder-name",
-    });
-    fragment.appendText(
-      " doesn't have a folder note yet. Pressing Confirm will create a new folder note.",
-    );
-  });
+  const message = document.createDocumentFragment();
+  message.append("The folder ");
+  const folderNameEl = document.createElement("code");
+  folderNameEl.classList.add("explorer-dialog-folder-name");
+  folderNameEl.textContent = folder.name;
+  message.append(
+    folderNameEl,
+    " doesn't have a folder note yet. Pressing Confirm will create a new folder note.",
+  );
 
   new ConfirmationDialog(
     app,

@@ -70,16 +70,20 @@ export class ConfirmationDialog extends Modal {
       text: "Confirm",
       cls: "mod-cta",
     });
-    confirmBtn.addEventListener("click", async () => {
+    confirmBtn.addEventListener("click", () => {
       const dontShowAgain = dontShowAgainInput?.checked ?? false;
 
-      if (dontShowAgain) {
-        await this.onDontShowAgain?.();
-      }
-
-      await this.onConfirm(dontShowAgain);
-      this.close();
+      void this.confirm(dontShowAgain);
     });
+  }
+
+  private async confirm(dontShowAgain: boolean): Promise<void> {
+    if (dontShowAgain) {
+      await this.onDontShowAgain?.();
+    }
+
+    await this.onConfirm(dontShowAgain);
+    this.close();
   }
 
   onClose() {
