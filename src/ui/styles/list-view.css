@@ -43,14 +43,21 @@
 }
 
 .list-tags-seperator {
-  height: 1.5em;
-  width: 1px;
+  /* height: 1.5em;
+
   border-inline-start: 1px solid var(--background-modifier-border);
-  margin-inline-start: .5em;
+  margin-inline-start: 1em; */
+  margin-inline-end: .5em;
 }
 
 .explorer-list-tags > * {
   flex: 0 0 auto;
+}
+
+.explorer-list-tags .tag {
+  /* background: rgba(0,0,0,0); */
+  border: 1px solid var(--tag-border-color);
+
 }
 
 .explorer-list-container {

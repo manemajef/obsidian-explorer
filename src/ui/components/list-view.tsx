@@ -70,14 +70,6 @@ export function ListView(props: ListViewProps): React.JSX.Element {
             ) : (
               settings.showListBullets && <span className="list-bullet" />
             )}
-            {/* {settings.showListBullets &&
-              (fileInfo.isPinned ? (
-                <span style={{ marginInlineStart: "-.5em" }}>
-                  <Pin fileInfo={fileInfo} />
-                </span>
-              ) : (
-                <span className="list-bullet" />
-              ))} */}
 
             <Group justify="start">
               <InternalLink

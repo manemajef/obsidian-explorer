@@ -11,6 +11,7 @@ import {
   type SavePluginSettings,
 } from "../explorer/navigation";
 import type { PluginSettings } from "../explorer/settings";
+import { ConfirmationDialog } from "./modals/prompt-modal";
 
 export type ContextMenuConfig = {
   app: App;
@@ -73,7 +74,13 @@ export function showFolderContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        void config.app.fileManager.promptForDeletion(folder);
+        new ConfirmationDialog(
+          config.app,
+          "Delete folder?",
+          () => config.app.fileManager.promptForDeletion(folder),
+          undefined,
+          `This will delete the folder "${folder.name}" and all of its contents.`,
+        ).open();
       }),
   );
 
