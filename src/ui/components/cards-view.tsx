@@ -13,6 +13,7 @@ import {
   folderDropProps,
   MoveIntoFolder,
 } from "../drag-drop";
+import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
 
 type OpenFolderNote = (folder: TFolder, newLeaf: boolean) => void;
 
@@ -22,9 +23,16 @@ export function CardsView(props: {
   extForCard: string;
   onOpenFolderNote: OpenFolderNote;
   onMoveIntoFolder: MoveIntoFolder;
+  contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const { model, files, extForCard, onOpenFolderNote, onMoveIntoFolder } =
-    props;
+  const {
+    model,
+    files,
+    extForCard,
+    onOpenFolderNote,
+    onMoveIntoFolder,
+    contextMenu,
+  } = props;
   const { app, settings, sourcePath } = model;
 
   return (
@@ -43,6 +51,9 @@ export function CardsView(props: {
                 fileDropTarget(fileInfo.file),
                 onMoveIntoFolder,
               )}
+              onContextMenuCapture={(event) =>
+                showFileContextMenu(event, contextMenu, fileInfo.file)
+              }
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest("a")) return;
                 void app.workspace.openLinkText(

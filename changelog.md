@@ -1,9 +1,10 @@
 # Explorer changelog
 
 ## 1.2.0 (Future Date)
-
+This release brings exsiting new features helping you better manage youre vault file system directly from the editor ui. including new drag-and-drop interface, context menu, and easier pinning.
+ 
 ## New 
-### Control file filesystem from the ui 
+### Control file filesystem from the ui (Desktop only) 
 - drag and drop notes and folders into folders directly from Explorer view.
 - drag and drop notes and folders from view into parent folder by dragging into the `go to parent` folder in the navbar.
 

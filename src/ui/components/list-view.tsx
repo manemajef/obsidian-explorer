@@ -15,11 +15,13 @@ import {
   folderDropProps,
   MoveIntoFolder,
 } from "../drag-drop";
+import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
 
 type ListViewProps = {
   model: ExplorerModel;
   files: FileInfo[];
   onMoveIntoFolder: MoveIntoFolder;
+  contextMenu: ContextMenuConfig;
 };
 
 export function ListView(props: ListViewProps): React.JSX.Element {
@@ -48,6 +50,9 @@ export function ListView(props: ListViewProps): React.JSX.Element {
               fileDropTarget(fileInfo.file),
               props.onMoveIntoFolder,
             )}
+            onContextMenuCapture={(event) =>
+              showFileContextMenu(event, props.contextMenu, fileInfo.file)
+            }
             style={{
               marginInlineStart:
                 settings.showListBullets && !fileInfo.isPinned
@@ -132,7 +137,13 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
   return (
     <div className="explorer-mobile-list ">
       {files.map((fileInfo, i) => (
-        <div key={fileInfo.file.path} className="explorer-mobile-list-item">
+        <div
+          key={fileInfo.file.path}
+          className="explorer-mobile-list-item"
+          onContextMenuCapture={(event) =>
+            showFileContextMenu(event, props.contextMenu, fileInfo.file)
+          }
+        >
           <InternalLink
             path={fileInfo.file.path}
             className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""} ${i >= files.length - 1 ? "explorer-mobile-note-last" : ""}`}

@@ -6,14 +6,22 @@ import {
   folderDropProps,
   MoveIntoFolder,
 } from "../drag-drop";
+import { showFolderContextMenu, type ContextMenuConfig } from "../context-menu";
 
 export function FolderButtons(props: {
   app: App;
   folderInfos: FolderInfo[];
   onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
   onMoveIntoFolder: MoveIntoFolder;
+  contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const { app, folderInfos, onOpenFolderNote, onMoveIntoFolder } = props;
+  const {
+    app,
+    folderInfos,
+    onOpenFolderNote,
+    onMoveIntoFolder,
+    contextMenu,
+  } = props;
 
   return (
     <div className="explorer-folders-grid explorer-folders-view">
@@ -31,6 +39,14 @@ export function FolderButtons(props: {
             className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""}`}
             {...draggableProps(folderInfo.folder)}
             {...folderDropProps(app, folderInfo.folder, onMoveIntoFolder)}
+            onContextMenuCapture={(event) =>
+              showFolderContextMenu(
+                event,
+                contextMenu,
+                folderInfo.folder,
+                folderNotePath,
+              )
+            }
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);

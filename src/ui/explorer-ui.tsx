@@ -12,6 +12,7 @@ import {
 import { promptAndCreateFolder, promptAndCreateNote } from "../explorer/create";
 import { moveIntoFolder } from "../explorer/move";
 import { ConfirmationDialog } from "./modals/prompt-modal";
+import type { ContextMenuConfig } from "./context-menu";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
@@ -61,6 +62,14 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       message,
     ).open();
   };
+  const contextMenu: ContextMenuConfig = {
+    app,
+    settings: model.pluginSettings,
+    sourcePath: model.sourcePath,
+    currentFolderPath: model.folder.path,
+    savePluginSettings: onSavePluginSettings,
+    onRefresh,
+  };
 
   const {
     searchMode,
@@ -98,6 +107,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           extForCard={extForCard}
           onOpenFolderNote={onOpenFolderNote}
           onMoveIntoFolder={onMoveIntoFolder}
+          contextMenu={contextMenu}
         />
       );
     }
@@ -107,6 +117,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         model={model}
         files={files}
         onMoveIntoFolder={onMoveIntoFolder}
+        contextMenu={contextMenu}
       />
     );
   };
@@ -159,6 +170,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
             folderInfos={model.folders}
             onOpenFolderNote={onOpenFolderNote}
             onMoveIntoFolder={onMoveIntoFolder}
+            contextMenu={contextMenu}
           />
         </>
       )}
