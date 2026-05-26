@@ -1,25 +1,47 @@
 # Explorer changelog
 
-## 1.2.0 (Future Date)
-This release brings exsiting new features helping you better manage youre vault file system directly from the editor ui. including new drag-and-drop interface, context menu, and easier pinning.
+## 1.2.0 (Unreleased)
 
-## New 
-### Control file filesystem from the ui (Desktop only) 
-- drag and drop notes and folders into folders directly from Explorer view.
-- drag and drop notes and folders from view into parent folder by dragging into the `go to parent` folder in the navbar.
+Explorer is becoming a place to organize your vault, not just browse it. This
+release adds direct file and folder management from folder notes, with new ways
+to shape each Explorer view around the content that matters.
 
-### Additional new features
-- folder notes in UI now have visible icon 
-- visual imporvements for folder button ui 
-- pinned note ui imporement 
-- tags in list view are not appended to the right 
+### Organize directly from Explorer
 
-## Breaking changes 
-- cards show last edited date date instead of created date when card extension is set to auto
-- folder notes dont appear under `markdown` only 
+- On desktop, drag notes and folders into another displayed folder to move them
+  without leaving the note.
+- Drag a note or folder onto the parent button to move it up one level.
+- Dragging a folder note moves its folder and asks for confirmation first.
+- Right-click notes and folders for useful actions including pinning and
+  deletion, plus quick navigation to nested folder notes.
+- Folder deletion now clearly warns that everything inside the folder will be
+  deleted before continuing.
 
-## bug fixes
-- folder notes now show parent folder as folder in card extension
+### Make Explorer your home base
+
+- Optionally open your Explorer homepage whenever you create a new empty tab,
+  so a fresh workspace can start at your vault's home.
+- Exclude selected nested folders and everything inside them from an individual
+  Explorer view, useful for archives, templates, or areas that should stay out
+  of a dashboard.
+- Choose whether nested folder notes appear alongside notes in deeper Explorer
+  views.
+
+### A clearer, more polished view
+
+- Folder notes are now visibly marked as folders in card and list views.
+- Folder cards handle long names more cleanly and have a refreshed layout.
+- Tags in list view stay alongside their note title, and pinned notes have a
+  cleaner position in the list.
+- Cards using the default footer now show last-edited time in the current
+  folder, better reflecting recent work.
+- Folder notes shown with folder information now display their containing
+  folder correctly.
+
+### Changed behavior
+
+- The `Only Markdown` displayed-notes option now leaves folder notes out of the
+  notes list; folder navigation remains available through folder buttons.
 
 
 ## 1.1.15 (24-05-26)

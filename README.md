@@ -1,28 +1,33 @@
 # Explorer
 
-Explorer is an Obsidian plugin for browsing folder contents directly inside a note. It is built for folder-based vaults where folder notes act as navigation hubs.
+**Browse and organize your Obsidian vault from inside your notes.**
+
+Explorer turns folder notes into working dashboards for your vault. Open a
+project note and see its files and subfolders, search within it, jump through
+your folder structure, and organize items in place instead of switching back
+to the file explorer.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
 ![](/assets/main.jpg)
 
-## Features
+## Why Explorer
 
-- Card and list views for folder contents
-- Folder buttons for moving through subfolders
-- Automatic folder-note creation
-- Optional homepage navigation
-- Parent folder and homepage commands
-- Sorting by name, created time, or modified time
-- Pagination for large folders
-- Scoped search within the current explorer
-- Mobile-friendly layout
-- Optional glass-style controls
-- RTL support for Hebrew and Arabic workflows
+- **Navigate from notes.** Turn each folder note into a card or list view of
+  its contents, with folder buttons, parent navigation, and an optional vault
+  homepage.
+- **Organize where you work.** On desktop, drag notes and folders into another
+  folder or onto the parent button to move them. Right-click items to pin,
+  navigate, or delete them.
+- **Build focused dashboards.** Search the current view, show nested content,
+  and exclude folders such as archives or templates from a particular Explorer
+  block.
+- **Keep your workflow comfortable.** Sort, paginate, style cards and lists,
+  use mobile-friendly layouts, and work in LTR or RTL vaults.
 
-## Usage
+## Get Started
 
-Add an Explorer block to any folder note:
+Add an Explorer block to a folder note:
 
 ````markdown
 ```explorer
@@ -31,17 +36,28 @@ Add an Explorer block to any folder note:
 
 The block displays files from the note's current folder using your default settings.
 
-You can add a block from the command palette with:
+From the command palette, use:
 
-- `Insert code block`
-
-You can create a new folder with a matching folder note from:
-
+- `Insert code block` to add Explorer to the current note
 - `Create folder in current note folder`
 
 That command creates `Folder/Folder.md`, inserts an Explorer block, and opens the new note.
 
+## Organize In Place
 
+On desktop, an Explorer view is also an interface for managing the folder:
+
+- Drag a note or folder onto a displayed folder to move it there.
+- Drag an item onto the parent button in the action bar to move it up one
+  level.
+- Right-click a note to pin or unpin it or delete it. If it appears from a
+  nested folder, you can also open or create that folder note.
+- Right-click a folder to delete it, or to pin or delete its existing folder
+  note.
+
+When a folder note is dragged, Explorer moves the folder it represents and
+confirms the move first. Deleting a folder also includes a warning before its
+contents are removed.
 
 ## Screenshots
 
@@ -61,9 +77,10 @@ That command creates `Folder/Folder.md`, inserts an Explorer block, and opens th
 
 ![](/assets/dark-mode.jpg)
 
-## Navigation
+## Folder Notes And Homepage
 
-Explorer treats folder notes as navigation pages. A folder note is a Markdown file named after its folder:
+Explorer treats a Markdown file named after its folder as that folder's
+navigation page:
 
 ```text
 Projects/Projects.md
@@ -71,9 +88,8 @@ Projects/Projects.md
 
 When you open a folder from Explorer, the plugin looks for the matching folder note. If it does not exist, Explorer creates it with a basic Explorer block.
 
-### Homepage
-
-Explorer can also use a root-level homepage when navigating above a root folder note.
+Explorer can also use a root-level homepage as a landing page for the vault
+and as the destination above a root folder note.
 
 By default, homepage navigation is enabled. If the homepage name is left empty, Explorer uses the vault name:
 
@@ -118,7 +134,9 @@ Explorer registers these command palette commands:
 
 ## Configuration
 
-Most options are available in the plugin settings UI. You can also override block-specific options inside an Explorer code block:
+Use plugin settings for your defaults, then tailor individual folder notes
+inside their Explorer blocks. For example, this makes a project dashboard that
+shows recent content while leaving an archive out of view:
 
 ````markdown
 ```explorer
@@ -127,7 +145,7 @@ sortBy: "edited"
 depth: 2
 pageSize: 21
 paginationStyle: "modern"
-excludedFolders: ["Archive", "Projects/Old"]
+excludedFolders: ["Archive"]
 ```
 ````
 
@@ -147,21 +165,23 @@ Supported block settings:
 | `excludedFolders` | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
-Plugin-only settings include homepage behavior, the parent button, glass controls, card icons, and list bullets.
+`excludedFolders` hides the selected folders and their contents from that
+Explorer block only. Plugin settings also include homepage behavior, nested
+folder-note display, the parent button, glass controls, card icons, and list
+bullets.
 
 ## Search
 
-Use the search icon in the action bar to filter the current Explorer view.
+Use the search icon in the action bar to quickly filter the current Explorer
+view:
 
 - Plain text searches file names
 - `#tag` searches frontmatter tags
 - `@name` searches folder notes
 
-
-
-## Fit
-
-Explorer is designed for vaults organized around folders and folder notes. It is not a vault-wide query engine and does not try to replace Dataview, Bases, or tag/database workflows.
+Explorer is designed for vaults organized around folders and folder notes. It
+complements Dataview, Bases, and tag-driven workflows by making the folder
+structure itself useful from inside the editor.
 
 ## Install
 
