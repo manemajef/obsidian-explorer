@@ -224,6 +224,8 @@
   padding: 0.8em var(--explorer-space-6);
   font-size: 0.9em;
   transition: 0.15s;
+  flex: 1 1 max-content;
+  max-width: 180px;
 }
 .explorer-folder-card:hover {
   box-shadow: var(--shadow-s);
@@ -413,14 +415,21 @@
   overflow-x: auto;
   border-radius: var(--explorer-radius-pill);
   justify-content: flex-start;
-  margin-inline-start: 0.5em;
+  margin-inline-start: .5em;
   gap: 0.25em;
+  transform: scale(.9);
 }
 .explorer-list-tags > * {
   flex: 0 0 auto;
 }
 .explorer-list-container {
   border-radius: var(--explorer-radius-md);
+  margin-top: .5em;
+}
+.explorer-list-container .pin,
+.explorer-mobile-list .pin {
+  margin-top: .4em;
+  margin-inline-end: .4em;
 }
 .explorer-mobile-list {
   padding-bottom: var(--explorer-space-2);

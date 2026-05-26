@@ -15,9 +15,12 @@
   overflow-x: auto;
   border-radius: var(--explorer-radius-pill);
   justify-content: flex-start;
-  margin-inline-start: 0.5em;
+  margin-inline-start: .5em;
   gap: 0.25em;
+  transform: scale(.9);
 }
+
+
 
 .explorer-list-tags > * {
   flex: 0 0 auto;
@@ -25,6 +28,13 @@
 
 .explorer-list-container {
   border-radius: var(--explorer-radius-md);
+  margin-top: .5em;
+}
+
+.explorer-list-container .pin, .explorer-mobile-list .pin{
+  margin-top: .4em;
+  margin-inline-end: .4em;
+
 }
 
 .explorer-mobile-list {

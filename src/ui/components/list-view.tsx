@@ -6,6 +6,7 @@ import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
+import Bar from "./ui/bar";
 
 type ListViewProps = {
   model: ExplorerModel;
@@ -30,13 +31,38 @@ export function ListView(props: ListViewProps): React.JSX.Element {
           <li
             className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
             style={{
-              marginInlineStart: settings.showListBullets
-                ? "var(--explorer-space-4)"
-                : "none",
+              marginInlineStart:
+                settings.showListBullets && !fileInfo.isPinned
+                  ? "var(--explorer-space-4)"
+                  : "none",
+              display: fileInfo.isPinned ? "flex" : "block",
             }}
           >
-            {settings.showListBullets && <span className="list-bullet" />}
-            <Group justify="between">
+            {fileInfo.isPinned ? (
+              <span
+                style={{
+                  marginInlineStart: settings.showListBullets
+                    ? "-.5em"
+                    : "-.2em",
+                  marginTop: ".2em",
+                  // transform: "scale(0.9)",
+                }}
+              >
+                <Pin fileInfo={fileInfo} />
+              </span>
+            ) : (
+              settings.showListBullets && <span className="list-bullet" />
+            )}
+            {/* {settings.showListBullets &&
+              (fileInfo.isPinned ? (
+                <span style={{ marginInlineStart: "-.5em" }}>
+                  <Pin fileInfo={fileInfo} />
+                </span>
+              ) : (
+                <span className="list-bullet" />
+              ))} */}
+
+            <Group justify="start">
               <InternalLink
                 path={fileInfo.file.path}
                 text={
@@ -53,11 +79,12 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                       {t}
                     </Badge>
                   ))}
-                {<Pin fileInfo={fileInfo} />}
               </div>
-
               {fileInfo.file.extension !== "md" && (
-                <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
+                <>
+                  <Bar.Spring />
+                  <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
+                </>
               )}
             </Group>
           </li>
@@ -80,11 +107,14 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""} ${i >= files.length - 1 ? "explorer-mobile-note-last" : ""}`}
           >
             <div className="explorer-mobile-note__header">
-              <span className="explorer-mobile-note__title">
-                {fileInfo.file.extension === "md"
-                  ? fileInfo.file.basename
-                  : `${fileInfo.file.basename}.${fileInfo.file.extension}`}
-              </span>
+              <Group>
+                <Pin fileInfo={fileInfo} />
+                <span className="explorer-mobile-note__title">
+                  {fileInfo.file.extension === "md"
+                    ? fileInfo.file.basename
+                    : `${fileInfo.file.basename}.${fileInfo.file.extension}`}
+                </span>
+              </Group>
 
               {fileInfo.file.extension !== "md" && (
                 <Badge
@@ -105,7 +135,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
                     </Badge>
                   ))}
               </div>
-              <Pin fileInfo={fileInfo} />
+              {/* <Pin fileInfo={fileInfo} /> */}
             </div>
           </InternalLink>
 
