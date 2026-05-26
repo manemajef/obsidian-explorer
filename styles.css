@@ -238,6 +238,8 @@
 }
 .explorer-folder-card > * {
   min-width: 0;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .explorer-folder-card:hover {
   box-shadow: var(--shadow-s);

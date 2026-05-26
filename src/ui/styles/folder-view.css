@@ -44,6 +44,8 @@
 
 .explorer-folder-card > * {
   min-width: 0;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 
