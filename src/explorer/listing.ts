@@ -132,7 +132,7 @@ export function buildExplorerListing(input: {
 
 export function resolveCardFooterMode(settings: BlockSettings): string {
   if (settings.cardExt !== "default") return settings.cardExt;
-  return settings.depth > 0 ? "folder" : "ctime";
+  return settings.depth > 0 ? "folder" : "mtime";
 }
 
 function shouldIndexFile(file: TFile): boolean {
@@ -155,7 +155,7 @@ function filterDisplayedFiles(
       return [];
     case "markdown":
       return visibleFiles.filter(
-        (file) => file.extension.toLowerCase() === "md",
+        (file) => file.extension.toLowerCase() === "md" && !isFolderNote(file),
       );
     case "supported":
       return visibleFiles.filter((file) =>

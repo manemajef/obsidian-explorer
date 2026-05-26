@@ -6,6 +6,13 @@ import { diffDays, isFolderNote } from "../../explorer/file-utils";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
+import {
+  draggableProps,
+  fileDragSource,
+  fileDropTarget,
+  folderDropProps,
+  MoveIntoFolder,
+} from "../drag-drop";
 
 type OpenFolderNote = (folder: TFolder, newLeaf: boolean) => void;
 
@@ -14,8 +21,10 @@ export function CardsView(props: {
   files: FileInfo[];
   extForCard: string;
   onOpenFolderNote: OpenFolderNote;
+  onMoveIntoFolder: MoveIntoFolder;
 }): React.JSX.Element {
-  const { model, files, extForCard, onOpenFolderNote } = props;
+  const { model, files, extForCard, onOpenFolderNote, onMoveIntoFolder } =
+    props;
   const { app, settings, sourcePath } = model;
 
   return (
@@ -25,6 +34,15 @@ export function CardsView(props: {
           <div key={fileInfo.file.path}>
             <div
               className="explorer-card"
+              {...draggableProps(
+                fileDragSource(fileInfo.file),
+                isFolderNote(fileInfo.file),
+              )}
+              {...folderDropProps(
+                app,
+                fileDropTarget(fileInfo.file),
+                onMoveIntoFolder,
+              )}
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest("a")) return;
                 void app.workspace.openLinkText(
@@ -39,6 +57,7 @@ export function CardsView(props: {
                   <InternalLink
                     path={fileInfo.file.path}
                     text={fileInfo.file.basename}
+                    draggable={false}
                   />
                 </div>
                 {/* <Bar.Spring /> */}
@@ -54,9 +73,14 @@ export function CardsView(props: {
                       <Pin fileInfo={fileInfo} />
                     )}
                   </div>
-                  {isFolderNote(fileInfo.file) ? (
-                    <Badge variant="folder" />
-                  ) : fileInfo.file.extension !== "md" ? (
+                  {isFolderNote(fileInfo.file) && (
+                    <Icon
+                      name="folder"
+                      className="explorer-card-folder-note-icon"
+                    />
+                  )}
+                  {!isFolderNote(fileInfo.file) &&
+                  fileInfo.file.extension !== "md" ? (
                     <Badge variant="ext" className="explorer-card-ext-badge">
                       {fileInfo.file.extension}
                     </Badge>
@@ -112,8 +136,9 @@ function CardFooter(props: {
     case "mtime":
       return <span>{diffDays(fileInfo.file.stat.mtime)}</span>;
     case "folder": {
-      const folder = fileInfo.file.parent;
-      if (!folder || !folder.name || isFolderNote(fileInfo.file)) return null;
+      let folder = fileInfo.file.parent;
+      if (isFolderNote(fileInfo.file) && folder) folder = folder?.parent;
+      if (!folder || !folder.name) return null;
       if (folder.path === currentFolderPath) return null;
       return (
         <span

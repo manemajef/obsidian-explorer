@@ -113,13 +113,6 @@
   opacity: 1;
   transform: scale(1.05);
 }
-.explorer-badge.folder-badge {
-  /* transform: scale(1.1); */
-  color: var(--text-muted);
-}
-
-
-
 .explorer-badge.ext {
   opacity: 0.6;
 }

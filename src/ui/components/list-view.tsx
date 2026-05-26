@@ -7,11 +7,19 @@ import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
-import { isFolderNote } from "src/explorer/file-utils";
+import { isFolderNote } from "../../explorer/file-utils";
+import {
+  draggableProps,
+  fileDragSource,
+  fileDropTarget,
+  folderDropProps,
+  MoveIntoFolder,
+} from "../drag-drop";
 
 type ListViewProps = {
   model: ExplorerModel;
   files: FileInfo[];
+  onMoveIntoFolder: MoveIntoFolder;
 };
 
 export function ListView(props: ListViewProps): React.JSX.Element {
@@ -23,7 +31,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     return <MobileListView {...props} />;
   }
 
-  const { settings } = props.model;
+  const { app, settings } = props.model;
 
   return (
     <div className="explorer-list-container">
@@ -31,6 +39,15 @@ export function ListView(props: ListViewProps): React.JSX.Element {
         <div key={fileInfo.file.path} className="list-item-container">
           <li
             className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
+            {...draggableProps(
+              fileDragSource(fileInfo.file),
+              isFolderNote(fileInfo.file),
+            )}
+            {...folderDropProps(
+              app,
+              fileDropTarget(fileInfo.file),
+              props.onMoveIntoFolder,
+            )}
             style={{
               marginInlineStart:
                 settings.showListBullets && !fileInfo.isPinned
@@ -66,6 +83,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
             <Group justify="start">
               <InternalLink
                 path={fileInfo.file.path}
+                draggable={false}
                 text={
                   fileInfo.file.extension === "md"
                     ? fileInfo.file.basename
@@ -81,19 +99,24 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                     </Badge>
                   ))}
               </div>
-              {fileInfo.file.extension !== "md" ||
-                (isFolderNote(fileInfo.file) && (
-                  <>
-                    <Bar.Spring />
-                    {isFolderNote(fileInfo.file) ? (
-                      <Badge variant="folder" />
-                    ) : (
-                      <Badge variant="ext-filled">
-                        {fileInfo.file.extension}
-                      </Badge>
-                    )}
-                  </>
-                ))}
+              {(fileInfo.file.extension !== "md" ||
+                isFolderNote(fileInfo.file)) && (
+                <>
+                  <Bar.Spring />
+                  {isFolderNote(fileInfo.file) ? (
+                    <Badge
+                      variant="ext-filled"
+                      className="explorer-folder-type-badge"
+                    >
+                      folder
+                    </Badge>
+                  ) : (
+                    <Badge variant="ext-filled">
+                      {fileInfo.file.extension}
+                    </Badge>
+                  )}
+                </>
+              )}
             </Group>
           </li>
         </div>
@@ -124,12 +147,15 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
                 </span>
               </Group>
 
-              {fileInfo.file.extension !== "md" && (
+              {(fileInfo.file.extension !== "md" ||
+                isFolderNote(fileInfo.file)) && (
                 <Badge
                   variant="ext-filled"
                   className="explorer-mobile-note__ext"
                 >
-                  {fileInfo.file.extension}
+                  {isFolderNote(fileInfo.file)
+                    ? "folder"
+                    : fileInfo.file.extension}
                 </Badge>
               )}
             </div>

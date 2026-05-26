@@ -2,10 +2,14 @@ import React from "react";
 import { Search } from "./search";
 import { ActionItem, ActionGroup, ActionGroupItem } from "./ui/action";
 import { Group, Separator } from "./ui/layout";
-import { Platform } from "obsidian";
+import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
+import { folderDropProps, MoveIntoFolder } from "../drag-drop";
 
 export function ActionsBar(props: {
+  app: App;
+  parentDropFolder: TFolder | null;
+  onMoveIntoFolder: MoveIntoFolder;
   onOpenSettings: () => void;
   onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
@@ -17,6 +21,9 @@ export function ActionsBar(props: {
   showParentNavigation: boolean;
 }): React.JSX.Element {
   const {
+    app,
+    parentDropFolder,
+    onMoveIntoFolder,
     onOpenSettings,
     onGoToParent,
     onNewFolder,
@@ -53,6 +60,8 @@ export function ActionsBar(props: {
             {showParentNavigation && (
               <ActionItem
                 icon="undo-2"
+                className="explorer-parent-action"
+                {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
                 onClick={() => {
                   onGoToParent(false);
                 }}

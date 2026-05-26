@@ -108,6 +108,7 @@ export async function renderExplorerBlock(
         model={model}
         onOpenSettings={openSettings}
         onSavePluginSettings={savePluginSettings}
+        onRefresh={queueRefresh}
       />,
     );
   };

@@ -1,5 +1,26 @@
 # Explorer changelog
 
+## 1.2.0 (Future Date)
+
+## New 
+### Control file filesystem from the ui 
+- drag and drop notes and folders into folders directly from Explorer view.
+- drag and drop notes and folders from view into parent folder by dragging into the `go to parent` folder in the navbar.
+
+### Additional new features
+- folder notes in UI now have visible icon 
+- visual imporvements for folder button ui 
+- pinned note ui imporement 
+- tags in list view are not appended to the right 
+
+## Breaking changes 
+- cards show last edited date date instead of created date when card extension is set to auto
+- folder notes dont appear under `markdown` only 
+
+## bug fixes 
+- folder notes now show parent folder as folder in card extension
+
+
 ## 1.1.15 (24-05-26)
 
 ### New

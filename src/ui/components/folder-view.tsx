@@ -1,12 +1,19 @@
 import React from "react";
-import { TFolder } from "obsidian";
+import { App, TFolder } from "obsidian";
 import { FolderInfo } from "../../types";
+import {
+  draggableProps,
+  folderDropProps,
+  MoveIntoFolder,
+} from "../drag-drop";
 
 export function FolderButtons(props: {
+  app: App;
   folderInfos: FolderInfo[];
   onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
+  onMoveIntoFolder: MoveIntoFolder;
 }): React.JSX.Element {
-  const { folderInfos, onOpenFolderNote } = props;
+  const { app, folderInfos, onOpenFolderNote, onMoveIntoFolder } = props;
 
   return (
     <div className="explorer-folders-grid explorer-folders-view">
@@ -22,6 +29,8 @@ export function FolderButtons(props: {
           <div
             key={folderNotePath}
             className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""}`}
+            {...draggableProps(folderInfo.folder)}
+            {...folderDropProps(app, folderInfo.folder, onMoveIntoFolder)}
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
               onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
@@ -34,6 +43,7 @@ export function FolderButtons(props: {
               data-tooltip-position="top"
               target="_blank"
               rel="noopener"
+              draggable={false}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

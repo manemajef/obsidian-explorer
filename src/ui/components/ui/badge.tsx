@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "../shared";
 
-type BadgeVariant = "ext" | "ext-filled" | "pin" | "tag" | "folder";
+type BadgeVariant = "ext" | "ext-filled" | "pin" | "tag";
 
 export function Badge(props: {
   variant: BadgeVariant;
@@ -18,13 +18,6 @@ export function Badge(props: {
         onClick={onClick}
       >
         <Icon name="pin" />
-      </span>
-    );
-  }
-  if (variant == "folder") {
-    return (
-      <span className="explorer-badge folder-badge">
-        <Icon name="folder" />
       </span>
     );
   }

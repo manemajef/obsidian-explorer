@@ -5,6 +5,22 @@
   font-size: 0.9em;
 }
 
+.explorer-list.is-dragging {
+  opacity: 0.5;
+}
+
+.explorer-list.is-drop-target {
+  background-color: var(--background-modifier-hover);
+  border-radius: var(--explorer-radius-sm);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 1px;
+}
+
+.explorer-list.is-drop-target .explorer-folder-type-badge {
+  border-color: var(--interactive-accent);
+  opacity: 1;
+}
+
 .explorer-list:hover {
   border-radius: var(--explorer-radius-sm);
 }

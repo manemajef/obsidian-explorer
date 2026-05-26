@@ -8,8 +8,17 @@ export function InternalLink(props: {
   additionalClasses?: string[];
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children?: React.ReactNode;
+  draggable?: boolean;
 }): React.JSX.Element {
-  const { path, text, className, additionalClasses, onClick, children } = props;
+  const {
+    path,
+    text,
+    className,
+    additionalClasses,
+    onClick,
+    children,
+    draggable,
+  } = props;
   const classes = ["internal-link", className, ...(additionalClasses ?? [])]
     .filter(Boolean)
     .join(" ");
@@ -21,6 +30,7 @@ export function InternalLink(props: {
       href={path}
       data-tooltip-position="top"
       onClick={onClick}
+      draggable={draggable}
     >
       {children ?? text}
     </a>

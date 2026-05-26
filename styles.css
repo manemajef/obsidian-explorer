@@ -39,6 +39,9 @@
 .explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
 }
+.explorer-drag-active .explorer-container :where(.explorer-folder-card, .explorer-card, .explorer-list, .explorer-parent-action) > * {
+  pointer-events: none;
+}
 .explorer-container :where(a, button, .explorer-card, .explorer-folder-card, .paging-label, .explorer-badge) {
   transition:
     color var(--explorer-hover-transition),
@@ -176,9 +179,6 @@
   opacity: 1;
   transform: scale(1.05);
 }
-.explorer-badge.folder-badge {
-  color: var(--text-muted);
-}
 .explorer-badge.ext {
   opacity: 0.6;
 }
@@ -239,6 +239,15 @@
   max-width: 180px;
   min-width: 0;
 }
+.explorer-folder-card.is-dragging {
+  opacity: 0.5;
+}
+.explorer-folder-card.is-drop-target {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+  background: var(--background-modifier-hover);
+  box-shadow: var(--shadow-s);
+}
 .explorer-folder-card > * {
   min-width: 0;
   text-wrap: balance;
@@ -271,6 +280,9 @@
   box-shadow: var(--explorer-shadow-glass);
 }
 .theme-dark .explorer-folder-card:hover {
+  box-shadow: var(--input-shadow-hover);
+}
+.theme-dark .explorer-folder-card.is-drop-target {
   box-shadow: var(--input-shadow-hover);
 }
 .explorer-folder-card--missing {
@@ -315,6 +327,15 @@
   border-radius: var(--bases-cards-radius);
   transition: box-shadow var(--anim-duration-fast) ease-in-out;
 }
+.explorer-card.is-dragging {
+  opacity: 0.5;
+}
+.explorer-card.is-drop-target {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+  background-color: var(--background-modifier-hover);
+  box-shadow: var(--bases-cards-shadow-hover);
+}
 .is-mobile .explorer-card {
 }
 .explorer-card:hover {
@@ -327,10 +348,24 @@
   flex: 1;
   margin-bottom: 0.5em;
 }
+.explorer-card-folder-note-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1em;
+  height: 1em;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+.explorer-card-folder-note-icon svg {
+  width: 0.9em;
+  height: 0.9em;
+}
 .explorer-card-exts {
   opacity: .8;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--explorer-space-1);
 }
 .explorer-card-pin-slot {
@@ -422,6 +457,19 @@
   padding: 0.4em var(--explorer-space-1);
   list-style: none;
   font-size: 0.9em;
+}
+.explorer-list.is-dragging {
+  opacity: 0.5;
+}
+.explorer-list.is-drop-target {
+  background-color: var(--background-modifier-hover);
+  border-radius: var(--explorer-radius-sm);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 1px;
+}
+.explorer-list.is-drop-target .explorer-folder-type-badge {
+  border-color: var(--interactive-accent);
+  opacity: 1;
 }
 .explorer-list:hover {
   border-radius: var(--explorer-radius-sm);
@@ -647,6 +695,12 @@
 .explorer-container:not(.use-glass) .action-item:focus-visible {
   color: var(--text-normal);
   opacity: 1;
+}
+.explorer-parent-action.is-drop-target {
+  color: var(--text-normal);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+  background: var(--background-modifier-hover);
 }
 .action-group {
   display: inline-flex;

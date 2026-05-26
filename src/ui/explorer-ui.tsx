@@ -10,6 +10,8 @@ import {
   openOrCreateFolderNote,
 } from "../explorer/navigation";
 import { promptAndCreateFolder, promptAndCreateNote } from "../explorer/create";
+import { moveIntoFolder } from "../explorer/move";
+import { ConfirmationDialog } from "./modals/prompt-modal";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
@@ -21,10 +23,11 @@ interface ExplorerUIProps {
   model: ExplorerModel;
   onOpenSettings: () => void;
   onSavePluginSettings: () => void | Promise<void>;
+  onRefresh: () => void;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
-  const { model, onOpenSettings, onSavePluginSettings } = props;
+  const { model, onOpenSettings, onSavePluginSettings, onRefresh } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
   const onOpenFolderNote = (folder: TFolder, newLeaf: boolean) =>
@@ -36,6 +39,28 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       newLeaf,
       onSavePluginSettings,
     );
+  const performMove = async (sourcePath: string, folder: TFolder) => {
+    if (await moveIntoFolder(app, sourcePath, folder)) onRefresh();
+  };
+  const onMoveIntoFolder = (
+    sourcePath: string,
+    folder: TFolder,
+    fromFolderNote: boolean,
+  ) => {
+    if (!fromFolderNote) return performMove(sourcePath, folder);
+
+    const source = app.vault.getAbstractFileByPath(sourcePath);
+    if (!(source instanceof TFolder)) return;
+
+    const message = `This is a folder note. Dragging it to ${folder.name} will move the folder ${source.name} there.`;
+    new ConfirmationDialog(
+      app,
+      "Move folder?",
+      () => performMove(sourcePath, folder),
+      undefined,
+      message,
+    ).open();
+  };
 
   const {
     searchMode,
@@ -72,11 +97,18 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           files={files}
           extForCard={extForCard}
           onOpenFolderNote={onOpenFolderNote}
+          onMoveIntoFolder={onMoveIntoFolder}
         />
       );
     }
 
-    return <ListView model={model} files={files} />;
+    return (
+      <ListView
+        model={model}
+        files={files}
+        onMoveIntoFolder={onMoveIntoFolder}
+      />
+    );
   };
 
   const showLoadMore = paginationKind === "load-more" && canLoadMore;
@@ -93,6 +125,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {/* {!Platform.isMobile && <Divider size="sm" />} */}
       <Divider size="sm" />
       <ActionsBar
+        app={app}
+        parentDropFolder={model.folder.parent}
+        onMoveIntoFolder={onMoveIntoFolder}
         showParentNavigation={
           settings.showParentButton &&
           canGoToParentFolderNote(app, model.pluginSettings, model.blockFile)
@@ -120,8 +155,10 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           )} */}
           <Divider size={folderDivider} />
           <FolderButtons
+            app={app}
             folderInfos={model.folders}
             onOpenFolderNote={onOpenFolderNote}
+            onMoveIntoFolder={onMoveIntoFolder}
           />
         </>
       )}
