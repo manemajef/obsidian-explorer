@@ -1,12 +1,10 @@
 import React from "react";
 import { App, TFolder } from "obsidian";
 import { FolderInfo } from "../../types";
-import {
-  draggableProps,
-  folderDropProps,
-  MoveIntoFolder,
-} from "../drag-drop";
+import { draggableProps, folderDropProps, MoveIntoFolder } from "../drag-drop";
 import { showFolderContextMenu, type ContextMenuConfig } from "../context-menu";
+
+const LONG_FOLDER_NAME_LENGTH = 20;
 
 export function FolderButtons(props: {
   app: App;
@@ -15,13 +13,8 @@ export function FolderButtons(props: {
   onMoveIntoFolder: MoveIntoFolder;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const {
-    app,
-    folderInfos,
-    onOpenFolderNote,
-    onMoveIntoFolder,
-    contextMenu,
-  } = props;
+  const { app, folderInfos, onOpenFolderNote, onMoveIntoFolder, contextMenu } =
+    props;
 
   return (
     <div className="explorer-folders-grid explorer-folders-view">
@@ -32,11 +25,12 @@ export function FolderButtons(props: {
           ? existingNote.path
           : `${folderInfo.folder.path}/${folderInfo.folder.name}.md`;
         const linkText = folderInfo.folder.name;
+        const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
 
         return (
           <div
             key={folderNotePath}
-            className={`explorer-folder-card${isMissing ? " explorer-folder-card--missing" : ""}`}
+            className={`explorer-folder-card${isLongName ? " explorer-folder-card--long-name" : ""}${isMissing ? " explorer-folder-card--missing" : ""}`}
             {...draggableProps(folderInfo.folder)}
             {...folderDropProps(app, folderInfo.folder, onMoveIntoFolder)}
             onContextMenuCapture={(event) =>

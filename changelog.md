@@ -2,7 +2,7 @@
 
 ## 1.2.0 (Future Date)
 This release brings exsiting new features helping you better manage youre vault file system directly from the editor ui. including new drag-and-drop interface, context menu, and easier pinning.
- 
+
 ## New 
 ### Control file filesystem from the ui (Desktop only) 
 - drag and drop notes and folders into folders directly from Explorer view.
@@ -18,7 +18,7 @@ This release brings exsiting new features helping you better manage youre vault 
 - cards show last edited date date instead of created date when card extension is set to auto
 - folder notes dont appear under `markdown` only 
 
-## bug fixes 
+## bug fixes
 - folder notes now show parent folder as folder in card extension
 
 

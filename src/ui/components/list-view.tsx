@@ -2,7 +2,7 @@ import React from "react";
 import { Platform } from "obsidian";
 import { FileInfo } from "../../types";
 import { ExplorerModel } from "../../explorer/model";
-import { Icon, InternalLink } from "./shared";
+import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
@@ -63,13 +63,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
           >
             {fileInfo.isPinned ? (
               <span
-                style={{
-                  marginInlineStart: settings.showListBullets
-                    ? "-.5em"
-                    : "-.2em",
-                  marginTop: ".2em",
-                  // transform: "scale(0.9)",
-                }}
+                className={`explorer-list-pin${settings.showListBullets ? " with-bullets" : ""}`}
               >
                 <Pin fileInfo={fileInfo} />
               </span>
@@ -95,7 +89,9 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                     : `${fileInfo.file.basename}.${fileInfo.file.extension}`
                 }
               />
-
+              {fileInfo.tags && fileInfo.tags.length > 0 && (
+                <span className="list-tags-seperator" />
+              )}
               <div className="explorer-list-tags">
                 {settings.showTags &&
                   fileInfo.tags?.map((t) => (

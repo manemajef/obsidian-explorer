@@ -40,7 +40,13 @@
   flex: 1 1 auto;
   max-width: 180px;
   min-width: 0;
+  text-align: center;
 }
+
+/* .explorer-folder-card--long-name {
+  max-width: 180px;
+  text-align: center;
+} */
 
 .explorer-folder-card.is-dragging {
   opacity: 0.5;
@@ -55,7 +61,6 @@
 
 .explorer-folder-card > * {
   min-width: 0;
-  text-wrap: balance;
   overflow-wrap: anywhere;
 }
 
