@@ -1,4 +1,4 @@
-import { App, Notice, TFile, TFolder } from "obsidian";
+import { App, MarkdownView, Notice, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { PluginSettings } from "./settings";
 import { isFolderNote } from "./file-utils";
 import { ConfirmationDialog } from "../ui/modals/prompt-modal";
@@ -111,7 +111,7 @@ export async function openOrCreateFolderNote(
         : `${parentPath}/${folder.name}.md`;
     const parentNote = app.vault.getAbstractFileByPath(parentNotePath);
     if (parentNote instanceof TFile) {
-      void app.workspace.openLinkText(parentNote.path, sourcePath, newLeaf);
+      await openExplorerPage(app, parentNote, sourcePath, newLeaf);
       return;
     }
   }
@@ -119,7 +119,7 @@ export async function openOrCreateFolderNote(
   const folderNotePath = `${folder.path}/${folder.name}.md`;
   const existing = app.vault.getAbstractFileByPath(folderNotePath);
   if (existing instanceof TFile) {
-    void app.workspace.openLinkText(existing.path, sourcePath, newLeaf);
+    await openExplorerPage(app, existing, sourcePath, newLeaf);
     return;
   }
   const tryCreateNew = async (): Promise<void> => {
@@ -128,7 +128,7 @@ export async function openOrCreateFolderNote(
         folderNotePath,
         FOLDERNOTE_TEMPLATE,
       );
-      void app.workspace.openLinkText(created.path, sourcePath, newLeaf);
+      await openExplorerPage(app, created, sourcePath, newLeaf);
     } catch (err) {
       new Notice(`Failed to create folder note: ${err}`);
     }
@@ -146,6 +146,30 @@ export async function openHomePage(
   sourcePath = "",
   newLeaf = false,
 ): Promise<void> {
+  await useHomePageFile(app, settings, async (file) => {
+    await openExplorerPage(app, file, sourcePath, newLeaf);
+  });
+}
+
+export async function openHomePageInEmptyLeaf(
+  app: App,
+  settings: PluginSettings,
+  leaf: WorkspaceLeaf,
+): Promise<void> {
+  if (!isEmptyLeaf(leaf)) return;
+
+  await useHomePageFile(app, settings, async (file) => {
+    if (!isEmptyLeaf(leaf)) return;
+    await leaf.openFile(file);
+    moveCursorBelowExplorerInEditMode(leaf, file);
+  });
+}
+
+async function useHomePageFile(
+  app: App,
+  settings: PluginSettings,
+  openFile: (file: TFile) => Promise<void>,
+): Promise<void> {
   const configuredName = settings.homePageName.trim();
   if (
     settings.useHomePage &&
@@ -160,7 +184,7 @@ export async function openHomePage(
 
   const existing = app.vault.getAbstractFileByPath(homePath);
   if (existing instanceof TFile) {
-    await app.workspace.openLinkText(existing.path, sourcePath, newLeaf);
+    await openFile(existing);
     return;
   }
   if (existing) {
@@ -170,10 +194,43 @@ export async function openHomePage(
 
   try {
     const created = await app.vault.create(homePath, HOME_PAGE_TEMPLATE);
-    await app.workspace.openLinkText(created.path, sourcePath, newLeaf);
+    await openFile(created);
   } catch (err) {
     new Notice(`Failed to create homepage: ${err}`);
   }
+}
+
+function isEmptyLeaf(leaf: WorkspaceLeaf): boolean {
+  return leaf.getViewState().type === "empty";
+}
+
+async function openExplorerPage(
+  app: App,
+  file: TFile,
+  sourcePath: string,
+  newLeaf: boolean,
+): Promise<void> {
+  await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
+
+  const leaf = app.workspace.getMostRecentLeaf();
+  if (leaf) moveCursorBelowExplorerInEditMode(leaf, file);
+}
+
+function moveCursorBelowExplorerInEditMode(
+  leaf: WorkspaceLeaf,
+  file: TFile,
+): void {
+  const view = leaf.view;
+  if (
+    !(view instanceof MarkdownView) ||
+    view.file?.path !== file.path ||
+    view.getMode() === "preview"
+  ) {
+    return;
+  }
+
+  const line = view.editor.lastLine();
+  view.editor.setCursor({ line, ch: view.editor.getLine(line).length });
 }
 
 function resolveHomePagePath(

@@ -3,13 +3,19 @@ import ExplorerPlugin from "../../main";
 import {
   BlockSettingKey,
   BlockSettings,
+  PLUGIN_SETTINGS_SCHEMA,
+  PluginGlobalSettings,
+  PluginSettingKey,
   SettingsSection,
   getSettingSurfaces,
   createDefaultPluginSettings,
+  getPluginSettingKeysForSection,
   getSettingKeysForSurface,
   getSettingSection,
+  isPluginSettingVisible,
 } from "../explorer/settings";
 import { renderSettingField } from "./render-setting-field";
+import { isHomePageNewTabManagedElsewhere } from "../explorer/new-tab";
 
 type SectionMeta = {
   title: string;
@@ -110,7 +116,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       }
 
       if (section === "navigation") {
-        this.renderHomePageSettings(containerEl);
+        this.renderNavigationSettings(containerEl);
       }
 
       for (const key of sectionKeys) {
@@ -170,36 +176,61 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     this.plugin.refreshExplorerBlocks();
   }
 
-  private renderHomePageSettings(containerEl: HTMLElement): void {
-    new Setting(containerEl)
-      .setName("Use homepage")
-      .setDesc("Open a root homepage when navigating above a root folder note.")
-      .addToggle((toggle) => {
+  private renderNavigationSettings(containerEl: HTMLElement): void {
+    for (const key of getPluginSettingKeysForSection("navigation")) {
+      if (!isPluginSettingVisible(key, this.plugin.settings)) continue;
+      this.renderPluginSetting(containerEl, key);
+    }
+  }
+
+  private renderPluginSetting(containerEl: HTMLElement, key: PluginSettingKey) {
+    const field = PLUGIN_SETTINGS_SCHEMA[key];
+    const description =
+      key === "openHomePageInNewTabs" &&
+      isHomePageNewTabManagedElsewhere(this.app)
+        ? "Inactive while the New Tab Default Page plugin is enabled because it manages this behavior."
+        : field.description;
+    const setting = new Setting(containerEl)
+      .setName(field.label)
+      .setDesc(description);
+
+    if (field.kind === "boolean") {
+      setting.addToggle((toggle) => {
         toggle
-          .setValue(this.plugin.settings.useHomePage)
-          .onChange(async (value) => {
-            this.plugin.settings.useHomePage = value;
-            await this.plugin.saveSettings();
-            this.plugin.refreshExplorerBlocks();
-            this.display();
+          .setValue(this.plugin.settings[key] as boolean)
+          .onChange((value) => {
+            void this.updatePluginSetting(
+              key,
+              value as PluginGlobalSettings[typeof key],
+            );
           });
       });
-
-    if (!this.plugin.settings.useHomePage) {
       return;
     }
 
-    new Setting(containerEl)
-      .setName("Homepage name")
-      .setDesc("Root note name. Leave empty to use the vault name.")
-      .addText((text) => {
-        text
-          .setPlaceholder(this.app.vault.getName())
-          .setValue(this.plugin.settings.homePageName)
-          .onChange(async (value) => {
-            this.plugin.settings.homePageName = value;
-            await this.plugin.saveSettings();
-          });
-      });
+    setting.addText((text) => {
+      text
+        .setPlaceholder(field.placeholder?.(this.app.vault.getName()) ?? "")
+        .setValue(this.plugin.settings[key] as string)
+        .onChange((value) => {
+          void this.updatePluginSetting(
+            key,
+            value as PluginGlobalSettings[typeof key],
+          );
+        });
+    });
+  }
+
+  private async updatePluginSetting<K extends PluginSettingKey>(
+    key: K,
+    value: PluginGlobalSettings[K],
+  ): Promise<void> {
+    (this.plugin.settings as PluginGlobalSettings)[key] = value;
+    await this.plugin.saveSettings();
+
+    if (key === "useHomePage") {
+      this.plugin.refreshExplorerBlocks();
+      this.display();
+    }
   }
 }

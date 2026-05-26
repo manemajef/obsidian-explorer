@@ -13,6 +13,7 @@ import {
 } from "./src/explorer/navigation";
 import { promptAndCreateFolder } from "./src/explorer/create";
 import { togglePin } from "./src/explorer/file-utils";
+import { registerHomePageNewTabs } from "./src/explorer/new-tab";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -41,6 +42,7 @@ export default class ExplorerPlugin extends Plugin {
         );
       },
     );
+    registerHomePageNewTabs(this, () => this.settings);
   }
 
   onunload() {}

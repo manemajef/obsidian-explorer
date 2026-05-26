@@ -1,383 +1,16 @@
-export type SortBy = "newest" | "oldest" | "edited" | "name" | "nameDesc";
-export type ViewMode = "cards" | "list";
-export type DirectionMode = "rtl" | "ltr" | "auto";
-export type PaginationStyle = "modern" | "classic" | "none";
-export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
-
-export type CardExt =
-  | "folder"
-  | "ctime"
-  | "mtime"
-  | "desc"
-  | "none"
-  | "default";
-
-export type SettingsSurface = "plugin" | "block";
-export type SettingsSection =
-  | "core"
-  | "behavior"
-  | "display"
-  | "appearance"
-  | "navigation";
-
-type SettingUiMeta = {
-  surfaces: readonly SettingsSurface[];
-  section: SettingsSection;
-  order: number;
-  labels?: Partial<Record<SettingsSurface, string>>;
-};
-
-type LegacySettingAlias<T> = {
-  blockKeys: readonly string[];
-  resolve: (source: Record<string, unknown>) => T | undefined;
-};
-
-type BaseSettingField<T> = {
-  label: string;
-  description?: string;
-  blockKey: string;
-  defaultValue: T;
-  legacy?: LegacySettingAlias<T>;
-  ui: SettingUiMeta;
-};
-
-type EnumSettingField<T extends string> = BaseSettingField<T> & {
-  kind: "enum";
-  options: readonly T[];
-  optionLabels?: Partial<Record<T, string>>;
-};
-
-type NumberSettingField = BaseSettingField<number> & {
-  kind: "number";
-  min: number;
-  max: number;
-  step?: number;
-};
-
-type BooleanSettingField = BaseSettingField<boolean> & {
-  kind: "boolean";
-};
-
-export type SettingField<T> =
-  | EnumSettingField<Extract<T, string>>
-  | NumberSettingField
-  | BooleanSettingField;
-
-const enumField = <T extends string>(
-  field: Omit<EnumSettingField<T>, "kind">,
-): EnumSettingField<T> => ({
-  kind: "enum",
-  ...field,
-});
-
-const numberField = (
-  field: Omit<NumberSettingField, "kind">,
-): NumberSettingField => ({
-  kind: "number",
-  ...field,
-});
-
-const booleanField = (
-  field: Omit<BooleanSettingField, "kind">,
-): BooleanSettingField => ({
-  kind: "boolean",
-  ...field,
-});
-
-export const BLOCK_SETTINGS_SCHEMA = {
-  view: enumField<ViewMode>({
-    label: "View",
-    description: "How to display files",
-    blockKey: "view",
-    defaultValue: "list",
-    options: ["cards", "list"],
-    optionLabels: {
-      cards: "Cards",
-      list: "List",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      order: 10,
-      labels: {
-        plugin: "Default view",
-      },
-    },
-  }),
-  sortBy: enumField<SortBy>({
-    label: "Sort by",
-    description: "How to sort files",
-    blockKey: "sortBy",
-    defaultValue: "oldest",
-    options: ["newest", "oldest", "edited", "name", "nameDesc"],
-    optionLabels: {
-      newest: "Newest",
-      oldest: "Oldest",
-      edited: "Last edited",
-      name: "Name",
-      nameDesc: "Name (reverse)",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      order: 20,
-      labels: {
-        plugin: "Default sort",
-      },
-    },
-  }),
-  depth: numberField({
-    label: "Subfolder depth",
-    description: "0 = current folder only, 1+ includes nested folders",
-    blockKey: "depth",
-    defaultValue: 0,
-    min: 0,
-    max: 10,
-    step: 1,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      order: 30,
-      labels: {
-        plugin: "Default depth",
-      },
-    },
-  }),
-  paginationStyle: enumField<PaginationStyle>({
-    label: "Pagination style",
-    description:
-      "Load more appends pages, classic shows page buttons, none shows every file.",
-    blockKey: "paginationStyle",
-    defaultValue: "modern",
-    options: ["modern", "classic", "none"],
-    optionLabels: {
-      modern: "Load more",
-      classic: "Classic",
-      none: "None",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      order: 40,
-      labels: {
-        plugin: "Pagination style",
-      },
-    },
-    legacy: {
-      blockKeys: ["usePagination"],
-      resolve: resolveLegacyPaginationStyle,
-    },
-  }),
-  showTags: booleanField({
-    label: "Display Tags",
-    description: "Show Tags in list and card view",
-    blockKey: "showTags",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 5,
-      labels: {
-        plugin: "Default tag display",
-      },
-    },
-  }),
-  pageSize: numberField({
-    label: "Page size",
-    description: "Number of items per page",
-    blockKey: "pageSize",
-    defaultValue: 15,
-    min: 6,
-    max: 100,
-    step: 1,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      order: 50,
-      labels: {
-        plugin: "Default page size",
-      },
-    },
-  }),
-  useGlass: booleanField({
-    label: "Use glass action bar",
-    description: "Use the glass style for the action bar controls",
-    blockKey: "useGlass",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      order: 10,
-    },
-  }),
-  showListBullets: booleanField({
-    label: "Use bullets in lists",
-    description: "display lists with bullets, turn off for plain lists",
-    blockKey: "showListBullets",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      order: 11,
-    },
-  }),
-
-  displayNestedFolderNotes: booleanField({
-    label: "Display nested folder notes as notes",
-    description:
-      "When displaying nested notes, also show folder notes in the notes list.",
-    defaultValue: true,
-    blockKey: "displayNestedFolderNotes",
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 9.5,
-    },
-  }),
-  ShowIconsInCards: booleanField({
-    label: "Show icons in cards view",
-    blockKey: "showIconsInCards",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      order: 12,
-    },
-  }),
-  cardExt: enumField<CardExt>({
-    label: "Card footer",
-    description: "What to show on card footer",
-    blockKey: "cardExt",
-    defaultValue: "default",
-    options: ["folder", "ctime", "mtime", "desc", "none", "default"],
-    optionLabels: {
-      folder: "Folder",
-      ctime: "Created",
-      mtime: "Modified",
-      desc: "Description",
-      none: "None",
-      default: "Default",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 10,
-      labels: {
-        plugin: "Default card footer",
-        block: "Card info",
-      },
-    },
-  }),
-  textDirection: enumField<DirectionMode>({
-    label: "Text direction",
-    description:
-      "Set explicit text direction for mixed RTL and LTR files (Arabic, Hebrew), for most users best to leave it `auto`.",
-    blockKey: "textDirection",
-    defaultValue: "auto",
-    options: ["auto", "ltr", "rtl"],
-    optionLabels: {
-      rtl: "Right to left",
-      ltr: "Left to right",
-      auto: "Auto (based on filename)",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "behavior",
-      order: 50,
-      labels: {
-        plugin: "Default text direction",
-      },
-    },
-  }),
-
-  showFolders: booleanField({
-    label: "Show folders",
-    description: "Show folder buttons",
-    blockKey: "showFolders",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 20,
-    },
-  }),
-  displayedNotes: enumField<DisplayedNotes>({
-    label: "Displayed notes",
-    description:
-      "Show supported files or only Markdown. Select all for unsupported files, or none to hide.",
-    blockKey: "displayedNotes",
-    defaultValue: "supported",
-    options: ["supported", "markdown", "all", "none"],
-    optionLabels: {
-      supported: "Supported files",
-      markdown: "Only Markdown",
-      all: "All files",
-      none: "None",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 30,
-      labels: {
-        plugin: "Displayed notes",
-      },
-    },
-    legacy: {
-      blockKeys: ["showNotes", "onlyNotes", "showUnsupportedFiles"],
-      resolve: resolveLegacyDisplayedNotes,
-    },
-  }),
-  showParentButton: booleanField({
-    label: "Show parent folder button",
-    description: "Show a button to navigate to the parent folder",
-    blockKey: "showParentButton",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 10,
-    },
-  }),
-  askForFolderNoteCreation: booleanField({
-    label: "Ask before folder note creation",
-    description:
-      "display a confirmation dialog before creating new foldernote when clicking on a folder in the ui",
-    blockKey: "askForFolderNoteCreation",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 9.5,
-    },
-  }),
-} as const;
-
-type InferSettingValue<T> =
-  T extends SettingField<infer V>
-    ? V
-    : T extends NumberSettingField
-      ? number
-      : T extends BooleanSettingField
-        ? boolean
-        : never;
-
-export type BlockSettings = {
-  -readonly [K in keyof typeof BLOCK_SETTINGS_SCHEMA]: InferSettingValue<
-    (typeof BLOCK_SETTINGS_SCHEMA)[K]
-  >;
-};
-
-export type BlockSettingKey = keyof BlockSettings;
-
-export interface PluginSettings {
-  defaultBlockSettings: BlockSettings;
-  useHomePage: boolean;
-  homePageName: string;
-}
-
-export const BLOCK_SETTING_KEYS = Object.keys(
+import {
   BLOCK_SETTINGS_SCHEMA,
-) as BlockSettingKey[];
+  BLOCK_SETTING_KEYS,
+  PLUGIN_SETTINGS_SCHEMA,
+  PLUGIN_SETTING_KEYS,
+  BlockSettingKey,
+  BlockSettings,
+  PluginGlobalSettings,
+  PluginSettingKey,
+  PluginSettings,
+} from "./settings-schema";
+
+export * from "./settings-schema";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -393,52 +26,6 @@ const LEGACY_BLOCK_KEYS = new Set(
   ),
 );
 
-const SETTING_SECTION_SORT_ORDER: SettingsSection[] = [
-  "core",
-  "display",
-  "behavior",
-  "appearance",
-  "navigation",
-];
-
-export function getSettingKeysForSurface(
-  surface: SettingsSurface,
-): BlockSettingKey[] {
-  return BLOCK_SETTING_KEYS.filter((key) =>
-    BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
-  ).sort((a, b) => {
-    const sectionDiff =
-      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[a].ui.section) -
-      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[b].ui.section);
-
-    if (sectionDiff !== 0) {
-      return sectionDiff;
-    }
-
-    return (
-      BLOCK_SETTINGS_SCHEMA[a].ui.order - BLOCK_SETTINGS_SCHEMA[b].ui.order
-    );
-  });
-}
-
-export function getSettingLabel(
-  key: BlockSettingKey,
-  surface: SettingsSurface,
-): string {
-  const field = BLOCK_SETTINGS_SCHEMA[key];
-  return field.ui.labels?.[surface] ?? field.label;
-}
-
-export function getSettingSection(key: BlockSettingKey): SettingsSection {
-  return BLOCK_SETTINGS_SCHEMA[key].ui.section;
-}
-
-export function getSettingSurfaces(
-  key: BlockSettingKey,
-): readonly SettingsSurface[] {
-  return BLOCK_SETTINGS_SCHEMA[key].ui.surfaces;
-}
-
 export function getSettingKeyForBlockKey(
   blockKey: string,
 ): BlockSettingKey | undefined {
@@ -447,19 +34,6 @@ export function getSettingKeyForBlockKey(
 
 export function isLegacySettingBlockKey(blockKey: string): boolean {
   return LEGACY_BLOCK_KEYS.has(blockKey);
-}
-
-export function getEnumOptionLabel<K extends BlockSettingKey>(
-  key: K,
-  value: Extract<BlockSettings[K], string>,
-): string {
-  const field = BLOCK_SETTINGS_SCHEMA[key];
-  if (field.kind !== "enum") {
-    return String(value);
-  }
-
-  const labels = field.optionLabels as Record<string, string> | undefined;
-  return labels?.[String(value)] ?? String(value);
 }
 
 export function createDefaultBlockSettings(): BlockSettings {
@@ -476,11 +50,21 @@ export function createDefaultBlockSettings(): BlockSettings {
 export const DEFAULT_BLOCK_SETTINGS: BlockSettings =
   createDefaultBlockSettings();
 
+function createDefaultGlobalSettings(): PluginGlobalSettings {
+  const defaults = {} as PluginGlobalSettings;
+
+  for (const key of PLUGIN_SETTING_KEYS) {
+    (defaults as Record<PluginSettingKey, unknown>)[key] =
+      PLUGIN_SETTINGS_SCHEMA[key].defaultValue;
+  }
+
+  return defaults;
+}
+
 export function createDefaultPluginSettings(): PluginSettings {
   return {
     defaultBlockSettings: createDefaultBlockSettings(),
-    useHomePage: true,
-    homePageName: "",
+    ...createDefaultGlobalSettings(),
   };
 }
 
@@ -518,50 +102,6 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function hasOwn(source: Record<string, unknown>, key: string): boolean {
-  return key in source;
-}
-
-function coerceLegacyBoolean(value: unknown): boolean | undefined {
-  if (typeof value === "boolean") return value;
-  if (value === "true") return true;
-  if (value === "false") return false;
-  return undefined;
-}
-
-function resolveLegacyPaginationStyle(
-  source: Record<string, unknown>,
-): PaginationStyle | undefined {
-  const usePagination = coerceLegacyBoolean(source.usePagination);
-  if (usePagination === false) return "none";
-  if (!hasOwn(source, "paginationStyle") && usePagination === true) {
-    return "modern";
-  }
-  return undefined;
-}
-
-function resolveLegacyDisplayedNotes(
-  source: Record<string, unknown>,
-): DisplayedNotes | undefined {
-  if (hasOwn(source, "displayedNotes")) return undefined;
-
-  const showNotes = coerceLegacyBoolean(source.showNotes);
-  const onlyNotes = coerceLegacyBoolean(source.onlyNotes);
-  const showUnsupportedFiles = coerceLegacyBoolean(source.showUnsupportedFiles);
-
-  if (showNotes === false) return "none";
-  if (onlyNotes === true) return "markdown";
-  if (showUnsupportedFiles === true) return "all";
-  if (
-    hasOwn(source, "showNotes") ||
-    hasOwn(source, "onlyNotes") ||
-    hasOwn(source, "showUnsupportedFiles")
-  ) {
-    return "supported";
-  }
-  return undefined;
-}
-
 function applyLegacySettingAliases(
   source: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -596,9 +136,7 @@ function coerceFieldValue<K extends BlockSettingKey>(
           ? Number.parseInt(value, 10)
           : NaN;
 
-    if (Number.isNaN(numeric)) {
-      return fallback;
-    }
+    if (Number.isNaN(numeric)) return fallback;
 
     return clamp(numeric, field.min, field.max) as BlockSettings[K];
   }
@@ -668,7 +206,7 @@ export function coercePartialBlockSettings(
   const normalized: Partial<BlockSettings> = {};
 
   for (const key of BLOCK_SETTING_KEYS) {
-    if (!hasOwn(source, key)) continue;
+    if (!(key in source)) continue;
     const value = parseFieldValue(key, source[key]);
     if (value !== undefined) {
       (normalized as Record<BlockSettingKey, unknown>)[key] = value;
@@ -690,11 +228,32 @@ export function resolveBlockSettings(
   return coerceBlockSettings(merged, defaultSettings);
 }
 
+function coercePluginSettingValue<K extends PluginSettingKey>(
+  key: K,
+  value: unknown,
+  fallback: PluginGlobalSettings[K],
+): PluginGlobalSettings[K] {
+  const field = PLUGIN_SETTINGS_SCHEMA[key];
+  if (field.kind === "boolean") {
+    return (typeof value === "boolean"
+      ? value
+      : fallback) as PluginGlobalSettings[K];
+  }
+
+  return (typeof value === "string"
+    ? value
+    : fallback) as PluginGlobalSettings[K];
+}
+
 export function normalizePluginSettings(raw: unknown): PluginSettings {
   const pluginDefaults = createDefaultPluginSettings();
 
-  if (!isRecord(raw)) {
-    return pluginDefaults;
+  if (!isRecord(raw)) return pluginDefaults;
+
+  const globalSettings = {} as PluginGlobalSettings;
+  for (const key of PLUGIN_SETTING_KEYS) {
+    (globalSettings as Record<PluginSettingKey, unknown>)[key] =
+      coercePluginSettingValue(key, raw[key], pluginDefaults[key]);
   }
 
   return {
@@ -704,14 +263,7 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
           pluginDefaults.defaultBlockSettings,
         )
       : pluginDefaults.defaultBlockSettings,
-    useHomePage:
-      typeof raw.useHomePage === "boolean"
-        ? raw.useHomePage
-        : pluginDefaults.useHomePage,
-    homePageName:
-      typeof raw.homePageName === "string"
-        ? raw.homePageName
-        : pluginDefaults.homePageName,
+    ...globalSettings,
   };
 }
 

@@ -84,6 +84,7 @@ My Vault.md
 You can change this in plugin settings:
 
 - `Use homepage`
+- `Open homepage in new tabs`
 - `Homepage name`
 
 The homepage must be a root note name, not a nested path. If the configured homepage does not exist, Explorer creates it with:
@@ -98,6 +99,11 @@ pageSize: 21
 ````
 
 If homepage navigation is disabled, the parent button is hidden when it would navigate above a root folder note.
+
+Enable `Open homepage in new tabs` to replace newly opened empty tabs with
+the homepage. The option is off by default so installing Explorer does not
+change Obsidian's standard blank-tab behavior. This is inactive when the
+`New Tab Default Page` community plugin is enabled.
 
 ## Commands
 
