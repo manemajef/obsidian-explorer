@@ -97,6 +97,7 @@
   padding: 0.1em 0.5em;
 }
 
+
 .explorer-badge.pin {
   display: inline-flex;
   align-items: center;
@@ -111,7 +112,10 @@
 .explorer-badge.pin:hover {
   opacity: 1;
   transform: scale(1.05);
-
+}
+.explorer-badge.folder-badge {
+  /* transform: scale(1.1); */
+  color: var(--text-muted);
 }
 
 

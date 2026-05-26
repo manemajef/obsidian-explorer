@@ -54,9 +54,9 @@ export function CardsView(props: {
                       <Pin fileInfo={fileInfo} />
                     )}
                   </div>
-
-                  {fileInfo.file.extension !== "md" &&
-                  !isFolderNote(fileInfo.file) ? (
+                  {isFolderNote(fileInfo.file) ? (
+                    <Badge variant="folder" />
+                  ) : fileInfo.file.extension !== "md" ? (
                     <Badge variant="ext" className="explorer-card-ext-badge">
                       {fileInfo.file.extension}
                     </Badge>
@@ -113,7 +113,7 @@ function CardFooter(props: {
       return <span>{diffDays(fileInfo.file.stat.mtime)}</span>;
     case "folder": {
       const folder = fileInfo.file.parent;
-      if (!folder || !folder.name) return null;
+      if (!folder || !folder.name || isFolderNote(fileInfo.file)) return null;
       if (folder.path === currentFolderPath) return null;
       return (
         <span

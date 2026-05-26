@@ -2,11 +2,12 @@ import React from "react";
 import { Platform } from "obsidian";
 import { FileInfo } from "../../types";
 import { ExplorerModel } from "../../explorer/model";
-import { InternalLink } from "./shared";
+import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
+import { isFolderNote } from "src/explorer/file-utils";
 
 type ListViewProps = {
   model: ExplorerModel;
@@ -80,12 +81,19 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                     </Badge>
                   ))}
               </div>
-              {fileInfo.file.extension !== "md" && (
-                <>
-                  <Bar.Spring />
-                  <Badge variant="ext-filled">{fileInfo.file.extension}</Badge>
-                </>
-              )}
+              {fileInfo.file.extension !== "md" ||
+                (isFolderNote(fileInfo.file) && (
+                  <>
+                    <Bar.Spring />
+                    {isFolderNote(fileInfo.file) ? (
+                      <Badge variant="folder" />
+                    ) : (
+                      <Badge variant="ext-filled">
+                        {fileInfo.file.extension}
+                      </Badge>
+                    )}
+                  </>
+                ))}
             </Group>
           </li>
         </div>
