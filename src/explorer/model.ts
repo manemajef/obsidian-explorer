@@ -27,7 +27,7 @@ export async function buildExplorerModel(input: {
   if (!(blockFile instanceof TFile) || !blockFile.parent) return null;
 
   const folder = blockFile.parent;
-  const index = new FolderIndex(app, folder);
+  const index = new FolderIndex(app, folder, settings.excludedFolders);
   await index.loadToDepth(settings.depth, settings.displayNestedFolderNotes);
 
   let allFiles: TFile[] | null = null;

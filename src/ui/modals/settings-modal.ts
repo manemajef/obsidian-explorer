@@ -14,6 +14,7 @@ export class ExplorerSettingsModal extends Modal {
   constructor(
     app: App,
     settings: BlockSettings,
+    private readonly sourcePath: string,
     onSettingsChange: (settings: BlockSettings) => void,
   ) {
     super(app);
@@ -47,6 +48,7 @@ export class ExplorerSettingsModal extends Modal {
         "block",
         (k, v) => this.updateSetting(k, v),
         fieldRefs,
+        { app: this.app, sourcePath: this.sourcePath },
       );
     }
 

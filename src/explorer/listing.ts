@@ -20,12 +20,16 @@ export class FolderIndex {
   folderNotes: TFile[] = [];
   private files: TFile[] = [];
   private nestedFiles: TFile[] = [];
+  private readonly excludedFolderPaths: string[];
 
   constructor(
     private app: App,
     folder: TFolder,
+    excludedFolders: readonly string[] = [],
   ) {
     this.folder = folder;
+    const prefix = folder.isRoot() ? "" : `${folder.path}/`;
+    this.excludedFolderPaths = excludedFolders.map((path) => `${prefix}${path}`);
   }
 
   async loadToDepth(
@@ -65,7 +69,7 @@ export class FolderIndex {
     for (const child of this.folder.children) {
       if (child instanceof TFile && shouldIndexFile(child)) {
         this.files.push(child);
-      } else if (child instanceof TFolder) {
+      } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
         const folderNote = getFolderNoteForFolder(this.app, child);
         this.folders.push({ folder: child, folderNote });
         if (folderNote) this.folderNotes.push(folderNote);
@@ -94,7 +98,7 @@ export class FolderIndex {
       for (const child of current.folder.children) {
         if (child instanceof TFile && shouldIndexFile(child)) {
           results.push(child);
-        } else if (child instanceof TFolder) {
+        } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
           const includeFolderNote =
             current.depth === 0
               ? includeFolderNotesAtFirstLevel
@@ -118,6 +122,14 @@ export class FolderIndex {
     }
 
     return results;
+  }
+
+  private isExcludedFolder(folder: TFolder): boolean {
+    return this.excludedFolderPaths.some(
+      (excludedPath) =>
+        folder.path === excludedPath ||
+        folder.path.startsWith(`${excludedPath}/`),
+    );
   }
 }
 

@@ -42,7 +42,10 @@ export function createDefaultBlockSettings(): BlockSettings {
     BlockSettings[BlockSettingKey]
   >;
   for (const key of BLOCK_SETTING_KEYS) {
-    defaults[key] = BLOCK_SETTINGS_SCHEMA[key].defaultValue;
+    const value = BLOCK_SETTINGS_SCHEMA[key].defaultValue;
+    defaults[key] = (Array.isArray(value)
+      ? [...value]
+      : value) as BlockSettings[typeof key];
   }
   return defaults as BlockSettings;
 }
@@ -86,12 +89,22 @@ export function getBlockSettingsOverrides(
   const overrides: Partial<BlockSettings> = {};
 
   for (const key of BLOCK_SETTING_KEYS) {
-    if (settings[key] !== defaultSettings[key]) {
+    if (!settingValuesEqual(settings[key], defaultSettings[key])) {
       (overrides as Record<BlockSettingKey, unknown>)[key] = settings[key];
     }
   }
 
   return overrides;
+}
+
+function settingValuesEqual(a: unknown, b: unknown): boolean {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return (
+      a.length === b.length && a.every((value, index) => value === b[index])
+    );
+  }
+
+  return a === b;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -100,6 +113,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+function normalizeFolderPaths(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+
+  const paths: string[] = [];
+  for (const item of value) {
+    if (typeof item !== "string") return undefined;
+
+    const path = item.trim().replace(/^\/+|\/+$/g, "");
+    if (!path || path.split("/").includes("..")) continue;
+    if (!paths.includes(path)) paths.push(path);
+  }
+
+  return paths;
 }
 
 function applyLegacySettingAliases(
@@ -141,6 +169,10 @@ function coerceFieldValue<K extends BlockSettingKey>(
     return clamp(numeric, field.min, field.max) as BlockSettings[K];
   }
 
+  if (field.kind === "folder-picker") {
+    return (normalizeFolderPaths(value) ?? fallback) as BlockSettings[K];
+  }
+
   if (typeof value === "string" && field.options.includes(value as never)) {
     return value as BlockSettings[K];
   }
@@ -173,6 +205,10 @@ function parseFieldValue<K extends BlockSettingKey>(
     }
 
     return numeric as BlockSettings[K];
+  }
+
+  if (field.kind === "folder-picker") {
+    return normalizeFolderPaths(value) as BlockSettings[K] | undefined;
   }
 
   if (typeof value === "string" && field.options.includes(value as never)) {
@@ -271,14 +307,28 @@ function formatBlockValue<K extends BlockSettingKey>(
   key: K,
   value: BlockSettings[K],
 ): string {
-  return BLOCK_SETTINGS_SCHEMA[key].kind === "enum"
-    ? `"${String(value)}"`
-    : String(value);
+  const field = BLOCK_SETTINGS_SCHEMA[key];
+  if (field.kind === "enum") return `"${String(value)}"`;
+  if (field.kind === "folder-picker") return JSON.stringify(value);
+  return String(value);
 }
 
-function parseBlockScalar(rawValue: string): string | boolean {
+function parseBlockScalar(rawValue: string): unknown {
   if (rawValue === "true") return true;
   if (rawValue === "false") return false;
+  if (rawValue.startsWith("[") && rawValue.endsWith("]")) {
+    try {
+      return JSON.parse(rawValue) as unknown;
+    } catch {
+      return rawValue;
+    }
+  }
+  if (
+    (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
+    (rawValue.startsWith("'") && rawValue.endsWith("'"))
+  ) {
+    return rawValue.slice(1, -1);
+  }
   return rawValue;
 }
 
@@ -286,7 +336,7 @@ export function parseSettings(source: string): Partial<BlockSettings> {
   const overrides: Record<string, unknown> = {};
 
   for (const line of source.trim().split("\n")) {
-    const match = line.match(/^(\w+):\s*["']?([^"'\n]+)["']?$/);
+    const match = line.match(/^(\w+):\s*(.+?)\s*$/);
     if (!match) continue;
 
     const [, blockKey, value] = match;

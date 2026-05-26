@@ -127,6 +127,7 @@ sortBy: "edited"
 depth: 2
 pageSize: 21
 paginationStyle: "modern"
+excludedFolders: ["Archive", "Projects/Old"]
 ```
 ````
 
@@ -143,6 +144,7 @@ Supported block settings:
 | `showTags`        | `true`, `false`                                       |
 | `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default` |
 | `displayedNotes`  | `supported`, `markdown`, `all`, `none`                |
+| `excludedFolders` | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
 Plugin-only settings include homepage behavior, the parent button, glass controls, card icons, and list bullets.

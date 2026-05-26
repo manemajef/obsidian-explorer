@@ -28,6 +28,7 @@ type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
   section: SettingsSection;
   order: number;
+  surfaceOrder?: Partial<Record<SettingsSurface, number>>;
   labels?: Partial<Record<SettingsSurface, string>>;
   visibleWhen?: SettingVisibility;
 };
@@ -66,22 +67,30 @@ type TextSettingField = BaseSettingField<string> & {
   placeholder?: (vaultName: string) => string;
 };
 
+type FolderPickerSettingField = BaseSettingField<string[]> & {
+  kind: "folder-picker";
+  placeholder?: string;
+};
+
 export type SettingField<T> =
   | EnumSettingField<Extract<T, string>>
   | NumberSettingField
   | BooleanSettingField
-  | TextSettingField;
+  | TextSettingField
+  | FolderPickerSettingField;
 
 type AnySettingField =
   | EnumSettingField<string>
   | NumberSettingField
   | BooleanSettingField
-  | TextSettingField;
+  | TextSettingField
+  | FolderPickerSettingField;
 
 type BlockField = (
   | EnumSettingField<string>
   | NumberSettingField
   | BooleanSettingField
+  | FolderPickerSettingField
 ) & {
   blockKey: string;
   legacy?: LegacySettingAlias<unknown>;
@@ -112,6 +121,15 @@ const textField = <F extends Omit<TextSettingField, "kind">>(
   field: F,
 ): F & { kind: "text" } => ({
   kind: "text",
+  ...field,
+});
+
+const folderPickerField = <
+  F extends Omit<FolderPickerSettingField, "kind">,
+>(
+  field: F,
+): F & { kind: "folder-picker" } => ({
+  kind: "folder-picker",
   ...field,
 });
 
@@ -198,6 +216,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       order: 10,
+      surfaceOrder: { block: 10 },
       labels: { plugin: "Default view" },
     },
   }),
@@ -218,6 +237,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       order: 20,
+      surfaceOrder: { block: 20 },
       labels: { plugin: "Default sort" },
     },
   }),
@@ -233,6 +253,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       order: 30,
+      surfaceOrder: { block: 30 },
       labels: { plugin: "Default depth" },
     },
   }),
@@ -252,6 +273,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       order: 40,
+      surfaceOrder: { block: 80 },
       labels: { plugin: "Pagination style" },
     },
     legacy: {
@@ -271,6 +293,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       order: 50,
+      surfaceOrder: { block: 90 },
       labels: { plugin: "Default page size" },
     },
   }),
@@ -283,6 +306,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "display",
       order: 5,
+      surfaceOrder: { block: 70 },
       labels: { plugin: "Default tag display" },
     },
   }),
@@ -348,6 +372,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "display",
       order: 10,
+      surfaceOrder: { block: 60 },
       labels: { plugin: "Default card footer", block: "Card info" },
     },
   }),
@@ -367,6 +392,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "behavior",
       order: 50,
+      surfaceOrder: { block: 100 },
       labels: { plugin: "Default text direction" },
     },
   }),
@@ -379,6 +405,20 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "display",
       order: 20,
+      surfaceOrder: { block: 40 },
+    },
+  }),
+  excludedFolders: folderPickerField({
+    label: "Excluded folders",
+    description: "Hide selected nested folders and everything inside them.",
+    blockKey: "excludedFolders",
+    defaultValue: [],
+    placeholder: "Choose a nested folder",
+    ui: {
+      surfaces: ["block"],
+      section: "display",
+      order: 25,
+      surfaceOrder: { block: 110 },
     },
   }),
   displayedNotes: enumField({
@@ -398,6 +438,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "display",
       order: 30,
+      surfaceOrder: { block: 50 },
       labels: { plugin: "Displayed notes" },
     },
     legacy: {
@@ -473,6 +514,8 @@ type InferSettingValue<T> =
       ? number
       : T extends BooleanSettingField
         ? boolean
+        : T extends FolderPickerSettingField
+          ? string[]
         : T extends TextSettingField
           ? string
           : never;
@@ -515,6 +558,13 @@ export function getSettingKeysForSurface(
   return BLOCK_SETTING_KEYS.filter((key) =>
     BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
   ).sort((a, b) => {
+    const surfaceA = BLOCK_SETTINGS_SCHEMA[a].ui.surfaceOrder?.[surface];
+    const surfaceB = BLOCK_SETTINGS_SCHEMA[b].ui.surfaceOrder?.[surface];
+    if (surfaceA !== undefined || surfaceB !== undefined) {
+      return (surfaceA ?? Number.MAX_SAFE_INTEGER) -
+        (surfaceB ?? Number.MAX_SAFE_INTEGER);
+    }
+
     const sectionDiff =
       SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[a].ui.section) -
       SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[b].ui.section);

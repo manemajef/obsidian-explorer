@@ -69,19 +69,24 @@ export async function renderExplorerBlock(
   ctx.addChild(child);
 
   const openSettings = (): void => {
-    new ExplorerSettingsModal(app, effectiveSettings, (newSettings) => {
-      effectiveSettings = newSettings;
-      const blockDefaults = getBlockDefaults();
-      blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
-      void updateExplorerBlock(
-        app,
-        container,
-        ctx,
-        ctx.sourcePath,
-        blockDefaults,
-        newSettings,
-      ).then(render);
-    }).open();
+    new ExplorerSettingsModal(
+      app,
+      effectiveSettings,
+      ctx.sourcePath,
+      (newSettings) => {
+        effectiveSettings = newSettings;
+        const blockDefaults = getBlockDefaults();
+        blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
+        void updateExplorerBlock(
+          app,
+          container,
+          ctx,
+          ctx.sourcePath,
+          blockDefaults,
+          newSettings,
+        ).then(render);
+      },
+    ).open();
   };
 
   const render = async (): Promise<void> => {
