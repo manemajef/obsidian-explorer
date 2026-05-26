@@ -208,9 +208,17 @@
   flex-wrap: wrap;
   gap: var(--explorer-space-4);
 }
+.explorer-folders-grid::after {
+  content: "";
+  flex: 999 1 0;
+}
 .is-mobile .explorer-folders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: var(--explorer-space-4);
+}
+.is-mobile .explorer-folders-grid::after {
+  content: none;
 }
 .explorer-folder-card {
   box-sizing: border-box;
@@ -224,8 +232,12 @@
   padding: 0.8em var(--explorer-space-6);
   font-size: 0.9em;
   transition: 0.15s;
-  flex: 1 1 max-content;
+  flex: 1 1 auto;
   max-width: 180px;
+  min-width: 0;
+}
+.explorer-folder-card > * {
+  min-width: 0;
 }
 .explorer-folder-card:hover {
   box-shadow: var(--shadow-s);
