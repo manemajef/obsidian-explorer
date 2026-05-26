@@ -221,6 +221,19 @@ export const BLOCK_SETTINGS_SCHEMA = {
       order: 11,
     },
   }),
+
+  displayNestedFolderNotes: booleanField({
+    label: "Display nested folder notes as notes",
+    description:
+      "When displaying nested notes, also show folder notes in the notes list.",
+    defaultValue: true,
+    blockKey: "displayNestedFolderNotes",
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 9.5,
+    },
+  }),
   ShowIconsInCards: booleanField({
     label: "Show icons in cards view",
     blockKey: "showIconsInCards",

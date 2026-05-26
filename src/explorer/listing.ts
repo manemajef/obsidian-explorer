@@ -28,15 +28,25 @@ export class FolderIndex {
     this.folder = folder;
   }
 
-  async loadToDepth(depth: number): Promise<void> {
+  async loadToDepth(
+    depth: number,
+    includeNestedFolderNotes: boolean,
+  ): Promise<void> {
     // if loading not just direct children of folder, use BFS to list the depth levels
     this.loadImmediate();
-    if (depth > 0) this.nestedFiles = await this.walkFolder(depth, true, false);
+    if (depth > 0) {
+      this.nestedFiles = await this.walkFolder(
+        depth,
+        false,
+        includeNestedFolderNotes,
+        false,
+      );
+    }
   }
 
   async getAllContent(): Promise<TFile[]> {
     // load all sub files without depth limit
-    return this.walkFolder(null, false, true);
+    return this.walkFolder(null, false, true, true);
   }
 
   getFilesToDisplay(settings: BlockSettings): TFile[] {
@@ -69,6 +79,7 @@ export class FolderIndex {
     // BFS loading sub folders content
     depth: number | null, // null means no depth limit
     includeFolderNotesAtFirstLevel: boolean,
+    includeFolderNotes: boolean,
     yieldToBrowser: boolean,
   ): Promise<TFile[]> {
     const results: TFile[] = [];
@@ -84,7 +95,11 @@ export class FolderIndex {
         if (child instanceof TFile && shouldIndexFile(child)) {
           results.push(child);
         } else if (child instanceof TFolder) {
-          if (current.depth > 0 || includeFolderNotesAtFirstLevel) {
+          const includeFolderNote =
+            current.depth === 0
+              ? includeFolderNotesAtFirstLevel
+              : includeFolderNotes;
+          if (includeFolderNote) {
             const folderNote = getFolderNoteForFolder(this.app, child);
             if (folderNote) results.push(folderNote);
           }
@@ -144,7 +159,6 @@ function isExcludedExplorerFile(file: TFile): boolean {
 }
 
 function filterDisplayedFiles(
-  // file visibility rules
   files: TFile[],
   displayedNotes: DisplayedNotes,
 ): TFile[] {

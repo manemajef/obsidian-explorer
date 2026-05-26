@@ -140,7 +140,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         parentDropFolder={model.folder.parent}
         onMoveIntoFolder={onMoveIntoFolder}
         showParentNavigation={
-          settings.showParentButton &&
+          model.settings.showParentButton &&
           canGoToParentFolderNote(app, model.pluginSettings, model.blockFile)
         }
         onOpenSettings={onOpenSettings}
