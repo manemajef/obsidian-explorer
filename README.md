@@ -1,28 +1,29 @@
 # Explorer
 
-**Your vault, from the inside.**
+Browse and organize your vault from inside your notes.
 
-Manage files the way Craft does — drag, rename, reorganize — but from inside
-your notes. No sidebar, no context switching, fully local.
+Explorer turns folder notes into file explorer views, with navigation,
+drag-and-drop, rename, pin, delete, search, and configurable display options.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
 ![](/assets/main.jpg)
 
-## Why Explorer
+## Features
 
-- **Work without the sidebar.** Drag notes into folders, rename items, pin
-  favorites — all from the note you're already in.
-- **Navigate from notes.** Each folder note becomes a live view of its contents,
-  with parent navigation, folder buttons, and an optional vault homepage.
-- **Shape each view.** Search, show nested content, exclude archives or
-  templates from specific blocks. Each Explorer view can be different.
-- **Cards or lists.** Sort by edited, name, or date. Paginate, style for
-  desktop or mobile. RTL supported.
+- Card and list views for folder contents
+- Folder buttons and automatically created folder notes for navigation
+- Drag-and-drop for moving notes and folders
+- Context menu actions for renaming and deleting items, and pinning notes
+- Automatic matching-folder-note renaming when a folder is renamed
+- Optional homepage navigation and homepage opening in new empty tabs
+- Per-block exclusion of selected nested folders
+- Sorting, pagination, and scoped search within the current Explorer view
+- Mobile-friendly layout, optional glass-style controls, and RTL support
 
-## Get Started
+## Usage
 
-Add an Explorer block to a folder note:
+Add an Explorer block to any folder note:
 
 ````markdown
 ```explorer
@@ -31,30 +32,25 @@ Add an Explorer block to a folder note:
 
 The block displays files from the note's current folder using your default settings.
 
-From the command palette, use:
+You can add a block from the command palette with:
 
-- `Insert code block` to add Explorer to the current note
+- `Insert code block`
+
+You can create a new folder with a matching folder note from:
+
 - `Create folder in current note folder`
 
 That command creates `Folder/Folder.md`, inserts an Explorer block, and opens the new note.
 
-## Organize In Place
+## File Management
 
-This is where Explorer feels like Craft — but local and private.
+Drag notes and folders onto a displayed folder or onto the parent button to
+move them. Dragging a folder note moves its associated folder after
+confirmation.
 
-On desktop, every Explorer view is a working interface:
-
-- **Drag and drop.** Move notes and folders by dragging them onto any displayed
-  folder, or onto the parent button to move up a level.
-- **Rename.** Right-click any note or folder. Folder notes stay synced with
-  their folders automatically.
-- **Pin.** Mark important items so they stay at the top.
-- **Delete.** Remove notes or entire folders, with a clear warning before
-  anything is gone.
-
-Folder notes and their folders are kept together — rename one, the other
-follows. Drag a folder note, and Explorer moves the whole folder after
-confirming.
+Right-click a note to rename, pin, or delete it, or a folder to rename or
+delete it. Renaming a folder also renames its matching folder note. Deleting a
+folder displays a warning before removing its contents.
 
 ## Screenshots
 
@@ -74,10 +70,10 @@ confirming.
 
 ![](/assets/dark-mode.jpg)
 
-## Folder Notes And Homepage
+## Navigation
 
-Explorer treats a Markdown file named after its folder as that folder's
-navigation page:
+Explorer treats folder notes as navigation pages. A folder note is a Markdown
+file named after its folder:
 
 ```text
 Projects/Projects.md
@@ -85,8 +81,10 @@ Projects/Projects.md
 
 When you open a folder from Explorer, the plugin looks for the matching folder note. If it does not exist, Explorer creates it with a basic Explorer block.
 
-Explorer can also use a root-level homepage as a landing page for the vault
-and as the destination above a root folder note.
+### Homepage
+
+Explorer can also use a root-level homepage when navigating above a root
+folder note.
 
 By default, homepage navigation is enabled. If the homepage name is left empty, Explorer uses the vault name:
 
@@ -131,9 +129,8 @@ Explorer registers these command palette commands:
 
 ## Configuration
 
-Use plugin settings for your defaults, then tailor individual folder notes
-inside their Explorer blocks. For example, this makes a project dashboard that
-shows recent content while leaving an archive out of view:
+Most options are available in the plugin settings UI. You can also override
+block-specific options inside an Explorer code block:
 
 ````markdown
 ```explorer
@@ -162,23 +159,23 @@ Supported block settings:
 | `excludedFolders` | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
-`excludedFolders` hides the selected folders and their contents from that
-Explorer block only. Plugin settings also include homepage behavior, nested
-folder-note display, the parent button, glass controls, card icons, and list
-bullets.
+`excludedFolders` hides selected folders and their contents from that Explorer
+block only. Plugin-only settings include homepage behavior, nested folder-note
+display, the parent button, glass controls, card icons, and list bullets.
 
 ## Search
 
-Use the search icon in the action bar to quickly filter the current Explorer
-view:
+Use the search icon in the action bar to filter the current Explorer view.
 
 - Plain text searches file names
 - `#tag` searches frontmatter tags
 - `@name` searches folder notes
 
+## Fit
+
 Explorer is designed for vaults organized around folders and folder notes. It
-complements Dataview, Bases, and tag-driven workflows by making the folder
-structure itself useful from inside the editor.
+is not a vault-wide query engine and does not try to replace Dataview, Bases,
+or tag/database workflows.
 
 ## Install
 
