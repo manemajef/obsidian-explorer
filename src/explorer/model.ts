@@ -15,7 +15,9 @@ export type ExplorerModel = {
   folders: ExplorerFolderNode[];
   files: ExplorerFileNode[];
   folderNotes: ExplorerFileNode[];
-  loadAllFiles: () => Promise<ExplorerFileNode[]>;
+  loadAllFiles: (
+    onChunk?: (chunk: ExplorerFileNode[]) => void,
+  ) => Promise<ExplorerFileNode[]>;
 };
 
 export async function buildExplorerModel(input: {
@@ -49,6 +51,10 @@ export async function buildExplorerModel(input: {
     folders: index.folders,
     files: index.getFilesToDisplay(settings),
     folderNotes: index.folderNotes,
-    loadAllFiles: async () => (allFiles ??= await index.getAllContent()),
+    loadAllFiles: async (onChunk) => {
+      if (allFiles) return allFiles;
+      allFiles = await index.getAllContent(onChunk);
+      return allFiles;
+    },
   };
 }

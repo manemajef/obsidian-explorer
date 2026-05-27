@@ -92,14 +92,28 @@ function useSearchState(model: ExplorerModel, metadataTick: number) {
 
     loadingRef.current = true;
     setIsLoading(true);
+
+    let cancelled = false;
+
     void model
-      .loadAllFiles()
-      .then(setAllFiles)
+      .loadAllFiles((chunk) => {
+        if (cancelled) return;
+        setAllFiles((prev) => (prev ? [...prev, ...chunk] : chunk));
+      })
+      .then((all) => {
+        if (cancelled) return;
+        setAllFiles(all);
+      })
       .catch(() => undefined)
       .finally(() => {
+        if (cancelled) return;
         loadingRef.current = false;
         setIsLoading(false);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [mode, allFiles, model]);
 
   const listing = useMemo(

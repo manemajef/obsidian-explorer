@@ -8,7 +8,7 @@ import {
   type ExplorerNodeFactory,
 } from "./nodes";
 
-const WALK_CHUNK_SIZE = 200;
+const WALK_BUDGET_MS = 16;
 const EXCLUDED_EXTENSIONS = ["png", "jpeg", "jpg"];
 const DEFAULT_DISPLAY_EXTENSIONS = ["md", "pdf", "base"];
 
@@ -49,9 +49,11 @@ export class FolderIndex {
     }
   }
 
-  async getAllContent(): Promise<ExplorerFileNode[]> {
-    // load all sub files without depth limit
-    return this.walkFolder(null, false, true, true);
+  async getAllContent(
+    onChunk?: (chunk: ExplorerFileNode[]) => void,
+  ): Promise<ExplorerFileNode[]> {
+    // load all sub files without depth limit; onChunk receives nodes as they're discovered
+    return this.walkFolder(null, false, true, true, onChunk);
   }
 
   getFilesToDisplay(settings: BlockSettings): ExplorerFileNode[] {
@@ -93,19 +95,27 @@ export class FolderIndex {
     includeFolderNotesAtFirstLevel: boolean,
     includeFolderNotes: boolean,
     yieldToBrowser: boolean,
+    onChunk?: (chunk: ExplorerFileNode[]) => void,
   ): Promise<ExplorerFileNode[]> {
-    const results: TFile[] = [];
-    let processed = 0;
+    const all: ExplorerFileNode[] = [];
+    let pending: ExplorerFileNode[] = [];
+    let sliceStart = performance.now();
     const queue: Array<{ folder: TFolder; depth: number }> = [
       { folder: this.folder, depth: 0 },
     ];
+
+    const collect = (file: TFile): void => {
+      const node = this.nodeFactory.createFileNode(file);
+      all.push(node);
+      pending.push(node);
+    };
 
     while (queue.length > 0) {
       const current = queue.shift()!;
 
       for (const child of current.folder.children) {
         if (child instanceof TFile && shouldIndexFile(child)) {
-          results.push(child);
+          collect(child);
         } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
           const includeFolderNote =
             current.depth === 0
@@ -116,23 +126,29 @@ export class FolderIndex {
               this.nodeFactory.app,
               child,
             );
-            if (folderNote) results.push(folderNote);
+            if (folderNote) collect(folderNote);
           }
           if (depth === null || current.depth < depth) {
             queue.push({ folder: child, depth: current.depth + 1 });
           }
         }
 
-        if (yieldToBrowser && ++processed >= WALK_CHUNK_SIZE) {
-          processed = 0;
-          await new Promise<void>((resolve) =>
-            window.requestAnimationFrame(() => resolve()),
-          );
+        if (
+          yieldToBrowser &&
+          performance.now() - sliceStart >= WALK_BUDGET_MS
+        ) {
+          if (onChunk && pending.length > 0) {
+            onChunk(pending);
+            pending = [];
+          }
+          await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+          sliceStart = performance.now();
         }
       }
     }
 
-    return results.map((file) => this.nodeFactory.createFileNode(file));
+    if (onChunk && pending.length > 0) onChunk(pending);
+    return all;
   }
 
   private isExcludedFolder(folder: TFolder): boolean {

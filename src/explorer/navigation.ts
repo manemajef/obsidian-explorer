@@ -1,4 +1,4 @@
-import { App, MarkdownView, Notice, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import { App, Notice, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { PluginSettings } from "./settings";
 import {
   getFolderNoteForFolder,
@@ -152,7 +152,6 @@ export async function openHomePageInEmptyLeaf(
   await useHomePageFile(app, settings, async (file) => {
     if (!isEmptyLeaf(leaf)) return;
     await leaf.openFile(file);
-    moveCursorBelowExplorerInEditMode(leaf, file);
   });
 }
 
@@ -202,26 +201,6 @@ async function openExplorerPage(
   newLeaf: boolean,
 ): Promise<void> {
   await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
-
-  const leaf = app.workspace.getMostRecentLeaf();
-  if (leaf) moveCursorBelowExplorerInEditMode(leaf, file);
-}
-
-function moveCursorBelowExplorerInEditMode(
-  leaf: WorkspaceLeaf,
-  file: TFile,
-): void {
-  const view = leaf.view;
-  if (
-    !(view instanceof MarkdownView) ||
-    view.file?.path !== file.path ||
-    view.getMode() === "preview"
-  ) {
-    return;
-  }
-
-  const line = view.editor.lastLine();
-  view.editor.setCursor({ line, ch: view.editor.getLine(line).length });
 }
 
 function resolveHomePagePath(

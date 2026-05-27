@@ -31,11 +31,18 @@ export async function moveIntoFolder(
     return false;
   }
 
+  const progress =
+    source instanceof TFolder
+      ? new Notice(`Moving ${source.name}…`, 0)
+      : null;
+
   try {
     await app.fileManager.renameFile(source, destinationPath);
     return true;
   } catch (error) {
     new Notice(`Could not move ${source.name}: ${error}`);
     return false;
+  } finally {
+    progress?.hide();
   }
 }
