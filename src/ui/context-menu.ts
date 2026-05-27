@@ -59,7 +59,7 @@ export function showNoteContextMenu(
         void config.app.fileManager.promptForDeletion(file);
       }),
   );
-  menu.showAtMouseEvent(event.nativeEvent);
+  showLegacyMenu(menu, event);
 }
 
 export function showFolderContextMenu(
@@ -111,7 +111,7 @@ export function showFolderContextMenu(
     );
   }
 
-  menu.showAtMouseEvent(event.nativeEvent);
+  showLegacyMenu(menu, event);
 }
 
 export function showFileContextMenu(
@@ -133,7 +133,10 @@ function beginMenu(
 ): Menu {
   event.preventDefault();
   event.stopPropagation();
-  const menu = new Menu();
+  const menu =
+    typeof Menu.forEvent === "function"
+      ? Menu.forEvent(event.nativeEvent)
+      : new Menu();
   config.app.workspace.handleLinkContextMenu(
     menu,
     linkPath,
@@ -141,6 +144,15 @@ function beginMenu(
   );
   menu.addSeparator();
   return menu;
+}
+
+function showLegacyMenu(
+  menu: Menu,
+  event: ReactMouseEvent<HTMLElement>,
+): void {
+  if (typeof Menu.forEvent !== "function") {
+    menu.showAtMouseEvent(event.nativeEvent);
+  }
 }
 
 function addFolderNoteNavigationItems(
