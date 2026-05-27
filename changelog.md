@@ -1,4 +1,8 @@
 # Explorer changelog
+## 1.2.1 (27-05-26)
+
+Add drag and drop for mobile as well.
+
 
 ## 1.2.0 (27-05-26)
 
