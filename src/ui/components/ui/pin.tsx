@@ -1,16 +1,20 @@
 import React from "react";
-import { FileInfo } from "src/types";
+import { ExplorerFileNode } from "../../../explorer/nodes";
+import { ExplorerActions } from "../../../explorer/actions";
 import { Badge } from "./badge";
 
-export function Pin(props: { fileInfo: FileInfo }): React.JSX.Element {
-  const { fileInfo } = props;
-  if (fileInfo.isPinned)
+export function Pin(props: {
+  file: ExplorerFileNode;
+  actions: ExplorerActions;
+}): React.JSX.Element {
+  const { file, actions } = props;
+  if (file.isPinned)
     return (
       <Badge
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          fileInfo.togglePin();
+          actions.togglePin(file);
         }}
         variant="pin"
       />

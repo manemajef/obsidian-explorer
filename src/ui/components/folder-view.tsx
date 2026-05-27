@@ -1,50 +1,51 @@
 import React from "react";
-import { App, TFolder } from "obsidian";
-import { FolderInfo } from "../../types";
-import { getFolderNotePath } from "../../explorer/file-utils";
-import { draggableProps, folderDropProps, MoveIntoFolder } from "../drag-drop";
+import { ExplorerFolderNode } from "../../explorer/nodes";
+import { ExplorerActions } from "../../explorer/actions";
+import { draggableProps, folderDropProps } from "../drag-drop";
 import { showFolderContextMenu, type ContextMenuConfig } from "../context-menu";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
 
 export function FolderButtons(props: {
-  app: App;
-  folderInfos: FolderInfo[];
-  onOpenFolderNote: (folder: TFolder, newLeaf: boolean) => void;
-  onMoveIntoFolder: MoveIntoFolder;
+  folders: ExplorerFolderNode[];
+  actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const { app, folderInfos, onOpenFolderNote, onMoveIntoFolder, contextMenu } =
-    props;
+  const { folders, actions, contextMenu } = props;
 
   return (
     <div className="explorer-folders-grid explorer-folders-view">
-      {folderInfos.map((folderInfo) => {
-        const existingNote = folderInfo.folderNote;
+      {folders.map((folder) => {
+        const existingNote = folder.folderNote;
         const isMissing = !existingNote;
         const folderNotePath = existingNote
           ? existingNote.path
-          : getFolderNotePath(folderInfo.folder);
-        const linkText = folderInfo.folder.name;
+          : folder.folderNotePath;
+        const linkText = folder.displayName;
         const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
 
         return (
           <div
             key={folderNotePath}
             className={`explorer-folder-card${isLongName ? " explorer-folder-card--long-name" : ""}${isMissing ? " explorer-folder-card--missing" : ""}`}
-            {...draggableProps(folderInfo.folder)}
-            {...folderDropProps(app, folderInfo.folder, onMoveIntoFolder)}
+            {...draggableProps(folder.folder)}
+            {...folderDropProps(
+              actions.app,
+              folder.folder,
+              (sourcePath, target, fromFolderNote) =>
+                actions.movePathIntoFolder(sourcePath, target, fromFolderNote),
+            )}
             onContextMenuCapture={(event) =>
               showFolderContextMenu(
                 event,
                 contextMenu,
-                folderInfo.folder,
-                folderNotePath,
+                folder,
+                folder.folderNotePath,
               )
             }
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;
-              onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
+              void actions.openFolder(folder, e.ctrlKey || e.metaKey);
             }}
           >
             <a
@@ -58,7 +59,7 @@ export function FolderButtons(props: {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onOpenFolderNote(folderInfo.folder, e.ctrlKey || e.metaKey);
+                void actions.openFolder(folder, e.ctrlKey || e.metaKey);
               }}
             >
               {linkText}

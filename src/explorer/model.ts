@@ -1,43 +1,51 @@
 import { App, TFile, TFolder } from "obsidian";
-import { FolderInfo } from "../types";
 import { BlockSettings, PluginSettings } from "./settings";
-import { FolderIndex } from "./listing";
+import { ExplorerFileNode, ExplorerFolderNode, type ExplorerNode } from "./nodes";
+import { ExplorerSession } from "./session";
 
 export type ExplorerModel = {
   app: App;
   sourcePath: string;
   blockFile: TFile;
   folder: TFolder;
+  session: ExplorerSession;
   settings: BlockSettings;
   pluginSettings: PluginSettings;
-  folders: FolderInfo[];
-  files: TFile[];
-  folderNotes: TFile[];
-  loadAllFiles: () => Promise<TFile[]>;
+  children: ExplorerNode[];
+  folders: ExplorerFolderNode[];
+  files: ExplorerFileNode[];
+  folderNotes: ExplorerFileNode[];
+  loadAllFiles: () => Promise<ExplorerFileNode[]>;
 };
 
 export async function buildExplorerModel(input: {
   app: App;
+  session: ExplorerSession;
   sourcePath: string;
   settings: BlockSettings;
   pluginSettings: PluginSettings;
 }): Promise<ExplorerModel | null> {
-  const { app, sourcePath, settings, pluginSettings } = input;
+  const { app, session, sourcePath, settings, pluginSettings } = input;
   const blockFile = app.vault.getAbstractFileByPath(sourcePath);
   if (!(blockFile instanceof TFile) || !blockFile.parent) return null;
 
   const folder = blockFile.parent;
-  const index = new FolderIndex(app, folder, settings.excludedFolders);
-  await index.loadToDepth(settings.depth, settings.displayNestedFolderNotes);
+  const index = await session.getIndex(folder, {
+    depth: settings.depth,
+    displayNestedFolderNotes: settings.displayNestedFolderNotes,
+    excludedFolders: settings.excludedFolders,
+  });
 
-  let allFiles: TFile[] | null = null;
+  let allFiles: ExplorerFileNode[] | null = null;
   return {
     app,
     sourcePath,
     blockFile,
     folder,
+    session,
     settings,
     pluginSettings,
+    children: index.children,
     folders: index.folders,
     files: index.getFilesToDisplay(settings),
     folderNotes: index.folderNotes,

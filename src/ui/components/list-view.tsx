@@ -1,26 +1,20 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { FileInfo } from "../../types";
 import { ExplorerModel } from "../../explorer/model";
+import { ExplorerFileNode } from "../../explorer/nodes";
+import { ExplorerActions } from "../../explorer/actions";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
-import { isFolderNote } from "../../explorer/file-utils";
-import {
-  draggableProps,
-  fileDragSource,
-  fileDropTarget,
-  folderDropProps,
-  MoveIntoFolder,
-} from "../drag-drop";
+import { draggableProps, folderDropProps } from "../drag-drop";
 import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
 
 type ListViewProps = {
   model: ExplorerModel;
-  files: FileInfo[];
-  onMoveIntoFolder: MoveIntoFolder;
+  files: ExplorerFileNode[];
+  actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 };
 
@@ -33,39 +27,41 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     return <MobileListView {...props} />;
   }
 
-  const { app, settings } = props.model;
+  const { settings } = props.model;
 
   return (
     <div className="explorer-list-container">
-      {files.map((fileInfo, i) => (
-        <div key={fileInfo.file.path} className="list-item-container">
+      {files.map((file) => (
+        <div key={file.path} className="list-item-container">
           <li
-            className={`explorer-list${fileInfo.isPinned ? " pinned" : ""}`}
-            {...draggableProps(
-              fileDragSource(fileInfo.file),
-              isFolderNote(fileInfo.file),
-            )}
+            className={`explorer-list${file.isPinned ? " pinned" : ""}`}
+            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
             {...folderDropProps(
-              app,
-              fileDropTarget(fileInfo.file),
-              props.onMoveIntoFolder,
+              props.actions.app,
+              file.dropTargetFolder,
+              (sourcePath, folder, fromFolderNote) =>
+                props.actions.movePathIntoFolder(
+                  sourcePath,
+                  folder,
+                  fromFolderNote,
+                ),
             )}
             onContextMenuCapture={(event) =>
-              showFileContextMenu(event, props.contextMenu, fileInfo.file)
+              showFileContextMenu(event, props.contextMenu, file)
             }
             style={{
               marginInlineStart:
-                settings.showListBullets && !fileInfo.isPinned
+                settings.showListBullets && !file.isPinned
                   ? "var(--explorer-space-4)"
                   : "none",
-              display: fileInfo.isPinned ? "flex" : "block",
+              display: file.isPinned ? "flex" : "block",
             }}
           >
-            {fileInfo.isPinned ? (
+            {file.isPinned ? (
               <span
                 className={`explorer-list-pin${settings.showListBullets ? " with-bullets" : ""}`}
               >
-                <Pin fileInfo={fileInfo} />
+                <Pin file={file} actions={props.actions} />
               </span>
             ) : (
               settings.showListBullets && <span className="list-bullet" />
@@ -73,30 +69,23 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 
             <Group justify="start">
               <InternalLink
-                path={fileInfo.file.path}
+                path={file.path}
                 draggable={false}
-                text={
-                  fileInfo.file.extension === "md"
-                    ? fileInfo.file.basename
-                    : `${fileInfo.file.basename}.${fileInfo.file.extension}`
-                }
+                text={file.displayName}
               />
-              {fileInfo.tags && fileInfo.tags.length > 0 && (
-                <span className="list-tags-seperator" />
-              )}
+              {file.tags.length > 0 && <span className="list-tags-seperator" />}
               <div className="explorer-list-tags">
                 {settings.showTags &&
-                  fileInfo.tags?.map((t) => (
+                  file.tags.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}
                     </Badge>
                   ))}
               </div>
-              {(fileInfo.file.extension !== "md" ||
-                isFolderNote(fileInfo.file)) && (
+              {file.extensionLabel && (
                 <>
                   <Bar.Spring />
-                  {isFolderNote(fileInfo.file) ? (
+                  {file.isFolderNote ? (
                     <Badge
                       variant="ext-filled"
                       className="explorer-folder-type-badge"
@@ -104,9 +93,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                       folder
                     </Badge>
                   ) : (
-                    <Badge variant="ext-filled">
-                      {fileInfo.file.extension}
-                    </Badge>
+                    <Badge variant="ext-filled">{file.extensionLabel}</Badge>
                   )}
                 </>
               )}
@@ -120,51 +107,46 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 
 const MobileListView = (props: ListViewProps): React.JSX.Element => {
   const { model, files } = props;
-  const { app, settings } = model;
+  const { settings } = model;
 
   return (
     <div className="explorer-mobile-list ">
-      {files.map((fileInfo, i) => (
-        <div key={fileInfo.file.path} className="explorer-mobile-list-item">
+      {files.map((file, i) => (
+        <div key={file.path} className="explorer-mobile-list-item">
           <div
-            className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-mobile-note-last" : ""}`}
-            {...draggableProps(
-              fileDragSource(fileInfo.file),
-              isFolderNote(fileInfo.file),
-            )}
+            className={`explorer-mobile-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-mobile-note-last" : ""}`}
+            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
             {...folderDropProps(
-              app,
-              fileDropTarget(fileInfo.file),
-              props.onMoveIntoFolder,
+              props.actions.app,
+              file.dropTargetFolder,
+              (sourcePath, folder, fromFolderNote) =>
+                props.actions.movePathIntoFolder(
+                  sourcePath,
+                  folder,
+                  fromFolderNote,
+                ),
             )}
             onContextMenuCapture={(event) =>
-              showFileContextMenu(event, props.contextMenu, fileInfo.file)
+              showFileContextMenu(event, props.contextMenu, file)
             }
           >
             <div className="explorer-mobile-note__header">
               <Group>
-                <Pin fileInfo={fileInfo} />
+                <Pin file={file} actions={props.actions} />
                 <InternalLink
-                  path={fileInfo.file.path}
+                  path={file.path}
                   className="explorer-mobile-note__title"
                   draggable={false}
-                  text={
-                    fileInfo.file.extension === "md"
-                      ? fileInfo.file.basename
-                      : `${fileInfo.file.basename}.${fileInfo.file.extension}`
-                  }
+                  text={file.displayName}
                 />
               </Group>
 
-              {(fileInfo.file.extension !== "md" ||
-                isFolderNote(fileInfo.file)) && (
+              {file.extensionLabel && (
                 <Badge
                   variant="ext-filled"
                   className="explorer-mobile-note__ext"
                 >
-                  {isFolderNote(fileInfo.file)
-                    ? "folder"
-                    : fileInfo.file.extension}
+                  {file.extensionLabel}
                 </Badge>
               )}
             </div>
@@ -172,13 +154,12 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             <div className="explorer-mobile-note__footer">
               <div className="explorer-mobile-note__tags">
                 {settings.showTags &&
-                  fileInfo.tags?.map((t) => (
+                  file.tags.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}
                     </Badge>
                   ))}
               </div>
-              {/* <Pin fileInfo={fileInfo} /> */}
             </div>
           </div>
 

@@ -1,73 +1,51 @@
 import React from "react";
-import { TFolder } from "obsidian";
-import { FileInfo } from "../../types";
 import { ExplorerModel } from "../../explorer/model";
-import { diffDays, isFolderNote } from "../../explorer/file-utils";
+import { ExplorerFileNode } from "../../explorer/nodes";
+import { ExplorerActions } from "../../explorer/actions";
+import { diffDays } from "../../explorer/file-utils";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
-import {
-  draggableProps,
-  fileDragSource,
-  fileDropTarget,
-  folderDropProps,
-  MoveIntoFolder,
-} from "../drag-drop";
+import { draggableProps, folderDropProps } from "../drag-drop";
 import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
-
-type OpenFolderNote = (folder: TFolder, newLeaf: boolean) => void;
 
 export function CardsView(props: {
   model: ExplorerModel;
-  files: FileInfo[];
+  files: ExplorerFileNode[];
   extForCard: string;
-  onOpenFolderNote: OpenFolderNote;
-  onMoveIntoFolder: MoveIntoFolder;
+  actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const {
-    model,
-    files,
-    extForCard,
-    onOpenFolderNote,
-    onMoveIntoFolder,
-    contextMenu,
-  } = props;
-  const { app, settings, sourcePath } = model;
+  const { model, files, extForCard, actions, contextMenu } = props;
+  const { settings } = model;
 
   return (
     <div className="explorer-cards-view">
       <div className="explorer-cards-grid">
-        {files.map((fileInfo) => (
-          <div key={fileInfo.file.path}>
+        {files.map((file) => (
+          <div key={file.path}>
             <div
               className="explorer-card"
-              {...draggableProps(
-                fileDragSource(fileInfo.file),
-                isFolderNote(fileInfo.file),
-              )}
+              {...draggableProps(file.dragSource, file.dragFromFolderNote)}
               {...folderDropProps(
-                app,
-                fileDropTarget(fileInfo.file),
-                onMoveIntoFolder,
+                actions.app,
+                file.dropTargetFolder,
+                (sourcePath, folder, fromFolderNote) =>
+                  actions.movePathIntoFolder(sourcePath, folder, fromFolderNote),
               )}
               onContextMenuCapture={(event) =>
-                showFileContextMenu(event, contextMenu, fileInfo.file)
+                showFileContextMenu(event, contextMenu, file)
               }
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest("a")) return;
-                void app.workspace.openLinkText(
-                  fileInfo.file.path,
-                  sourcePath,
-                  false,
-                );
+                void actions.openFile(file);
               }}
             >
               <div className="explorer-card-header">
                 <div>
                   <InternalLink
-                    path={fileInfo.file.path}
-                    text={fileInfo.file.basename}
+                    path={file.path}
+                    text={file.basename}
                     draggable={false}
                   />
                 </div>
@@ -80,28 +58,25 @@ export function CardsView(props: {
                     className="explorer-card-pin-slot"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {fileInfo.file.extension === "md" && (
-                      <Pin fileInfo={fileInfo} />
-                    )}
+                    {file.isMarkdown && <Pin file={file} actions={actions} />}
                   </div>
-                  {isFolderNote(fileInfo.file) && (
+                  {file.isFolderNote && (
                     <Icon
                       name="folder"
                       className="explorer-card-folder-note-icon"
                     />
                   )}
-                  {!isFolderNote(fileInfo.file) &&
-                  fileInfo.file.extension !== "md" ? (
+                  {!file.isFolderNote && file.extensionLabel ? (
                     <Badge variant="ext" className="explorer-card-ext-badge">
-                      {fileInfo.file.extension}
+                      {file.extensionLabel}
                     </Badge>
                   ) : null}
                 </div>
               </div>
 
-              {settings.showTags && (fileInfo.tags?.length ?? 0) > 0 && (
+              {settings.showTags && file.tags.length > 0 && (
                 <div className="explorer-card-tags-container explorer-cards-row">
-                  {fileInfo.tags?.map((t) => (
+                  {file.tags.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}
                     </Badge>
@@ -111,9 +86,9 @@ export function CardsView(props: {
 
               <div className="explorer-card-footer explorer-cards-row">
                 <CardFooter
-                  fileInfo={fileInfo}
+                  file={file}
                   extForCard={extForCard}
-                  onOpenFolderNote={onOpenFolderNote}
+                  actions={actions}
                   showIconsInCards={settings.ShowIconsInCards}
                   currentFolderPath={model.folder.path}
                 />
@@ -127,28 +102,27 @@ export function CardsView(props: {
 }
 
 function CardFooter(props: {
-  fileInfo: FileInfo;
+  file: ExplorerFileNode;
   extForCard: string;
   showIconsInCards: boolean;
-  onOpenFolderNote: OpenFolderNote;
+  actions: ExplorerActions;
   currentFolderPath: string;
 }): React.JSX.Element | null {
   const {
-    fileInfo,
+    file,
     extForCard,
     showIconsInCards,
-    onOpenFolderNote,
+    actions,
     currentFolderPath,
   } = props;
 
   switch (extForCard) {
     case "ctime":
-      return <span>{diffDays(fileInfo.file.stat.ctime)}</span>;
+      return <span>{diffDays(file.createdAt)}</span>;
     case "mtime":
-      return <span>{diffDays(fileInfo.file.stat.mtime)}</span>;
+      return <span>{diffDays(file.modifiedAt)}</span>;
     case "folder": {
-      let folder = fileInfo.file.parent;
-      if (isFolderNote(fileInfo.file) && folder) folder = folder?.parent;
+      const folder = file.parentExplorerFolder;
       if (!folder || !folder.name) return null;
       if (folder.path === currentFolderPath) return null;
       return (
@@ -156,7 +130,7 @@ function CardFooter(props: {
           className="explorer-card-folder-link"
           onClick={(e) => {
             e.stopPropagation();
-            onOpenFolderNote(folder, e.ctrlKey || e.metaKey);
+            void actions.openFolder(folder, e.ctrlKey || e.metaKey);
           }}
         >
           {showIconsInCards && (
@@ -168,11 +142,11 @@ function CardFooter(props: {
       );
     }
     case "desc":
-      if (!fileInfo.description) return null;
+      if (!file.description) return null;
       return (
         <span>
-          {fileInfo.description.slice(0, 60)}
-          {fileInfo.description.length > 60 ? "..." : ""}
+          {file.description.slice(0, 60)}
+          {file.description.length > 60 ? "..." : ""}
         </span>
       );
     case "none":

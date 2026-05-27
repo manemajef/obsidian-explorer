@@ -1,48 +1,28 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { App, Menu, Platform, TFile, TFolder } from "obsidian";
-import {
-  getFolderNoteForFolder,
-  getFolderNotePath,
-  isFolderNote,
-  isPinned,
-  togglePin,
-} from "../explorer/file-utils";
-import {
-  openOrCreateFolderNote,
-  type SavePluginSettings,
-} from "../explorer/navigation";
-import {
-  promptAndRenameFile,
-  promptAndRenameFolder,
-} from "../explorer/rename";
-import type { PluginSettings } from "../explorer/settings";
-import { ConfirmationDialog } from "./modals/prompt-modal";
+import { Menu, Platform } from "obsidian";
+import { ExplorerActions } from "../explorer/actions";
+import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
 
 export type ContextMenuConfig = {
-  app: App;
-  settings: PluginSettings;
-  sourcePath: string;
-  currentFolderPath: string;
-  savePluginSettings?: SavePluginSettings;
-  onRefresh: () => void;
+  actions: ExplorerActions;
 };
 
 export function showNoteContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
-  file: TFile,
+  file: ExplorerFileNode,
 ): void {
   if (shouldDeferToNestedLink(event)) return;
 
   const menu = beginMenu(event, config, file.path);
-  const folder = file.parent;
+  const folder = file.parentFolder;
   let hasAction = false;
 
-  if (folder && folder.path !== config.currentFolderPath) {
+  if (folder && folder.path !== config.actions.currentFolderPath) {
     addFolderNoteNavigationItems(
       menu,
       config,
-      folder,
+      config.actions.createFolderNode(folder),
       "Go to or create folder note",
     );
     hasAction = true;
@@ -58,7 +38,7 @@ export function showNoteContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        void config.app.fileManager.promptForDeletion(file);
+        config.actions.deleteFile(file);
       }),
   );
   menu.showAtMouseEvent(event.nativeEvent);
@@ -67,13 +47,13 @@ export function showNoteContextMenu(
 export function showFolderContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
-  folder: TFolder,
-  linkPath = getFolderNotePath(folder),
+  folder: ExplorerFolderNode,
+  linkPath = folder.folderNotePath,
 ): void {
   if (shouldDeferToNestedLink(event)) return;
 
   const menu = beginMenu(event, config, linkPath);
-  const folderNote = getFolderNoteForFolder(config.app, folder);
+  const folderNote = folder.folderNoteNode;
   const hasAction = folderNote
     ? addPinItem(menu, config, folderNote)
     : false;
@@ -81,9 +61,7 @@ export function showFolderContextMenu(
   if (hasAction) menu.addSeparator();
   menu.addItem((item) =>
     item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
-      void promptAndRenameFolder(config.app, folder).then((renamed) => {
-        if (renamed) config.onRefresh();
-      });
+      void config.actions.renameFolder(folder);
     }),
   );
   menu.addSeparator();
@@ -93,13 +71,7 @@ export function showFolderContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        new ConfirmationDialog(
-          config.app,
-          "Delete folder?",
-          () => config.app.fileManager.promptForDeletion(folder),
-          undefined,
-          `This will delete the folder "${folder.name}" and all of its contents.`,
-        ).open();
+        config.actions.deleteFolder(folder);
       }),
   );
 
@@ -110,7 +82,7 @@ export function showFolderContextMenu(
         .setIcon("file-x")
         .setWarning(true)
         .onClick(() => {
-          void config.app.fileManager.promptForDeletion(folderNote);
+          config.actions.deleteFolderNote(folder);
         }),
     );
   }
@@ -121,10 +93,15 @@ export function showFolderContextMenu(
 export function showFileContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
-  file: TFile,
+  file: ExplorerFileNode,
 ): void {
-  if (isFolderNote(file) && file.parent) {
-    showFolderContextMenu(event, config, file.parent, file.path);
+  if (file.isFolderNote && file.parentFolder) {
+    showFolderContextMenu(
+      event,
+      config,
+      config.actions.createFolderNode(file.parentFolder),
+      file.path,
+    );
     return;
   }
   showNoteContextMenu(event, config, file);
@@ -147,10 +124,10 @@ function beginMenu(
   event.preventDefault();
   event.stopPropagation();
   const menu = new Menu();
-  config.app.workspace.handleLinkContextMenu(
+  config.actions.app.workspace.handleLinkContextMenu(
     menu,
     linkPath,
-    config.sourcePath,
+    config.actions.sourcePath,
   );
   menu.addSeparator();
   return menu;
@@ -159,31 +136,17 @@ function beginMenu(
 function addFolderNoteNavigationItems(
   menu: Menu,
   config: ContextMenuConfig,
-  folder: TFolder,
+  folder: ExplorerFolderNode,
   label: string,
 ): void {
   menu.addItem((item) =>
     item.setTitle(label).setIcon("folder-open").onClick(() => {
-      void openOrCreateFolderNote(
-        config.app,
-        folder,
-        config.settings,
-        config.sourcePath,
-        false,
-        config.savePluginSettings,
-      );
+      void config.actions.openFolder(folder, false);
     }),
   );
   menu.addItem((item) =>
     item.setTitle(`${label} in new tab`).setIcon("folder-plus").onClick(() => {
-      void openOrCreateFolderNote(
-        config.app,
-        folder,
-        config.settings,
-        config.sourcePath,
-        true,
-        config.savePluginSettings,
-      );
+      void config.actions.openFolder(folder, true);
     }),
   );
 }
@@ -191,17 +154,16 @@ function addFolderNoteNavigationItems(
 function addPinItem(
   menu: Menu,
   config: ContextMenuConfig,
-  file: TFile,
+  file: ExplorerFileNode,
 ): boolean {
-  if (file.extension.toLowerCase() !== "md") return false;
+  if (!file.isMarkdown) return false;
 
   menu.addItem((item) =>
     item
-      .setTitle(isPinned(config.app, file) ? "Unpin note" : "Pin note")
+      .setTitle(file.isPinned ? "Unpin note" : "Pin note")
       .setIcon("pin")
       .onClick(() => {
-        togglePin(config.app, file);
-        window.setTimeout(config.onRefresh, 100);
+        config.actions.togglePin(file);
       }),
   );
   return true;
@@ -210,14 +172,12 @@ function addPinItem(
 function addRenameFileItem(
   menu: Menu,
   config: ContextMenuConfig,
-  file: TFile,
+  file: ExplorerFileNode,
 ): void {
-  const itemName = file.extension.toLowerCase() === "md" ? "note" : "file";
+  const itemName = file.isMarkdown ? "note" : "file";
   menu.addItem((item) =>
     item.setTitle(`Rename ${itemName}`).setIcon("pencil").onClick(() => {
-      void promptAndRenameFile(config.app, file).then((renamed) => {
-        if (renamed) config.onRefresh();
-      });
+      void config.actions.renameFile(file);
     }),
   );
 }

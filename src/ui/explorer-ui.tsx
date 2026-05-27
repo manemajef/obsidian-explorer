@@ -1,17 +1,10 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Platform, TFolder } from "obsidian";
-import { FileInfo } from "../types";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
+import { ExplorerFileNode } from "../explorer/nodes";
+import { ExplorerActions } from "../explorer/actions";
 import { useExplorerState } from "../explorer/state";
-import {
-  canGoToParentFolderNote,
-  goToParentFolderNote,
-  openOrCreateFolderNote,
-} from "../explorer/navigation";
-import { promptAndCreateFolder, promptAndCreateNote } from "../explorer/create";
-import { moveIntoFolder } from "../explorer/move";
-import { ConfirmationDialog } from "./modals/prompt-modal";
 import type { ContextMenuConfig } from "./context-menu";
 import { CardsView } from "./components/cards-view";
 import { FolderButtons } from "./components/folder-view";
@@ -31,45 +24,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const { model, onOpenSettings, onSavePluginSettings, onRefresh } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
-  const onOpenFolderNote = (folder: TFolder, newLeaf: boolean) =>
-    void openOrCreateFolderNote(
-      app,
-      folder,
-      model.pluginSettings,
-      model.sourcePath,
-      newLeaf,
-      onSavePluginSettings,
-    );
-  const performMove = async (sourcePath: string, folder: TFolder) => {
-    if (await moveIntoFolder(app, sourcePath, folder)) onRefresh();
-  };
-  const onMoveIntoFolder = (
-    sourcePath: string,
-    folder: TFolder,
-    fromFolderNote: boolean,
-  ) => {
-    if (!fromFolderNote) return performMove(sourcePath, folder);
-
-    const source = app.vault.getAbstractFileByPath(sourcePath);
-    if (!(source instanceof TFolder)) return;
-
-    const message = `This is a folder note. Dragging it to ${folder.name} will move the folder ${source.name} there.`;
-    new ConfirmationDialog(
-      app,
-      "Move folder?",
-      () => performMove(sourcePath, folder),
-      undefined,
-      message,
-    ).open();
-  };
-  const contextMenu: ContextMenuConfig = {
-    app,
-    settings: model.pluginSettings,
-    sourcePath: model.sourcePath,
-    currentFolderPath: model.folder.path,
-    savePluginSettings: onSavePluginSettings,
-    onRefresh,
-  };
 
   const {
     searchMode,
@@ -81,7 +35,39 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     loadMore,
     paginationKind,
     extForCard,
+    refreshMetadata,
   } = explorerState;
+
+  const actions = useMemo(
+    () =>
+      new ExplorerActions(
+        app,
+        model.session,
+        model.sourcePath,
+        model.folder,
+        model.pluginSettings,
+        onSavePluginSettings,
+        onRefresh,
+        refreshMetadata,
+      ),
+    [
+      app,
+      model.session,
+      model.sourcePath,
+      model.folder,
+      model.pluginSettings,
+      onSavePluginSettings,
+      onRefresh,
+      refreshMetadata,
+    ],
+  );
+  const onMoveIntoFolder = useCallback(
+    (sourcePath: string, folder: TFolder, fromFolderNote: boolean) => {
+      void actions.movePathIntoFolder(sourcePath, folder, fromFolderNote);
+    },
+    [actions],
+  );
+  const contextMenu: ContextMenuConfig = useMemo(() => ({ actions }), [actions]);
 
   const showFolders =
     settings.showFolders && model.folders.length > 0 && !searchMode;
@@ -98,29 +84,31 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       : "sm"
     : "md";
 
-  const renderFiles = (files: FileInfo[]) => {
-    if (settings.view === "cards") {
+  const renderFiles = useCallback(
+    (files: ExplorerFileNode[]) => {
+      if (settings.view === "cards") {
+        return (
+          <CardsView
+            model={model}
+            files={files}
+            extForCard={extForCard}
+            actions={actions}
+            contextMenu={contextMenu}
+          />
+        );
+      }
+
       return (
-        <CardsView
+        <ListView
           model={model}
           files={files}
-          extForCard={extForCard}
-          onOpenFolderNote={onOpenFolderNote}
-          onMoveIntoFolder={onMoveIntoFolder}
+          actions={actions}
           contextMenu={contextMenu}
         />
       );
-    }
-
-    return (
-      <ListView
-        model={model}
-        files={files}
-        onMoveIntoFolder={onMoveIntoFolder}
-        contextMenu={contextMenu}
-      />
-    );
-  };
+    },
+    [actions, contextMenu, extForCard, model, settings.view],
+  );
 
   const showLoadMore = paginationKind === "load-more" && canLoadMore;
   const classicPagination =
@@ -141,18 +129,12 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onMoveIntoFolder={onMoveIntoFolder}
         showParentNavigation={
           model.settings.showParentButton &&
-          canGoToParentFolderNote(app, model.pluginSettings, model.blockFile)
+          actions.canGoToParent(model.blockFile)
         }
         onOpenSettings={onOpenSettings}
-        onGoToParent={(newLeaf) =>
-          void goToParentFolderNote(app, model.pluginSettings, {
-            currentFile: model.blockFile,
-            newLeaf,
-            savePluginSettings: onSavePluginSettings,
-          })
-        }
-        onNewFolder={() => void promptAndCreateFolder(app, model.folder.path)}
-        onNewNote={() => void promptAndCreateNote(app, model.folder.path)}
+        onGoToParent={(newLeaf) => void actions.goToParent(model.blockFile, newLeaf)}
+        onNewFolder={() => void actions.createFolder()}
+        onNewNote={() => void actions.createNote()}
         onSearchToggle={toggleSearch}
         searchMode={searchMode}
         searchQuery={searchQuery}
@@ -166,10 +148,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           )} */}
           <Divider size={folderDivider} />
           <FolderButtons
-            app={app}
-            folderInfos={model.folders}
-            onOpenFolderNote={onOpenFolderNote}
-            onMoveIntoFolder={onMoveIntoFolder}
+            folders={model.folders}
+            actions={actions}
             contextMenu={contextMenu}
           />
         </>

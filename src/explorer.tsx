@@ -16,6 +16,7 @@ import { ExplorerUI } from "./ui/explorer-ui";
 import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
 import { buildExplorerModel } from "./explorer/model";
 import { updateExplorerBlock } from "./explorer/block-update";
+import { ExplorerSession } from "./explorer/session";
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   if (settings.textDirection && settings.textDirection !== "auto") {
@@ -38,6 +39,7 @@ export async function renderExplorerBlock(
 
   const reactRoot = createRoot(container);
   let blockOverrides = { ...initialOverrides };
+  const session = new ExplorerSession(app);
   let effectiveSettings = resolveBlockSettings(
     getBlockDefaults(),
     blockOverrides,
@@ -45,7 +47,8 @@ export async function renderExplorerBlock(
   let refreshQueued = false;
   let isUnmounted = false;
 
-  const queueRefresh = (): void => {
+  const queueRefresh = (path?: string): void => {
+    session.invalidate(path);
     if (refreshQueued || isUnmounted) return;
     refreshQueued = true;
     window.requestAnimationFrame(() => {
@@ -56,9 +59,14 @@ export async function renderExplorerBlock(
   };
 
   const child = new MarkdownRenderChild(container);
-  child.registerEvent(app.vault.on("create", queueRefresh));
-  child.registerEvent(app.vault.on("delete", queueRefresh));
-  child.registerEvent(app.vault.on("rename", queueRefresh));
+  child.registerEvent(app.vault.on("create", (file) => queueRefresh(file.path)));
+  child.registerEvent(app.vault.on("delete", (file) => queueRefresh(file.path)));
+  child.registerEvent(
+    app.vault.on("rename", (file, oldPath) => {
+      session.invalidate(oldPath);
+      queueRefresh(file.path);
+    }),
+  );
   child.register(() => {
     isUnmounted = true;
     reactRoot.unmount();
@@ -99,6 +107,7 @@ export async function renderExplorerBlock(
 
     const model = await buildExplorerModel({
       app,
+      session,
       sourcePath: ctx.sourcePath,
       settings: effectiveSettings,
       pluginSettings: getPluginSettings(),

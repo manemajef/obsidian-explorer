@@ -1,6 +1,5 @@
 import type { HTMLAttributes } from "react";
-import { App, TAbstractFile, TFile, TFolder } from "obsidian";
-import { isFolderNote } from "../explorer/file-utils";
+import { App, TAbstractFile, TFolder } from "obsidian";
 import { canMoveIntoFolder } from "../explorer/move";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
@@ -15,14 +14,6 @@ export type MoveIntoFolder = (
   target: TFolder,
   fromFolderNote: boolean,
 ) => void | Promise<void>;
-
-export function fileDragSource(file: TFile): TAbstractFile {
-  return fileDropTarget(file) ?? file;
-}
-
-export function fileDropTarget(file: TFile): TFolder | null {
-  return isFolderNote(file) ? file.parent : null;
-}
 
 export function draggableProps<T extends HTMLElement>(
   source: TAbstractFile,
