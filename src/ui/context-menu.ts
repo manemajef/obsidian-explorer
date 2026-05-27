@@ -1,5 +1,5 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { App, Menu, TFile, TFolder } from "obsidian";
+import { App, Menu, Platform, TFile, TFolder } from "obsidian";
 import {
   getFolderNoteForFolder,
   getFolderNotePath,
@@ -32,6 +32,8 @@ export function showNoteContextMenu(
   config: ContextMenuConfig,
   file: TFile,
 ): void {
+  if (shouldDeferToNestedLink(event)) return;
+
   const menu = beginMenu(event, config, file.path);
   const folder = file.parent;
   let hasAction = false;
@@ -59,7 +61,7 @@ export function showNoteContextMenu(
         void config.app.fileManager.promptForDeletion(file);
       }),
   );
-  showLegacyMenu(menu, event);
+  menu.showAtMouseEvent(event.nativeEvent);
 }
 
 export function showFolderContextMenu(
@@ -68,6 +70,8 @@ export function showFolderContextMenu(
   folder: TFolder,
   linkPath = getFolderNotePath(folder),
 ): void {
+  if (shouldDeferToNestedLink(event)) return;
+
   const menu = beginMenu(event, config, linkPath);
   const folderNote = getFolderNoteForFolder(config.app, folder);
   const hasAction = folderNote
@@ -111,7 +115,7 @@ export function showFolderContextMenu(
     );
   }
 
-  showLegacyMenu(menu, event);
+  menu.showAtMouseEvent(event.nativeEvent);
 }
 
 export function showFileContextMenu(
@@ -126,6 +130,15 @@ export function showFileContextMenu(
   showNoteContextMenu(event, config, file);
 }
 
+function shouldDeferToNestedLink(event: ReactMouseEvent<HTMLElement>): boolean {
+  if (!Platform.isMobile) return false;
+  const target = event.target;
+  if (!(target instanceof Element)) return false;
+
+  const link = target.closest("a.internal-link");
+  return Boolean(link && event.currentTarget.contains(link));
+}
+
 function beginMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
@@ -133,10 +146,7 @@ function beginMenu(
 ): Menu {
   event.preventDefault();
   event.stopPropagation();
-  const menu =
-    typeof Menu.forEvent === "function"
-      ? Menu.forEvent(event.nativeEvent)
-      : new Menu();
+  const menu = new Menu();
   config.app.workspace.handleLinkContextMenu(
     menu,
     linkPath,
@@ -144,15 +154,6 @@ function beginMenu(
   );
   menu.addSeparator();
   return menu;
-}
-
-function showLegacyMenu(
-  menu: Menu,
-  event: ReactMouseEvent<HTMLElement>,
-): void {
-  if (typeof Menu.forEvent !== "function") {
-    menu.showAtMouseEvent(event.nativeEvent);
-  }
 }
 
 function addFolderNoteNavigationItems(
