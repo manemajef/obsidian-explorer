@@ -120,30 +120,40 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 
 const MobileListView = (props: ListViewProps): React.JSX.Element => {
   const { model, files } = props;
-  const { settings } = model;
+  const { app, settings } = model;
 
   return (
     <div className="explorer-mobile-list ">
       {files.map((fileInfo, i) => (
-        <div
-          key={fileInfo.file.path}
-          className="explorer-mobile-list-item"
-          onContextMenuCapture={(event) =>
-            showFileContextMenu(event, props.contextMenu, fileInfo.file)
-          }
-        >
-          <InternalLink
-            path={fileInfo.file.path}
-            className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""} ${i >= files.length - 1 ? "explorer-mobile-note-last" : ""}`}
+        <div key={fileInfo.file.path} className="explorer-mobile-list-item">
+          <div
+            className={`explorer-mobile-note${fileInfo.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-mobile-note-last" : ""}`}
+            {...draggableProps(
+              fileDragSource(fileInfo.file),
+              isFolderNote(fileInfo.file),
+            )}
+            {...folderDropProps(
+              app,
+              fileDropTarget(fileInfo.file),
+              props.onMoveIntoFolder,
+            )}
+            onContextMenuCapture={(event) =>
+              showFileContextMenu(event, props.contextMenu, fileInfo.file)
+            }
           >
             <div className="explorer-mobile-note__header">
               <Group>
                 <Pin fileInfo={fileInfo} />
-                <span className="explorer-mobile-note__title">
-                  {fileInfo.file.extension === "md"
-                    ? fileInfo.file.basename
-                    : `${fileInfo.file.basename}.${fileInfo.file.extension}`}
-                </span>
+                <InternalLink
+                  path={fileInfo.file.path}
+                  className="explorer-mobile-note__title"
+                  draggable={false}
+                  text={
+                    fileInfo.file.extension === "md"
+                      ? fileInfo.file.basename
+                      : `${fileInfo.file.basename}.${fileInfo.file.extension}`
+                  }
+                />
               </Group>
 
               {(fileInfo.file.extension !== "md" ||
@@ -170,7 +180,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
               </div>
               {/* <Pin fileInfo={fileInfo} /> */}
             </div>
-          </InternalLink>
+          </div>
 
           {i < files.length - 1 && (
             <div className="explorer-mobile-note__divider" />
