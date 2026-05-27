@@ -2,6 +2,7 @@ import type { MouseEvent as ReactMouseEvent } from "react";
 import { App, Menu, TFile, TFolder } from "obsidian";
 import {
   getFolderNoteForFolder,
+  getFolderNotePath,
   isFolderNote,
   isPinned,
   togglePin,
@@ -10,6 +11,10 @@ import {
   openOrCreateFolderNote,
   type SavePluginSettings,
 } from "../explorer/navigation";
+import {
+  promptAndRenameFile,
+  promptAndRenameFolder,
+} from "../explorer/rename";
 import type { PluginSettings } from "../explorer/settings";
 import { ConfirmationDialog } from "./modals/prompt-modal";
 
@@ -41,6 +46,8 @@ export function showNoteContextMenu(
     hasAction = true;
   }
   hasAction = addPinItem(menu, config, file) || hasAction;
+  addRenameFileItem(menu, config, file);
+  hasAction = true;
 
   if (hasAction) menu.addSeparator();
   menu.addItem((item) =>
@@ -59,7 +66,7 @@ export function showFolderContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
   folder: TFolder,
-  linkPath = folderNotePath(folder),
+  linkPath = getFolderNotePath(folder),
 ): void {
   const menu = beginMenu(event, config, linkPath);
   const folderNote = getFolderNoteForFolder(config.app, folder);
@@ -68,6 +75,14 @@ export function showFolderContextMenu(
     : false;
 
   if (hasAction) menu.addSeparator();
+  menu.addItem((item) =>
+    item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
+      void promptAndRenameFolder(config.app, folder).then((renamed) => {
+        if (renamed) config.onRefresh();
+      });
+    }),
+  );
+  menu.addSeparator();
   menu.addItem((item) =>
     item
       .setTitle("Delete folder")
@@ -179,6 +194,17 @@ function addPinItem(
   return true;
 }
 
-function folderNotePath(folder: TFolder): string {
-  return `${folder.path}/${folder.name}.md`;
+function addRenameFileItem(
+  menu: Menu,
+  config: ContextMenuConfig,
+  file: TFile,
+): void {
+  const itemName = file.extension.toLowerCase() === "md" ? "note" : "file";
+  menu.addItem((item) =>
+    item.setTitle(`Rename ${itemName}`).setIcon("pencil").onClick(() => {
+      void promptAndRenameFile(config.app, file).then((renamed) => {
+        if (renamed) config.onRefresh();
+      });
+    }),
+  );
 }

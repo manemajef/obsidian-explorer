@@ -7,9 +7,18 @@ export function promptForName(
   app: App,
   title: string,
   placeholder: string,
+  initialValue = "",
+  submitLabel = "Create",
 ): Promise<string | null> {
   return new Promise((resolve) => {
-    new PromptModal(app, title, placeholder, resolve).open();
+    new PromptModal(
+      app,
+      title,
+      placeholder,
+      resolve,
+      initialValue,
+      submitLabel,
+    ).open();
   });
 }
 
@@ -95,6 +104,8 @@ export class PromptModal extends Modal {
   title: string;
   placeholder: string;
   resolve: (value: string | null) => void;
+  initialValue: string;
+  submitLabel: string;
   value: string = "";
 
   constructor(
@@ -102,11 +113,15 @@ export class PromptModal extends Modal {
     title: string,
     placeholder: string,
     resolve: (value: string | null) => void,
+    initialValue = "",
+    submitLabel = "Create",
   ) {
     super(app);
     this.title = title;
     this.placeholder = placeholder;
     this.resolve = resolve;
+    this.initialValue = initialValue;
+    this.submitLabel = submitLabel;
   }
 
   onOpen() {
@@ -120,6 +135,7 @@ export class PromptModal extends Modal {
         style: "width: 100%; padding: 8px; margin: 8px 0;",
       },
     });
+    input.value = this.initialValue;
 
     const submit = () => {
       const value = input.value || "";
@@ -157,7 +173,7 @@ export class PromptModal extends Modal {
     });
 
     const okBtn = btnContainer.createEl("button", {
-      text: "Create",
+      text: this.submitLabel,
       cls: "mod-cta",
     });
     okBtn.addEventListener("click", () => {
@@ -165,6 +181,7 @@ export class PromptModal extends Modal {
     });
 
     input.focus();
+    input.select();
   }
 
   onClose() {

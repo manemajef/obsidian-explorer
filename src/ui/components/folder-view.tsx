@@ -1,6 +1,7 @@
 import React from "react";
 import { App, TFolder } from "obsidian";
 import { FolderInfo } from "../../types";
+import { getFolderNotePath } from "../../explorer/file-utils";
 import { draggableProps, folderDropProps, MoveIntoFolder } from "../drag-drop";
 import { showFolderContextMenu, type ContextMenuConfig } from "../context-menu";
 
@@ -23,7 +24,7 @@ export function FolderButtons(props: {
         const isMissing = !existingNote;
         const folderNotePath = existingNote
           ? existingNote.path
-          : `${folderInfo.folder.path}/${folderInfo.folder.name}.md`;
+          : getFolderNotePath(folderInfo.folder);
         const linkText = folderInfo.folder.name;
         const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
 

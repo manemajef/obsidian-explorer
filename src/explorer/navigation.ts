@@ -1,6 +1,10 @@
 import { App, MarkdownView, Notice, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { PluginSettings } from "./settings";
-import { isFolderNote } from "./file-utils";
+import {
+  getFolderNoteForFolder,
+  getFolderNotePath,
+  isFolderNote,
+} from "./file-utils";
 import { ConfirmationDialog } from "../ui/modals/prompt-modal";
 
 export type SavePluginSettings = () => void | Promise<void>;
@@ -103,22 +107,9 @@ export async function openOrCreateFolderNote(
     return;
   }
 
-  const parentPath = folder.parent?.path;
-  if (parentPath) {
-    const parentNotePath =
-      parentPath === "/"
-        ? `${folder.name}.md`
-        : `${parentPath}/${folder.name}.md`;
-    const parentNote = app.vault.getAbstractFileByPath(parentNotePath);
-    if (parentNote instanceof TFile) {
-      await openExplorerPage(app, parentNote, sourcePath, newLeaf);
-      return;
-    }
-  }
-
-  const folderNotePath = `${folder.path}/${folder.name}.md`;
-  const existing = app.vault.getAbstractFileByPath(folderNotePath);
-  if (existing instanceof TFile) {
+  const folderNotePath = getFolderNotePath(folder);
+  const existing = getFolderNoteForFolder(app, folder);
+  if (existing) {
     await openExplorerPage(app, existing, sourcePath, newLeaf);
     return;
   }

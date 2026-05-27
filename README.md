@@ -1,11 +1,9 @@
 # Explorer
 
-**Browse and organize your Obsidian vault from inside your notes.**
+**Your vault, from the inside.**
 
-Explorer turns folder notes into working dashboards for your vault. Open a
-project note and see its files and subfolders, search within it, jump through
-your folder structure, and organize items in place instead of switching back
-to the file explorer.
+Manage files the way Craft does — drag, rename, reorganize — but from inside
+your notes. No sidebar, no context switching, fully local.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
@@ -13,17 +11,14 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 
 ## Why Explorer
 
-- **Navigate from notes.** Turn each folder note into a card or list view of
-  its contents, with folder buttons, parent navigation, and an optional vault
-  homepage.
-- **Organize where you work.** On desktop, drag notes and folders into another
-  folder or onto the parent button to move them. Right-click items to pin,
-  navigate, or delete them.
-- **Build focused dashboards.** Search the current view, show nested content,
-  and exclude folders such as archives or templates from a particular Explorer
-  block.
-- **Keep your workflow comfortable.** Sort, paginate, style cards and lists,
-  use mobile-friendly layouts, and work in LTR or RTL vaults.
+- **Work without the sidebar.** Drag notes into folders, rename items, pin
+  favorites — all from the note you're already in.
+- **Navigate from notes.** Each folder note becomes a live view of its contents,
+  with parent navigation, folder buttons, and an optional vault homepage.
+- **Shape each view.** Search, show nested content, exclude archives or
+  templates from specific blocks. Each Explorer view can be different.
+- **Cards or lists.** Sort by edited, name, or date. Paginate, style for
+  desktop or mobile. RTL supported.
 
 ## Get Started
 
@@ -45,19 +40,21 @@ That command creates `Folder/Folder.md`, inserts an Explorer block, and opens th
 
 ## Organize In Place
 
-On desktop, an Explorer view is also an interface for managing the folder:
+This is where Explorer feels like Craft — but local and private.
 
-- Drag a note or folder onto a displayed folder to move it there.
-- Drag an item onto the parent button in the action bar to move it up one
-  level.
-- Right-click a note to pin or unpin it or delete it. If it appears from a
-  nested folder, you can also open or create that folder note.
-- Right-click a folder to delete it, or to pin or delete its existing folder
-  note.
+On desktop, every Explorer view is a working interface:
 
-When a folder note is dragged, Explorer moves the folder it represents and
-confirms the move first. Deleting a folder also includes a warning before its
-contents are removed.
+- **Drag and drop.** Move notes and folders by dragging them onto any displayed
+  folder, or onto the parent button to move up a level.
+- **Rename.** Right-click any note or folder. Folder notes stay synced with
+  their folders automatically.
+- **Pin.** Mark important items so they stay at the top.
+- **Delete.** Remove notes or entire folders, with a clear warning before
+  anything is gone.
+
+Folder notes and their folders are kept together — rename one, the other
+follows. Drag a folder note, and Explorer moves the whole folder after
+confirming.
 
 ## Screenshots
 

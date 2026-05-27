@@ -45,11 +45,15 @@ export function isFolderNote(file: TFile): boolean {
 /**
  * Get the folder note for a given folder if it exists
  */
+export function getFolderNotePath(folder: TFolder): string {
+  return `${folder.path}/${folder.name}.md`;
+}
+
 export function getFolderNoteForFolder(
   app: App,
   folder: TFolder,
 ): TFile | null {
-  const folderNotePath = `${folder.path}/${folder.name}.md`;
+  const folderNotePath = getFolderNotePath(folder);
   const file = app.vault.getAbstractFileByPath(folderNotePath);
   return file instanceof TFile ? file : null;
 }

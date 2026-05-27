@@ -1,10 +1,11 @@
 # Explorer changelog
 
-## 1.2.0 (Unreleased)
+## 1.2.0 (27-05-26)
 
-Explorer is becoming a place to organize your vault, not just browse it. This
-release adds direct file and folder management from folder notes, with new ways
-to shape each Explorer view around the content that matters.
+Explorer started as a way to browse folders. Now you can manage them too.
+
+Drag notes, rename folders, hide archives from specific views, open your
+homepage in new tabs — all without leaving your note.
 
 ### Organize directly from Explorer
 
@@ -12,8 +13,10 @@ to shape each Explorer view around the content that matters.
   without leaving the note.
 - Drag a note or folder onto the parent button to move it up one level.
 - Dragging a folder note moves its folder and asks for confirmation first.
-- Right-click notes and folders for useful actions including pinning and
-  deletion, plus quick navigation to nested folder notes.
+- Rename notes and folders from their right-click menu. Renaming a folder
+  keeps its matching folder note named with it.
+- Right-click notes and folders for pinning and deletion, plus quick
+  navigation to nested folder notes.
 - Folder deletion now clearly warns that everything inside the folder will be
   deleted before continuing.
 
@@ -37,6 +40,8 @@ to shape each Explorer view around the content that matters.
   folder, better reflecting recent work.
 - Folder notes shown with folder information now display their containing
   folder correctly.
+- Opening a folder now consistently uses its matching nested folder note,
+  rather than a same-named note in the parent folder.
 
 ### Changed behavior
 
