@@ -218,7 +218,7 @@
 }
 .is-mobile .explorer-folders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 140px));
+  grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
   gap: var(--explorer-space-4);
 }
 .is-mobile .explorer-folders-grid::after {
@@ -271,7 +271,6 @@
 .is-mobile .explorer-folder-card {
   padding: 1.15em 0.2em;
   border-radius: 16px;
-  max-width: 140px;
 }
 .theme-dark.is-mobile .explorer-folder-card {
   background: var(--raised-background);

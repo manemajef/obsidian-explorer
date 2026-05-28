@@ -1,4 +1,6 @@
 # Explorer changelog
+## 1.2.3 (28-05-26)
+- Urgent fix for Mobile folder view grid to have 3 columns again
 
 ## 1.2.2 (28-05-26)
 
