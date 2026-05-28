@@ -88,7 +88,9 @@ export class ExplorerActions {
     new ConfirmationDialog(
       this.app,
       "Move folder?",
-      () => this.performMove(sourcePath, target),
+      () => {
+        void this.performMove(sourcePath, target);
+      },
       undefined,
       message,
     ).open();
