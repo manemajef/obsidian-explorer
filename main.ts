@@ -43,6 +43,53 @@ export default class ExplorerPlugin extends Plugin {
       },
     );
     registerHomePageNewTabs(this, () => this.settings);
+    // const USE_FORCED_VIEW =
+    //   !this.settings.defaultBlockSettings.forceReadingMode;
+    this.registerEvent(
+      this.app.workspace.on("file-open", async (file) => {
+        if (!file) return;
+        const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+        if (!view) return;
+        // @ts-ignore
+        if (this.app.vault.config.defaultViewMode === "preview") return;
+        const leaf = view.leaf;
+        const content = await this.app.vault.cachedRead(file);
+        const hasExplorerBlock = content.includes("```explorer");
+
+        if (
+          !this.settings.defaultBlockSettings.forceReadingMode &&
+          hasExplorerBlock
+        ) {
+          setTimeout(() => {
+            if (view.editor) {
+              view.editor.blur();
+            }
+          }, 10);
+          return;
+        }
+        if (hasExplorerBlock) {
+          console.log("has explorer view, setting view to preview");
+          const state = leaf.getViewState();
+          if (state.state && state.state.mode !== "preview")
+            state.state.mode = "preview";
+          await leaf.setViewState(state);
+          console.log("set state to preview");
+          // @ts-ignore
+          leaf._explorerViewForcedPreview = true;
+        }
+        // @ts-ignore
+        else if (leaf._explorerViewForcedPreview) {
+          const state = leaf.getViewState();
+          // @ts-ignore
+          const defaultMode = this.app.vault.config.defaultViewMode || "source";
+          // @ts-ignore
+          if (state.state) state.state.mode = defaultMode;
+          await leaf.setViewState(state);
+          // @ts-ignore
+          delete leaf._explorerViewForcedPreview;
+        }
+      }),
+    );
   }
 
   onunload() {}

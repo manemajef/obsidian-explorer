@@ -96,7 +96,10 @@ type BlockField = (
   legacy?: LegacySettingAlias<unknown>;
 };
 
-const enumField = <T extends string, F extends Omit<EnumSettingField<T>, "kind">>(
+const enumField = <
+  T extends string,
+  F extends Omit<EnumSettingField<T>, "kind">,
+>(
   field: F,
 ): F & { kind: "enum" } => ({
   kind: "enum",
@@ -124,9 +127,7 @@ const textField = <F extends Omit<TextSettingField, "kind">>(
   ...field,
 });
 
-const folderPickerField = <
-  F extends Omit<FolderPickerSettingField, "kind">,
->(
+const folderPickerField = <F extends Omit<FolderPickerSettingField, "kind">>(
   field: F,
 ): F & { kind: "folder-picker" } => ({
   kind: "folder-picker",
@@ -469,12 +470,25 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       order: 9.5,
     },
   }),
+  forceReadingMode: booleanField({
+    label: "always Open folder notes in reading mode",
+    description:
+      "open folder notes in reading mode even if default mode is set to editing (Recomended)",
+    blockKey: "forceReadingMode",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 9.4,
+    },
+  }),
 });
 
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   useHomePage: booleanField({
     label: "Use homepage",
-    description: "Open a root homepage when navigating above a root folder note.",
+    description:
+      "Open a root homepage when navigating above a root folder note.",
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
@@ -516,9 +530,9 @@ type InferSettingValue<T> =
         ? boolean
         : T extends FolderPickerSettingField
           ? string[]
-        : T extends TextSettingField
-          ? string
-          : never;
+          : T extends TextSettingField
+            ? string
+            : never;
 
 export type BlockSettingKey = keyof typeof BLOCK_SETTINGS_SCHEMA;
 export type BlockSettings = {
@@ -561,8 +575,10 @@ export function getSettingKeysForSurface(
     const surfaceA = BLOCK_SETTINGS_SCHEMA[a].ui.surfaceOrder?.[surface];
     const surfaceB = BLOCK_SETTINGS_SCHEMA[b].ui.surfaceOrder?.[surface];
     if (surfaceA !== undefined || surfaceB !== undefined) {
-      return (surfaceA ?? Number.MAX_SAFE_INTEGER) -
-        (surfaceB ?? Number.MAX_SAFE_INTEGER);
+      return (
+        (surfaceA ?? Number.MAX_SAFE_INTEGER) -
+        (surfaceB ?? Number.MAX_SAFE_INTEGER)
+      );
     }
 
     const sectionDiff =
