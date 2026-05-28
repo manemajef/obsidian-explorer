@@ -17,19 +17,67 @@ import random
 import shutil
 import sys
 from pathlib import Path
+import subprocess
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+EXPLORER_DIR = (SCRIPT_DIR / "../").resolve()
 
 WORDS = [
-    "alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta",
-    "project", "meeting", "idea", "note", "draft", "todo", "review", "spec",
-    "design", "research", "log", "journal", "recipe", "trip", "book", "movie",
-    "quote", "thought", "snippet", "config", "playbook", "retrospective",
-    "kickoff", "postmortem", "sketch", "outline", "summary", "brief",
+    "alpha",
+    "beta",
+    "gamma",
+    "delta",
+    "epsilon",
+    "zeta",
+    "eta",
+    "theta",
+    "project",
+    "meeting",
+    "idea",
+    "note",
+    "draft",
+    "todo",
+    "review",
+    "spec",
+    "design",
+    "research",
+    "log",
+    "journal",
+    "recipe",
+    "trip",
+    "book",
+    "movie",
+    "quote",
+    "thought",
+    "snippet",
+    "config",
+    "playbook",
+    "retrospective",
+    "kickoff",
+    "postmortem",
+    "sketch",
+    "outline",
+    "summary",
+    "brief",
 ]
 
 TAGS_POOL = [
-    "work", "personal", "idea", "todo", "archive", "reference", "draft",
-    "important", "research/active", "research/done", "writing", "review",
-    "trip/asia", "trip/europe", "recipe/dinner", "recipe/dessert",
+    "work",
+    "personal",
+    "idea",
+    "todo",
+    "archive",
+    "reference",
+    "draft",
+    "important",
+    "research/active",
+    "research/done",
+    "writing",
+    "review",
+    "trip/asia",
+    "trip/europe",
+    "recipe/dinner",
+    "recipe/dessert",
 ]
 
 EXTRA_EXTS = [("pdf", 30), ("base", 20), ("png", 10), ("canvas", 5)]
@@ -52,14 +100,16 @@ def make_file_basename(rng: random.Random) -> str:
 
 
 def make_frontmatter(rng: random.Random) -> str | None:
+    pinned_so_far = 0
     fields: list[str] = []
     if rng.random() < 0.4:
         n = rng.randint(1, 3)
         tags = rng.sample(TAGS_POOL, n)
         fields.append("tags:")
         fields.extend(f"  - {t}" for t in tags)
-    if rng.random() < 0.08:
+    if rng.random() < 0.08 and pinned_so_far <= 30:
         fields.append("pin: true")
+        pinned_so_far += 1
     if rng.random() < 0.3:
         desc = " ".join(rng.choices(WORDS, k=rng.randint(4, 10)))
         fields.append(f"description: {desc}")
@@ -94,7 +144,11 @@ def build_folder_tree(
 
 
 def write_markdown(path: Path, rng: random.Random) -> None:
-    parts = [make_frontmatter(rng), f"# {path.stem.replace('-', ' ').title()}\n\n", make_body(rng)]
+    parts = [
+        make_frontmatter(rng),
+        f"# {path.stem.replace('-', ' ').title()}\n\n",
+        make_body(rng),
+    ]
     path.write_text("".join(p for p in parts if p), encoding="utf-8")
 
 
@@ -111,10 +165,7 @@ def write_folder_notes(rng: random.Random, folders: list[Path], root: Path) -> i
             note = folder / f"{folder.name}.md"
             if not note.exists():
                 fm = make_frontmatter(rng) or ""
-                note.write_text(
-                    f"{fm}# {folder.name}\n\nFolder note for {folder.name}.\n",
-                    encoding="utf-8",
-                )
+                note.write_text("\n```explorer\n````")
                 count += 1
     return count
 
@@ -180,10 +231,28 @@ def main() -> int:
     root.mkdir(parents=True)
 
     # Mark as an Obsidian vault so it opens cleanly.
-    (root / ".obsidian").mkdir()
+    obsidian_dir = root / ".obsidian"
+    plugins_dir = obsidian_dir / "plugins"
+    obsidian_dir.mkdir()
+    plugins_dir.mkdir()
+    (plugins_dir / "explorer").symlink_to(EXPLORER_DIR, target_is_directory=True)
+
+    hot_reload_dir = plugins_dir / "hot-reload"
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "https://github.com/pjeby/hot-reload.git",
+            str(hot_reload_dir),
+        ],
+        check=True,
+    )
+    shutil.rmtree(hot_reload_dir / ".git")
 
     rng = random.Random(args.seed)
-    print(f"Building {args.folders} folders under {root} (max depth {args.max_depth})...")
+    print(
+        f"Building {args.folders} folders under {root} (max depth {args.max_depth})..."
+    )
     folders = build_folder_tree(rng, root, args.folders, args.max_depth)
 
     print("Writing folder notes...")
