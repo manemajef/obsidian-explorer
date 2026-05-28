@@ -1,7 +1,6 @@
 import type { HTMLAttributes } from "react";
-import { App, TAbstractFile, TFolder } from "obsidian";
+import { App, Platform, TAbstractFile, TFolder } from "obsidian";
 import { canMoveIntoFolder } from "../explorer/move";
-import { cancelPendingContextMenu } from "./context-menu";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
 const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";
@@ -9,10 +8,6 @@ const ACTIVE_DRAG_CLASS = "explorer-drag-active";
 const DRAGGING_CLASS = "is-dragging";
 const DROP_TARGET_CLASS = "is-drop-target";
 let draggedItem: { path: string; fromFolderNote: boolean } | null = null;
-
-export function isCurrentlyDragging(): boolean {
-  return draggedItem !== null;
-}
 
 export type MoveIntoFolder = (
   sourcePath: string,
@@ -24,6 +19,10 @@ export function draggableProps<T extends HTMLElement>(
   source: TAbstractFile,
   fromFolderNote = false,
 ): Pick<HTMLAttributes<T>, "draggable" | "onDragStart" | "onDragEnd"> {
+  if (Platform.isMobile) {
+    return {};
+  }
+
   return {
     draggable: true,
     onDragStart: (event) => {
@@ -33,8 +32,6 @@ export function draggableProps<T extends HTMLElement>(
       }
 
       draggedItem = { path: source.path, fromFolderNote };
-      cancelPendingContextMenu();
-      
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData(EXPLORER_DRAG_TYPE, source.path);
       if (fromFolderNote) {
@@ -45,9 +42,9 @@ export function draggableProps<T extends HTMLElement>(
     },
     onDragEnd: (event) => {
       draggedItem = null;
-      cancelPendingContextMenu();
-      
-      event.currentTarget.ownerDocument.body.classList.remove(ACTIVE_DRAG_CLASS);
+      event.currentTarget.ownerDocument.body.classList.remove(
+        ACTIVE_DRAG_CLASS,
+      );
       event.currentTarget.classList.remove(DRAGGING_CLASS);
       clearDropTargets(event.currentTarget.ownerDocument);
     },
@@ -96,7 +93,9 @@ export function folderDropProps<T extends HTMLElement>(
 
       event.preventDefault();
       event.stopPropagation();
-      event.currentTarget.ownerDocument.body.classList.remove(ACTIVE_DRAG_CLASS);
+      event.currentTarget.ownerDocument.body.classList.remove(
+        ACTIVE_DRAG_CLASS,
+      );
       const fromFolderNote =
         event.dataTransfer.getData(FOLDER_NOTE_DRAG_TYPE) === "true" ||
         draggedItem?.fromFolderNote === true;
@@ -106,9 +105,7 @@ export function folderDropProps<T extends HTMLElement>(
 }
 
 function getDraggedSource(app: App): TAbstractFile | null {
-  return draggedItem
-    ? app.vault.getAbstractFileByPath(draggedItem.path)
-    : null;
+  return draggedItem ? app.vault.getAbstractFileByPath(draggedItem.path) : null;
 }
 
 function clearDropTargets(document: Document): void {

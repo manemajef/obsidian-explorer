@@ -67,7 +67,10 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     },
     [actions],
   );
-  const contextMenu: ContextMenuConfig = useMemo(() => ({ actions }), [actions]);
+  const contextMenu: ContextMenuConfig = useMemo(
+    () => ({ actions }),
+    [actions],
+  );
 
   const showFolders =
     settings.showFolders && model.folders.length > 0 && !searchMode;
@@ -123,6 +126,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {/* {settings.useGlass && TOP_DIVIDER && <Divider size="sm" />} */}
       {/* {!Platform.isMobile && <Divider size="sm" />} */}
       <Divider size="sm" />
+      {/* <div>This is beta number 5</div> */}
       <ActionsBar
         app={app}
         parentDropFolder={model.folder.parent}
@@ -132,7 +136,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           actions.canGoToParent(model.blockFile)
         }
         onOpenSettings={onOpenSettings}
-        onGoToParent={(newLeaf) => void actions.goToParent(model.blockFile, newLeaf)}
+        onGoToParent={(newLeaf) =>
+          void actions.goToParent(model.blockFile, newLeaf)
+        }
         onNewFolder={() => void actions.createFolder()}
         onNewNote={() => void actions.createNote()}
         onSearchToggle={toggleSearch}
