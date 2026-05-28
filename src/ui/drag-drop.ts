@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "react";
 import { App, Platform, TAbstractFile, TFolder } from "obsidian";
-import { canMoveIntoFolder } from "../explorer/move";
+import { canMoveIntoFolder } from "../explorer/vault/move";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
 const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";

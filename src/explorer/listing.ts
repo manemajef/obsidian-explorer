@@ -1,6 +1,6 @@
 import { TFile, TFolder } from "obsidian";
 import { BlockSettings, DisplayedNotes } from "./settings";
-import { getFolderNoteForFolder, isFolderNote } from "./file-utils";
+import { getFolderNoteForFolder, isFolderNote } from "./folder-notes";
 import {
   ExplorerFileNode,
   ExplorerFolderNode,
@@ -30,7 +30,9 @@ export class FolderIndex {
   ) {
     this.folder = folder;
     const prefix = folder.isRoot() ? "" : `${folder.path}/`;
-    this.excludedFolderPaths = excludedFolders.map((path) => `${prefix}${path}`);
+    this.excludedFolderPaths = excludedFolders.map(
+      (path) => `${prefix}${path}`,
+    );
   }
 
   async loadToDepth(

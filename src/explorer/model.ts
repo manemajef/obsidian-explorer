@@ -1,6 +1,10 @@
 import { App, TFile, TFolder } from "obsidian";
 import { BlockSettings, PluginSettings } from "./settings";
-import { ExplorerFileNode, ExplorerFolderNode, type ExplorerNode } from "./nodes";
+import {
+  ExplorerFileNode,
+  ExplorerFolderNode,
+  type ExplorerNode,
+} from "./nodes";
 import { ExplorerSession } from "./session";
 
 export type ExplorerModel = {
@@ -34,7 +38,7 @@ export async function buildExplorerModel(input: {
   const folder = blockFile.parent;
   const index = await session.getIndex(folder, {
     depth: settings.depth,
-    displayNestedFolderNotes: settings.displayNestedFolderNotes,
+    displayNestedFolderNotes: pluginSettings.displayNestedFolderNotes,
     excludedFolders: settings.excludedFolders,
   });
 

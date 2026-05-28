@@ -1,5 +1,5 @@
 import { App, Notice, TFile } from "obsidian";
-import { promptForName } from "../ui/modals/prompt-modal";
+import { promptForName } from "../../ui/modals/prompt-modal";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 

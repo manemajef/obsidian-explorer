@@ -82,7 +82,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   //   ? "sm"
   //   : "md";
   const folderDivider = Platform.isMobile
-    ? model.settings.useGlass
+    ? model.pluginSettings.useGlass
       ? "md"
       : "sm"
     : "md";
@@ -119,11 +119,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       ? explorerState
       : null;
   const paginationDividerSize = showLoadMore ? "md" : "sm";
-  // const TOP_DIVIDER = false;
 
   return (
     <>
-      {/* {settings.useGlass && TOP_DIVIDER && <Divider size="sm" />} */}
       {/* {!Platform.isMobile && <Divider size="sm" />} */}
       <Divider size="sm" />
       {/* <div>This is beta number 5</div> */}
@@ -132,7 +130,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         parentDropFolder={model.folder.parent}
         onMoveIntoFolder={onMoveIntoFolder}
         showParentNavigation={
-          model.settings.showParentButton &&
+          model.pluginSettings.showParentButton &&
           actions.canGoToParent(model.blockFile)
         }
         onOpenSettings={onOpenSettings}
@@ -149,9 +147,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {showFolders && (
         <>
-          {/* {!(Platform.isMobile && !model.settings.useGlass) && (
-            <Divider size={folderDivider} />
-          )} */}
           <Divider size={folderDivider} />
           <FolderButtons
             folders={model.folders}

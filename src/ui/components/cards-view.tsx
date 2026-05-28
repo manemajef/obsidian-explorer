@@ -2,7 +2,7 @@ import React from "react";
 import { ExplorerModel } from "../../explorer/model";
 import { ExplorerFileNode } from "../../explorer/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { diffDays } from "../../explorer/file-utils";
+import { diffDays } from "../../utils";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
@@ -17,7 +17,7 @@ export function CardsView(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { model, files, extForCard, actions, contextMenu } = props;
-  const { settings } = model;
+  const { settings, pluginSettings } = model;
 
   return (
     <div className="explorer-cards-view">
@@ -89,7 +89,7 @@ export function CardsView(props: {
                   file={file}
                   extForCard={extForCard}
                   actions={actions}
-                  showIconsInCards={settings.ShowIconsInCards}
+                  showIconsInCards={pluginSettings.ShowIconsInCards}
                   currentFolderPath={model.folder.path}
                 />
               </div>

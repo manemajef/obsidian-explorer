@@ -7,7 +7,6 @@ import {
   PluginGlobalSettings,
   PluginSettingKey,
   SettingsSection,
-  getSettingSurfaces,
   createDefaultPluginSettings,
   getPluginSettingKeysForSection,
   getSettingKeysForSurface,
@@ -15,7 +14,7 @@ import {
   isPluginSettingVisible,
 } from "../explorer/settings";
 import { renderSettingField } from "./render-setting-field";
-import { isHomePageNewTabManagedElsewhere } from "../explorer/new-tab";
+import { isHomePageNewTabManagedElsewhere } from "../explorer/homepage";
 
 type SectionMeta = {
   title: string;
@@ -89,18 +88,14 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     containerEl.empty();
 
     const settings = this.plugin.settings.defaultBlockSettings;
-    const keys = getSettingKeysForSurface("plugin");
-    const pluginOnlyKeys = keys.filter(
-      (key) => !getSettingSurfaces(key).includes("block"),
+    const defaultBlockKeys = getSettingKeysForSurface("plugin").sort((a, b) =>
+      compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER),
     );
-    const defaultBlockKeys = keys
-      .filter((key) => getSettingSurfaces(key).includes("block"))
-      .sort((a, b) => compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER));
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
     for (const section of SECTION_ORDER) {
-      const sectionKeys = pluginOnlyKeys.filter(
-        (key) => getSettingSection(key) === section,
+      const sectionKeys = getPluginSettingKeysForSection(section).filter(
+        (key) => isPluginSettingVisible(key, this.plugin.settings),
       );
       if (sectionKeys.length === 0) {
         continue;
@@ -115,21 +110,8 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       }
 
-      if (section === "navigation") {
-        this.renderNavigationSettings(containerEl);
-      }
-
       for (const key of sectionKeys) {
-        renderSettingField(
-          containerEl,
-          key,
-          settings,
-          "plugin",
-          (k, v) => {
-            void this.updateSetting(k, v);
-          },
-          fieldRefs,
-        );
+        this.renderPluginSetting(containerEl, key);
       }
     }
 
@@ -174,13 +156,6 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     this.plugin.settings.defaultBlockSettings[key] = value;
     await this.plugin.saveSettings();
     this.plugin.refreshExplorerBlocks();
-  }
-
-  private renderNavigationSettings(containerEl: HTMLElement): void {
-    for (const key of getPluginSettingKeysForSection("navigation")) {
-      if (!isPluginSettingVisible(key, this.plugin.settings)) continue;
-      this.renderPluginSetting(containerEl, key);
-    }
   }
 
   private renderPluginSetting(containerEl: HTMLElement, key: PluginSettingKey) {
@@ -228,8 +203,9 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     (this.plugin.settings as PluginGlobalSettings)[key] = value;
     await this.plugin.saveSettings();
 
+    this.plugin.refreshExplorerBlocks();
+
     if (key === "useHomePage") {
-      this.plugin.refreshExplorerBlocks();
       this.display();
     }
   }

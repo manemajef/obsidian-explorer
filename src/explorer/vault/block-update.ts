@@ -1,5 +1,5 @@
 import { App, MarkdownPostProcessorContext, TFile } from "obsidian";
-import { BlockSettings, serializeSettings } from "./settings";
+import { BlockSettings, serializeSettings } from "../settings";
 
 function formatExplorerBlock(
   settings: BlockSettings,
@@ -24,7 +24,12 @@ export async function updateExplorerBlock(
   const content = await app.vault.read(file);
   const sectionInfo = ctx.getSectionInfo(container);
   const newContent = sectionInfo
-    ? replaceSection(content, sectionInfo.lineStart, sectionInfo.lineEnd, newBlock)
+    ? replaceSection(
+        content,
+        sectionInfo.lineStart,
+        sectionInfo.lineEnd,
+        newBlock,
+      )
     : content.replace(/```explorer\n[\s\S]*?```/, newBlock);
 
   if (newContent !== content) await app.vault.modify(file, newContent);

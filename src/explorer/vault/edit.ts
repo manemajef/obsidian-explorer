@@ -1,6 +1,6 @@
 import { App, normalizePath, Notice, TFile, TFolder } from "obsidian";
-import { promptForName } from "../ui/modals/prompt-modal";
-import { getFolderNoteForFolder } from "./file-utils";
+import { promptForName } from "../../ui/modals/prompt-modal";
+import { getFolderNoteForFolder } from "../folder-notes";
 
 export async function promptAndRenameFile(
   app: App,
@@ -31,6 +31,24 @@ export async function promptAndRenameFolder(
   );
   if (!name) return false;
   return renameFolder(app, folder, name);
+}
+
+export function isPinned(app: App, file: TFile): boolean {
+  const fm = app.metadataCache.getFileCache(file)?.frontmatter;
+  return fm?.pin === true;
+}
+
+export function togglePin(app: App, file: TFile): void {
+  void app.fileManager.processFrontMatter(
+    file,
+    (frontmatter: Record<string, unknown>) => {
+      if (isPinned(app, file)) {
+        delete frontmatter["pin"];
+      } else {
+        frontmatter["pin"] = true;
+      }
+    },
+  );
 }
 
 async function renameFile(

@@ -9,11 +9,10 @@ import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import {
   canGoToParentFolderNote,
   goToParentFolderNote,
-  openHomePage,
-} from "./src/explorer/navigation";
-import { promptAndCreateFolder } from "./src/explorer/create";
-import { togglePin } from "./src/explorer/file-utils";
-import { registerHomePageNewTabs } from "./src/explorer/new-tab";
+} from "./src/explorer/folder-notes";
+import { openHomePage, registerHomePageNewTabs } from "./src/explorer/homepage";
+import { promptAndCreateFolder } from "./src/explorer/vault/create";
+import { togglePin } from "./src/explorer/vault/edit";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -56,8 +55,6 @@ export default class ExplorerPlugin extends Plugin {
       },
     );
     registerHomePageNewTabs(this, () => this.settings);
-    // const USE_FORCED_VIEW =
-    //   !this.settings.defaultBlockSettings.forceReadingMode;
     this.registerEvent(
       this.app.workspace.on("file-open", async (file) => {
         if (!file) return;
@@ -68,10 +65,7 @@ export default class ExplorerPlugin extends Plugin {
         const content = await this.app.vault.cachedRead(file);
         const hasExplorerBlock = content.includes("```explorer");
 
-        if (
-          !this.settings.defaultBlockSettings.forceReadingMode &&
-          hasExplorerBlock
-        ) {
+        if (!this.settings.forceReadingMode && hasExplorerBlock) {
           setTimeout(() => {
             if (view.editor) {
               view.editor.blur();

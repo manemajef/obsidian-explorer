@@ -11,11 +11,11 @@ import {
   getBlockSettingsOverrides,
   resolveBlockSettings,
 } from "./explorer/settings";
-import { isRtl } from "./explorer/file-utils";
+import { isRtl } from "./utils";
 import { ExplorerUI } from "./ui/explorer-ui";
 import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
 import { buildExplorerModel } from "./explorer/model";
-import { updateExplorerBlock } from "./explorer/block-update";
+import { updateExplorerBlock } from "./explorer/vault/block-update";
 import { ExplorerSession } from "./explorer/session";
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
@@ -59,8 +59,12 @@ export async function renderExplorerBlock(
   };
 
   const child = new MarkdownRenderChild(container);
-  child.registerEvent(app.vault.on("create", (file) => queueRefresh(file.path)));
-  child.registerEvent(app.vault.on("delete", (file) => queueRefresh(file.path)));
+  child.registerEvent(
+    app.vault.on("create", (file) => queueRefresh(file.path)),
+  );
+  child.registerEvent(
+    app.vault.on("delete", (file) => queueRefresh(file.path)),
+  );
   child.registerEvent(
     app.vault.on("rename", (file, oldPath) => {
       session.invalidate(oldPath);
@@ -98,19 +102,20 @@ export async function renderExplorerBlock(
   };
 
   const render = async (): Promise<void> => {
+    const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
       getBlockDefaults(),
       blockOverrides,
     );
     container.setAttribute("dir", resolveDirection(effectiveSettings));
-    container.toggleClass("use-glass", effectiveSettings.useGlass);
+    container.toggleClass("use-glass", pluginSettings.useGlass);
 
     const model = await buildExplorerModel({
       app,
       session,
       sourcePath: ctx.sourcePath,
       settings: effectiveSettings,
-      pluginSettings: getPluginSettings(),
+      pluginSettings,
     });
     if (!model) {
       reactRoot.render(<p>No active file or folder</p>);

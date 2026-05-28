@@ -50,7 +50,10 @@ export function renderSettingField(
   key: BlockSettingKey,
   settings: BlockSettings,
   surface: SettingsSurface,
-  onChange: <K extends BlockSettingKey>(key: K, value: BlockSettings[K]) => void,
+  onChange: <K extends BlockSettingKey>(
+    key: K,
+    value: BlockSettings[K],
+  ) => void,
   fieldRefs: Map<BlockSettingKey, Setting>,
   context?: SettingFieldContext,
 ): void {
@@ -95,9 +98,7 @@ export function renderSettingField(
       dropdown.setValue(settings[key] as string).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
         if (key === "paginationStyle") {
-          fieldRefs
-            .get("pageSize")
-            ?.setDisabled(value === "none");
+          fieldRefs.get("pageSize")?.setDisabled(value === "none");
         }
       });
     });
@@ -115,7 +116,10 @@ function renderFolderPicker(
   setting: Setting,
   key: BlockSettingKey,
   value: string[],
-  onChange: <K extends BlockSettingKey>(key: K, value: BlockSettings[K]) => void,
+  onChange: <K extends BlockSettingKey>(
+    key: K,
+    value: BlockSettings[K],
+  ) => void,
   context: SettingFieldContext | undefined,
   placeholder: string | undefined,
 ): void {
@@ -137,7 +141,10 @@ function renderFolderPicker(
   };
   const add = (path: string): void => {
     const normalized = path.trim();
-    if (!availableFolders.includes(normalized) || selected.includes(normalized)) {
+    if (
+      !availableFolders.includes(normalized) ||
+      selected.includes(normalized)
+    ) {
       return;
     }
     update([...selected, normalized]);
@@ -157,14 +164,14 @@ function renderFolderPicker(
 
   setting.addSearch((component) => {
     search = component;
-    component
-      .setPlaceholder(placeholder ?? "")
-      .onChange((value) => {
-        input = value;
-      });
-    new FolderSuggest(context.app, component.inputEl, availableFolders).onSelect(
-      (path) => add(path),
-    );
+    component.setPlaceholder(placeholder ?? "").onChange((value) => {
+      input = value;
+    });
+    new FolderSuggest(
+      context.app,
+      component.inputEl,
+      availableFolders,
+    ).onSelect((path) => add(path));
   });
   setting.addButton((button) => {
     button.setButtonText("Exclude").onClick(() => add(input));
@@ -183,8 +190,7 @@ function getDescendantFolderPaths(context: SettingFieldContext): string[] {
     .getAllFolders()
     .map((folder) => folder.path)
     .filter(
-      (path) =>
-        path !== parentPath && path !== "/" && path.startsWith(prefix),
+      (path) => path !== parentPath && path !== "/" && path.startsWith(prefix),
     )
     .map((path) => path.slice(prefix.length))
     .filter((path) => path.length > 0)

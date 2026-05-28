@@ -1,13 +1,13 @@
 import { App, TFile, TFolder } from "obsidian";
-import { promptAndCreateFolder, promptAndCreateNote } from "./create";
-import { moveIntoFolder } from "./move";
+import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
+import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
   goToParentFolderNote,
   openOrCreateFolderNote,
   type SavePluginSettings,
-} from "./navigation";
-import { promptAndRenameFile, promptAndRenameFolder } from "./rename";
+} from "./folder-notes";
+import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
 import type { PluginSettings } from "./settings";
 import { ExplorerFileNode, ExplorerFolderNode } from "./nodes";
 import { ExplorerSession } from "./session";
@@ -37,7 +37,10 @@ export class ExplorerActions {
     return canGoToParentFolderNote(this.app, this.settings, currentFile);
   }
 
-  async goToParent(currentFile: TFile | null, newLeaf?: boolean): Promise<void> {
+  async goToParent(
+    currentFile: TFile | null,
+    newLeaf?: boolean,
+  ): Promise<void> {
     await goToParentFolderNote(this.app, this.settings, {
       currentFile,
       newLeaf,
@@ -137,7 +140,10 @@ export class ExplorerActions {
     this.refresh();
   }
 
-  private async performMove(sourcePath: string, target: TFolder): Promise<void> {
+  private async performMove(
+    sourcePath: string,
+    target: TFolder,
+  ): Promise<void> {
     if (await moveIntoFolder(this.app, sourcePath, target)) this.refresh();
   }
 }

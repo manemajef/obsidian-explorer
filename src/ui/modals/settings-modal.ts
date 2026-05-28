@@ -53,7 +53,10 @@ export class ExplorerSettingsModal extends Modal {
     }
 
     new Setting(contentEl).addButton((button) => {
-      button.setButtonText("Close").setCta().onClick(() => this.close());
+      button
+        .setButtonText("Close")
+        .setCta()
+        .onClick(() => this.close());
     });
   }
 

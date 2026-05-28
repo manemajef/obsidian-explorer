@@ -1,10 +1,6 @@
-import { App, Notice, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import { App, Notice, TFile, TFolder } from "obsidian";
+import { openHomePage, resolveHomePagePath } from "./homepage";
 import { PluginSettings } from "./settings";
-import {
-  getFolderNoteForFolder,
-  getFolderNotePath,
-  isFolderNote,
-} from "./file-utils";
 import { ConfirmationDialog } from "../ui/modals/prompt-modal";
 
 export type SavePluginSettings = () => void | Promise<void>;
@@ -33,7 +29,7 @@ function askBeforeCreating(
       await onCreate();
     },
     async () => {
-      settings.defaultBlockSettings.askForFolderNoteCreation = false;
+      settings.askForFolderNoteCreation = false;
       await savePluginSettings?.();
     },
     message,
@@ -41,8 +37,24 @@ function askBeforeCreating(
 }
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
-const HOME_PAGE_TEMPLATE =
-  '```explorer\nview: "cards"\nsortBy: "edited"\ndepth: 10\npageSize: 21\n```\n';
+
+export function isFolderNote(file: TFile): boolean {
+  if (!file.parent) return false;
+  return file.basename === file.parent.name;
+}
+
+export function getFolderNotePath(folder: TFolder): string {
+  return `${folder.path}/${folder.name}.md`;
+}
+
+export function getFolderNoteForFolder(
+  app: App,
+  folder: TFolder,
+): TFile | null {
+  const folderNotePath = getFolderNotePath(folder);
+  const file = app.vault.getAbstractFileByPath(folderNotePath);
+  return file instanceof TFile ? file : null;
+}
 
 export function canGoToParentFolderNote(
   app: App,
@@ -124,74 +136,11 @@ export async function openOrCreateFolderNote(
       new Notice(`Failed to create folder note: ${err}`);
     }
   };
-  if (!settings.defaultBlockSettings.askForFolderNoteCreation) {
+  if (!settings.askForFolderNoteCreation) {
     await tryCreateNew();
   } else {
     askBeforeCreating(app, folder, settings, savePluginSettings, tryCreateNew);
   }
-}
-
-export async function openHomePage(
-  app: App,
-  settings: PluginSettings,
-  sourcePath = "",
-  newLeaf = false,
-): Promise<void> {
-  await useHomePageFile(app, settings, async (file) => {
-    await openExplorerPage(app, file, sourcePath, newLeaf);
-  });
-}
-
-export async function openHomePageInEmptyLeaf(
-  app: App,
-  settings: PluginSettings,
-  leaf: WorkspaceLeaf,
-): Promise<void> {
-  if (!isEmptyLeaf(leaf)) return;
-
-  await useHomePageFile(app, settings, async (file) => {
-    if (!isEmptyLeaf(leaf)) return;
-    await leaf.openFile(file);
-  });
-}
-
-async function useHomePageFile(
-  app: App,
-  settings: PluginSettings,
-  openFile: (file: TFile) => Promise<void>,
-): Promise<void> {
-  const configuredName = settings.homePageName.trim();
-  if (
-    settings.useHomePage &&
-    (configuredName.includes("/") || configuredName.includes("\\"))
-  ) {
-    new Notice("Homepage name must be a root note name, not a path.");
-    return;
-  }
-
-  const homePath = resolveHomePagePath(app, settings);
-  if (!homePath) return;
-
-  const existing = app.vault.getAbstractFileByPath(homePath);
-  if (existing instanceof TFile) {
-    await openFile(existing);
-    return;
-  }
-  if (existing) {
-    new Notice(`Homepage path is not a note: ${homePath}`);
-    return;
-  }
-
-  try {
-    const created = await app.vault.create(homePath, HOME_PAGE_TEMPLATE);
-    await openFile(created);
-  } catch (err) {
-    new Notice(`Failed to create homepage: ${err}`);
-  }
-}
-
-function isEmptyLeaf(leaf: WorkspaceLeaf): boolean {
-  return leaf.getViewState().type === "empty";
 }
 
 async function openExplorerPage(
@@ -201,20 +150,4 @@ async function openExplorerPage(
   newLeaf: boolean,
 ): Promise<void> {
   await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
-}
-
-function resolveHomePagePath(
-  app: App,
-  settings: PluginSettings,
-): string | null {
-  if (!settings.useHomePage) return null;
-
-  const configuredName = settings.homePageName.trim();
-  const basename = (configuredName || app.vault.getName()).replace(
-    /\.md$/i,
-    "",
-  );
-  return basename && !basename.includes("/") && !basename.includes("\\")
-    ? `${basename}.md`
-    : null;
 }

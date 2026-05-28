@@ -27,7 +27,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     return <MobileListView {...props} />;
   }
 
-  const { settings } = props.model;
+  const { settings, pluginSettings } = props.model;
 
   return (
     <div className="explorer-list-container">
@@ -51,7 +51,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
             }
             style={{
               marginInlineStart:
-                settings.showListBullets && !file.isPinned
+                pluginSettings.showListBullets && !file.isPinned
                   ? "var(--explorer-space-4)"
                   : "none",
               display: file.isPinned ? "flex" : "block",
@@ -59,12 +59,12 @@ export function ListView(props: ListViewProps): React.JSX.Element {
           >
             {file.isPinned ? (
               <span
-                className={`explorer-list-pin${settings.showListBullets ? " with-bullets" : ""}`}
+                className={`explorer-list-pin${pluginSettings.showListBullets ? " with-bullets" : ""}`}
               >
                 <Pin file={file} actions={props.actions} />
               </span>
             ) : (
-              settings.showListBullets && <span className="list-bullet" />
+              pluginSettings.showListBullets && <span className="list-bullet" />
             )}
 
             <Group justify="start">

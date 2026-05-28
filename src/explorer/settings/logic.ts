@@ -8,9 +8,10 @@ import {
   PluginGlobalSettings,
   PluginSettingKey,
   PluginSettings,
-} from "./settings-schema";
-
-export * from "./settings-schema";
+  SettingsSection,
+  SettingsSurface,
+} from "./schema";
+import type { AnySettingField } from "./types";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -43,9 +44,9 @@ export function createDefaultBlockSettings(): BlockSettings {
   >;
   for (const key of BLOCK_SETTING_KEYS) {
     const value = BLOCK_SETTINGS_SCHEMA[key].defaultValue;
-    defaults[key] = (Array.isArray(value)
-      ? [...value]
-      : value) as BlockSettings[typeof key];
+    defaults[key] = (
+      Array.isArray(value) ? [...value] : value
+    ) as BlockSettings[typeof key];
   }
   return defaults as BlockSettings;
 }
@@ -80,6 +81,100 @@ export function isPaginationEnabled(settings: BlockSettings): boolean {
 
 export function shouldDisplayNotes(settings: BlockSettings): boolean {
   return settings.displayedNotes !== "none";
+}
+
+const SETTING_SECTION_SORT_ORDER: SettingsSection[] = [
+  "core",
+  "display",
+  "behavior",
+  "appearance",
+  "navigation",
+];
+
+export function getSettingKeysForSurface(
+  surface: SettingsSurface,
+): BlockSettingKey[] {
+  return BLOCK_SETTING_KEYS.filter((key) =>
+    BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
+  ).sort((a, b) => {
+    const surfaceA = BLOCK_SETTINGS_SCHEMA[a].ui.surfaceOrder?.[surface];
+    const surfaceB = BLOCK_SETTINGS_SCHEMA[b].ui.surfaceOrder?.[surface];
+    if (surfaceA !== undefined || surfaceB !== undefined) {
+      return (
+        (surfaceA ?? Number.MAX_SAFE_INTEGER) -
+        (surfaceB ?? Number.MAX_SAFE_INTEGER)
+      );
+    }
+
+    const sectionDiff =
+      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[a].ui.section) -
+      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[b].ui.section);
+    return (
+      sectionDiff ||
+      BLOCK_SETTINGS_SCHEMA[a].ui.order - BLOCK_SETTINGS_SCHEMA[b].ui.order
+    );
+  });
+}
+
+export function getSettingLabel(
+  key: BlockSettingKey,
+  surface: SettingsSurface,
+): string {
+  const field = BLOCK_SETTINGS_SCHEMA[key];
+  return field.ui.labels?.[surface] ?? field.label;
+}
+
+export function getSettingSection(key: BlockSettingKey): SettingsSection {
+  return BLOCK_SETTINGS_SCHEMA[key].ui.section;
+}
+
+export function getPluginSettingKeysForSection(
+  section: SettingsSection,
+): PluginSettingKey[] {
+  return PLUGIN_SETTING_KEYS.filter(
+    (key) => PLUGIN_SETTINGS_SCHEMA[key].ui.section === section,
+  ).sort(
+    (a, b) =>
+      PLUGIN_SETTINGS_SCHEMA[a].ui.order - PLUGIN_SETTINGS_SCHEMA[b].ui.order,
+  );
+}
+
+function isSettingVisible(
+  field: AnySettingField,
+  values: Record<string, unknown>,
+): boolean {
+  const visibleWhen = field.ui.visibleWhen;
+  return !visibleWhen || values[visibleWhen.key] === visibleWhen.value;
+}
+
+export function isPluginSettingVisible(
+  key: PluginSettingKey,
+  settings: PluginSettings,
+): boolean {
+  return isSettingVisible(
+    PLUGIN_SETTINGS_SCHEMA[key],
+    settings as unknown as Record<string, unknown>,
+  );
+}
+
+export function isBlockSettingVisible(
+  key: BlockSettingKey,
+  settings: BlockSettings,
+): boolean {
+  return isSettingVisible(
+    BLOCK_SETTINGS_SCHEMA[key],
+    settings as unknown as Record<string, unknown>,
+  );
+}
+
+export function getEnumOptionLabel<K extends BlockSettingKey>(
+  key: K,
+  value: Extract<BlockSettings[K], string>,
+): string {
+  const field = BLOCK_SETTINGS_SCHEMA[key];
+  if (field.kind !== "enum") return String(value);
+  const labels = field.optionLabels as Record<string, string> | undefined;
+  return labels?.[String(value)] ?? String(value);
 }
 
 export function getBlockSettingsOverrides(
@@ -271,14 +366,14 @@ function coercePluginSettingValue<K extends PluginSettingKey>(
 ): PluginGlobalSettings[K] {
   const field = PLUGIN_SETTINGS_SCHEMA[key];
   if (field.kind === "boolean") {
-    return (typeof value === "boolean"
-      ? value
-      : fallback) as PluginGlobalSettings[K];
+    return (
+      typeof value === "boolean" ? value : fallback
+    ) as PluginGlobalSettings[K];
   }
 
-  return (typeof value === "string"
-    ? value
-    : fallback) as PluginGlobalSettings[K];
+  return (
+    typeof value === "string" ? value : fallback
+  ) as PluginGlobalSettings[K];
 }
 
 export function normalizePluginSettings(raw: unknown): PluginSettings {
@@ -287,9 +382,13 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
   if (!isRecord(raw)) return pluginDefaults;
 
   const globalSettings = {} as PluginGlobalSettings;
+  const rawBlockDefaults = isRecord(raw.defaultBlockSettings)
+    ? raw.defaultBlockSettings
+    : {};
   for (const key of PLUGIN_SETTING_KEYS) {
+    const sourceValue = key in raw ? raw[key] : rawBlockDefaults[key];
     (globalSettings as Record<PluginSettingKey, unknown>)[key] =
-      coercePluginSettingValue(key, raw[key], pluginDefaults[key]);
+      coercePluginSettingValue(key, sourceValue, pluginDefaults[key]);
   }
 
   return {
