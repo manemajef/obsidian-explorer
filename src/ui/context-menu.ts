@@ -1,5 +1,5 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { Menu } from "obsidian";
+import { Menu, TAbstractFile } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
 import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
 
@@ -51,7 +51,7 @@ export function showFolderContextMenu(
 ): void {
   if (shouldDeferToNestedLink(event)) return;
 
-  const menu = beginMenu(event, config, folder.path);
+  const menu = beginFileMenu(event, config, folder.folder);
   const folderNote = folder.folderNoteNode;
   const hasAction = folderNote
     ? addPinItem(menu, config, folderNote)
@@ -122,6 +122,19 @@ function beginMenu(
     linkPath,
     config.actions.sourcePath,
   );
+  menu.addSeparator();
+  return menu;
+}
+
+function beginFileMenu(
+  event: ReactMouseEvent<HTMLElement>,
+  config: ContextMenuConfig,
+  file: TAbstractFile,
+): Menu {
+  event.preventDefault();
+  event.stopPropagation();
+  const menu = new Menu();
+  config.actions.app.workspace.trigger("file-menu", menu, file, "explorer");
   menu.addSeparator();
   return menu;
 }

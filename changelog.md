@@ -1,5 +1,6 @@
 # Explorer changelog
-## Upcoming
+
+## 1.2.2 (28-05-26)
 
 - Added an optional setting to force folder notes into reading mode, preventing
   the editor cursor from interfering with Explorer blocks.

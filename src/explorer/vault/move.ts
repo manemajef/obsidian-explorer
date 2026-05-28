@@ -31,30 +31,11 @@ export async function moveIntoFolder(
     return false;
   }
 
-  const progress =
-    source instanceof TFolder
-      ? new Notice(
-          `Moving folder ${source.name} to ${target.name || "vault root"}`,
-          0,
-        )
-      : null;
-
   try {
-    if (progress) await afterNextPaint();
     await app.fileManager.renameFile(source, destinationPath);
     return true;
   } catch (error) {
     new Notice(`Could not move ${source.name}: ${error}`);
     return false;
-  } finally {
-    progress?.hide();
   }
-}
-
-function afterNextPaint(): Promise<void> {
-  return new Promise((resolve) => {
-    window.requestAnimationFrame(() => {
-      window.setTimeout(resolve, 0);
-    });
-  });
 }
