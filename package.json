@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"lint:css": "stylelint \"src/ui/styles/**/*.css\""
+		"lint:css": "stylelint \"src/ui/styles/**/*.css\"",
+		"lint": "npx eslint ."
 	},
 	"keywords": [
 		"obsidian",
