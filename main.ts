@@ -180,7 +180,7 @@ export default class ExplorerPlugin extends Plugin {
         }
 
         if (!checking) {
-          togglePin(this.app, activeFile);
+          void togglePin(this.app, activeFile);
         }
 
         return true;

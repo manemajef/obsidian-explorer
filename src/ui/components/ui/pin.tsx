@@ -14,7 +14,7 @@ export function Pin(props: {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          actions.togglePin(file);
+          void actions.togglePin(file);
         }}
         variant="pin"
       />

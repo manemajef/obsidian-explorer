@@ -48,11 +48,10 @@ export function showFolderContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
   folder: ExplorerFolderNode,
-  linkPath = folder.folderNotePath,
 ): void {
   if (shouldDeferToNestedLink(event)) return;
 
-  const menu = beginMenu(event, config, linkPath);
+  const menu = beginMenu(event, config, folder.path);
   const folderNote = folder.folderNoteNode;
   const hasAction = folderNote
     ? addPinItem(menu, config, folderNote)
@@ -100,7 +99,6 @@ export function showFileContextMenu(
       event,
       config,
       config.actions.createFolderNode(file.parentFolder),
-      file.path,
     );
     return;
   }
@@ -158,7 +156,7 @@ function addPinItem(
       .setTitle(file.isPinned ? "Unpin note" : "Pin note")
       .setIcon("pin")
       .onClick(() => {
-        config.actions.togglePin(file);
+        void config.actions.togglePin(file);
       }),
   );
   return true;

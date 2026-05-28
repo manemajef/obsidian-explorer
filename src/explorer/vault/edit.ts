@@ -38,17 +38,19 @@ export function isPinned(app: App, file: TFile): boolean {
   return fm?.pin === true;
 }
 
-export function togglePin(app: App, file: TFile): void {
-  void app.fileManager.processFrontMatter(
+export async function togglePin(app: App, file: TFile): Promise<boolean> {
+  const nextPinned = !isPinned(app, file);
+  await app.fileManager.processFrontMatter(
     file,
     (frontmatter: Record<string, unknown>) => {
-      if (isPinned(app, file)) {
-        delete frontmatter["pin"];
-      } else {
+      if (nextPinned) {
         frontmatter["pin"] = true;
+      } else {
+        delete frontmatter["pin"];
       }
     },
   );
+  return nextPinned;
 }
 
 async function renameFile(

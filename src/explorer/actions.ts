@@ -126,9 +126,9 @@ export class ExplorerActions {
     if (folderNote) void this.app.fileManager.promptForDeletion(folderNote);
   }
 
-  togglePin(file: ExplorerFileNode): void {
-    file.togglePin();
-    window.setTimeout(this.refreshMetadata, 100);
+  async togglePin(file: ExplorerFileNode): Promise<void> {
+    await file.togglePin();
+    this.refreshMetadata();
   }
 
   async setProperty(

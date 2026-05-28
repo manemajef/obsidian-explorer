@@ -1,4 +1,13 @@
 # Explorer changelog
+## Upcoming
+
+- Added an optional setting to force folder notes into reading mode, preventing
+  the editor cursor from interfering with Explorer blocks.
+- Removed mobile drag-and-drop. Long-press works better for context menus on
+  mobile, and folder context menus now target the folder itself so Obsidian's
+  move action moves the folder instead of only moving its folder note.
+- Fixed pin toggles so the UI updates immediately after frontmatter changes.
+
 ## 1.2.1 (27-05-26)
 
 Add drag and drop for mobile as well.

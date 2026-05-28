@@ -3,7 +3,7 @@
 Browse and organize your vault from inside your notes.
 
 Explorer turns folder notes into file explorer views, with navigation,
-drag-and-drop, rename, pin, delete, search, and configurable display options.
+desktop drag-and-drop, rename, pin, delete, search, and configurable display options.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
@@ -13,8 +13,8 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 
 - Card and list views for folder contents
 - Folder buttons and automatically created folder notes for navigation
-- Drag-and-drop for moving notes and folders
-- Context menu actions for renaming and deleting items, and pinning notes
+- Desktop drag-and-drop for moving notes and folders
+- Context menu actions for moving folders, renaming and deleting items, and pinning notes
 - Automatic matching-folder-note renaming when a folder is renamed
 - Optional homepage navigation and homepage opening in new empty tabs
 - Per-block exclusion of selected nested folders
@@ -44,13 +44,17 @@ That command creates `Folder/Folder.md`, inserts an Explorer block, and opens th
 
 ## File Management
 
-Drag notes and folders onto a displayed folder or onto the parent button to
-move them. Dragging a folder note moves its associated folder after
+On desktop, drag notes and folders onto a displayed folder or onto the parent
+button to move them. Dragging a folder note moves its associated folder after
 confirmation.
 
 Right-click a note to rename, pin, or delete it, or a folder to rename or
 delete it. Renaming a folder also renames its matching folder note. Deleting a
 folder displays a warning before removing its contents.
+
+On mobile, use the context menu instead of drag-and-drop. Long-press a folder
+button and use Obsidian's move action to move the folder itself, not just its
+folder note.
 
 ## Screenshots
 
@@ -160,8 +164,9 @@ Supported block settings:
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
 `excludedFolders` hides selected folders and their contents from that Explorer
-block only. Plugin-only settings include homepage behavior, nested folder-note
-display, the parent button, glass controls, card icons, and list bullets.
+block only. Plugin-only settings include homepage behavior, reading-mode
+handling for folder notes, nested folder-note display, the parent button, glass
+controls, card icons, and list bullets.
 
 ## Search
 

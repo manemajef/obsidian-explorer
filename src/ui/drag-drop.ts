@@ -59,7 +59,7 @@ export function folderDropProps<T extends HTMLElement>(
   HTMLAttributes<T>,
   "onDragOverCapture" | "onDragLeaveCapture" | "onDropCapture"
 > {
-  if (!target) return {};
+  if (!target || Platform.isMobile) return {};
 
   return {
     onDragOverCapture: (event) => {

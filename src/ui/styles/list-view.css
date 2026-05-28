@@ -143,17 +143,6 @@
   border-bottom: none;
 }
 
-.explorer-mobile-note.is-dragging {
-  opacity: 0.5;
-}
-
-.explorer-mobile-note.is-drop-target {
-  background-color: var(--background-modifier-hover);
-  border-radius: var(--explorer-radius-sm);
-  outline: 2px solid var(--interactive-accent);
-  outline-offset: 1px;
-}
-
 .explorer-mobile-note__header,
 .explorer-mobile-note__footer {
   display: flex;

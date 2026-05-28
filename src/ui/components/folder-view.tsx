@@ -36,12 +36,7 @@ export function FolderButtons(props: {
                 actions.movePathIntoFolder(sourcePath, target, fromFolderNote),
             )}
             onContextMenuCapture={(event) =>
-              showFolderContextMenu(
-                event,
-                contextMenu,
-                folder,
-                folder.folderNotePath,
-              )
+              showFolderContextMenu(event, contextMenu, folder)
             }
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("a")) return;

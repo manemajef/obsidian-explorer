@@ -147,8 +147,19 @@ export class ExplorerFileNode {
     return this.cachedIsPinned;
   }
 
-  togglePin(): void {
-    togglePin(this.app, this.file);
+  async togglePin(): Promise<void> {
+    this.setCachedPin(await togglePin(this.app, this.file));
+  }
+
+  private setCachedPin(isPinned: boolean): void {
+    this.cachedIsPinned = isPinned;
+    const frontmatter = { ...(this.frontmatter ?? {}) };
+    if (isPinned) {
+      frontmatter["pin"] = true;
+    } else {
+      delete frontmatter["pin"];
+    }
+    this.cachedFrontmatter = frontmatter;
   }
 }
 

@@ -112,11 +112,7 @@
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  padding: 1px;
-  background: var(--explorer-glass-shine);
-  -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
 .bar {
@@ -562,15 +558,6 @@
 }
 .explorer-mobile-note-last {
   border-bottom: none;
-}
-.explorer-mobile-note.is-dragging {
-  opacity: 0.5;
-}
-.explorer-mobile-note.is-drop-target {
-  background-color: var(--background-modifier-hover);
-  border-radius: var(--explorer-radius-sm);
-  outline: 2px solid var(--interactive-accent);
-  outline-offset: 1px;
 }
 .explorer-mobile-note__header,
 .explorer-mobile-note__footer {
