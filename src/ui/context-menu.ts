@@ -2,46 +2,82 @@ import type { MouseEvent as ReactMouseEvent } from "react";
 import { Menu, Platform } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
 import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
+import { isCurrentlyDragging } from "./drag-drop";
 
 export type ContextMenuConfig = {
   actions: ExplorerActions;
 };
+
+let pendingMenuTimeout: number | null = null;
+
+export function cancelPendingContextMenu(): void {
+  if (pendingMenuTimeout !== null) {
+    window.clearTimeout(pendingMenuTimeout);
+    pendingMenuTimeout = null;
+  }
+}
+
+function showDelayedMenu(
+  event: ReactMouseEvent<HTMLElement>,
+  showFn: () => void,
+): void {
+  if (shouldDeferToNestedLink(event)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (Platform.isMobile) {
+    if (isCurrentlyDragging()) return;
+
+    cancelPendingContextMenu();
+
+    const nativeEvent = event.nativeEvent;
+    pendingMenuTimeout = window.setTimeout(() => {
+      pendingMenuTimeout = null;
+      if (isCurrentlyDragging()) return;
+      showFn();
+    }, 150);
+    return;
+  }
+
+  showFn();
+}
 
 export function showNoteContextMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
   file: ExplorerFileNode,
 ): void {
-  if (shouldDeferToNestedLink(event)) return;
+  showDelayedMenu(event, () => {
+    const menu = beginMenu(event, config, file.path);
+    const folder = file.parentFolder;
+    let hasAction = false;
 
-  const menu = beginMenu(event, config, file.path);
-  const folder = file.parentFolder;
-  let hasAction = false;
-
-  if (folder && folder.path !== config.actions.currentFolderPath) {
-    addFolderNoteNavigationItems(
-      menu,
-      config,
-      config.actions.createFolderNode(folder),
-      "Go to or create folder note",
-    );
+    if (folder && folder.path !== config.actions.currentFolderPath) {
+      addFolderNoteNavigationItems(
+        menu,
+        config,
+        config.actions.createFolderNode(folder),
+        "Go to or create folder note",
+      );
+      hasAction = true;
+    }
+    hasAction = addPinItem(menu, config, file) || hasAction;
+    addRenameFileItem(menu, config, file);
     hasAction = true;
-  }
-  hasAction = addPinItem(menu, config, file) || hasAction;
-  addRenameFileItem(menu, config, file);
-  hasAction = true;
 
-  if (hasAction) menu.addSeparator();
-  menu.addItem((item) =>
-    item
-      .setTitle("Delete note")
-      .setIcon("trash")
-      .setWarning(true)
-      .onClick(() => {
-        config.actions.deleteFile(file);
-      }),
-  );
-  menu.showAtMouseEvent(event.nativeEvent);
+    if (hasAction) menu.addSeparator();
+    menu.addItem((item) =>
+      item
+        .setTitle("Delete note")
+        .setIcon("trash")
+        .setWarning(true)
+        .onClick(() => {
+          config.actions.deleteFile(file);
+        }),
+    );
+    menu.showAtMouseEvent(event.nativeEvent);
+  });
 }
 
 export function showFolderContextMenu(
@@ -50,44 +86,44 @@ export function showFolderContextMenu(
   folder: ExplorerFolderNode,
   linkPath = folder.folderNotePath,
 ): void {
-  if (shouldDeferToNestedLink(event)) return;
+  showDelayedMenu(event, () => {
+    const menu = beginMenu(event, config, linkPath);
+    const folderNote = folder.folderNoteNode;
+    const hasAction = folderNote
+      ? addPinItem(menu, config, folderNote)
+      : false;
 
-  const menu = beginMenu(event, config, linkPath);
-  const folderNote = folder.folderNoteNode;
-  const hasAction = folderNote
-    ? addPinItem(menu, config, folderNote)
-    : false;
-
-  if (hasAction) menu.addSeparator();
-  menu.addItem((item) =>
-    item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
-      void config.actions.renameFolder(folder);
-    }),
-  );
-  menu.addSeparator();
-  menu.addItem((item) =>
-    item
-      .setTitle("Delete folder")
-      .setIcon("trash")
-      .setWarning(true)
-      .onClick(() => {
-        config.actions.deleteFolder(folder);
+    if (hasAction) menu.addSeparator();
+    menu.addItem((item) =>
+      item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
+        void config.actions.renameFolder(folder);
       }),
-  );
-
-  if (folderNote) {
+    );
+    menu.addSeparator();
     menu.addItem((item) =>
       item
-        .setTitle("Delete folder note")
-        .setIcon("file-x")
+        .setTitle("Delete folder")
+        .setIcon("trash")
         .setWarning(true)
         .onClick(() => {
-          config.actions.deleteFolderNote(folder);
+          config.actions.deleteFolder(folder);
         }),
     );
-  }
 
-  menu.showAtMouseEvent(event.nativeEvent);
+    if (folderNote) {
+      menu.addItem((item) =>
+        item
+          .setTitle("Delete folder note")
+          .setIcon("file-x")
+          .setWarning(true)
+          .onClick(() => {
+            config.actions.deleteFolderNote(folder);
+          }),
+      );
+    }
+
+    menu.showAtMouseEvent(event.nativeEvent);
+  });
 }
 
 export function showFileContextMenu(

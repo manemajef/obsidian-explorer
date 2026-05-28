@@ -169,3 +169,15 @@
   padding-bottom: 2em;
   max-height: 80vh;
 }
+
+.is-mobile .explorer-container :where(
+    .explorer-folder-card,
+    .explorer-card,
+    .explorer-list,
+    .explorer-mobile-note
+  ) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+

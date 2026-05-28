@@ -1,6 +1,7 @@
 import type { HTMLAttributes } from "react";
 import { App, TAbstractFile, TFolder } from "obsidian";
 import { canMoveIntoFolder } from "../explorer/move";
+import { cancelPendingContextMenu } from "./context-menu";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
 const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";
@@ -8,6 +9,10 @@ const ACTIVE_DRAG_CLASS = "explorer-drag-active";
 const DRAGGING_CLASS = "is-dragging";
 const DROP_TARGET_CLASS = "is-drop-target";
 let draggedItem: { path: string; fromFolderNote: boolean } | null = null;
+
+export function isCurrentlyDragging(): boolean {
+  return draggedItem !== null;
+}
 
 export type MoveIntoFolder = (
   sourcePath: string,
@@ -28,6 +33,8 @@ export function draggableProps<T extends HTMLElement>(
       }
 
       draggedItem = { path: source.path, fromFolderNote };
+      cancelPendingContextMenu();
+      
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData(EXPLORER_DRAG_TYPE, source.path);
       if (fromFolderNote) {
@@ -38,6 +45,8 @@ export function draggableProps<T extends HTMLElement>(
     },
     onDragEnd: (event) => {
       draggedItem = null;
+      cancelPendingContextMenu();
+      
       event.currentTarget.ownerDocument.body.classList.remove(ACTIVE_DRAG_CLASS);
       event.currentTarget.classList.remove(DRAGGING_CLASS);
       clearDropTargets(event.currentTarget.ownerDocument);

@@ -43,7 +43,13 @@ export class ExplorerSession implements ExplorerNodeFactory {
     }
 
     for (const [key, index] of this.indexes) {
-      if (index.folder.path === path || index.folder.path.startsWith(`${path}/`)) {
+      const indexPath = index.folder.path;
+      if (
+        indexPath === "" ||
+        path === indexPath ||
+        path.startsWith(indexPath + "/") ||
+        indexPath.startsWith(path + "/")
+      ) {
         this.indexes.delete(key);
       }
     }
