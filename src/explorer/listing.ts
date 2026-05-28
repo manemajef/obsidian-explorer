@@ -99,7 +99,7 @@ export class FolderIndex {
   ): Promise<ExplorerFileNode[]> {
     const all: ExplorerFileNode[] = [];
     let pending: ExplorerFileNode[] = [];
-    let sliceStart = performance.now();
+    let sliceStart = window.performance.now();
     const queue: Array<{ folder: TFolder; depth: number }> = [
       { folder: this.folder, depth: 0 },
     ];
@@ -135,14 +135,14 @@ export class FolderIndex {
 
         if (
           yieldToBrowser &&
-          performance.now() - sliceStart >= WALK_BUDGET_MS
+          window.performance.now() - sliceStart >= WALK_BUDGET_MS
         ) {
           if (onChunk && pending.length > 0) {
             onChunk(pending);
             pending = [];
           }
           await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
-          sliceStart = performance.now();
+          sliceStart = window.performance.now();
         }
       }
     }

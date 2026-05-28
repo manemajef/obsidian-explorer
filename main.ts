@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, Plugin, TFile } from "obsidian";
+import { Editor, MarkdownView, Plugin, TFile, Vault } from "obsidian";
 import {
   normalizePluginSettings,
   parseSettings,
@@ -17,6 +17,19 @@ import { registerHomePageNewTabs } from "./src/explorer/new-tab";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
+type ForcedPreviewLeaf = MarkdownView["leaf"] & {
+  _explorerViewForcedPreview?: boolean;
+};
+type VaultWithViewModeConfig = Vault & {
+  config?: {
+    defaultViewMode?: unknown;
+  };
+};
+
+function getDefaultViewMode(vault: Vault): string {
+  const mode = (vault as VaultWithViewModeConfig).config?.defaultViewMode;
+  return typeof mode === "string" ? mode : "source";
+}
 
 export default class ExplorerPlugin extends Plugin {
   settings: PluginSettings;
@@ -50,9 +63,8 @@ export default class ExplorerPlugin extends Plugin {
         if (!file) return;
         const view = this.app.workspace.getActiveViewOfType(MarkdownView);
         if (!view) return;
-        // @ts-ignore
-        if (this.app.vault.config.defaultViewMode === "preview") return;
-        const leaf = view.leaf;
+        if (getDefaultViewMode(this.app.vault) === "preview") return;
+        const leaf = view.leaf as ForcedPreviewLeaf;
         const content = await this.app.vault.cachedRead(file);
         const hasExplorerBlock = content.includes("```explorer");
 
@@ -68,24 +80,16 @@ export default class ExplorerPlugin extends Plugin {
           return;
         }
         if (hasExplorerBlock) {
-          console.log("has explorer view, setting view to preview");
           const state = leaf.getViewState();
           if (state.state && state.state.mode !== "preview")
             state.state.mode = "preview";
           await leaf.setViewState(state);
-          console.log("set state to preview");
-          // @ts-ignore
           leaf._explorerViewForcedPreview = true;
-        }
-        // @ts-ignore
-        else if (leaf._explorerViewForcedPreview) {
+        } else if (leaf._explorerViewForcedPreview) {
           const state = leaf.getViewState();
-          // @ts-ignore
-          const defaultMode = this.app.vault.config.defaultViewMode || "source";
-          // @ts-ignore
+          const defaultMode = getDefaultViewMode(this.app.vault);
           if (state.state) state.state.mode = defaultMode;
           await leaf.setViewState(state);
-          // @ts-ignore
           delete leaf._explorerViewForcedPreview;
         }
       }),

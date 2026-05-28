@@ -1,5 +1,5 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { Menu, Platform } from "obsidian";
+import { Menu } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
 import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
 
