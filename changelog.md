@@ -1,4 +1,10 @@
 # Explorer changelog
+## 1.2.4 (29-05-26)
+- fix style issues caused by `css` variables value changes in Latest obsidian version `1.130` and additional layout issues.
+- fixed mobile list not opening link when pressed on the edge 
+- added hectic feedback on context menu on mobile 
+
+
 ## 1.2.3 (28-05-26)
 - Urgent fix for Mobile folder view grid to have 3 columns again
 
