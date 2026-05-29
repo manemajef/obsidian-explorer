@@ -222,7 +222,7 @@
 }
 .is-mobile .explorer-folders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 22vw, 150px), 1fr));
   gap: var(--explorer-space-4);
 }
 .is-mobile .explorer-folders-grid::after {
@@ -275,7 +275,7 @@
   border-radius: 16px;
 }
 .theme-dark.is-mobile .explorer-folder-card {
-  background: var(--raised-background);
+  background-color: var(--background-primary-alt);
 }
 .explorer-folder-card:hover,
 .explorer-folder-card:focus-within {
@@ -313,7 +313,7 @@
   margin-top: .25em;
 }
 .is-mobile .explorer-cards-grid {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 22vw, 180px), 1fr));
   margin-top: unset;
 }
 .explorer-card {
@@ -550,7 +550,8 @@
 .explorer-modern-list--desktop {
   margin-top: var(--explorer-space-4);
   background: var(--explorer-glass-background);
-  border: var(--explorer-border-glass);
+  background-color: var(--explorer-bg-alt);
+  box-shadow: none;
 }
 .theme-light .use-glass .explorer-modern-list--desktop {
   background: var(--background-primary);
@@ -559,6 +560,9 @@
 .use-glass .explorer-modern-list {
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);
+}
+.theme-dark.is-mobile .use-glass .explorer-modern-list {
+  background-color: var(--background-primary-alt);
 }
 .explorer-modern-list-item {
   padding: var(--explorer-space-1) var(--explorer-space-4);
@@ -612,7 +616,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding-block: 0.15em;
-  scrollbar-width: thin;
 }
 .explorer-modern-note__desktop-tags > * {
   flex: 0 0 auto;

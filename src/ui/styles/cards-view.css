@@ -8,7 +8,9 @@
 
 
 .is-mobile .explorer-cards-grid {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); */
+    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 22vw, 180px), 1fr));
+
   margin-top: unset;
 }
 

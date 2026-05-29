@@ -5,6 +5,7 @@
   gap: var(--explorer-space-4);
 }
 
+
 .explorer-folders-grid::after {
   content: "";
   flex: 999 1 0;
@@ -12,10 +13,11 @@
 
 .is-mobile .explorer-folders-grid {
   display: grid;
-  grid-template-columns: repeat(
+  /* grid-template-columns: repeat(
     auto-fit,
-    minmax(min(140px, 100%), 1fr)
-  );
+    minmax(max(10%, 100px), 1fr)
+  ); */
+  grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 22vw, 150px), 1fr));
   gap: var(--explorer-space-4);
 }
 
@@ -95,7 +97,9 @@
 
 }
 .theme-dark.is-mobile .explorer-folder-card {
-  background: var(--raised-background);
+  /* background: var(--raised-background); */
+  background-color: var(--background-primary-alt);
+
 }
 
 
