@@ -1,4 +1,24 @@
 # Explorer changelog
+## 1.2.5 (29-05-26) 
+### Introducing Modern list 
+![](./assets/modern-list.png)
+Previously known as `Mobile list`, now available on Desktop as well. Use by choosing in `Block` settings `List style`: `Modern`. Return to regular Markdown list by choosing `Markdown` instead, or `plain markdown` for a list without bullets. 
+
+- If you want to change all list views to use the modern list, update the `default block settings` in plugin setting 
+
+- You can now choose to use regular markdown lists instead of the `modern` one in mobile (in plugin settings) 
+
+### Bug fixes
+- fixed line wrap issues in cards view
+- dragging lists now only drag the title 
+- input corners are rounded again 
+
+### Breaking changes 
+- the settings field `use bullets in list` was removed, instead use `plain markdown` list. 
+
+
+
+
 ## 1.2.4 (29-05-26)
 - fix style issues caused by `css` variables value changes in Latest obsidian version `1.130` and additional layout issues.
 - fixed mobile list not opening link when pressed on the edge 

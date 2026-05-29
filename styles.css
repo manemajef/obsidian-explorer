@@ -416,6 +416,13 @@
   margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }
+.explorer-card-tags-container .value-list-item,
+.explorer-card-tags-container .tag {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
 .explorer-card-exts .explorer-badge {
   display: flex;
   justify-content: center;
@@ -537,6 +544,8 @@
   --explorer-glass-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
+  border: none;
+  box-shadow: var(--explorer-shadow-glass-sm);
 }
 .explorer-modern-list--desktop {
   margin-top: var(--explorer-space-4);

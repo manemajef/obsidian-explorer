@@ -106,6 +106,8 @@
   --explorer-glass-hover-scale: 1;
   background-color: var(--explorer-bg-alt);
   border-radius: 1em;
+  border: none;
+  box-shadow: var(--explorer-shadow-glass-sm);
 }
 
 .explorer-modern-list--desktop {
