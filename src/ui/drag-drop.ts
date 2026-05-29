@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+import type { DragEvent, HTMLAttributes } from "react";
 import { App, Platform, TAbstractFile, TFolder } from "obsidian";
 import { canMoveIntoFolder } from "../explorer/vault/move";
 
@@ -7,6 +7,7 @@ const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";
 const ACTIVE_DRAG_CLASS = "explorer-drag-active";
 const DRAGGING_CLASS = "is-dragging";
 const DROP_TARGET_CLASS = "is-drop-target";
+const DRAG_IMAGE_SELECTOR = ".explorer-list-note-title";
 let draggedItem: { path: string; fromFolderNote: boolean } | null = null;
 
 export type MoveIntoFolder = (
@@ -37,6 +38,7 @@ export function draggableProps<T extends HTMLElement>(
       if (fromFolderNote) {
         event.dataTransfer.setData(FOLDER_NOTE_DRAG_TYPE, "true");
       }
+      setTitleDragImage(event);
       event.currentTarget.ownerDocument.body.classList.add(ACTIVE_DRAG_CLASS);
       event.currentTarget.classList.add(DRAGGING_CLASS);
     },
@@ -112,6 +114,14 @@ function clearDropTargets(document: Document): void {
   document.querySelectorAll(`.${DROP_TARGET_CLASS}`).forEach((target) => {
     target.classList.remove(DROP_TARGET_CLASS);
   });
+}
+
+function setTitleDragImage<T extends HTMLElement>(event: DragEvent<T>): void {
+  const title = event.currentTarget.querySelector(DRAG_IMAGE_SELECTOR);
+  if (!(title instanceof HTMLElement)) return;
+
+  const rect = title.getBoundingClientRect();
+  event.dataTransfer.setDragImage(title, 0, event.clientY - rect.top);
 }
 
 function isControl(target: EventTarget): boolean {

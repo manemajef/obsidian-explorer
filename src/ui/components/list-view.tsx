@@ -77,6 +77,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
             <Group justify="start">
               <InternalLink
                 path={file.path}
+                className="explorer-list-note-title"
                 draggable={false}
                 text={file.displayName}
               />
@@ -149,7 +150,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                 <Pin file={file} actions={props.actions} />
                 <InternalLink
                   path={file.path}
-                  className="explorer-modern-note__title"
+                  className="explorer-list-note-title explorer-modern-note__title"
                   draggable={false}
                   text={file.displayName}
                 />

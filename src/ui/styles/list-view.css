@@ -9,7 +9,6 @@
   opacity: 0.5;
 }
 
-
 .explorer-list.is-drop-target {
   background-color: var(--background-modifier-hover);
   border-radius: var(--explorer-radius-sm);
