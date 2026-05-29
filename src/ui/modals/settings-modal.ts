@@ -3,6 +3,7 @@ import {
   BlockSettingKey,
   BlockSettings,
   getSettingKeysForSurface,
+  isBlockSettingVisible,
 } from "../../explorer/settings";
 import { renderSettingField } from "../render-setting-field";
 
@@ -28,6 +29,9 @@ export class ExplorerSettingsModal extends Modal {
   ): void {
     this.settings[key] = value;
     this.onSettingsChange(this.settings);
+    if (key === "view") {
+      this.onOpen();
+    }
   }
 
   onOpen() {
@@ -37,7 +41,9 @@ export class ExplorerSettingsModal extends Modal {
 
     new Setting(contentEl).setName("Explorer settings").setHeading();
 
-    const keys = getSettingKeysForSurface("block");
+    const keys = getSettingKeysForSurface("block").filter((key) =>
+      isBlockSettingVisible(key, this.settings),
+    );
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
     for (const key of keys) {

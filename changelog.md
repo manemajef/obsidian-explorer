@@ -1,20 +1,20 @@
 # Explorer changelog
-## 1.2.5 (29-05-26) 
-### Introducing Modern list 
+## 1.2.5 (29-05-26)
+### Introducing Modern List
 ![](./assets/modern-list.png)
-Previously known as `Mobile list`, now available on Desktop as well. Use by choosing in `Block` settings `List style`: `Modern`. Return to regular Markdown list by choosing `Markdown` instead, or `plain markdown` for a list without bullets. 
+Previously known as `Mobile list`, the modern list is now available on desktop as well. To use it, choose `Modern` under `List style` in the block settings. To return to a regular Markdown list, choose `Markdown`, or choose `Plain Markdown` for a list without bullets.
 
-- If you want to change all list views to use the modern list, update the `default block settings` in plugin setting 
+- To use the modern list for all list views, update the `Default block settings` in the plugin settings.
 
-- You can now choose to use regular markdown lists instead of the `modern` one in mobile (in plugin settings) 
+- You can now choose regular Markdown lists instead of the modern list on mobile from the plugin settings.
 
 ### Bug fixes
-- fixed line wrap issues in cards view
-- dragging lists now only drag the title 
-- input corners are rounded again 
+- Fixed line wrapping issues in the cards view.
+- List dragging now uses only the title as the drag preview.
+- Input corners are rounded again.
 
-### Breaking changes 
-- the settings field `use bullets in list` was removed, instead use `plain markdown` list. 
+### Breaking changes
+- The `Use bullets in lists` setting was removed. Use the `Plain Markdown` list style instead.
 
 
 

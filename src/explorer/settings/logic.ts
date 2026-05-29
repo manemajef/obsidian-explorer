@@ -1,3 +1,4 @@
+import { Platform } from "obsidian";
 import {
   BLOCK_SETTINGS_SCHEMA,
   BLOCK_SETTING_KEYS,
@@ -144,7 +145,20 @@ function isSettingVisible(
   values: Record<string, unknown>,
 ): boolean {
   const visibleWhen = field.ui.visibleWhen;
-  return !visibleWhen || values[visibleWhen.key] === visibleWhen.value;
+  if (!visibleWhen) return true;
+
+  if (
+    visibleWhen.platform &&
+    (visibleWhen.platform === "mobile") !== Platform.isMobile
+  ) {
+    return false;
+  }
+
+  if (visibleWhen.key !== undefined) {
+    return values[visibleWhen.key] === visibleWhen.value;
+  }
+
+  return true;
 }
 
 export function isPluginSettingVisible(

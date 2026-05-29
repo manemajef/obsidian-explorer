@@ -7,8 +7,9 @@ export type SettingsSection =
   | "navigation";
 
 type SettingVisibility = {
-  key: string;
-  value: unknown;
+  key?: string;
+  value?: unknown;
+  platform?: "mobile" | "desktop";
 };
 
 export type SettingUiMeta = {

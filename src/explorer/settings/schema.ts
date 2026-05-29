@@ -375,6 +375,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "appearance",
       order: 9.5,
+      visibleWhen: { platform: "mobile" },
     },
   }),
   showParentButton: booleanField({

@@ -11,6 +11,7 @@ import {
   getPluginSettingKeysForSection,
   getSettingKeysForSurface,
   getSettingSection,
+  isBlockSettingVisible,
   isPluginSettingVisible,
 } from "../explorer/settings";
 import { renderSettingField } from "./render-setting-field";
@@ -88,9 +89,9 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     containerEl.empty();
 
     const settings = this.plugin.settings.defaultBlockSettings;
-    const defaultBlockKeys = getSettingKeysForSurface("plugin").sort((a, b) =>
-      compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER),
-    );
+    const defaultBlockKeys = getSettingKeysForSurface("plugin")
+      .filter((key) => isBlockSettingVisible(key, settings))
+      .sort((a, b) => compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER));
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
     for (const section of SECTION_ORDER) {
@@ -156,6 +157,9 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     this.plugin.settings.defaultBlockSettings[key] = value;
     await this.plugin.saveSettings();
     this.plugin.refreshExplorerBlocks();
+    if (key === "view") {
+      this.display();
+    }
   }
 
   private renderPluginSetting(containerEl: HTMLElement, key: PluginSettingKey) {
