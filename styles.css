@@ -71,7 +71,7 @@
   --explorer-shadow-glass-hover:
     0 4px 10px rgba(0,0,0,0.08),
     inset 1px 1px 0 0 rgba(255,255,255,0.08),
-    inset -1px -1px 0 0 rgba(255,255,255,0.06);
+    inset -1px -1px 0 0 rgba(255,255,255,0.03);
   --explorer-glass-shine: linear-gradient( 135deg, rgba(255, 255, 255, 0.15) 0%, transparent 35%, transparent 65%, rgba(255, 255, 255, 0.15) 100% );
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
@@ -115,7 +115,7 @@
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset .5px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
 .bar {
@@ -229,7 +229,6 @@
 }
 .explorer-folder-card {
   box-sizing: border-box;
-  box-shadow: var(--background-modifier-box-shadow);
   background: var(--raised-background);
   border-radius: var(--explorer-radius-lg);
   border: var(--explorer-border-glass);
@@ -268,7 +267,6 @@
 }
 .theme-dark .explorer-folder-card {
   border: none;
-  box-shadow: var(--input-shadow);
   background: var(--explorer-glass-background);
 }
 .is-mobile .explorer-folder-card {
@@ -283,7 +281,7 @@
   box-shadow: var(--explorer-shadow-glass);
 }
 .theme-dark .explorer-folder-card:hover {
-  box-shadow: var(--input-shadow-hover);
+  box-shadow: var(--explorer-shadow-glass-hover);
 }
 .theme-dark .explorer-folder-card.is-drop-target {
   box-shadow: var(--input-shadow-hover);
@@ -329,6 +327,7 @@
   box-shadow: var(--bases-cards-shadow);
   border-radius: var(--bases-cards-radius);
   transition: box-shadow var(--anim-duration-fast) ease-in-out;
+  overflow-wrap: anywhere;
 }
 .explorer-card.is-dragging {
   opacity: 0.5;

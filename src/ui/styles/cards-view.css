@@ -24,6 +24,7 @@
   box-shadow: var(--bases-cards-shadow);
   border-radius: var(--bases-cards-radius);
   transition: box-shadow var(--anim-duration-fast) ease-in-out;
+  overflow-wrap: anywhere;
 }
 
 .explorer-card.is-dragging {
