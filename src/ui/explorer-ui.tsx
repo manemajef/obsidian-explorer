@@ -124,7 +124,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     <>
       {/* {!Platform.isMobile && <Divider size="sm" />} */}
       <Divider size="sm" />
-      {/* <div>This is beta number 5</div> */}
       <ActionsBar
         app={app}
         parentDropFolder={model.folder.parent}

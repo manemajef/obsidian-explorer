@@ -137,6 +137,8 @@
   border-bottom: 1px solid var(--background-modifier-border);
   color: var(--text-normal);
   text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .explorer-mobile-note-last {
@@ -177,6 +179,33 @@
   flex-wrap: wrap;
   gap: 0.25em;
   min-width: 0;
+}
+
+@media (min-width: 700px) {
+  .is-mobile .explorer-mobile-note {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--explorer-space-4);
+  }
+
+  .is-mobile .explorer-mobile-note__header {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .is-mobile .explorer-mobile-note__footer {
+    flex: 0 1 auto;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .is-mobile .explorer-mobile-note__tags {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 }
 
 .explorer-mobile-note__divider {

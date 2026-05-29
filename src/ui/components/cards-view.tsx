@@ -7,7 +7,11 @@ import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
 import { draggableProps, folderDropProps } from "../drag-drop";
-import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
+import {
+  isInteractiveTouchTarget,
+  showFileContextMenu,
+  type ContextMenuConfig,
+} from "../context-menu";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -37,7 +41,7 @@ export function CardsView(props: {
                 showFileContextMenu(event, contextMenu, file)
               }
               onClick={(e) => {
-                if ((e.target as HTMLElement).closest("a")) return;
+                if (isInteractiveTouchTarget(e.target)) return;
                 void actions.openFile(file);
               }}
             >

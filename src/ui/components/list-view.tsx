@@ -9,7 +9,11 @@ import { Group } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
 import { draggableProps, folderDropProps } from "../drag-drop";
-import { showFileContextMenu, type ContextMenuConfig } from "../context-menu";
+import {
+  isInteractiveTouchTarget,
+  showFileContextMenu,
+  type ContextMenuConfig,
+} from "../context-menu";
 
 type ListViewProps = {
   model: ExplorerModel;
@@ -129,6 +133,10 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             onContextMenuCapture={(event) =>
               showFileContextMenu(event, props.contextMenu, file)
             }
+            onClick={(event) => {
+              if (isInteractiveTouchTarget(event.target)) return;
+              void props.actions.openFile(file);
+            }}
           >
             <div className="explorer-mobile-note__header">
               <Group>

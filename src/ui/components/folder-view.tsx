@@ -2,7 +2,11 @@ import React from "react";
 import { ExplorerFolderNode } from "../../explorer/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { draggableProps, folderDropProps } from "../drag-drop";
-import { showFolderContextMenu, type ContextMenuConfig } from "../context-menu";
+import {
+  isInteractiveTouchTarget,
+  showFolderContextMenu,
+  type ContextMenuConfig,
+} from "../context-menu";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
 
@@ -39,7 +43,7 @@ export function FolderButtons(props: {
               showFolderContextMenu(event, contextMenu, folder)
             }
             onClick={(e) => {
-              if ((e.target as HTMLElement).closest("a")) return;
+              if (isInteractiveTouchTarget(e.target)) return;
               void actions.openFolder(folder, e.ctrlKey || e.metaKey);
             }}
           >

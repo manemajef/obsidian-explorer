@@ -1,7 +1,9 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { Menu, TAbstractFile } from "obsidian";
+import { Menu, Platform, TAbstractFile } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
 import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
+
+const HAPTIC_DURATION_MS = 10;
 
 export type ContextMenuConfig = {
   actions: ExplorerActions;
@@ -109,6 +111,22 @@ function shouldDeferToNestedLink(event: ReactMouseEvent<HTMLElement>): boolean {
   return false;
 }
 
+export function isInteractiveTouchTarget(target: EventTarget): boolean {
+  return (
+    target instanceof Element &&
+    Boolean(
+      target.closest(
+        "a, button, input, textarea, select, [role='button'], .pin, .explorer-badge, .value-list-item",
+      ),
+    )
+  );
+}
+
+function triggerHapticFeedback(): void {
+  if (!Platform.isMobile) return;
+  globalThis.navigator.vibrate?.(HAPTIC_DURATION_MS);
+}
+
 function beginMenu(
   event: ReactMouseEvent<HTMLElement>,
   config: ContextMenuConfig,
@@ -116,6 +134,7 @@ function beginMenu(
 ): Menu {
   event.preventDefault();
   event.stopPropagation();
+  triggerHapticFeedback();
   const menu = new Menu();
   config.actions.app.workspace.handleLinkContextMenu(
     menu,
@@ -133,6 +152,7 @@ function beginFileMenu(
 ): Menu {
   event.preventDefault();
   event.stopPropagation();
+  triggerHapticFeedback();
   const menu = new Menu();
   config.actions.app.workspace.trigger("file-menu", menu, file, "explorer");
   menu.addSeparator();
