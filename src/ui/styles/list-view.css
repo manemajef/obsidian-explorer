@@ -181,7 +181,7 @@
   min-width: 0;
 }
 
-@media (min-width: 700px) {
+@media (width >= 700px) {
   .is-mobile .explorer-mobile-note {
     flex-direction: row;
     align-items: center;
