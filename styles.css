@@ -39,6 +39,9 @@
 .explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
 }
+.explorer-container.use-glass .clickable-icon {
+  --corner-shape: round;
+}
 .explorer-drag-active .explorer-container :where(.explorer-folder-card, .explorer-card, .explorer-list, .explorer-parent-action) > * {
   pointer-events: none;
 }

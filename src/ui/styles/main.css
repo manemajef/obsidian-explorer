@@ -66,6 +66,9 @@
   cursor: default;
 }
 
+.explorer-container.use-glass .clickable-icon {
+  --corner-shape: round;
+}
 .explorer-drag-active .explorer-container :where(
     .explorer-folder-card,
     .explorer-card,
