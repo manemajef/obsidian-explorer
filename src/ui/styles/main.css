@@ -177,10 +177,9 @@
     .explorer-folder-card,
     .explorer-card,
     .explorer-list,
-    .explorer-mobile-note
+    .explorer-modern-note
   ) {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
-

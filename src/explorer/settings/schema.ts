@@ -15,6 +15,7 @@ import {
 
 export type SortBy = "newest" | "oldest" | "edited" | "name" | "nameDesc";
 export type ViewMode = "cards" | "list";
+export type ListStyle = "markdown" | "modern" | "plain";
 export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
 export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
@@ -26,11 +27,7 @@ export type CardExt =
   | "none"
   | "default";
 
-export type {
-  SettingField,
-  SettingsSection,
-  SettingsSurface,
-} from "./types";
+export type { SettingField, SettingsSection, SettingsSurface } from "./types";
 
 function hasOwn(source: Record<string, unknown>, key: string): boolean {
   return key in source;
@@ -95,6 +92,27 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       labels: { plugin: "Default view" },
     },
   }),
+
+  listStyle: enumField({
+    label: "List style",
+    description: "The visual style to use for list views.",
+    blockKey: "listStyle",
+    defaultValue: "markdown",
+    options: ["markdown", "modern", "plain"],
+    optionLabels: {
+      markdown: "Markdown",
+      modern: "Modern",
+      plain: "Plain Markdown",
+    },
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      order: 11,
+      surfaceOrder: { block: 11 },
+      visibleWhen: { key: "view", value: "list" },
+    },
+  }),
+
   sortBy: enumField({
     label: "Sort by",
     description: "How to sort files.",
@@ -348,6 +366,17 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       order: 6,
     },
   }),
+  alwaysUseModernListInMobile: booleanField({
+    label: "Use modern list style on mobile",
+    description:
+      "Use the modern list style on mobile, even when a block is set to Markdown or Plain.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "appearance",
+      order: 9.5,
+    },
+  }),
   showParentButton: booleanField({
     label: "Show parent folder button",
     description: "Show a button that navigates to the parent folder.",
@@ -366,16 +395,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "appearance",
       order: 10,
-    },
-  }),
-  showListBullets: booleanField({
-    label: "Use bullets in lists",
-    description: "Display list items with bullets. Turn off for plain lists.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      order: 11,
     },
   }),
   ShowIconsInCards: booleanField({

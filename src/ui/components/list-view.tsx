@@ -26,12 +26,15 @@ export function ListView(props: ListViewProps): React.JSX.Element {
   const { files } = props;
   const n = files.length;
   if (n == 0) return <div></div>;
-
-  if (Platform.isMobile) {
-    return <MobileListView {...props} />;
-  }
-
   const { settings, pluginSettings } = props.model;
+  const shouldUseModernList =
+    settings.listStyle === "modern" ||
+    (Platform.isMobile && pluginSettings.alwaysUseModernListInMobile);
+
+  if (shouldUseModernList) {
+    return <ModernListView {...props} />;
+  }
+  const useBullet = settings.listStyle === "markdown";
 
   return (
     <div className="explorer-list-container">
@@ -55,7 +58,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
             }
             style={{
               marginInlineStart:
-                pluginSettings.showListBullets && !file.isPinned
+                useBullet && !file.isPinned
                   ? "var(--explorer-space-4)"
                   : "none",
               display: file.isPinned ? "flex" : "block",
@@ -63,12 +66,12 @@ export function ListView(props: ListViewProps): React.JSX.Element {
           >
             {file.isPinned ? (
               <span
-                className={`explorer-list-pin${pluginSettings.showListBullets ? " with-bullets" : ""}`}
+                className={`explorer-list-pin${useBullet ? " with-bullets" : ""}`}
               >
                 <Pin file={file} actions={props.actions} />
               </span>
             ) : (
-              pluginSettings.showListBullets && <span className="list-bullet" />
+              useBullet && <span className="list-bullet" />
             )}
 
             <Group justify="start">
@@ -77,7 +80,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                 draggable={false}
                 text={file.displayName}
               />
-              {file.tags.length > 0 && <span className="list-tags-seperator" />}
+              {file.tags.length > 0 && <span className="list-tags-separator" />}
               <div className="explorer-list-tags">
                 {settings.showTags &&
                   file.tags.map((t) => (
@@ -109,16 +112,18 @@ export function ListView(props: ListViewProps): React.JSX.Element {
   );
 }
 
-const MobileListView = (props: ListViewProps): React.JSX.Element => {
+const ModernListView = (props: ListViewProps): React.JSX.Element => {
   const { model, files } = props;
   const { settings } = model;
+  const isMobile = Platform.isMobile;
+  const desktopClass = isMobile ? "" : " explorer-modern-list--desktop";
 
   return (
-    <div className="explorer-mobile-list ">
+    <div className={`explorer-modern-list${desktopClass}`}>
       {files.map((file, i) => (
-        <div key={file.path} className="explorer-mobile-list-item">
+        <div key={file.path} className="explorer-modern-list-item">
           <div
-            className={`explorer-mobile-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-mobile-note-last" : ""}`}
+            className={`explorer-modern-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-modern-note-last" : ""}`}
             {...draggableProps(file.dragSource, file.dragFromFolderNote)}
             {...folderDropProps(
               props.actions.app,
@@ -135,33 +140,43 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
             }
             onClick={(event) => {
               if (isInteractiveTouchTarget(event.target)) return;
+              if (!isMobile) return;
               void props.actions.openFile(file);
             }}
           >
-            <div className="explorer-mobile-note__header">
+            <div className="explorer-modern-note__header">
               <Group>
                 <Pin file={file} actions={props.actions} />
                 <InternalLink
                   path={file.path}
-                  className="explorer-mobile-note__title"
+                  className="explorer-modern-note__title"
                   draggable={false}
                   text={file.displayName}
                 />
               </Group>
-
+              {!isMobile && settings.showTags && file.tags.length > 0 && (
+                <Group className="explorer-modern-note__desktop-tags">
+                  {file.tags.map((t) => (
+                    <Badge key={t} variant="tag">
+                      {t}
+                    </Badge>
+                  ))}
+                </Group>
+              )}
               {file.extensionLabel && (
                 <Badge
                   variant="ext-filled"
-                  className="explorer-mobile-note__ext"
+                  className="explorer-modern-note__ext"
                 >
                   {file.extensionLabel}
                 </Badge>
               )}
             </div>
 
-            <div className="explorer-mobile-note__footer">
-              <div className="explorer-mobile-note__tags">
+            <div className="explorer-modern-note__footer">
+              <div className="explorer-modern-note__tags">
                 {settings.showTags &&
+                  isMobile &&
                   file.tags.map((t) => (
                     <Badge key={t} variant="tag">
                       {t}
@@ -172,7 +187,7 @@ const MobileListView = (props: ListViewProps): React.JSX.Element => {
           </div>
 
           {i < files.length - 1 && (
-            <div className="explorer-mobile-note__divider" />
+            <div className="explorer-modern-note__divider" />
           )}
         </div>
       ))}
