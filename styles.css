@@ -30,6 +30,7 @@
   --explorer-hover-transition: 0.15s ease;
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
   --explorer-bg-alt: rgba(0, 0, 0, 0.02);
+  --input-corner-shape: round;
   scroll-margin-top: 10em;
   cursor: default;
 }

@@ -52,7 +52,7 @@
   /* Interactive surfaces */
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
   --explorer-bg-alt: rgba(0, 0, 0, 0.02);
-
+  --input-corner-shape: round;
   scroll-margin-top: 10em;
   /* Live Preview renders inside CodeMirror, whose text cursor can otherwise leak into the block. */
   cursor: default;
@@ -62,6 +62,7 @@
   cursor: text;
 }
 
+
 .explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
 }
@@ -69,6 +70,7 @@
 .explorer-container.use-glass .clickable-icon {
   --corner-shape: round;
 }
+
 .explorer-drag-active .explorer-container :where(
     .explorer-folder-card,
     .explorer-card,
