@@ -240,7 +240,7 @@
   font-size: 0.9em;
   transition: 0.15s;
   flex: 1 1 auto;
-  max-width: 180px;
+  max-width: 220px;
   min-width: 0;
   text-align: center;
 }

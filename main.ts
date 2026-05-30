@@ -1,4 +1,14 @@
-import { Editor, MarkdownView, Plugin, TFile, Vault } from "obsidian";
+import {
+  Editor,
+  MarkdownView,
+  normalizePath,
+  Notice,
+  Plugin,
+  TAbstractFile,
+  TFile,
+  TFolder,
+  Vault,
+} from "obsidian";
 import {
   normalizePluginSettings,
   parseSettings,
@@ -55,6 +65,16 @@ export default class ExplorerPlugin extends Plugin {
       },
     );
     registerHomePageNewTabs(this, () => this.settings);
+
+    this.registerEvent(
+      this.app.vault.on(
+        "rename",
+        async (file: TAbstractFile, oldPath: string) => {
+          await this.syncFolderNoteRename(file, oldPath);
+        },
+      ),
+    );
+
     this.registerEvent(
       this.app.workspace.on("file-open", async (file) => {
         if (!file) return;
@@ -223,6 +243,82 @@ export default class ExplorerPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
+  }
+
+  private async syncFolderNoteRename(
+    file: TAbstractFile,
+    oldPath: string,
+  ): Promise<void> {
+    try {
+      if (file instanceof TFile) {
+        await this.syncFolderFromFolderNote(file, oldPath);
+      } else if (file instanceof TFolder) {
+        await this.syncFolderNoteFromFolder(file, oldPath);
+      }
+    } catch (error) {
+      new Notice(`Could not sync folder note rename: ${error}`);
+    }
+  }
+
+  private async syncFolderFromFolderNote(
+    file: TFile,
+    oldPath: string,
+  ): Promise<void> {
+    if (file.extension.toLowerCase() !== "md") return;
+
+    const filePath = file.path;
+    await this.waitForVaultRenameToSettle();
+
+    const currentFile = this.app.vault.getAbstractFileByPath(filePath);
+    if (!(currentFile instanceof TFile)) return;
+
+    const folder = currentFile.parent;
+    const parentFolder = folder?.parent;
+    if (!folder || !parentFolder) return;
+
+    const oldFolderNoteName = oldPath.split("/").pop()?.replace(/\.md$/i, "");
+    if (oldFolderNoteName !== folder.name) return;
+
+    const destinationPath = normalizePath(
+      `${parentFolder.path}/${currentFile.basename}`,
+    );
+    if (destinationPath === folder.path) return;
+    if (this.app.vault.getAbstractFileByPath(destinationPath)) {
+      new Notice(
+        `Could not rename folder ${folder.name}: an item with that name already exists.`,
+      );
+      return;
+    }
+
+    await this.app.fileManager.renameFile(folder, destinationPath);
+  }
+
+  private async waitForVaultRenameToSettle(): Promise<void> {
+    await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+  }
+
+  private async syncFolderNoteFromFolder(
+    folder: TFolder,
+    oldPath: string,
+  ): Promise<void> {
+    const oldFolderName = oldPath.split("/").pop();
+    if (!oldFolderName) return;
+
+    const oldFolderNote = this.app.vault.getAbstractFileByPath(
+      normalizePath(`${folder.path}/${oldFolderName}.md`),
+    );
+    if (!(oldFolderNote instanceof TFile)) return;
+
+    const destinationPath = normalizePath(`${folder.path}/${folder.name}.md`);
+    if (destinationPath === oldFolderNote.path) return;
+    if (this.app.vault.getAbstractFileByPath(destinationPath)) {
+      new Notice(
+        `Could not rename folder note ${oldFolderNote.name}: an item with that name already exists.`,
+      );
+      return;
+    }
+
+    await this.app.fileManager.renameFile(oldFolderNote, destinationPath);
   }
 
   refreshExplorerBlocks(): void {

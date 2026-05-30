@@ -1,4 +1,4 @@
-import { App, TFile, TFolder } from "obsidian";
+import { App, TAbstractFile, TFile, TFolder } from "obsidian";
 import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
 import { moveIntoFolder } from "./vault/move";
 import {
@@ -107,23 +107,23 @@ export class ExplorerActions {
     if (await promptAndRenameFolder(this.app, folder.folder)) this.refresh();
   }
 
-  deleteFile(file: ExplorerFileNode): void {
-    void this.app.fileManager.promptForDeletion(file.file);
+  async deleteFile(file: ExplorerFileNode): Promise<void> {
+    await this.deleteAndRefresh(file.file);
   }
 
   deleteFolder(folder: ExplorerFolderNode): void {
     new ConfirmationDialog(
       this.app,
       "Delete folder?",
-      () => this.app.fileManager.promptForDeletion(folder.folder),
+      () => this.deleteAndRefresh(folder.folder),
       undefined,
       `This will delete the folder "${folder.name}" and all of its contents.`,
     ).open();
   }
 
-  deleteFolderNote(folder: ExplorerFolderNode): void {
+  async deleteFolderNote(folder: ExplorerFolderNode): Promise<void> {
     const folderNote = folder.folderNote;
-    if (folderNote) void this.app.fileManager.promptForDeletion(folderNote);
+    if (folderNote) await this.deleteAndRefresh(folderNote);
   }
 
   async togglePin(file: ExplorerFileNode): Promise<void> {
@@ -145,5 +145,10 @@ export class ExplorerActions {
     target: TFolder,
   ): Promise<void> {
     if (await moveIntoFolder(this.app, sourcePath, target)) this.refresh();
+  }
+
+  private async deleteAndRefresh(file: TAbstractFile): Promise<void> {
+    await this.app.fileManager.promptForDeletion(file);
+    this.refresh();
   }
 }

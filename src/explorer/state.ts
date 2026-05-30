@@ -78,6 +78,10 @@ function useSearchState(model: ExplorerModel, metadataTick: number) {
   const loadingRef = useRef(false);
 
   useEffect(() => {
+    setAllFiles(null);
+  }, [model]);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 80);
     return () => window.clearTimeout(timer);
   }, [query]);

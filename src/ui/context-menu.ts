@@ -40,7 +40,7 @@ export function showNoteContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        config.actions.deleteFile(file);
+        void config.actions.deleteFile(file);
       }),
   );
   menu.showAtMouseEvent(event.nativeEvent);
@@ -83,7 +83,7 @@ export function showFolderContextMenu(
         .setIcon("file-x")
         .setWarning(true)
         .onClick(() => {
-          config.actions.deleteFolderNote(folder);
+          void config.actions.deleteFolderNote(folder);
         }),
     );
   }

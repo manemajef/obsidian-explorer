@@ -4,6 +4,8 @@ import {
   App,
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
+  TAbstractFile,
+  TFolder,
 } from "obsidian";
 import {
   BlockSettings,
@@ -46,9 +48,25 @@ export async function renderExplorerBlock(
   );
   let refreshQueued = false;
   let isUnmounted = false;
+  let renderVersion = 0;
+  let sourcePath = ctx.sourcePath;
 
-  const queueRefresh = (path?: string): void => {
-    session.invalidate(path);
+  const trackSourceRename = (
+    file: TAbstractFile,
+    oldPath: string,
+  ): void => {
+    if (sourcePath === oldPath) {
+      sourcePath = file.path;
+      return;
+    }
+
+    if (file instanceof TFolder && sourcePath.startsWith(`${oldPath}/`)) {
+      sourcePath = `${file.path}${sourcePath.slice(oldPath.length)}`;
+    }
+  };
+
+  const queueRefresh = (): void => {
+    session.invalidate();
     if (refreshQueued || isUnmounted) return;
     refreshQueued = true;
     window.requestAnimationFrame(() => {
@@ -59,16 +77,12 @@ export async function renderExplorerBlock(
   };
 
   const child = new MarkdownRenderChild(container);
-  child.registerEvent(
-    app.vault.on("create", (file) => queueRefresh(file.path)),
-  );
-  child.registerEvent(
-    app.vault.on("delete", (file) => queueRefresh(file.path)),
-  );
+  child.registerEvent(app.vault.on("create", queueRefresh));
+  child.registerEvent(app.vault.on("delete", queueRefresh));
   child.registerEvent(
     app.vault.on("rename", (file, oldPath) => {
-      session.invalidate(oldPath);
-      queueRefresh(file.path);
+      trackSourceRename(file, oldPath);
+      queueRefresh();
     }),
   );
   child.register(() => {
@@ -84,7 +98,7 @@ export async function renderExplorerBlock(
     new ExplorerSettingsModal(
       app,
       effectiveSettings,
-      ctx.sourcePath,
+      sourcePath,
       (newSettings) => {
         effectiveSettings = newSettings;
         const blockDefaults = getBlockDefaults();
@@ -93,7 +107,7 @@ export async function renderExplorerBlock(
           app,
           container,
           ctx,
-          ctx.sourcePath,
+          sourcePath,
           blockDefaults,
           newSettings,
         ).then(render);
@@ -102,6 +116,7 @@ export async function renderExplorerBlock(
   };
 
   const render = async (): Promise<void> => {
+    renderVersion += 1;
     const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
       getBlockDefaults(),
@@ -113,7 +128,7 @@ export async function renderExplorerBlock(
     const model = await buildExplorerModel({
       app,
       session,
-      sourcePath: ctx.sourcePath,
+      sourcePath,
       settings: effectiveSettings,
       pluginSettings,
     });
@@ -124,6 +139,7 @@ export async function renderExplorerBlock(
 
     reactRoot.render(
       <ExplorerUI
+        key={renderVersion}
         model={model}
         onOpenSettings={openSettings}
         onSavePluginSettings={savePluginSettings}
