@@ -20,6 +20,7 @@ export function ActionsBar(props: {
   searchQuery: string;
   onSearchInput: (query: string) => void;
   showParentNavigation: boolean;
+  useGlass: boolean;
 }): React.JSX.Element {
   const {
     app,
@@ -35,6 +36,7 @@ export function ActionsBar(props: {
     onSearchToggle,
     onSearchInput,
     showParentNavigation,
+    useGlass,
   } = props;
 
   if (Platform.isMobile && searchMode)
@@ -59,7 +61,7 @@ export function ActionsBar(props: {
       <Bar>
         <Bar.Item>
           <Group gap={2} className="explorer-actions-start">
-            {showParentNavigation && (
+            {showParentNavigation ? (
               <ActionItem
                 icon="undo-2"
                 className="explorer-parent-action"
@@ -68,16 +70,13 @@ export function ActionsBar(props: {
                   onGoToParent(false);
                 }}
               />
+            ) : (
+              false && <ActionItem icon="home" />
             )}
             {onSaveFolderNote ? (
-              <ActionItem
-                icon="save"
-                aria-label="Save folder note"
-                title="Save folder note"
-                onClick={onSaveFolderNote}
-              />
+              <ActionItem icon="save" onClick={onSaveFolderNote} />
             ) : (
-              <ActionItem icon="settings-2" onClick={onOpenSettings} />
+              <ActionItem icon="ellipsis" onClick={onOpenSettings} />
             )}
           </Group>
         </Bar.Item>
@@ -88,11 +87,17 @@ export function ActionsBar(props: {
           <Group className="explorer-actions-controls">
             {!(searchMode && Platform.isMobile) && (
               <ActionGroup>
+                {onSaveFolderNote ? (
+                  <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
+                ) : (
+                  <ActionGroupItem icon="settings-2" onClick={onOpenSettings} />
+                )}
                 <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
                 <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
               </ActionGroup>
             )}
-            <Separator />
+            {/* <Separator className="action-seperator" />  */}
+            {useGlass ? <span style={{ width: ".6em" }} /> : <Separator />}
             <Search
               searchMode={searchMode}
               searchQuery={searchQuery}

@@ -9,6 +9,9 @@
 .explorer-actions-end {
   min-width: 0;
 }
+.use-glass .action-seperator {
+  display: none;
+}
 
 .action-item {
   display: inline-flex;

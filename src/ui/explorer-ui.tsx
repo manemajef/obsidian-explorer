@@ -147,6 +147,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         searchMode={searchMode}
         searchQuery={searchQuery}
         onSearchInput={setSearchQuery}
+        useGlass={model.pluginSettings.useGlass}
       />
 
       {showFolders && (

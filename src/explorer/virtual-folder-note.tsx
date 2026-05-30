@@ -99,11 +99,13 @@ export class VirtualFolderNoteView extends ItemView {
     this.cleanupExplorer?.();
     this.cleanupExplorer = null;
     this.contentEl.empty();
-    this.contentEl.addClass("explorer-virtual-folder-note");
-
+    this.contentEl.addClass("explorer-virtual-folder-note-container");
+    const mainView = this.contentEl.createDiv({
+      cls: "explorer-virtual-folder-note",
+    });
     const folder = this.folder;
     if (!folder) {
-      this.contentEl.createDiv({
+      mainView.createDiv({
         cls: "explorer-virtual-folder-note-missing",
         text: "Folder not found",
       });
@@ -112,7 +114,7 @@ export class VirtualFolderNoteView extends ItemView {
     }
     this.updateHeaderTitle(folder);
 
-    const preview = this.contentEl.createDiv({
+    const preview = mainView.createDiv({
       cls: "markdown-preview-view markdown-rendered",
     });
     preview.setAttr("data-path", this.sourcePath);
@@ -120,7 +122,14 @@ export class VirtualFolderNoteView extends ItemView {
       cls: "markdown-preview-sizer markdown-preview-section",
     });
 
-    section.createDiv({ cls: "inline-title", text: folder.name });
+    const titleContainer = section.createDiv({
+      cls: "virtual-folder-title-container",
+    });
+    titleContainer.createDiv({ cls: "inline-title", text: folder.name });
+    // titleContainer.createDiv({
+    //   cls: "virtual-folder-warning",
+    //   text: "Save folder note",
+    // });
     const explorerContainer = section.createDiv();
 
     this.cleanupExplorer = await mountExplorer({
@@ -197,7 +206,6 @@ export class VirtualFolderNoteView extends ItemView {
       });
     });
   }
-
 }
 
 export function getActiveVirtualFolderNote(

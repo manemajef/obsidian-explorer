@@ -61,6 +61,15 @@
     transition: none;
   }
 }
+.explorer-virtual-folder-note {
+  max-width: var(--max-width);
+  width: var(--line-width);
+  margin-inline: auto;
+}
+.explorer-virtual-folder-note .markdown-preview-view.markdown-rendered {
+  margin: 0;
+  padding: 0;
+}
 .markdown-source-view.mod-cm6.is-mobile .explorer-container {
   padding: 2px;
 }
@@ -823,6 +832,9 @@
 .explorer-actions-controls,
 .explorer-actions-end {
   min-width: 0;
+}
+.use-glass .action-seperator {
+  display: none;
 }
 .action-item {
   display: inline-flex;

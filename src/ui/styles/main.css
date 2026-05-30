@@ -1,5 +1,6 @@
 .explorer-container {
   /* Spacing scale */
+  
   --explorer-space-1: 0.25em;
   --explorer-space-2: 0.5em;
   --explorer-space-3: 0.75em;
@@ -111,6 +112,15 @@
   }
 }
 
+.explorer-virtual-folder-note {
+  max-width: var(--max-width);
+  width: var(--line-width);
+  margin-inline: auto;
+}
+.explorer-virtual-folder-note .markdown-preview-view.markdown-rendered {
+  margin: 0;
+  padding: 0;
+}
 .markdown-source-view.mod-cm6.is-mobile .explorer-container {
   padding: 2px;
   /* margin-top: 6px; */
@@ -230,3 +240,16 @@
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* .virtual-folder-title-container { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.virtual-folder-warning {
+  display: none;
+  padding: .25 .5em; 
+  border: var(--explorer-border-glass);
+  background: var(--explorer-background-glass);
+  box-shadow: var(--explorer-shadow-glass);;
+} */
