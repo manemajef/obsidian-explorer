@@ -74,7 +74,9 @@ export function ActionsBar(props: {
               false && <ActionItem icon="home" />
             )}
             {onSaveFolderNote ? (
-              <ActionItem icon="save" onClick={onSaveFolderNote} />
+              !Platform.isMobile && (
+                <ActionItem icon="save" onClick={onSaveFolderNote} />
+              )
             ) : (
               <ActionItem icon="ellipsis" onClick={onOpenSettings} />
             )}
@@ -88,7 +90,16 @@ export function ActionsBar(props: {
             {!(searchMode && Platform.isMobile) && (
               <ActionGroup>
                 {onSaveFolderNote ? (
-                  <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
+                  <>
+                    {Platform.isMobile && (
+                      <ActionGroupItem icon="save" onClick={onSaveFolderNote} />
+                    )}
+
+                    <ActionGroupItem
+                      icon="pen-line"
+                      onClick={onSaveFolderNote}
+                    />
+                  </>
                 ) : (
                   <ActionGroupItem icon="settings-2" onClick={onOpenSettings} />
                 )}
