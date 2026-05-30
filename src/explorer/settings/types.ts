@@ -2,6 +2,7 @@ export type SettingsSurface = "plugin" | "block";
 export type SettingsSection =
   | "core"
   | "behavior"
+  | "homepage"
   | "display"
   | "appearance"
   | "navigation";

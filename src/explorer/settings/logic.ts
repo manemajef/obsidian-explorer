@@ -89,6 +89,7 @@ const SETTING_SECTION_SORT_ORDER: SettingsSection[] = [
   "display",
   "behavior",
   "appearance",
+  "homepage",
   "navigation",
 ];
 

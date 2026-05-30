@@ -557,6 +557,9 @@
   background: var(--background-primary);
   box-shadow: var(--explorer-shadow-glass-sm);
 }
+.theme-dark .explorer-modern-list {
+  background-color: var(--background-primary-alt);
+}
 .use-glass .explorer-modern-list {
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);

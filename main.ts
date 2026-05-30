@@ -70,7 +70,8 @@ export default class ExplorerPlugin extends Plugin {
       this.app.vault.on(
         "rename",
         async (file: TAbstractFile, oldPath: string) => {
-          await this.syncFolderNoteRename(file, oldPath);
+          if (this.settings.syncFolderNotes)
+            await this.syncFolderNoteRename(file, oldPath);
         },
       ),
     );

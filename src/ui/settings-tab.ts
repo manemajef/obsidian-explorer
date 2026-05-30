@@ -24,6 +24,7 @@ type SectionMeta = {
 
 const SECTION_ORDER: SettingsSection[] = [
   "navigation",
+  "homepage",
   "appearance",
   "behavior",
   "core",
@@ -54,6 +55,9 @@ const SECTION_META: Record<SettingsSection, SectionMeta> = {
   },
   navigation: {
     title: "Navigation",
+  },
+  homepage: {
+    title: "Homepage",
   },
 };
 

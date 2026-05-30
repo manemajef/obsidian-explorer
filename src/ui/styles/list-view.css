@@ -126,14 +126,21 @@
   box-shadow: var(--explorer-shadow-glass-sm);
 }
 
+.theme-dark .explorer-modern-list {
+   background-color: var(--background-primary-alt);
+
+}
+
 .use-glass .explorer-modern-list {
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);
 }
 
+
 .theme-dark.is-mobile .use-glass .explorer-modern-list {
   background-color: var(--background-primary-alt);
 }
+
 
 .explorer-modern-list-item {
   padding: var(--explorer-space-1) var(--explorer-space-4);

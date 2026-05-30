@@ -306,7 +306,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
+      section: "homepage",
       order: 1,
     },
   }),
@@ -316,7 +316,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: false,
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
+      section: "homepage",
       order: 2,
       visibleWhen: { key: "useHomePage", value: true },
     },
@@ -328,7 +328,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     placeholder: (vaultName: string) => vaultName,
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
+      section: "homepage",
       order: 3,
       visibleWhen: { key: "useHomePage", value: true },
     },
@@ -384,8 +384,19 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
+      section: "appearance",
+      order: 12.5,
+    },
+  }),
+  syncFolderNotes: booleanField({
+    label: "Sync folder notes on rename",
+    description:
+      "Keep folders and their matching folder notes synchronized when either is renamed.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
       section: "navigation",
-      order: 7,
+      order: 6.9,
     },
   }),
   useGlass: booleanField({
