@@ -11,6 +11,7 @@ export function ActionsBar(props: {
   parentDropFolder: TFolder | null;
   onMoveIntoFolder: MoveIntoFolder;
   onOpenSettings: () => void;
+  onSaveFolderNote?: () => void;
   onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
   onNewNote: () => void;
@@ -25,6 +26,7 @@ export function ActionsBar(props: {
     parentDropFolder,
     onMoveIntoFolder,
     onOpenSettings,
+    onSaveFolderNote,
     onGoToParent,
     onNewFolder,
     onNewNote,
@@ -67,7 +69,16 @@ export function ActionsBar(props: {
                 }}
               />
             )}
-            <ActionItem icon="settings-2" onClick={onOpenSettings} />
+            {onSaveFolderNote ? (
+              <ActionItem
+                icon="save"
+                aria-label="Save folder note"
+                title="Save folder note"
+                onClick={onSaveFolderNote}
+              />
+            ) : (
+              <ActionItem icon="settings-2" onClick={onOpenSettings} />
+            )}
           </Group>
         </Bar.Item>
 

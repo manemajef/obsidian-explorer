@@ -191,6 +191,23 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       return;
     }
 
+    if (field.kind === "enum") {
+      setting.addDropdown((dropdown) => {
+        for (const option of field.options) {
+          dropdown.addOption(option, field.optionLabels?.[option] ?? option);
+        }
+        dropdown
+          .setValue(this.plugin.settings[key] as string)
+          .onChange((value) => {
+            void this.updatePluginSetting(
+              key,
+              value as PluginGlobalSettings[typeof key],
+            );
+          });
+      });
+      return;
+    }
+
     setting.addText((text) => {
       text
         .setPlaceholder(field.placeholder?.(this.app.vault.getName()) ?? "")

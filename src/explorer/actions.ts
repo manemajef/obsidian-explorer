@@ -4,6 +4,7 @@ import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
   createAndOpenFolderNote,
+  createFolderNoteFile,
   goToParentFolderNote,
   openFolderNote,
   type FolderNoteSource,
@@ -75,6 +76,13 @@ export class ExplorerActions {
       false,
       this.savePluginSettings,
     );
+  }
+
+  async saveCurrentFolderNote(): Promise<void> {
+    const file = await createFolderNoteFile(this.app, this.currentFolder);
+    if (file) {
+      await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
+    }
   }
 
   async createFolder(): Promise<void> {

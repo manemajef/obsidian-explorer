@@ -92,25 +92,31 @@
 .explorer-virtual-folder-note .markdown-preview-view {
   min-height: 100%;
 }
-.explorer-virtual-breadcrumbs {
-  display: flex;
+.explorer-virtual-folder-note .markdown-preview-sizer {
+  box-sizing: border-box;
+  max-width: var(--file-line-width, 700px);
+  margin-inline: auto;
+  padding-inline: var(--file-margins, var(--size-4-8));
+  width: 100%;
+}
+.explorer-virtual-title-container {
+  min-width: 0;
+}
+.explorer-virtual-title {
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35em;
-  color: var(--text-muted);
-  font-size: var(--font-ui-small);
-  margin-bottom: var(--size-4-2);
+  display: flex;
+  gap: var(--size-2-2);
+  min-width: 0;
 }
-.explorer-virtual-breadcrumbs a.internal-link {
-  color: var(--text-muted);
-  text-decoration: none;
+.explorer-virtual-title-part {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.explorer-virtual-breadcrumbs a.internal-link:hover {
-  color: var(--text-normal);
-  text-decoration: none;
-}
-.explorer-virtual-breadcrumb-separator {
+.explorer-virtual-title-separator {
   color: var(--text-faint);
+  flex: 0 0 auto;
 }
 .explorer-virtual-folder-note-missing {
   color: var(--text-muted);

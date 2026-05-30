@@ -73,10 +73,12 @@ export class VirtualFolderNoteView extends ItemView {
     void result;
     this.state = this.normalizeState(state);
     await this.render();
+    this.queueHeaderTitleUpdate();
   }
 
   protected async onOpen(): Promise<void> {
     await this.render();
+    this.queueHeaderTitleUpdate();
   }
 
   protected async onClose(): Promise<void> {
@@ -105,8 +107,10 @@ export class VirtualFolderNoteView extends ItemView {
         cls: "explorer-virtual-folder-note-missing",
         text: "Folder not found",
       });
+      this.updateHeaderTitle(null);
       return;
     }
+    this.updateHeaderTitle(folder);
 
     const preview = this.contentEl.createDiv({
       cls: "markdown-preview-view markdown-rendered",
@@ -116,7 +120,6 @@ export class VirtualFolderNoteView extends ItemView {
       cls: "markdown-preview-sizer markdown-preview-section",
     });
 
-    this.renderBreadcrumbs(section, folder);
     section.createDiv({ cls: "inline-title", text: folder.name });
     const explorerContainer = section.createDiv();
 
@@ -156,51 +159,43 @@ export class VirtualFolderNoteView extends ItemView {
     return existing;
   }
 
-  private renderBreadcrumbs(container: HTMLElement, folder: TFolder): void {
-    const ancestors: TFolder[] = [];
-    for (let current: TFolder | null = folder; current && !current.isRoot();) {
-      ancestors.unshift(current);
-      current = current.parent;
-    }
-
-    if (ancestors.length <= 1) return;
-
-    const breadcrumbs = container.createDiv({
-      cls: "explorer-virtual-breadcrumbs",
-    });
-
-    ancestors.forEach((ancestor, index) => {
-      if (index > 0) {
-        breadcrumbs.createSpan({
-          cls: "explorer-virtual-breadcrumb-separator",
-          text: "/",
-        });
-      }
-      const link = breadcrumbs.createEl("a", {
-        cls: "internal-link",
-        text: ancestor.name,
-        href: getFolderNotePath(ancestor),
-      });
-      link.setAttr("data-href", getFolderNotePath(ancestor));
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        void this.openFolder(ancestor, event.ctrlKey || event.metaKey);
-      });
-    });
+  private queueHeaderTitleUpdate(): void {
+    const win = this.containerEl.ownerDocument.defaultView ?? window;
+    win.requestAnimationFrame(() => this.updateHeaderTitle(this.folder));
   }
 
-  private async openFolder(folder: TFolder, newLeaf: boolean): Promise<void> {
-    const existing = getFolderNoteForFolder(this.app, folder);
-    if (!existing) {
-      await openVirtualFolderNote(this.app, folder, newLeaf);
+  private updateHeaderTitle(folder: TFolder | null): void {
+    const titleContainer =
+      this.containerEl.querySelector(".view-header-title-container") ??
+      this.containerEl
+        .closest(".workspace-leaf-content")
+        ?.querySelector(".view-header-title-container");
+    if (!(titleContainer instanceof HTMLElement)) return;
+
+    titleContainer.empty();
+    titleContainer.addClass("explorer-virtual-title-container");
+
+    const title = titleContainer.createDiv({
+      cls: "view-header-title explorer-virtual-title",
+    });
+    const parts = folder?.path.split("/").filter(Boolean) ?? [];
+    if (parts.length === 0) {
+      title.createSpan({ text: "Folder note" });
       return;
     }
 
-    await this.app.workspace.openLinkText(
-      existing.path,
-      this.sourcePath,
-      newLeaf,
-    );
+    parts.forEach((part, index) => {
+      if (index > 0) {
+        title.createSpan({
+          cls: "explorer-virtual-title-separator",
+          text: "/",
+        });
+      }
+      title.createSpan({
+        cls: "explorer-virtual-title-part",
+        text: part,
+      });
+    });
   }
 
 }

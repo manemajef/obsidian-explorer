@@ -112,6 +112,16 @@ export async function openFolderNote(
     await openExplorerPage(app, existing, sourcePath, newLeaf);
     return;
   }
+  if (settings.missingFolderNoteBehavior === "create") {
+    await createAndOpenFolderNote(
+      app,
+      folder,
+      settings,
+      sourcePath,
+      newLeaf,
+    );
+    return;
+  }
   await openVirtualFolderNote(app, folder, newLeaf);
 }
 

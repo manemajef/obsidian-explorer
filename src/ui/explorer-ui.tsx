@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Platform, TFolder } from "obsidian";
+import { Platform, TFile, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
 import { ExplorerFileNode } from "../explorer/nodes";
@@ -133,6 +133,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           actions.canGoToParent(model.source)
         }
         onOpenSettings={onOpenSettings}
+        onSaveFolderNote={
+          model.source instanceof TFile
+            ? undefined
+            : () => void actions.saveCurrentFolderNote()
+        }
         onGoToParent={(newLeaf) =>
           void actions.goToParent(model.source, newLeaf)
         }
