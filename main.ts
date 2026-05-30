@@ -18,7 +18,7 @@ import { renderExplorerBlock } from "./src/explorer";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import {
   canGoToParentFolderNote,
-  type FolderNoteSource,
+  type ExplorerLocation,
   goToParentFolderNote,
 } from "./src/explorer/folder-notes";
 import { openHomePage, registerHomePageNewTabs } from "./src/explorer/homepage";
@@ -176,9 +176,8 @@ export default class ExplorerPlugin extends Plugin {
         }
 
         if (!checking) {
-          const activeTarget = this.getActiveExplorerTarget();
-          const sourcePath = this.getExplorerTargetPath(activeTarget);
-          void openHomePage(this.app, this.settings, sourcePath);
+          const location = this.getActiveExplorerLocation();
+          void openHomePage(this.app, this.settings, location?.path ?? "");
         }
 
         return true;
@@ -189,18 +188,14 @@ export default class ExplorerPlugin extends Plugin {
       id: "go-to-parent-folder",
       name: "Go to parent folder",
       checkCallback: (checking: boolean) => {
-        const activeTarget = this.getActiveExplorerTarget();
+        const location = this.getActiveExplorerLocation();
 
-        if (
-          !canGoToParentFolderNote(this.app, this.settings, activeTarget)
-        ) {
+        if (!canGoToParentFolderNote(this.app, this.settings, location)) {
           return false;
         }
 
         if (!checking) {
-          void goToParentFolderNote(this.app, this.settings, {
-            source: activeTarget,
-          });
+          void goToParentFolderNote(this.app, this.settings, { location });
         }
 
         return true;
@@ -263,25 +258,21 @@ export default class ExplorerPlugin extends Plugin {
     await this.saveData(this.settings);
   }
 
-  private getActiveExplorerTarget(): FolderNoteSource | null {
+  private getActiveExplorerLocation(): ExplorerLocation | null {
     const virtualView = getActiveVirtualFolderNote(this.app);
     const virtualFolder = virtualView?.folder;
     if (virtualView && virtualFolder) {
-      return { folder: virtualFolder, path: virtualView.sourcePath };
+      return { folder: virtualFolder, path: virtualView.sourcePath, file: null };
     }
-    return this.app.workspace.getActiveFile();
+    const activeFile = this.app.workspace.getActiveFile();
+    if (!activeFile?.parent) return null;
+    return { folder: activeFile.parent, path: activeFile.path, file: activeFile };
   }
 
   private getActiveExplorerFolder(): TFolder | null {
     const virtualView = getActiveVirtualFolderNote(this.app);
     if (virtualView?.folder) return virtualView.folder;
     return this.app.workspace.getActiveFile()?.parent ?? null;
-  }
-
-  private getExplorerTargetPath(
-    target: FolderNoteSource | null,
-  ): string {
-    return target instanceof TFile ? target.path : target?.path ?? "";
   }
 
   private async syncFolderNoteRename(

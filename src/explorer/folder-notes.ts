@@ -19,11 +19,17 @@ export {
 } from "./folder-note-data";
 
 export type SavePluginSettings = () => void | Promise<void>;
-export type VirtualFolderNoteSource = {
+
+/**
+ * A place the explorer can be viewing: the folder whose contents are shown,
+ * the source path used for link and homepage context, and the backing file
+ * when one exists (null for in-memory virtual folder notes).
+ */
+export type ExplorerLocation = {
   folder: TFolder;
   path: string;
+  file: TFile | null;
 };
-export type FolderNoteSource = TFile | VirtualFolderNoteSource;
 
 function askBeforeCreating(
   app: App,
@@ -59,14 +65,13 @@ function askBeforeCreating(
 export function canGoToParentFolderNote(
   app: App,
   settings: PluginSettings,
-  source: FolderNoteSource | null,
+  location: ExplorerLocation | null,
 ): boolean {
-  if (!source) return false;
+  if (!location) return false;
 
   const homePath = resolveHomePagePath(app, settings);
-  if (homePath && getFolderNoteSourcePath(source) === homePath)
-    return false;
-  const parent = getParentFolderForNavigation(source);
+  if (homePath && location.path === homePath) return false;
+  const parent = getNavigationParent(location);
   return Boolean(parent && !parent.isRoot()) || settings.useHomePage;
 }
 
@@ -74,25 +79,24 @@ export async function goToParentFolderNote(
   app: App,
   settings: PluginSettings,
   input: {
-    source: FolderNoteSource | null;
+    location: ExplorerLocation | null;
     newLeaf?: boolean;
   },
 ): Promise<void> {
-  const source = input.source;
-  if (!source) return;
+  const location = input.location;
+  if (!location) return;
 
-  const sourcePath = getFolderNoteSourcePath(source);
   const homePath = resolveHomePagePath(app, settings);
-  if (homePath && sourcePath === homePath) return;
+  if (homePath && location.path === homePath) return;
 
-  const parent = getParentFolderForNavigation(source);
+  const parent = getNavigationParent(location);
 
   if (!parent || parent.isRoot()) {
-    await openHomePage(app, settings, sourcePath, input.newLeaf);
+    await openHomePage(app, settings, location.path, input.newLeaf);
     return;
   }
 
-  await openFolderNote(app, parent, settings, sourcePath, input.newLeaf);
+  await openFolderNote(app, parent, settings, location.path, input.newLeaf);
 }
 
 export async function openFolderNote(
@@ -163,13 +167,9 @@ async function openExplorerPage(
   await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
 }
 
-function getFolderNoteSourcePath(source: FolderNoteSource): string {
-  return source instanceof TFile ? source.path : source.path;
-}
-
-function getParentFolderForNavigation(
-  source: FolderNoteSource,
-): TFolder | null | undefined {
-  if (!(source instanceof TFile)) return source.folder.parent;
-  return isFolderNote(source) ? source.parent?.parent : source.parent;
+function getNavigationParent(location: ExplorerLocation): TFolder | null {
+  // A folder note (real or virtual) steps up to the folder's parent; a plain
+  // note inside a folder steps up to its own containing folder.
+  const representsFolder = !location.file || isFolderNote(location.file);
+  return representsFolder ? location.folder.parent : location.folder;
 }

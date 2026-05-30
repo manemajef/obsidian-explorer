@@ -6,12 +6,12 @@ import {
   type ExplorerNode,
 } from "./nodes";
 import { ExplorerSession } from "./session";
-import type { FolderNoteSource } from "./folder-notes";
+import type { ExplorerLocation } from "./folder-notes";
 
 export type ExplorerModel = {
   app: App;
   sourcePath: string;
-  source: FolderNoteSource;
+  location: ExplorerLocation;
   folder: TFolder;
   session: ExplorerSession;
   settings: BlockSettings;
@@ -54,10 +54,11 @@ export async function buildExplorerModel(input: {
   return {
     app,
     sourcePath,
-    source:
-      sourceFile instanceof TFile
-        ? sourceFile
-        : { folder, path: sourcePath },
+    location: {
+      folder,
+      path: sourcePath,
+      file: sourceFile instanceof TFile ? sourceFile : null,
+    },
     folder,
     session,
     settings,

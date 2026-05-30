@@ -7,7 +7,7 @@ import {
   createFolderNoteFile,
   goToParentFolderNote,
   openFolderNote,
-  type FolderNoteSource,
+  type ExplorerLocation,
   type SavePluginSettings,
 } from "./folder-notes";
 import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
@@ -36,16 +36,16 @@ export class ExplorerActions {
     return this.session.createFolderNode(folder);
   }
 
-  canGoToParent(source: FolderNoteSource | null): boolean {
-    return canGoToParentFolderNote(this.app, this.settings, source);
+  canGoToParent(location: ExplorerLocation | null): boolean {
+    return canGoToParentFolderNote(this.app, this.settings, location);
   }
 
   async goToParent(
-    source: FolderNoteSource | null,
+    location: ExplorerLocation | null,
     newLeaf?: boolean,
   ): Promise<void> {
     await goToParentFolderNote(this.app, this.settings, {
-      source,
+      location,
       newLeaf,
     });
   }
