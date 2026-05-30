@@ -1,10 +1,12 @@
-import { App, TAbstractFile, TFile, TFolder } from "obsidian";
+import { App, TAbstractFile, TFolder } from "obsidian";
 import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
 import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
+  createAndOpenFolderNote,
   goToParentFolderNote,
-  openOrCreateFolderNote,
+  openFolderNote,
+  type FolderNoteSource,
   type SavePluginSettings,
 } from "./folder-notes";
 import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
@@ -33,18 +35,17 @@ export class ExplorerActions {
     return this.session.createFolderNode(folder);
   }
 
-  canGoToParent(currentFile: TFile | null): boolean {
-    return canGoToParentFolderNote(this.app, this.settings, currentFile);
+  canGoToParent(source: FolderNoteSource | null): boolean {
+    return canGoToParentFolderNote(this.app, this.settings, source);
   }
 
   async goToParent(
-    currentFile: TFile | null,
+    source: FolderNoteSource | null,
     newLeaf?: boolean,
   ): Promise<void> {
     await goToParentFolderNote(this.app, this.settings, {
-      currentFile,
+      source,
       newLeaf,
-      savePluginSettings: this.savePluginSettings,
     });
   }
 
@@ -56,12 +57,22 @@ export class ExplorerActions {
     folder: ExplorerFolderNode | TFolder,
     newLeaf = false,
   ): Promise<void> {
-    await openOrCreateFolderNote(
+    await openFolderNote(
       this.app,
       folder instanceof ExplorerFolderNode ? folder.folder : folder,
       this.settings,
       this.sourcePath,
       newLeaf,
+    );
+  }
+
+  async createFolderNote(folder: ExplorerFolderNode): Promise<void> {
+    await createAndOpenFolderNote(
+      this.app,
+      folder.folder,
+      this.settings,
+      this.sourcePath,
+      false,
       this.savePluginSettings,
     );
   }

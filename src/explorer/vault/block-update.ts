@@ -1,7 +1,7 @@
 import { App, MarkdownPostProcessorContext, TFile } from "obsidian";
 import { BlockSettings, serializeSettings } from "../settings";
 
-function formatExplorerBlock(
+export function formatExplorerBlock(
   settings: BlockSettings,
   defaultSettings: BlockSettings,
 ): string {

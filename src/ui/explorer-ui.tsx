@@ -130,11 +130,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onMoveIntoFolder={onMoveIntoFolder}
         showParentNavigation={
           model.pluginSettings.showParentButton &&
-          actions.canGoToParent(model.blockFile)
+          actions.canGoToParent(model.source)
         }
         onOpenSettings={onOpenSettings}
         onGoToParent={(newLeaf) =>
-          void actions.goToParent(model.blockFile, newLeaf)
+          void actions.goToParent(model.source, newLeaf)
         }
         onNewFolder={() => void actions.createFolder()}
         onNewNote={() => void actions.createNote()}

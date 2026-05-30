@@ -6,11 +6,12 @@ import {
   type ExplorerNode,
 } from "./nodes";
 import { ExplorerSession } from "./session";
+import type { FolderNoteSource } from "./folder-notes";
 
 export type ExplorerModel = {
   app: App;
   sourcePath: string;
-  blockFile: TFile;
+  source: FolderNoteSource;
   folder: TFolder;
   session: ExplorerSession;
   settings: BlockSettings;
@@ -28,14 +29,21 @@ export async function buildExplorerModel(input: {
   app: App;
   session: ExplorerSession;
   sourcePath: string;
+  sourceFolder?: TFolder;
   settings: BlockSettings;
   pluginSettings: PluginSettings;
 }): Promise<ExplorerModel | null> {
-  const { app, session, sourcePath, settings, pluginSettings } = input;
-  const blockFile = app.vault.getAbstractFileByPath(sourcePath);
-  if (!(blockFile instanceof TFile) || !blockFile.parent) return null;
+  const { app, session, sourcePath, sourceFolder, settings, pluginSettings } =
+    input;
+  const sourceFile = app.vault.getAbstractFileByPath(sourcePath);
+  if (!sourceFolder && (!(sourceFile instanceof TFile) || !sourceFile.parent))
+    return null;
 
-  const folder = blockFile.parent;
+  const folder = sourceFolder ?? (sourceFile instanceof TFile
+    ? sourceFile.parent
+    : null);
+  if (!folder) return null;
+
   const index = await session.getIndex(folder, {
     depth: settings.depth,
     displayNestedFolderNotes: pluginSettings.displayNestedFolderNotes,
@@ -46,7 +54,10 @@ export async function buildExplorerModel(input: {
   return {
     app,
     sourcePath,
-    blockFile,
+    source:
+      sourceFile instanceof TFile
+        ? sourceFile
+        : { folder, path: sourcePath },
     folder,
     session,
     settings,

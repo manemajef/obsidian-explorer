@@ -25,7 +25,7 @@ export function showNoteContextMenu(
       menu,
       config,
       config.actions.createFolderNode(folder),
-      "Go to or create folder note",
+      "Go to folder note",
     );
     hasAction = true;
   }
@@ -60,6 +60,13 @@ export function showFolderContextMenu(
     : false;
 
   if (hasAction) menu.addSeparator();
+  if (!folderNote) {
+    menu.addItem((item) =>
+      item.setTitle("Create folder note").setIcon("file-plus-2").onClick(() => {
+        void config.actions.createFolderNote(folder);
+      }),
+    );
+  }
   menu.addItem((item) =>
     item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
       void config.actions.renameFolder(folder);

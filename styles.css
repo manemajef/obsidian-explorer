@@ -85,6 +85,37 @@
 .is-mobile .explorer-container {
   --explorer-control-size: 42px;
 }
+.explorer-virtual-folder-note {
+  height: 100%;
+  overflow-y: auto;
+}
+.explorer-virtual-folder-note .markdown-preview-view {
+  min-height: 100%;
+}
+.explorer-virtual-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  margin-bottom: var(--size-4-2);
+}
+.explorer-virtual-breadcrumbs a.internal-link {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.explorer-virtual-breadcrumbs a.internal-link:hover {
+  color: var(--text-normal);
+  text-decoration: none;
+}
+.explorer-virtual-breadcrumb-separator {
+  color: var(--text-faint);
+}
+.explorer-virtual-folder-note-missing {
+  color: var(--text-muted);
+  padding: var(--size-4-6);
+}
 .is-mobile .modal {
   padding-bottom: 2em;
   max-height: 80vh;

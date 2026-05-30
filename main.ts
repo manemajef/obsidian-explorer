@@ -18,11 +18,17 @@ import { renderExplorerBlock } from "./src/explorer";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import {
   canGoToParentFolderNote,
+  type FolderNoteSource,
   goToParentFolderNote,
 } from "./src/explorer/folder-notes";
 import { openHomePage, registerHomePageNewTabs } from "./src/explorer/homepage";
 import { promptAndCreateFolder } from "./src/explorer/vault/create";
 import { togglePin } from "./src/explorer/vault/edit";
+import {
+  getActiveVirtualFolderNote,
+  VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
+  VirtualFolderNoteView,
+} from "./src/explorer/virtual-folder-note";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -47,6 +53,16 @@ export default class ExplorerPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new ExplorerSettingsTab(this.app, this));
+    this.registerView(
+      VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
+      (leaf) =>
+        new VirtualFolderNoteView(leaf, {
+          getBlockDefaults: () => this.settings.defaultBlockSettings,
+          getPluginSettings: () => this.settings,
+          savePluginSettings: () => this.saveSettings(),
+          registerRefresh: (refresh) => this.registerExplorerRefresh(refresh),
+        }),
+    );
     this.registerCommands();
 
     this.registerMarkdownCodeBlockProcessor(
@@ -137,10 +153,9 @@ export default class ExplorerPlugin extends Plugin {
       id: "create-folder-in-current-folder",
       name: "Create folder in current note folder",
       checkCallback: (checking: boolean) => {
-        const activeFile = this.app.workspace.getActiveFile();
-        const basePath = activeFile?.parent?.path;
+        const basePath = this.getActiveExplorerFolder()?.path;
 
-        if (!activeFile || !basePath) {
+        if (!basePath) {
           return false;
         }
 
@@ -161,8 +176,9 @@ export default class ExplorerPlugin extends Plugin {
         }
 
         if (!checking) {
-          const activeFile = this.app.workspace.getActiveFile();
-          void openHomePage(this.app, this.settings, activeFile?.path ?? "");
+          const activeTarget = this.getActiveExplorerTarget();
+          const sourcePath = this.getExplorerTargetPath(activeTarget);
+          void openHomePage(this.app, this.settings, sourcePath);
         }
 
         return true;
@@ -173,16 +189,17 @@ export default class ExplorerPlugin extends Plugin {
       id: "go-to-parent-folder",
       name: "Go to parent folder",
       checkCallback: (checking: boolean) => {
-        const activeFile = this.app.workspace.getActiveFile();
+        const activeTarget = this.getActiveExplorerTarget();
 
-        if (!canGoToParentFolderNote(this.app, this.settings, activeFile)) {
+        if (
+          !canGoToParentFolderNote(this.app, this.settings, activeTarget)
+        ) {
           return false;
         }
 
         if (!checking) {
           void goToParentFolderNote(this.app, this.settings, {
-            currentFile: activeFile,
-            savePluginSettings: () => this.saveSettings(),
+            source: activeTarget,
           });
         }
 
@@ -244,6 +261,27 @@ export default class ExplorerPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
+  }
+
+  private getActiveExplorerTarget(): FolderNoteSource | null {
+    const virtualView = getActiveVirtualFolderNote(this.app);
+    const virtualFolder = virtualView?.folder;
+    if (virtualView && virtualFolder) {
+      return { folder: virtualFolder, path: virtualView.sourcePath };
+    }
+    return this.app.workspace.getActiveFile();
+  }
+
+  private getActiveExplorerFolder(): TFolder | null {
+    const virtualView = getActiveVirtualFolderNote(this.app);
+    if (virtualView?.folder) return virtualView.folder;
+    return this.app.workspace.getActiveFile()?.parent ?? null;
+  }
+
+  private getExplorerTargetPath(
+    target: FolderNoteSource | null,
+  ): string {
+    return target instanceof TFile ? target.path : target?.path ?? "";
   }
 
   private async syncFolderNoteRename(

@@ -7,6 +7,7 @@ import {
   TAbstractFile,
   TFolder,
 } from "obsidian";
+import type { EventRef } from "obsidian";
 import {
   BlockSettings,
   PluginSettings,
@@ -19,6 +20,22 @@ import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
 import { buildExplorerModel } from "./explorer/model";
 import { updateExplorerBlock } from "./explorer/vault/block-update";
 import { ExplorerSession } from "./explorer/session";
+
+export type ExplorerMount = {
+  app: App;
+  container: HTMLElement;
+  sourcePath: string;
+  sourceFolder?: TFolder;
+  getBlockDefaults: () => BlockSettings;
+  getPluginSettings: () => PluginSettings;
+  savePluginSettings: () => void | Promise<void>;
+  initialOverrides: Partial<BlockSettings>;
+  registerRefresh?: (refresh: () => void) => () => void;
+  replaceExplorerBlock?: (
+    settings: BlockSettings,
+    sourcePath: string,
+  ) => Promise<void>;
+};
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   if (settings.textDirection && settings.textDirection !== "auto") {
@@ -37,6 +54,43 @@ export async function renderExplorerBlock(
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
 ): Promise<void> {
+  const child = new MarkdownRenderChild(container);
+  const cleanup = await mountExplorer({
+    app,
+    container,
+    sourcePath: ctx.sourcePath,
+    getBlockDefaults,
+    getPluginSettings,
+    savePluginSettings,
+    initialOverrides,
+    registerRefresh,
+    replaceExplorerBlock: async (newSettings, sourcePath) => {
+      await updateExplorerBlock(
+        app,
+        container,
+        ctx,
+        sourcePath,
+        getBlockDefaults(),
+        newSettings,
+      );
+    },
+  });
+  child.register(cleanup);
+  ctx.addChild(child);
+}
+
+export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
+  const {
+    app,
+    container,
+    sourceFolder,
+    getBlockDefaults,
+    getPluginSettings,
+    savePluginSettings,
+    initialOverrides,
+    registerRefresh,
+    replaceExplorerBlock,
+  } = input;
   container.addClass("explorer-container");
 
   const reactRoot = createRoot(container);
@@ -49,7 +103,7 @@ export async function renderExplorerBlock(
   let refreshQueued = false;
   let isUnmounted = false;
   let renderVersion = 0;
-  let sourcePath = ctx.sourcePath;
+  let sourcePath = input.sourcePath;
 
   const trackSourceRename = (
     file: TAbstractFile,
@@ -76,23 +130,28 @@ export async function renderExplorerBlock(
     });
   };
 
-  const child = new MarkdownRenderChild(container);
-  child.registerEvent(app.vault.on("create", queueRefresh));
-  child.registerEvent(app.vault.on("delete", queueRefresh));
-  child.registerEvent(
+  const cleanupCallbacks: Array<() => void> = [];
+  const registerCleanup = (cleanup: () => void): void => {
+    cleanupCallbacks.push(cleanup);
+  };
+  const registerEventRef = (ref: EventRef): void => {
+    registerCleanup(() => app.vault.offref(ref));
+  };
+  registerEventRef(app.vault.on("create", queueRefresh));
+  registerEventRef(app.vault.on("delete", queueRefresh));
+  registerEventRef(
     app.vault.on("rename", (file, oldPath) => {
       trackSourceRename(file, oldPath);
       queueRefresh();
     }),
   );
-  child.register(() => {
+  registerCleanup(() => {
     isUnmounted = true;
     reactRoot.unmount();
   });
   if (registerRefresh) {
-    child.register(registerRefresh(queueRefresh));
+    registerCleanup(registerRefresh(queueRefresh));
   }
-  ctx.addChild(child);
 
   const openSettings = (): void => {
     new ExplorerSettingsModal(
@@ -103,13 +162,8 @@ export async function renderExplorerBlock(
         effectiveSettings = newSettings;
         const blockDefaults = getBlockDefaults();
         blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
-        void updateExplorerBlock(
-          app,
-          container,
-          ctx,
-          sourcePath,
-          blockDefaults,
-          newSettings,
+        void (
+          replaceExplorerBlock?.(newSettings, sourcePath) ?? Promise.resolve()
         ).then(render);
       },
     ).open();
@@ -129,6 +183,7 @@ export async function renderExplorerBlock(
       app,
       session,
       sourcePath,
+      sourceFolder,
       settings: effectiveSettings,
       pluginSettings,
     });
@@ -149,4 +204,7 @@ export async function renderExplorerBlock(
   };
 
   await render();
+  return () => {
+    for (const cleanup of cleanupCallbacks.splice(0)) cleanup();
+  };
 }
