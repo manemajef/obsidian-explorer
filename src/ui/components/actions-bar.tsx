@@ -39,7 +39,9 @@ export function ActionsBar(props: {
     useGlass,
   } = props;
 
-  if (Platform.isMobile && searchMode)
+  const isMobile = Platform.isMobile;
+
+  if (isMobile && searchMode)
     return (
       <div id="explorer-actions" className="explorer-actions-mobile-search">
         <Bar>
@@ -71,14 +73,13 @@ export function ActionsBar(props: {
                 }}
               />
             ) : (
-              false && <ActionItem icon="home" />
+              null
             )}
-            {onSaveFolderNote ? (
-              !Platform.isMobile && (
-                <ActionItem icon="save" onClick={onSaveFolderNote} />
-              )
-            ) : (
-              <ActionItem icon="ellipsis" onClick={onOpenSettings} />
+            {!isMobile && (
+              <ActionItem
+                icon={onSaveFolderNote ? "save" : "settings-2"}
+                onClick={onSaveFolderNote ?? onOpenSettings}
+              />
             )}
           </Group>
         </Bar.Item>
@@ -87,21 +88,13 @@ export function ActionsBar(props: {
 
         <Bar.Item className="explorer-actions-end">
           <Group className="explorer-actions-controls">
-            {!(searchMode && Platform.isMobile) && (
+            {!(searchMode && isMobile) && (
               <ActionGroup>
-                {onSaveFolderNote ? (
-                  <>
-                    {Platform.isMobile && (
-                      <ActionGroupItem icon="save" onClick={onSaveFolderNote} />
-                    )}
-
-                    <ActionGroupItem
-                      icon="pen-line"
-                      onClick={onSaveFolderNote}
-                    />
-                  </>
-                ) : (
-                  <ActionGroupItem icon="settings-2" onClick={onOpenSettings} />
+                {(onSaveFolderNote || isMobile) && (
+                  <ActionGroupItem
+                    icon={onSaveFolderNote ? "pen-line" : "settings-2"}
+                    onClick={onSaveFolderNote ?? onOpenSettings}
+                  />
                 )}
                 <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
                 <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
