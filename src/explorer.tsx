@@ -34,7 +34,7 @@ export type ExplorerMount = {
   replaceExplorerBlock?: (
     settings: BlockSettings,
     sourcePath: string,
-  ) => Promise<void>;
+  ) => Promise<boolean | void>;
 };
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
@@ -159,12 +159,20 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       effectiveSettings,
       sourcePath,
       (newSettings) => {
+        const previousSettings = effectiveSettings;
+        const previousOverrides = blockOverrides;
         effectiveSettings = newSettings;
         const blockDefaults = getBlockDefaults();
         blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
         void (
           replaceExplorerBlock?.(newSettings, sourcePath) ?? Promise.resolve()
-        ).then(render);
+        ).then((saved) => {
+          if (saved === false) {
+            effectiveSettings = previousSettings;
+            blockOverrides = previousOverrides;
+          }
+          return render();
+        });
       },
     ).open();
   };

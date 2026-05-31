@@ -1,8 +1,15 @@
-import { App, ItemView, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import {
+  App,
+  ItemView,
+  TAbstractFile,
+  TFile,
+  TFolder,
+  WorkspaceLeaf,
+} from "obsidian";
 import type { ViewStateResult } from "obsidian";
 import { BlockSettings, PluginSettings } from "./settings";
 import {
-  createFolderNoteFile,
+  createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
   getFolderNotePath,
 } from "./folder-note-data";
@@ -37,6 +44,7 @@ export async function openVirtualFolderNote(
 export class VirtualFolderNoteView extends ItemView {
   private state = { folderPath: "" };
   private cleanupExplorer: (() => void) | null = null;
+  private isRenameTrackingRegistered = false;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -77,6 +85,7 @@ export class VirtualFolderNoteView extends ItemView {
   }
 
   protected async onOpen(): Promise<void> {
+    this.registerRenameTracking();
     await this.render();
     this.queueHeaderTitleUpdate();
   }
@@ -93,6 +102,34 @@ export class VirtualFolderNoteView extends ItemView {
           ? state.folderPath
           : "",
     };
+  }
+
+  private registerRenameTracking(): void {
+    if (this.isRenameTrackingRegistered) return;
+    this.isRenameTrackingRegistered = true;
+    this.registerEvent(
+      this.app.vault.on("rename", (file, oldPath) => {
+        void this.handleRename(file, oldPath);
+      }),
+    );
+  }
+
+  private async handleRename(
+    file: TAbstractFile,
+    oldPath: string,
+  ): Promise<void> {
+    if (!(file instanceof TFolder)) return;
+    if (this.state.folderPath === oldPath) {
+      this.state = { folderPath: file.path };
+    } else if (this.state.folderPath.startsWith(`${oldPath}/`)) {
+      this.state = {
+        folderPath: `${file.path}${this.state.folderPath.slice(oldPath.length)}`,
+      };
+    } else {
+      return;
+    }
+    await this.render();
+    this.queueHeaderTitleUpdate();
   }
 
   private async render(): Promise<void> {
@@ -147,13 +184,8 @@ export class VirtualFolderNoteView extends ItemView {
           folder,
           formatExplorerBlock(settings, this.host.getBlockDefaults()),
         );
-        if (file) {
-          await this.app.workspace.openLinkText(
-            file.path,
-            this.sourcePath,
-            false,
-          );
-        }
+        if (!file) return false;
+        await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
       },
     });
   }
@@ -163,7 +195,15 @@ export class VirtualFolderNoteView extends ItemView {
     content: string,
   ): Promise<TFile | null> {
     const existing = getFolderNoteForFolder(this.app, folder);
-    if (!existing) return createFolderNoteFile(this.app, folder, content);
+    if (!existing) {
+      return createFolderNoteFileWithConfirmation(
+        this.app,
+        folder,
+        this.host.getPluginSettings(),
+        this.host.savePluginSettings,
+        content,
+      );
+    }
     await this.app.vault.modify(existing, content);
     return existing;
   }

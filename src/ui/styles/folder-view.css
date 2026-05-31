@@ -5,7 +5,6 @@
   gap: var(--explorer-space-4);
 }
 
-
 .explorer-folders-grid::after {
   content: "";
   flex: 999 1 0;
@@ -13,12 +12,15 @@
 
 .is-mobile .explorer-folders-grid {
   display: grid;
-  /* grid-template-columns: repeat(
+  grid-template-columns: repeat(
     auto-fit,
-    minmax(max(10%, 100px), 1fr)
-  ); */
-  grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 22vw, 150px), 1fr));
+    minmax(clamp(90px, 22vw, 150px), 1fr)
+  );
   gap: var(--explorer-space-4);
+}
+
+.is-mobile .explorer-folders-grid--sparse {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .is-mobile .explorer-folders-grid::after {
@@ -91,15 +93,12 @@
 }
 
 .is-mobile .explorer-folder-card {
-    padding: 1.15em 0.2em;
-    border-radius: 16px;
-    /* max-width: 140px; */
-
+  padding: 1.15em 0.2em;
+  border-radius: 16px;
 }
-.theme-dark.is-mobile .explorer-folder-card {
-  /* background: var(--raised-background); */
-  background-color: var(--background-primary-alt);
 
+.theme-dark.is-mobile .explorer-folder-card {
+  background-color: var(--background-primary-alt);
 }
 
 

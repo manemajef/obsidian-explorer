@@ -4,8 +4,9 @@ import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
   createAndOpenFolderNote,
-  createFolderNoteFile,
+  createFolderNoteFileWithConfirmation,
   goToParentFolderNote,
+  type MissingFolderNoteIntent,
   openFolderNote,
   type ExplorerLocation,
   type SavePluginSettings,
@@ -47,6 +48,7 @@ export class ExplorerActions {
     await goToParentFolderNote(this.app, this.settings, {
       location,
       newLeaf,
+      savePluginSettings: this.savePluginSettings,
     });
   }
 
@@ -57,6 +59,7 @@ export class ExplorerActions {
   async openFolder(
     folder: ExplorerFolderNode | TFolder,
     newLeaf = false,
+    intent: MissingFolderNoteIntent = "navigate",
   ): Promise<void> {
     await openFolderNote(
       this.app,
@@ -64,7 +67,16 @@ export class ExplorerActions {
       this.settings,
       this.sourcePath,
       newLeaf,
+      intent,
+      this.savePluginSettings,
     );
+  }
+
+  async openFolderLink(
+    folder: ExplorerFolderNode,
+    newLeaf = false,
+  ): Promise<void> {
+    await this.openFolder(folder, newLeaf, "explicit");
   }
 
   async createFolderNote(folder: ExplorerFolderNode): Promise<void> {
@@ -79,7 +91,12 @@ export class ExplorerActions {
   }
 
   async saveCurrentFolderNote(): Promise<void> {
-    const file = await createFolderNoteFile(this.app, this.currentFolder);
+    const file = await createFolderNoteFileWithConfirmation(
+      this.app,
+      this.currentFolder,
+      this.settings,
+      this.savePluginSettings,
+    );
     if (file) {
       await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
     }

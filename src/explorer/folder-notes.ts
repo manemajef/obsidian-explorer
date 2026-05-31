@@ -1,66 +1,37 @@
 import { App, TFile, TFolder } from "obsidian";
 import { openHomePage, resolveHomePagePath } from "./homepage";
 import { PluginSettings } from "./settings";
-import { ConfirmationDialog } from "../ui/modals/prompt-modal";
 import { openVirtualFolderNote } from "./virtual-folder-note";
 import {
   FOLDERNOTE_TEMPLATE,
-  createFolderNoteFile,
+  createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
   isFolderNote,
+  type SavePluginSettings,
 } from "./folder-note-data";
 
 export {
   FOLDERNOTE_TEMPLATE,
   createFolderNoteFile,
+  createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
   getFolderNotePath,
   isFolderNote,
+  type SavePluginSettings,
 } from "./folder-note-data";
 
-export type SavePluginSettings = () => void | Promise<void>;
+export type MissingFolderNoteIntent = "navigate" | "explicit" | "save";
 
 /**
  * A place the explorer can be viewing: the folder whose contents are shown,
  * the source path used for link and homepage context, and the backing file
- * when one exists (null for in-memory virtual folder notes).
+ * when one exists (null for temporary folder views).
  */
 export type ExplorerLocation = {
   folder: TFolder;
   path: string;
   file: TFile | null;
 };
-
-function askBeforeCreating(
-  app: App,
-  folder: TFolder,
-  settings: PluginSettings,
-  savePluginSettings: SavePluginSettings | undefined,
-  onCreate: () => Promise<void>,
-): void {
-  const message = document.createDocumentFragment();
-  message.append("The folder ");
-  const folderNameEl = document.createElement("code");
-  folderNameEl.classList.add("explorer-dialog-folder-name");
-  folderNameEl.textContent = folder.name;
-  message.append(
-    folderNameEl,
-    " doesn't have a folder note yet. Pressing Confirm will create a new folder note.",
-  );
-
-  new ConfirmationDialog(
-    app,
-    "Create folder note?",
-    async () => {
-      await onCreate();
-    },
-    async () => {
-      settings.askForFolderNoteCreation = false;
-      await savePluginSettings?.();
-    },
-    message,
-  ).open();
-}
 
 export function canGoToParentFolderNote(
   app: App,
@@ -81,6 +52,7 @@ export async function goToParentFolderNote(
   input: {
     location: ExplorerLocation | null;
     newLeaf?: boolean;
+    savePluginSettings?: SavePluginSettings;
   },
 ): Promise<void> {
   const location = input.location;
@@ -96,7 +68,15 @@ export async function goToParentFolderNote(
     return;
   }
 
-  await openFolderNote(app, parent, settings, location.path, input.newLeaf);
+  await openFolderNote(
+    app,
+    parent,
+    settings,
+    location.path,
+    input.newLeaf,
+    "navigate",
+    input.savePluginSettings,
+  );
 }
 
 export async function openFolderNote(
@@ -105,6 +85,8 @@ export async function openFolderNote(
   settings: PluginSettings,
   sourcePath = "",
   newLeaf = false,
+  intent: MissingFolderNoteIntent = "navigate",
+  savePluginSettings?: SavePluginSettings,
 ): Promise<void> {
   if (folder.isRoot()) {
     await openHomePage(app, settings, sourcePath, newLeaf);
@@ -116,13 +98,14 @@ export async function openFolderNote(
     await openExplorerPage(app, existing, sourcePath, newLeaf);
     return;
   }
-  if (settings.missingFolderNoteBehavior === "create") {
+  if (shouldCreateMissingFolderNote(settings, intent)) {
     await createAndOpenFolderNote(
       app,
       folder,
       settings,
       sourcePath,
       newLeaf,
+      savePluginSettings,
     );
     return;
   }
@@ -144,17 +127,21 @@ export async function createAndOpenFolderNote(
   }
 
   const tryCreateNew = async (): Promise<void> => {
-    const created = await createFolderNoteFile(app, folder, content);
+    const created = await createFolderNoteFileWithConfirmation(
+      app,
+      folder,
+      settings,
+      savePluginSettings,
+      content,
+    );
     if (created) await openExplorerPage(app, created, sourcePath, newLeaf);
   };
 
   const existing = getFolderNoteForFolder(app, folder);
   if (existing) {
     await openExplorerPage(app, existing, sourcePath, newLeaf);
-  } else if (!settings.askForFolderNoteCreation) {
-    await tryCreateNew();
   } else {
-    askBeforeCreating(app, folder, settings, savePluginSettings, tryCreateNew);
+    await tryCreateNew();
   }
 }
 
@@ -172,4 +159,18 @@ function getNavigationParent(location: ExplorerLocation): TFolder | null {
   // note inside a folder steps up to its own containing folder.
   const representsFolder = !location.file || isFolderNote(location.file);
   return representsFolder ? location.folder.parent : location.folder;
+}
+
+export function shouldCreateMissingFolderNote(
+  settings: PluginSettings,
+  intent: MissingFolderNoteIntent,
+): boolean {
+  switch (settings.missingFolderNoteBehavior) {
+    case "create":
+      return true;
+    case "smart":
+      return intent === "explicit" || intent === "save";
+    case "manual":
+      return intent === "save";
+  }
 }

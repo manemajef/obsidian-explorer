@@ -3,7 +3,8 @@
 Browse and organize your vault from inside your notes.
 
 Explorer turns folder notes into file explorer views, with navigation,
-desktop drag-and-drop, rename, pin, delete, search, and configurable display options.
+temporary folder views, desktop drag-and-drop, rename, pin, delete, search, and
+configurable display options.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
@@ -12,10 +13,10 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 ## Features
 
 - Card and list views for folder contents
-- Folder buttons and automatically created folder notes for navigation
+- Folder buttons, temporary folder views, and configurable folder-note creation
 - Desktop drag-and-drop for moving notes and folders
 - Context menu actions for moving folders, renaming and deleting items, and pinning notes
-- Automatic matching-folder-note renaming when a folder is renamed
+- Optional matching-folder-note renaming when a folder is renamed
 - Optional homepage navigation and homepage opening in new empty tabs
 - Per-block exclusion of selected nested folders
 - Sorting, pagination, and scoped search within the current Explorer view
@@ -49,8 +50,8 @@ button to move them. Dragging a folder note moves its associated folder after
 confirmation.
 
 Right-click a note to rename, pin, or delete it, or a folder to rename or
-delete it. Renaming a folder also renames its matching folder note. Deleting a
-folder displays a warning before removing its contents.
+delete it. Rename sync can keep a folder and its matching folder note named
+together. Deleting a folder displays a warning before removing its contents.
 
 On mobile, use the context menu instead of drag-and-drop. Long-press a folder
 button and use Obsidian's move action to move the folder itself, not just its
@@ -84,6 +85,28 @@ Projects/Projects.md
 ```
 
 When you open a folder from Explorer, the plugin looks for the matching folder note. If it does not exist, Explorer creates it with a basic Explorer block.
+
+### Missing folder notes
+
+When a folder does not have a matching folder note yet, Explorer can open a
+temporary folder view instead of creating a Markdown note immediately.
+
+The default for new installs is `Links and edits`:
+
+- Clicking the folder card opens a temporary folder view.
+- Clicking the unresolved folder-note link creates the Markdown folder note.
+- Editing or saving a temporary folder view also creates the Markdown folder
+  note.
+
+Other modes are available in `Missing folder notes`:
+
+- `Always create` preserves the old behavior and creates missing folder notes
+  during navigation.
+- `Edits only` creates a folder note only when saving or editing a temporary
+  folder view.
+
+Existing users keep the old `Always create` behavior when upgrading unless they
+change this setting.
 
 ### Homepage
 
@@ -129,7 +152,10 @@ Explorer registers these command palette commands:
 - `Go to homepage`
 - `Go to parent folder`
 
-`Go to homepage` opens or creates the configured homepage. `Go to parent folder` opens the parent folder note, or the homepage when the current note is already in the vault root and homepage navigation is enabled.
+`Go to homepage` opens or creates the configured homepage. `Go to parent folder`
+opens the parent folder note, a temporary parent folder view, or the homepage
+when the current note is already in the vault root and homepage navigation is
+enabled.
 
 ## Configuration
 
@@ -164,9 +190,10 @@ Supported block settings:
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
 `excludedFolders` hides selected folders and their contents from that Explorer
-block only. Plugin-only settings include homepage behavior, reading-mode
-handling for folder notes, nested folder-note display, the parent button, glass
-controls, card icons, and list bullets.
+block only. Plugin-only settings include missing folder-note behavior, homepage
+behavior, reading-mode handling for folder notes, folder-note rename sync,
+nested folder-note display, the parent button, glass controls, card icons, and
+list style defaults.
 
 ## Search
 

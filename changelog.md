@@ -1,4 +1,45 @@
 # Explorer changelog
+## 1.3.0 (31-05-26)
+
+This release changes how Explorer handles folders that do not yet have folder
+notes, adds temporary folder views, and makes the new behavior safer for
+existing users.
+
+### Temporary folder views
+
+- Explorer can now open a folder even when its matching `Folder/Folder.md`
+  note does not exist yet.
+- New installs use the new default: clicking a folder card opens a temporary
+  folder view, while clicking the unresolved folder-note link or editing/saving
+  that view creates the Markdown folder note.
+- Existing users keep the old missing-folder-note behavior by default: missing
+  folder notes are still created when navigating to a folder.
+- Added a `Missing folder notes` setting with three modes:
+  - `Links and edits`
+  - `Always create`
+  - `Edits only`
+- `Ask before creating folder notes` now also applies when saving or editing a
+  temporary folder view.
+
+### Safer folder-note sync
+
+- Added optional folder-name sync: when a folder or its matching folder note is
+  renamed, Explorer can keep the other side named with it.
+- Folder/folder-note rename sync is now safer for existing users. New installs
+  can use rename sync by default, but existing users are migrated with sync
+  disabled unless they already configured it.
+- Open temporary folder views now keep following their folder when it is renamed.
+
+### Navigation and UI
+
+- The parent button and `Go to parent folder` command now open temporary folder
+  views for missing parent folder notes unless the user chooses `Always create`.
+- Missing folder-note links no longer imply note creation when the selected
+  behavior is `Edits only`.
+- Mobile folder grids now keep a three-column rhythm for sparse folder lists, so
+  one or two folders do not stretch awkwardly on wider mobile screens.
+- The action bar layout was tightened for desktop and mobile.
+
 ## 1.2.5 (29-05-26)
 ### Introducing Modern List
 ![](./assets/modern-list.png)

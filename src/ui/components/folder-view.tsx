@@ -1,6 +1,7 @@
 import React from "react";
 import { ExplorerFolderNode } from "../../explorer/nodes";
 import { ExplorerActions } from "../../explorer/actions";
+import { shouldCreateMissingFolderNote } from "../../explorer/folder-notes";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import {
   isInteractiveTouchTarget,
@@ -16,9 +17,12 @@ export function FolderButtons(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { folders, actions, contextMenu } = props;
+  const isSparse = folders.length < 3;
 
   return (
-    <div className="explorer-folders-grid explorer-folders-view">
+    <div
+      className={`explorer-folders-grid explorer-folders-view${isSparse ? " explorer-folders-grid--sparse" : ""}`}
+    >
       {folders.map((folder) => {
         const existingNote = folder.folderNote;
         const isMissing = !existingNote;
@@ -27,6 +31,9 @@ export function FolderButtons(props: {
           : folder.folderNotePath;
         const linkText = folder.displayName;
         const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
+        const linkCreatesFolderNote =
+          !isMissing ||
+          shouldCreateMissingFolderNote(actions.settings, "explicit");
 
         return (
           <div
@@ -47,22 +54,28 @@ export function FolderButtons(props: {
               void actions.openFolder(folder, e.ctrlKey || e.metaKey);
             }}
           >
-            <a
-              className={`internal-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
-              data-href={folderNotePath}
-              href={folderNotePath}
-              data-tooltip-position="top"
-              target="_blank"
-              rel="noopener"
-              draggable={false}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                void actions.openFolder(folder, e.ctrlKey || e.metaKey);
-              }}
-            >
-              {linkText}
-            </a>
+            {linkCreatesFolderNote ? (
+              <a
+                className={`internal-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
+                data-href={folderNotePath}
+                href={folderNotePath}
+                data-tooltip-position="top"
+                target="_blank"
+                rel="noopener"
+                draggable={false}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  void actions.openFolderLink(folder, e.ctrlKey || e.metaKey);
+                }}
+              >
+                {linkText}
+              </a>
+            ) : (
+              <span className="explorer-folder-link explorer-folder-link--missing">
+                {linkText}
+              </span>
+            )}
           </div>
         );
       })}

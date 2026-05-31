@@ -27,6 +27,8 @@ export class ConfirmationDialog extends Modal {
   message?: string | DocumentFragment;
   onConfirm: (dontShowAgain: boolean) => void | Promise<void>;
   onDontShowAgain?: () => void | Promise<void>;
+  onCancel?: () => void | Promise<void>;
+  private isSettled = false;
 
   constructor(
     app: App,
@@ -34,12 +36,14 @@ export class ConfirmationDialog extends Modal {
     onConfirm: (dontShowAgain: boolean) => void | Promise<void>,
     onDontShowAgain?: () => void | Promise<void>,
     message?: string | DocumentFragment,
+    onCancel?: () => void | Promise<void>,
   ) {
     super(app);
     this.title = title;
     this.message = message;
     this.onConfirm = onConfirm;
     this.onDontShowAgain = onDontShowAgain;
+    this.onCancel = onCancel;
   }
 
   onOpen() {
@@ -50,7 +54,11 @@ export class ConfirmationDialog extends Modal {
 
     if (this.message) {
       const messageEl = contentEl.createEl("div");
-      messageEl.setText(this.message);
+      if (typeof this.message === "string") {
+        messageEl.setText(this.message);
+      } else {
+        messageEl.appendChild(this.message);
+      }
     }
 
     let dontShowAgainInput: HTMLInputElement | null = null;
@@ -72,6 +80,8 @@ export class ConfirmationDialog extends Modal {
 
     const cancelBtn = btnContainer.createEl("button", { text: "Cancel" });
     cancelBtn.addEventListener("click", () => {
+      this.isSettled = true;
+      void this.onCancel?.();
       this.close();
     });
 
@@ -87,6 +97,7 @@ export class ConfirmationDialog extends Modal {
   }
 
   private async confirm(dontShowAgain: boolean): Promise<void> {
+    this.isSettled = true;
     if (dontShowAgain) {
       await this.onDontShowAgain?.();
     }
@@ -96,6 +107,10 @@ export class ConfirmationDialog extends Modal {
   }
 
   onClose() {
+    if (!this.isSettled) {
+      this.isSettled = true;
+      void this.onCancel?.();
+    }
     this.contentEl.empty();
   }
 }

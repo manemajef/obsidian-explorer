@@ -195,7 +195,10 @@ export default class ExplorerPlugin extends Plugin {
         }
 
         if (!checking) {
-          void goToParentFolderNote(this.app, this.settings, { location });
+          void goToParentFolderNote(this.app, this.settings, {
+            location,
+            savePluginSettings: () => this.saveSettings(),
+          });
         }
 
         return true;

@@ -72,9 +72,7 @@ export function ActionsBar(props: {
                   onGoToParent(false);
                 }}
               />
-            ) : (
-              null
-            )}
+            ) : null}
             {!isMobile && (
               <ActionItem
                 icon={onSaveFolderNote ? "save" : "settings-2"}

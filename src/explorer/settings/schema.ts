@@ -19,7 +19,7 @@ export type ListStyle = "markdown" | "modern" | "plain";
 export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
 export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
-export type MissingFolderNoteBehavior = "virtual" | "create";
+export type MissingFolderNoteBehavior = "smart" | "create" | "manual";
 export type CardExt =
   | "folder"
   | "ctime"
@@ -301,14 +301,14 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
 
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   missingFolderNoteBehavior: enumField({
-    label: "When folder note doesn't exist",
-    description:
-      "Open a temporary in-memory folder note or create a Markdown folder note.",
-    defaultValue: "create",
-    options: ["virtual", "create"],
+    label: "Missing folder notes",
+    description: "Choose when Explorer creates the Markdown note.",
+    defaultValue: "smart",
+    options: ["smart", "create", "manual"],
     optionLabels: {
-      virtual: "Open in memory",
-      create: "Create note",
+      smart: "Links and edits",
+      create: "Always create",
+      manual: "Edits only",
     },
     ui: {
       surfaces: ["plugin"],

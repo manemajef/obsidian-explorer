@@ -269,6 +269,9 @@
   grid-template-columns: repeat(auto-fit, minmax(clamp(90px, 22vw, 150px), 1fr));
   gap: var(--explorer-space-4);
 }
+.is-mobile .explorer-folders-grid--sparse {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
 .is-mobile .explorer-folders-grid::after {
   content: none;
 }

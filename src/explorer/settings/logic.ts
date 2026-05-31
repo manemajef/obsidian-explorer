@@ -386,9 +386,30 @@ function coercePluginSettingValue<K extends PluginSettingKey>(
     ) as PluginGlobalSettings[K];
   }
 
+  if (field.kind === "enum") {
+    return (
+      typeof value === "string" && field.options.includes(value as never)
+        ? value
+        : fallback
+    ) as PluginGlobalSettings[K];
+  }
+
   return (
     typeof value === "string" ? value : fallback
   ) as PluginGlobalSettings[K];
+}
+
+function getExistingUserFallback<K extends PluginSettingKey>(
+  key: K,
+  fallback: PluginGlobalSettings[K],
+): PluginGlobalSettings[K] {
+  if (key === "missingFolderNoteBehavior") {
+    return "create" as PluginGlobalSettings[K];
+  }
+  if (key === "syncFolderNotes") {
+    return false as PluginGlobalSettings[K];
+  }
+  return fallback;
 }
 
 export function normalizePluginSettings(raw: unknown): PluginSettings {
@@ -402,8 +423,12 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
     : {};
   for (const key of PLUGIN_SETTING_KEYS) {
     const sourceValue = key in raw ? raw[key] : rawBlockDefaults[key];
+    const fallback =
+      key in raw || key in rawBlockDefaults
+        ? pluginDefaults[key]
+        : getExistingUserFallback(key, pluginDefaults[key]);
     (globalSettings as Record<PluginSettingKey, unknown>)[key] =
-      coercePluginSettingValue(key, sourceValue, pluginDefaults[key]);
+      coercePluginSettingValue(key, sourceValue, fallback);
   }
 
   return {
