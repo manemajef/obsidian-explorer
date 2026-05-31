@@ -13,21 +13,35 @@
   display: none;
 }
 
-.action-item {
+.action-item,
+.action-group-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: var(--explorer-control-size);
   height: var(--explorer-control-size);
-  --explorer-glass-radius: 50%;
-  --explorer-glass-hover-scale: var(--explorer-hover-scale);
+  min-width: var(--explorer-control-size);
+  min-height: var(--explorer-control-size);
+  padding: 0;
   appearance: none;
   -webkit-appearance: none;
-  padding: 0;
+}
+
+.action-item {
+  --explorer-glass-radius: 50%;
+  --explorer-glass-hover-scale: var(--explorer-hover-scale);
+  flex: 0 0 auto;
 }
 
 .explorer-container.use-glass .action-item {
   color: var(--text-normal);
+}
+
+.explorer-container.use-glass .action-item:hover,
+.explorer-container.use-glass .action-item:focus-visible {
+  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
+  z-index: 10;
 }
 
 .explorer-container:not(.use-glass) .action-item {
@@ -62,9 +76,30 @@
   --explorer-glass-hover-scale: var(--explorer-hover-scale);
 }
 
+.explorer-container.use-glass .action-group:hover,
+.explorer-container.use-glass .action-group:focus-visible,
+.explorer-container.use-glass .action-group:focus-within {
+  transform: none;
+}
+
 .explorer-container:not(.use-glass) .action-group {
   padding-inline: 0;
   gap: var(--explorer-space-1);
+}
+
+.is-mobile .explorer-container.use-glass .action-group {
+  height: auto;
+  min-height: 0;
+  padding-block: 0;
+  padding-inline: 6px;
+}
+
+.is-mobile .explorer-container.use-glass :where(.action-item, .action-group-item) {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  line-height: 0;
 }
 
 .explorer-container.use-glass .clickable-icon {
@@ -72,18 +107,27 @@
 }
 
 .action-group-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--explorer-control-size);
-  height: var(--explorer-control-size);
   border-radius: 50%;
   background: transparent;
   border: none;
   transition: all 0.2s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0;
+  flex: 0 1 auto;
+}
+
+.is-mobile .explorer-container.use-glass .action-icon,
+.is-mobile .explorer-container.use-glass .action-icon svg {
+  width: var(--explorer-action-icon-size);
+  height: var(--explorer-action-icon-size);
+}
+
+.is-mobile .explorer-container.use-glass .action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  flex: 0 0 auto;
+  line-height: 0;
+  padding: 12px;
 }
 
 .explorer-container:not(.use-glass) .action-group-item {

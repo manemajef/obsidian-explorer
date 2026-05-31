@@ -1,6 +1,11 @@
 import React from "react";
 import { Search } from "./search";
-import { ActionItem, ActionGroup, ActionGroupItem } from "./ui/action";
+import {
+  ActionItem,
+  ActionGroup,
+  ActionGroupItem,
+  ActionSpace,
+} from "./ui/action";
 import { Group, Separator } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
@@ -43,6 +48,10 @@ export function ActionsBar(props: {
   const canGoToParent = showParentNavigation;
   const showGroupedFolderOrSettingsAction =
     onSaveFolderNote || (isMobile && canGoToParent);
+  const MobileSpace = () => <span style={{ width: ".5em", flexShrink: 1 }} />;
+  const MobileEdgeSpace = () => (
+    <span style={{ width: ".5em", flexShrink: 1 }} />
+  );
 
   if (isMobile && searchMode)
     return (
@@ -59,6 +68,46 @@ export function ActionsBar(props: {
           </Bar.Item>
           <Bar.Spring />
         </Bar>
+      </div>
+    );
+
+  if (isMobile)
+    return (
+      <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <ActionGroup
+          style={{
+            flex: "0 1 auto",
+            minWidth: 0,
+            justifyContent: "space-around",
+          }}
+        >
+          <MobileEdgeSpace />
+
+          {showParentNavigation && (
+            <>
+              <ActionGroupItem
+                icon="undo-2"
+                className="explorer-parent-action"
+                {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
+                onClick={() => {
+                  onGoToParent(false);
+                }}
+              />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem
+            icon={onSaveFolderNote ? "pen-line" : "settings-2"}
+            onClick={onSaveFolderNote ?? onOpenSettings}
+          />
+          <MobileSpace />
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
+          <MobileEdgeSpace />
+        </ActionGroup>
+        <ActionSpace minWidth="1em" maxWidth="none" />
+        <ActionItem icon="search" onClick={onSearchToggle} />
       </div>
     );
 

@@ -179,7 +179,8 @@
 }
 
 .is-mobile .explorer-container {
-  --explorer-control-size: 42px;
+  --explorer-control-size: 44px;
+  --explorer-action-icon-size: 26px;
 }
 
 .explorer-virtual-folder-note .markdown-preview-view {

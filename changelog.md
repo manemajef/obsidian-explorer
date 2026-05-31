@@ -31,7 +31,9 @@ existing users.
 - Open temporary folder views now keep following their folder when it is renamed.
 
 ### Navigation and UI
-
+#### Mobile `Action bar` Redesign
+Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass` is on). 
+#### Additional Changes 
 - The parent button and `Go to parent folder` command now open temporary folder
   views for missing parent folder notes unless the user chooses `Always create`.
 - Missing folder-note links no longer imply note creation when the selected

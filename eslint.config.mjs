@@ -4,7 +4,7 @@ import obsidianmd from "eslint-plugin-obsidianmd";
 
 export default defineConfig([
   {
-    ignores: ["main.js", "*.js.map", "node_modules/**"],
+    ignores: ["main.js", "*.js.map", "node_modules/**", "dev/**"],
   },
   ...obsidianmd.configs.recommended,
   {

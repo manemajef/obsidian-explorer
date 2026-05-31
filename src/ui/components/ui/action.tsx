@@ -101,3 +101,21 @@ export const ActionGroupItem = forwardRef<
   </button>
 ));
 ActionGroupItem.displayName = "ActionGroupItem";
+
+export const ActionSpace = ({
+  minWidth,
+  maxWidth,
+}: {
+  minWidth?: string;
+  maxWidth?: string;
+}) => {
+  return (
+    <div
+      style={{
+        flex: "1 1 0",
+        minWidth: minWidth ?? "0px",
+        maxWidth: maxWidth ?? "64px",
+      }}
+    />
+  );
+};
