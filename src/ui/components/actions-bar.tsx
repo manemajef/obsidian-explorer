@@ -40,6 +40,9 @@ export function ActionsBar(props: {
   } = props;
 
   const isMobile = Platform.isMobile;
+  const canGoToParent = showParentNavigation;
+  const showGroupedFolderOrSettingsAction =
+    onSaveFolderNote || (isMobile && canGoToParent);
 
   if (isMobile && searchMode)
     return (
@@ -58,6 +61,7 @@ export function ActionsBar(props: {
         </Bar>
       </div>
     );
+
   return (
     <div id="explorer-actions">
       <Bar>
@@ -72,7 +76,11 @@ export function ActionsBar(props: {
                   onGoToParent(false);
                 }}
               />
-            ) : null}
+            ) : (
+              isMobile && (
+                <ActionItem icon="settings-2" onClick={onOpenSettings} />
+              )
+            )}
             {!isMobile && (
               <ActionItem
                 icon={onSaveFolderNote ? "save" : "settings-2"}
@@ -88,7 +96,7 @@ export function ActionsBar(props: {
           <Group className="explorer-actions-controls">
             {!(searchMode && isMobile) && (
               <ActionGroup>
-                {(onSaveFolderNote || isMobile) && (
+                {showGroupedFolderOrSettingsAction && (
                   <ActionGroupItem
                     icon={onSaveFolderNote ? "pen-line" : "settings-2"}
                     onClick={onSaveFolderNote ?? onOpenSettings}
