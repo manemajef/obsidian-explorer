@@ -127,7 +127,7 @@
   box-sizing: content-box;
   flex: 0 0 auto;
   line-height: 0;
-  padding: 12px;
+  padding: 11px;
 }
 
 .explorer-container:not(.use-glass) .action-group-item {
