@@ -1,5 +1,5 @@
 # Explorer changelog
-## 1.3.0 (not released yet)
+## 1.3.0 (01-06-2026)
 
 This release changes how Explorer handles folders that do not yet have folder
 notes, adds temporary folder views, and makes the new behavior safer for
