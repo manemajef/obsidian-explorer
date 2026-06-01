@@ -24,6 +24,7 @@ type SectionMeta = {
 
 const SECTION_ORDER: SettingsSection[] = [
   "navigation",
+  "sidebarFolderNotes",
   "homepage",
   "appearance",
   "behavior",
@@ -56,16 +57,13 @@ const SECTION_META: Record<SettingsSection, SectionMeta> = {
   navigation: {
     title: "Navigation",
   },
+  sidebarFolderNotes: {
+    title: "Folder notes in Obsidian sidebar",
+  },
   homepage: {
     title: "Homepage",
   },
 };
-
-const FILE_EXPLORER_FOLDER_NOTE_KEYS = new Set<PluginSettingKey>([
-  "hideFolderNotesInFileExplorer",
-  "openFolderNotesFromFileExplorer",
-  "openVirtualFolderNotesFromFileExplorer",
-]);
 
 function compareBySection(
   a: BlockSettingKey,
@@ -121,16 +119,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       }
 
-      let renderedFolderNoteHeading = false;
       for (const key of sectionKeys) {
-        if (
-          section === "navigation" &&
-          FILE_EXPLORER_FOLDER_NOTE_KEYS.has(key) &&
-          !renderedFolderNoteHeading
-        ) {
-          new Setting(containerEl).setName("Folder notes").setHeading();
-          renderedFolderNoteHeading = true;
-        }
         this.renderPluginSetting(containerEl, key);
       }
     }
@@ -208,8 +197,10 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     if (field.kind === "enum") {
       setting.addDropdown((dropdown) => {
+        const optionLabels: Partial<Record<string, string>> =
+          field.optionLabels ?? {};
         for (const option of field.options) {
-          dropdown.addOption(option, field.optionLabels?.[option] ?? option);
+          dropdown.addOption(option, optionLabels[option] ?? option);
         }
         dropdown
           .setValue(this.plugin.settings[key] as string)
@@ -245,7 +236,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     this.plugin.refreshExplorerBlocks();
 
-    if (key === "useHomePage" || FILE_EXPLORER_FOLDER_NOTE_KEYS.has(key)) {
+    if (key === "useHomePage" || key === "hideFolderNotesInFileExplorer") {
       this.display();
     }
   }

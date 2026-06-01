@@ -159,14 +159,14 @@ async function handleFileExplorerFolderClick(
   evt: MouseEvent,
 ): Promise<void> {
   if (evt.defaultPrevented || !settings.hideFolderNotesInFileExplorer) return;
-  if (!settings.openFolderNotesFromFileExplorer) return;
+  if (settings.sidebarFolderClickBehavior === "nothing") return;
 
   const folder = getClickedFolder(app, evt);
   if (!folder || folder.isRoot()) return;
 
   const folderNote = getFolderNoteForFolder(app, folder);
   const shouldOpenVirtual =
-    !folderNote && settings.openVirtualFolderNotesFromFileExplorer;
+    !folderNote && settings.sidebarFolderClickBehavior === "virtual";
 
   if (!folderNote && !shouldOpenVirtual) return;
 

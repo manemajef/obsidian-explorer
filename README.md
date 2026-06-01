@@ -14,6 +14,7 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 
 - Card and list views for folder contents
 - Folder buttons, temporary folder views, and configurable folder-note creation
+- Optional hiding of folder-note files in Obsidian's sidebar
 - Desktop drag-and-drop for moving notes and folders
 - Context menu actions for moving folders, renaming and deleting items, and pinning notes
 - Optional matching-folder-note renaming when a folder is renamed
@@ -108,6 +109,16 @@ Other modes are available in `Missing folder notes`:
 Existing users keep the old `Always create` behavior when upgrading unless they
 change this setting.
 
+### Obsidian sidebar
+
+Explorer can hide folder-note files from Obsidian's built-in sidebar file tree.
+When this is enabled, clicking a folder name in the sidebar can optionally open
+the matching folder note, or open a temporary folder note when the Markdown note
+does not exist yet.
+
+This only handles clicks on the folder name. The collapse arrow and row
+whitespace keep Obsidian's normal sidebar behavior.
+
 ### Homepage
 
 Explorer can also use a root-level homepage when navigating above a root
@@ -192,8 +203,8 @@ Supported block settings:
 `excludedFolders` hides selected folders and their contents from that Explorer
 block only. Plugin-only settings include missing folder-note behavior, homepage
 behavior, reading-mode handling for folder notes, folder-note rename sync,
-nested folder-note display, the parent button, glass controls, card icons, and
-list style defaults.
+Obsidian sidebar folder-note behavior, nested folder-note display, the parent
+button, glass controls, card icons, and list style defaults.
 
 ## Search
 

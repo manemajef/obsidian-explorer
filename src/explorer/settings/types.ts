@@ -5,9 +5,10 @@ export type SettingsSection =
   | "homepage"
   | "display"
   | "appearance"
-  | "navigation";
+  | "navigation"
+  | "sidebarFolderNotes";
 
-export type SettingVisibility = {
+type SettingVisibility = {
   key?: string;
   value?: unknown;
   platform?: "mobile" | "desktop";
@@ -19,7 +20,7 @@ export type SettingUiMeta = {
   order: number;
   surfaceOrder?: Partial<Record<SettingsSurface, number>>;
   labels?: Partial<Record<SettingsSurface, string>>;
-  visibleWhen?: SettingVisibility | readonly SettingVisibility[];
+  visibleWhen?: SettingVisibility;
 };
 
 export type LegacySettingAlias<T> = {

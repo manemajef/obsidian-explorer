@@ -12,7 +12,7 @@ import {
   SettingsSection,
   SettingsSurface,
 } from "./schema";
-import type { AnySettingField, SettingVisibility } from "./types";
+import type { AnySettingField } from "./types";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -91,6 +91,7 @@ const SETTING_SECTION_SORT_ORDER: SettingsSection[] = [
   "appearance",
   "homepage",
   "navigation",
+  "sidebarFolderNotes",
 ];
 
 export function getSettingKeysForSurface(
@@ -147,24 +148,19 @@ function isSettingVisible(
 ): boolean {
   const visibleWhen = field.ui.visibleWhen;
   if (!visibleWhen) return true;
-  const conditions: readonly SettingVisibility[] = Array.isArray(visibleWhen)
-    ? visibleWhen
-    : [visibleWhen];
 
-  return conditions.every((condition) => {
-    if (
-      condition.platform &&
-      (condition.platform === "mobile") !== Platform.isMobile
-    ) {
-      return false;
-    }
+  if (
+    visibleWhen.platform &&
+    (visibleWhen.platform === "mobile") !== Platform.isMobile
+  ) {
+    return false;
+  }
 
-    if (condition.key !== undefined) {
-      return values[condition.key] === condition.value;
-    }
+  if (visibleWhen.key !== undefined) {
+    return values[visibleWhen.key] === visibleWhen.value;
+  }
 
-    return true;
-  });
+  return true;
 }
 
 export function isPluginSettingVisible(

@@ -20,6 +20,7 @@ export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
 export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
 export type MissingFolderNoteBehavior = "smart" | "create" | "manual";
+export type SidebarFolderClickBehavior = "nothing" | "existing" | "virtual";
 export type CardExt =
   | "folder"
   | "ctime"
@@ -417,40 +418,32 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
   hideFolderNotesInFileExplorer: booleanField({
-    label: "Hide folder notes in file explorer",
-    description: "Hide Explorer folder-note files in Obsidian's file explorer.",
+    label: "Hide folder-note files in Obsidian sidebar",
+    description:
+      "Hide Markdown folder-note files from Obsidian's built-in file tree.",
     defaultValue: false,
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
+      section: "sidebarFolderNotes",
       order: 7.1,
     },
   }),
-  openFolderNotesFromFileExplorer: booleanField({
-    label: "Open folder notes from folder names",
+  sidebarFolderClickBehavior: enumField({
+    label: "When clicking folder names in the sidebar",
     description:
-      "Open a folder note when clicking the folder name in Obsidian's file explorer.",
-    defaultValue: false,
+      "Choose what happens when clicking a folder name instead of the collapse arrow or row whitespace.",
+    defaultValue: "nothing",
+    options: ["nothing", "existing", "virtual"],
+    optionLabels: {
+      nothing: "Do nothing",
+      existing: "Open folder note if it exists",
+      virtual: "Open folder note or temporary folder note",
+    },
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
+      section: "sidebarFolderNotes",
       order: 7.2,
       visibleWhen: { key: "hideFolderNotesInFileExplorer", value: true },
-    },
-  }),
-  openVirtualFolderNotesFromFileExplorer: booleanField({
-    label: "Open virtual folder notes when missing",
-    description:
-      "Open a temporary Explorer folder note when the clicked folder has no Markdown folder note.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 7.3,
-      visibleWhen: [
-        { key: "hideFolderNotesInFileExplorer", value: true },
-        { key: "openFolderNotesFromFileExplorer", value: true },
-      ],
     },
   }),
   useGlass: booleanField({

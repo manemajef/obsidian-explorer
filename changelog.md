@@ -1,5 +1,5 @@
 # Explorer changelog
-## 1.3.0 (31-05-26)
+## 1.3.0 (not released yet)
 
 This release changes how Explorer handles folders that do not yet have folder
 notes, adds temporary folder views, and makes the new behavior safer for
@@ -33,6 +33,13 @@ existing users.
 ### Navigation and UI
 #### Mobile `Action bar` Redesign
 Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass` is on). 
+#### Obsidian sidebar folder notes
+- Added settings for hiding folder-note files from Obsidian's sidebar file
+  tree.
+- When folder-note files are hidden, clicking folder names in the sidebar can
+  now open existing folder notes or temporary folder notes.
+- Sidebar folder-name clicks are strict: collapse arrows and row whitespace keep
+  Obsidian's normal sidebar behavior.
 #### Additional Changes 
 - The parent button and `Go to parent folder` command now open temporary folder
   views for missing parent folder notes unless the user chooses `Always create`.
