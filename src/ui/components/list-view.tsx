@@ -141,7 +141,6 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
             }
             onClick={(event) => {
               if (isInteractiveTouchTarget(event.target)) return;
-              if (!isMobile) return;
               void props.actions.openFile(file);
             }}
           >
