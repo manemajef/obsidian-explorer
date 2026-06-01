@@ -10,7 +10,6 @@ import { Group, Separator } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
-import { canGoToParentFolderNote } from "src/explorer/folder-notes";
 
 export function ActionsBar(props: {
   app: App;
@@ -56,7 +55,8 @@ export function ActionsBar(props: {
   type MobileLayout = "right-bar" | "mid-bar" | "left-bar" | null;
   const mobileLayout = "right-bar" as MobileLayout;
   const useElpise = false;
-  const settingsIcon = useElpise || !canGoToParent ? "ellipsis" : "settings-2";
+  // const settingsIcon = useElpise || !canGoToParent ? "ellipsis" : "settings-2";
+  const settingsIcon = useElpise ? "ellipsis" : "settings-2";
   const useLeftBar = mobileLayout === "left-bar";
   const useRightBar = mobileLayout === "right-bar";
   const useMidBar = mobileLayout === "mid-bar";

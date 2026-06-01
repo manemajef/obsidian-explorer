@@ -120,8 +120,6 @@
   max-width: var(--max-width);
   width: var(--line-width);
   margin-inline: auto;
-  height: 100%;
-  overflow-y: auto;
 }
 .explorer-virtual-folder-note .markdown-preview-view.markdown-rendered {
   margin: 0;
@@ -183,8 +181,8 @@
 }
 
 .is-mobile .explorer-container {
-  --explorer-control-size: 44px;
-  --explorer-action-icon-size: 26px;
+  --explorer-control-size: 40px;
+  --explorer-action-icon-size: 24px;
 }
 
 .explorer-virtual-folder-note .markdown-preview-view {

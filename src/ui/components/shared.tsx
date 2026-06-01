@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { setIcon } from "obsidian";
+import { setIcon, setTooltip } from "obsidian";
 
 export function InternalLink(props: {
   path: string;
@@ -9,6 +9,7 @@ export function InternalLink(props: {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children?: React.ReactNode;
   draggable?: boolean;
+  tooltip?: string;
 }): React.JSX.Element {
   const {
     path,
@@ -18,13 +19,22 @@ export function InternalLink(props: {
     onClick,
     children,
     draggable,
+    tooltip,
   } = props;
+  const ref = useRef<HTMLAnchorElement | null>(null);
   const classes = ["internal-link", className, ...(additionalClasses ?? [])]
     .filter(Boolean)
     .join(" ");
 
+  useEffect(() => {
+    if (ref.current && tooltip) {
+      setTooltip(ref.current, tooltip, { placement: "top" });
+    }
+  }, [tooltip]);
+
   return (
     <a
+      ref={ref}
       className={classes}
       data-href={path}
       href={path}

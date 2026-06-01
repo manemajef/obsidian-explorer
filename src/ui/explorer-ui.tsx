@@ -149,7 +149,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onSearchInput={setSearchQuery}
         useGlass={model.pluginSettings.useGlass}
       />
-
       {showFolders && (
         <>
           <Divider size={folderDivider} />

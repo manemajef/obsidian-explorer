@@ -3,6 +3,7 @@ import { ExplorerFolderNode } from "../../explorer/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { shouldCreateMissingFolderNote } from "../../explorer/folder-notes";
 import { draggableProps, folderDropProps } from "../drag-drop";
+import { InternalLink } from "./shared";
 import {
   isInteractiveTouchTarget,
   showFolderContextMenu,
@@ -55,14 +56,18 @@ export function FolderButtons(props: {
             }}
           >
             {linkCreatesFolderNote ? (
-              <a
-                className={`internal-link explorer-folder-link${isMissing ? " is-unresolved explorer-folder-link--missing" : ""}`}
-                data-href={folderNotePath}
-                href={folderNotePath}
-                data-tooltip-position="top"
-                target="_blank"
-                rel="noopener"
+              <InternalLink
+                path={folderNotePath}
+                className="explorer-folder-link"
+                additionalClasses={
+                  isMissing
+                    ? ["is-unresolved", "explorer-folder-link--missing"]
+                    : undefined
+                }
                 draggable={false}
+                tooltip={
+                  isMissing ? `Create folder note ${folder.name}.md` : undefined
+                }
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -70,7 +75,7 @@ export function FolderButtons(props: {
                 }}
               >
                 {linkText}
-              </a>
+              </InternalLink>
             ) : (
               <span className="explorer-folder-link explorer-folder-link--missing">
                 {linkText}
