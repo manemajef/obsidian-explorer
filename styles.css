@@ -11,7 +11,7 @@
   --explorer-radius-lg: 0.8em;
   --explorer-radius-pill: 999px;
   --explorer-control-size: 32px;
-  --explorer-glass-background: linear-gradient( 135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.01) 100% ), rgba(0, 0, 0, 0.01);
+  --explorer-glass-background: linear-gradient( 135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.85) 100% ), rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
   --explorer-shadow-glass:
     0 4px 12px rgba(0, 0, 0, 0.04),
@@ -993,6 +993,7 @@
 .is-mobile .explorer-search__input,
 .is-mobile .explorer-search__input input {
   width: 100%;
+  height: 52px;
 }
 
 /* src/ui/styles/modal.css */

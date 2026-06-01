@@ -22,7 +22,7 @@
   --explorer-glass-background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.32) 0%,
-    rgba(255, 255, 255, 0.01) 100%
+    rgba(255, 255, 255, 0.85) 100%
   ),
     rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);

@@ -10,6 +10,7 @@ import { Group, Separator } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
+import { canGoToParentFolderNote } from "src/explorer/folder-notes";
 
 export function ActionsBar(props: {
   app: App;
@@ -52,6 +53,13 @@ export function ActionsBar(props: {
   const MobileEdgeSpace = () => (
     <span style={{ width: ".5em", flexShrink: 1 }} />
   );
+  type MobileLayout = "right-bar" | "mid-bar" | "left-bar" | null;
+  const mobileLayout = "right-bar" as MobileLayout;
+  const useElpise = false;
+  const settingsIcon = useElpise || !canGoToParent ? "ellipsis" : "settings-2";
+  const useLeftBar = mobileLayout === "left-bar";
+  const useRightBar = mobileLayout === "right-bar";
+  const useMidBar = mobileLayout === "mid-bar";
 
   if (isMobile && searchMode)
     return (
@@ -70,10 +78,43 @@ export function ActionsBar(props: {
         </Bar>
       </div>
     );
-
-  if (isMobile)
+  if (isMobile && useRightBar)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        {showParentNavigation ? (
+          <ActionItem onClick={() => onGoToParent(false)} icon="undo-2" />
+        ) : (
+          <ActionItem onClick={onOpenSettings} icon={settingsIcon} />
+        )}
+        <ActionSpace minWidth=".5em" />
+        <ActionGroup>
+          <MobileEdgeSpace />
+          {showParentNavigation && (
+            <>
+              <ActionGroupItem icon={settingsIcon} onClick={onOpenSettings} />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
+          <MobileSpace />
+          <ActionGroupItem onClick={onSearchToggle} icon="search" />
+          <MobileEdgeSpace />
+        </ActionGroup>
+      </div>
+    );
+  if (isMobile && useLeftBar)
     return (
       <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        {/* <MobileSpace /> */}
         <ActionGroup
           style={{
             flex: "0 1 auto",
@@ -82,7 +123,6 @@ export function ActionsBar(props: {
           }}
         >
           <MobileEdgeSpace />
-
           {showParentNavigation && (
             <>
               <ActionGroupItem
@@ -97,7 +137,48 @@ export function ActionsBar(props: {
             </>
           )}
           <ActionGroupItem
-            icon={onSaveFolderNote ? "pen-line" : "settings-2"}
+            icon={onSaveFolderNote ? "pen-line" : settingsIcon}
+            onClick={onSaveFolderNote ?? onOpenSettings}
+          />
+          <MobileSpace />
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
+          <MobileSpace />
+          <ActionGroupItem icon="search" onClick={onSearchToggle} />
+          <MobileEdgeSpace />
+        </ActionGroup>
+
+        {/* <MobileSpace /> */}
+      </div>
+    );
+  if (isMobile && useMidBar)
+    return (
+      <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        {/* <MobileSpace /> */}
+        <ActionGroup
+          style={{
+            flex: "0 1 auto",
+            minWidth: 0,
+            justifyContent: "space-around",
+          }}
+        >
+          <MobileEdgeSpace />
+          {showParentNavigation && (
+            <>
+              <ActionGroupItem
+                icon="undo-2"
+                className="explorer-parent-action"
+                {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
+                onClick={() => {
+                  onGoToParent(false);
+                }}
+              />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem
+            icon={onSaveFolderNote ? "pen-line" : settingsIcon}
             onClick={onSaveFolderNote ?? onOpenSettings}
           />
           <MobileSpace />
@@ -106,8 +187,9 @@ export function ActionsBar(props: {
           <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
           <MobileEdgeSpace />
         </ActionGroup>
-        <ActionSpace minWidth="1em" maxWidth="none" />
+        <ActionSpace minWidth=".5em" maxWidth="none" />
         <ActionItem icon="search" onClick={onSearchToggle} />
+        {/* <MobileSpace /> */}
       </div>
     );
 
@@ -127,12 +209,12 @@ export function ActionsBar(props: {
               />
             ) : (
               isMobile && (
-                <ActionItem icon="settings-2" onClick={onOpenSettings} />
+                <ActionItem icon={settingsIcon} onClick={onOpenSettings} />
               )
             )}
             {!isMobile && (
               <ActionItem
-                icon={onSaveFolderNote ? "save" : "settings-2"}
+                icon={onSaveFolderNote ? "save" : settingsIcon}
                 onClick={onSaveFolderNote ?? onOpenSettings}
               />
             )}
@@ -147,7 +229,7 @@ export function ActionsBar(props: {
               <ActionGroup>
                 {showGroupedFolderOrSettingsAction && (
                   <ActionGroupItem
-                    icon={onSaveFolderNote ? "pen-line" : "settings-2"}
+                    icon={onSaveFolderNote ? "pen-line" : settingsIcon}
                     onClick={onSaveFolderNote ?? onOpenSettings}
                   />
                 )}
