@@ -4,17 +4,19 @@ import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
   createAndOpenFolderNote,
-  createFolderNoteFileWithConfirmation,
   goToParentFolderNote,
   type MissingFolderNoteIntent,
   openFolderNote,
   type ExplorerLocation,
+} from "./navigation/folder-notes";
+import {
+  createFolderNoteFileWithConfirmation,
   type SavePluginSettings,
-} from "./folder-notes";
+} from "./lib/folder-note";
 import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
 import type { PluginSettings } from "./settings";
-import { ExplorerFileNode, ExplorerFolderNode } from "./nodes";
-import { ExplorerSession } from "./session";
+import { ExplorerFileNode, ExplorerFolderNode } from "./lib/nodes";
+import { ExplorerSession } from "./data/session";
 import { ConfirmationDialog } from "../ui/modals/prompt-modal";
 
 export class ExplorerActions {

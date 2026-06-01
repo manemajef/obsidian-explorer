@@ -1,7 +1,6 @@
 import { App, Notice, TFile } from "obsidian";
 import { promptForName } from "../../ui/modals/prompt-modal";
-
-const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
+import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
 
 export async function createFolderWithNote(
   app: App,

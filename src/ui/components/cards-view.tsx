@@ -1,6 +1,6 @@
 import React from "react";
 import { ExplorerModel } from "../../explorer/model";
-import { ExplorerFileNode } from "../../explorer/nodes";
+import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { diffDays } from "../../utils";
 import { Icon, InternalLink } from "./shared";

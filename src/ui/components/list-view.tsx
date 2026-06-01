@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform } from "obsidian";
 import { ExplorerModel } from "../../explorer/model";
-import { ExplorerFileNode } from "../../explorer/nodes";
+import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";

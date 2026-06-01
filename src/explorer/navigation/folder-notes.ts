@@ -1,6 +1,6 @@
 import { App, TFile, TFolder } from "obsidian";
 import { openHomePage, resolveHomePagePath } from "./homepage";
-import { PluginSettings } from "./settings";
+import { PluginSettings } from "../settings";
 import { openVirtualFolderNote } from "./virtual-folder-note";
 import {
   FOLDERNOTE_TEMPLATE,
@@ -8,17 +8,7 @@ import {
   getFolderNoteForFolder,
   isFolderNote,
   type SavePluginSettings,
-} from "./folder-note-data";
-
-export {
-  FOLDERNOTE_TEMPLATE,
-  createFolderNoteFile,
-  createFolderNoteFileWithConfirmation,
-  getFolderNoteForFolder,
-  getFolderNotePath,
-  isFolderNote,
-  type SavePluginSettings,
-} from "./folder-note-data";
+} from "../lib/folder-note";
 
 export type MissingFolderNoteIntent = "navigate" | "explicit" | "save";
 

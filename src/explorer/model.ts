@@ -4,9 +4,9 @@ import {
   ExplorerFileNode,
   ExplorerFolderNode,
   type ExplorerNode,
-} from "./nodes";
-import { ExplorerSession } from "./session";
-import type { ExplorerLocation } from "./folder-notes";
+} from "./lib/nodes";
+import { ExplorerSession } from "./data/session";
+import type { ExplorerLocation } from "./navigation/folder-notes";
 
 export type ExplorerModel = {
   app: App;
@@ -39,9 +39,8 @@ export async function buildExplorerModel(input: {
   if (!sourceFolder && (!(sourceFile instanceof TFile) || !sourceFile.parent))
     return null;
 
-  const folder = sourceFolder ?? (sourceFile instanceof TFile
-    ? sourceFile.parent
-    : null);
+  const folder =
+    sourceFolder ?? (sourceFile instanceof TFile ? sourceFile.parent : null);
   if (!folder) return null;
 
   const index = await session.getIndex(folder, {

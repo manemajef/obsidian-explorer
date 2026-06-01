@@ -1,7 +1,7 @@
 import React from "react";
-import { ExplorerFolderNode } from "../../explorer/nodes";
+import { ExplorerFolderNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { shouldCreateMissingFolderNote } from "../../explorer/folder-notes";
+import { shouldCreateMissingFolderNote } from "../../explorer/navigation/folder-notes";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import { InternalLink } from "./shared";
 import {

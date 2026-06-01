@@ -13,13 +13,13 @@ import {
   PluginSettings,
   getBlockSettingsOverrides,
   resolveBlockSettings,
-} from "./explorer/settings";
-import { isRtl } from "./utils";
-import { ExplorerUI } from "./ui/explorer-ui";
-import { ExplorerSettingsModal } from "./ui/modals/settings-modal";
-import { buildExplorerModel } from "./explorer/model";
-import { updateExplorerBlock } from "./explorer/vault/block-update";
-import { ExplorerSession } from "./explorer/session";
+} from "./settings";
+import { isRtl } from "../utils";
+import { ExplorerUI } from "../ui/explorer-ui";
+import { ExplorerSettingsModal } from "../ui/modals/settings-modal";
+import { buildExplorerModel } from "./model";
+import { updateExplorerBlock } from "./vault/block-update";
+import { ExplorerSession } from "./data/session";
 
 export type ExplorerMount = {
   app: App;
@@ -105,10 +105,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   let renderVersion = 0;
   let sourcePath = input.sourcePath;
 
-  const trackSourceRename = (
-    file: TAbstractFile,
-    oldPath: string,
-  ): void => {
+  const trackSourceRename = (file: TAbstractFile, oldPath: string): void => {
     if (sourcePath === oldPath) {
       sourcePath = file.path;
       return;

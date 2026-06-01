@@ -1,5 +1,5 @@
 import React from "react";
-import { ExplorerFileNode } from "../../../explorer/nodes";
+import { ExplorerFileNode } from "../../../explorer/lib/nodes";
 import { ExplorerActions } from "../../../explorer/actions";
 import { Badge } from "./badge";
 

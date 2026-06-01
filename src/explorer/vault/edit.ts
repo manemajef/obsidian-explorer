@@ -1,6 +1,6 @@
 import { App, normalizePath, Notice, TFile, TFolder } from "obsidian";
 import { promptForName } from "../../ui/modals/prompt-modal";
-import { getFolderNoteForFolder } from "../folder-notes";
+import { getFolderNoteForFolder } from "../lib/folder-note";
 
 export async function promptAndRenameFile(
   app: App,

@@ -1,6 +1,6 @@
 import { App, Notice, TFile, TFolder } from "obsidian";
-import { ConfirmationDialog } from "../ui/modals/prompt-modal";
-import type { PluginSettings } from "./settings";
+import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
+import type { PluginSettings } from "../settings";
 
 export const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 export type SavePluginSettings = () => void | Promise<void>;

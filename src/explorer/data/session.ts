@@ -1,10 +1,10 @@
 import { App, TFile, TFolder } from "obsidian";
-import { FolderIndex } from "./listing";
+import { FolderIndex } from "./folder-index";
 import {
   ExplorerFileNode,
   ExplorerFolderNode,
   type ExplorerNodeFactory,
-} from "./nodes";
+} from "../lib/nodes";
 
 export type IndexOptions = {
   depth: number;

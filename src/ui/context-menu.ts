@@ -1,7 +1,7 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { Menu, Platform, TAbstractFile } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
-import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/nodes";
+import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/lib/nodes";
 
 const HAPTIC_DURATION_MS = 10;
 

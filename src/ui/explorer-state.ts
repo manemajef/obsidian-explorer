@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ExplorerModel } from "./model";
-import { buildExplorerListing, resolveCardFooterMode } from "./listing";
-import { ExplorerFileNode } from "./nodes";
+import { ExplorerModel } from "../explorer/model";
+import {
+  buildExplorerListing,
+  resolveCardFooterMode,
+} from "../explorer/lib/listing";
+import { ExplorerFileNode } from "../explorer/lib/nodes";
 
 type PaginationKind = "classic" | "load-more" | "none";
 

@@ -3,8 +3,8 @@ import {
   getFolderNoteForFolder,
   getFolderNotePath,
   isFolderNote,
-} from "./folder-notes";
-import { togglePin } from "./vault/edit";
+} from "./folder-note";
+import { togglePin } from "../vault/edit";
 
 export type ExplorerNode = ExplorerFileNode | ExplorerFolderNode;
 

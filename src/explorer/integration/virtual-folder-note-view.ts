@@ -7,16 +7,17 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 import type { ViewStateResult } from "obsidian";
-import { BlockSettings, PluginSettings } from "./settings";
+import { BlockSettings, PluginSettings } from "../settings";
 import {
   createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
   getFolderNotePath,
-} from "./folder-note-data";
-import { mountExplorer } from "../explorer";
-import { formatExplorerBlock } from "./vault/block-update";
+} from "../lib/folder-note";
+import { mountExplorer } from "../runtime";
+import { formatExplorerBlock } from "../vault/block-update";
+import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
 
-export const VIRTUAL_FOLDER_NOTE_VIEW_TYPE = "explorer-virtual-folder-note";
+export { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
 
 export type VirtualFolderNoteHost = {
   getBlockDefaults: () => BlockSettings;
@@ -24,22 +25,6 @@ export type VirtualFolderNoteHost = {
   savePluginSettings: () => void | Promise<void>;
   registerRefresh?: (refresh: () => void) => () => void;
 };
-
-export async function openVirtualFolderNote(
-  app: App,
-  folder: TFolder,
-  newLeaf = false,
-): Promise<void> {
-  const leaf = app.workspace.getLeaf(newLeaf);
-  await leaf.setViewState({
-    type: VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
-    active: true,
-    state: {
-      folderPath: folder.path,
-    },
-  });
-  app.workspace.setActiveLeaf(leaf, { focus: true });
-}
 
 export class VirtualFolderNoteView extends ItemView {
   private state = { folderPath: "" };

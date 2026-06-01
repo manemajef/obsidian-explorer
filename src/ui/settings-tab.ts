@@ -15,7 +15,7 @@ import {
   isPluginSettingVisible,
 } from "../explorer/settings";
 import { renderSettingField } from "./render-setting-field";
-import { isHomePageNewTabManagedElsewhere } from "../explorer/homepage";
+import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
 
 type SectionMeta = {
   title: string;

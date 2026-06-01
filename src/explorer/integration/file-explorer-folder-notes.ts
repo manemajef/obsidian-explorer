@@ -1,7 +1,7 @@
 import { App, Keymap, Plugin, TFolder } from "obsidian";
-import { getFolderNoteForFolder, isFolderNote } from "./folder-note-data";
-import type { PluginSettings } from "./settings";
-import { openVirtualFolderNote } from "./virtual-folder-note";
+import { getFolderNoteForFolder, isFolderNote } from "../lib/folder-note";
+import type { PluginSettings } from "../settings";
+import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
 
 type FileExplorerFolderNoteBehaviorOptions = {
   app: App;

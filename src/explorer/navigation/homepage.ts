@@ -1,5 +1,5 @@
 import { App, Notice, Plugin, TFile, WorkspaceLeaf } from "obsidian";
-import { PluginSettings } from "./settings";
+import { PluginSettings } from "../settings";
 
 const HOME_PAGE_TEMPLATE =
   '```explorer\nview: "cards"\nsortBy: "edited"\ndepth: 10\npageSize: 21\n```\n';
