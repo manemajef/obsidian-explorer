@@ -7,7 +7,7 @@ export type SettingsSection =
   | "appearance"
   | "navigation";
 
-type SettingVisibility = {
+export type SettingVisibility = {
   key?: string;
   value?: unknown;
   platform?: "mobile" | "desktop";
@@ -19,7 +19,7 @@ export type SettingUiMeta = {
   order: number;
   surfaceOrder?: Partial<Record<SettingsSurface, number>>;
   labels?: Partial<Record<SettingsSurface, string>>;
-  visibleWhen?: SettingVisibility;
+  visibleWhen?: SettingVisibility | readonly SettingVisibility[];
 };
 
 export type LegacySettingAlias<T> = {

@@ -61,6 +61,12 @@ const SECTION_META: Record<SettingsSection, SectionMeta> = {
   },
 };
 
+const FILE_EXPLORER_FOLDER_NOTE_KEYS = new Set<PluginSettingKey>([
+  "hideFolderNotesInFileExplorer",
+  "openFolderNotesFromFileExplorer",
+  "openVirtualFolderNotesFromFileExplorer",
+]);
+
 function compareBySection(
   a: BlockSettingKey,
   b: BlockSettingKey,
@@ -115,7 +121,16 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       }
 
+      let renderedFolderNoteHeading = false;
       for (const key of sectionKeys) {
+        if (
+          section === "navigation" &&
+          FILE_EXPLORER_FOLDER_NOTE_KEYS.has(key) &&
+          !renderedFolderNoteHeading
+        ) {
+          new Setting(containerEl).setName("Folder notes").setHeading();
+          renderedFolderNoteHeading = true;
+        }
         this.renderPluginSetting(containerEl, key);
       }
     }
@@ -230,7 +245,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     this.plugin.refreshExplorerBlocks();
 
-    if (key === "useHomePage") {
+    if (key === "useHomePage" || FILE_EXPLORER_FOLDER_NOTE_KEYS.has(key)) {
       this.display();
     }
   }

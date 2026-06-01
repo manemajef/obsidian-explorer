@@ -29,6 +29,7 @@ import {
   VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
   VirtualFolderNoteView,
 } from "./src/explorer/virtual-folder-note";
+import { registerFileExplorerFolderNoteBehavior } from "./src/explorer/file-explorer-folder-notes";
 
 const FOLDERNOTE_TEMPLATE = "\n```explorer\n```\n";
 type ExplorerRefresh = () => void;
@@ -49,6 +50,7 @@ function getDefaultViewMode(vault: Vault): string {
 export default class ExplorerPlugin extends Plugin {
   settings: PluginSettings;
   private explorerRefreshers = new Set<ExplorerRefresh>();
+  private refreshFileExplorerFolderNotes: (() => void) | null = null;
 
   async onload() {
     await this.loadSettings();
@@ -64,6 +66,11 @@ export default class ExplorerPlugin extends Plugin {
         }),
     );
     this.registerCommands();
+    this.refreshFileExplorerFolderNotes =
+      registerFileExplorerFolderNoteBehavior(this, {
+        app: this.app,
+        getSettings: () => this.settings,
+      });
 
     this.registerMarkdownCodeBlockProcessor(
       "explorer",
@@ -259,6 +266,7 @@ export default class ExplorerPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
+    this.refreshFileExplorerFolderNotes?.();
   }
 
   private getActiveExplorerLocation(): ExplorerLocation | null {

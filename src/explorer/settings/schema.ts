@@ -416,6 +416,43 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       order: 6.9,
     },
   }),
+  hideFolderNotesInFileExplorer: booleanField({
+    label: "Hide folder notes in file explorer",
+    description: "Hide Explorer folder-note files in Obsidian's file explorer.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 7.1,
+    },
+  }),
+  openFolderNotesFromFileExplorer: booleanField({
+    label: "Open folder notes from folder names",
+    description:
+      "Open a folder note when clicking the folder name in Obsidian's file explorer.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 7.2,
+      visibleWhen: { key: "hideFolderNotesInFileExplorer", value: true },
+    },
+  }),
+  openVirtualFolderNotesFromFileExplorer: booleanField({
+    label: "Open virtual folder notes when missing",
+    description:
+      "Open a temporary Explorer folder note when the clicked folder has no Markdown folder note.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 7.3,
+      visibleWhen: [
+        { key: "hideFolderNotesInFileExplorer", value: true },
+        { key: "openFolderNotesFromFileExplorer", value: true },
+      ],
+    },
+  }),
   useGlass: booleanField({
     label: "Use glass action bar",
     description: "Use the glass style for action bar controls.",

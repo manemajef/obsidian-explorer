@@ -81,6 +81,10 @@
   pointer-events: none;
 }
 
+.explorer-hide-folder-notes .explorer-native-folder-note {
+  display: none;
+}
+
 .explorer-container :where(
     a,
     button,

@@ -12,7 +12,7 @@ import {
   SettingsSection,
   SettingsSurface,
 } from "./schema";
-import type { AnySettingField } from "./types";
+import type { AnySettingField, SettingVisibility } from "./types";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -147,19 +147,24 @@ function isSettingVisible(
 ): boolean {
   const visibleWhen = field.ui.visibleWhen;
   if (!visibleWhen) return true;
+  const conditions: readonly SettingVisibility[] = Array.isArray(visibleWhen)
+    ? visibleWhen
+    : [visibleWhen];
 
-  if (
-    visibleWhen.platform &&
-    (visibleWhen.platform === "mobile") !== Platform.isMobile
-  ) {
-    return false;
-  }
+  return conditions.every((condition) => {
+    if (
+      condition.platform &&
+      (condition.platform === "mobile") !== Platform.isMobile
+    ) {
+      return false;
+    }
 
-  if (visibleWhen.key !== undefined) {
-    return values[visibleWhen.key] === visibleWhen.value;
-  }
+    if (condition.key !== undefined) {
+      return values[condition.key] === condition.value;
+    }
 
-  return true;
+    return true;
+  });
 }
 
 export function isPluginSettingVisible(
