@@ -1,4 +1,4 @@
-import { App, Notice, TFile, normalizePath } from "obsidian";
+import { App, Notice, TFile, TFolder, normalizePath } from "obsidian";
 import { promptForName } from "../../ui/modals/prompt-modal";
 import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
 
@@ -6,21 +6,30 @@ export async function createFolderWithNote(
   app: App,
   basePath: string,
   name: string,
+  createFolderNote: boolean,
   template = FOLDERNOTE_TEMPLATE,
-): Promise<void> {
+): Promise<TFolder | null> {
   const folderPath = normalizePath(`${basePath}/${name}`);
-  const folderNotePath = normalizePath(`${folderPath}/${name}.md`);
 
   try {
     if (!app.vault.getAbstractFileByPath(folderPath)) {
       await app.vault.createFolder(folderPath);
     }
 
-    let file = app.vault.getAbstractFileByPath(folderNotePath);
-    if (!file) file = await app.vault.create(folderNotePath, template);
-    if (file instanceof TFile) await app.workspace.getLeaf(false).openFile(file);
+    if (createFolderNote) {
+      const folderNotePath = normalizePath(`${folderPath}/${name}.md`);
+      let file = app.vault.getAbstractFileByPath(folderNotePath);
+      if (!file) file = await app.vault.create(folderNotePath, template);
+      if (file instanceof TFile) {
+        await app.workspace.getLeaf(false).openFile(file);
+      }
+    }
+
+    const folder = app.vault.getAbstractFileByPath(folderPath);
+    return folder instanceof TFolder ? folder : null;
   } catch (e) {
     new Notice(`Failed to create folder: ${e}`);
+    return null;
   }
 }
 
@@ -47,9 +56,11 @@ export async function createNewNote(
 export async function promptAndCreateFolder(
   app: App,
   basePath: string,
-): Promise<void> {
+  createFolderNote: boolean,
+): Promise<TFolder | null> {
   const name = await promptForName(app, "New Folder", "Enter folder name");
-  if (name) await createFolderWithNote(app, basePath, name);
+  if (!name) return null;
+  return createFolderWithNote(app, basePath, name, createFolderNote);
 }
 
 export async function promptAndCreateNote(

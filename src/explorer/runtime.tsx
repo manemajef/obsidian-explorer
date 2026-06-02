@@ -35,6 +35,7 @@ export type ExplorerMount = {
     settings: BlockSettings,
     sourcePath: string,
   ) => Promise<boolean | void>;
+  onSaveFolderNote?: () => void | Promise<void>;
 };
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
@@ -204,6 +205,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
         onOpenSettings={openSettings}
         onSavePluginSettings={savePluginSettings}
         onRefresh={queueRefresh}
+        onSaveFolderNote={input.onSaveFolderNote}
       />,
     );
   };

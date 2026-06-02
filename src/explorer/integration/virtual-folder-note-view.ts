@@ -7,7 +7,12 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 import type { ViewStateResult } from "obsidian";
-import { BlockSettings, PluginSettings } from "../settings";
+import {
+  BlockSettings,
+  PluginSettings,
+  getBlockSettingsOverrides,
+  resolveBlockSettings,
+} from "../settings";
 import {
   createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
@@ -24,6 +29,12 @@ export type VirtualFolderNoteHost = {
   getPluginSettings: () => PluginSettings;
   savePluginSettings: () => void | Promise<void>;
   registerRefresh?: (refresh: () => void) => () => void;
+  getFolderData: (folderPath: string) => Partial<BlockSettings>;
+  setFolderData: (
+    folderPath: string,
+    overrides: Partial<BlockSettings>,
+  ) => void;
+  deleteFolderData: (folderPath: string) => void;
 };
 
 export class VirtualFolderNoteView extends ItemView {
@@ -154,6 +165,8 @@ export class VirtualFolderNoteView extends ItemView {
     // });
     const explorerContainer = section.createDiv();
 
+    const persist = this.host.getPluginSettings().persistVirtualFolderNotes;
+
     this.cleanupExplorer = await mountExplorer({
       app: this.app,
       container: explorerContainer,
@@ -162,9 +175,20 @@ export class VirtualFolderNoteView extends ItemView {
       getBlockDefaults: this.host.getBlockDefaults,
       getPluginSettings: this.host.getPluginSettings,
       savePluginSettings: this.host.savePluginSettings,
-      initialOverrides: {},
+      initialOverrides: persist ? this.host.getFolderData(folder.path) : {},
       registerRefresh: this.host.registerRefresh,
+      onSaveFolderNote: () => this.materialize(),
       replaceExplorerBlock: async (settings) => {
+        // When persistence is enabled, changing a per-view setting writes to
+        // the data store and the folder stays virtual. Otherwise fall back to
+        // the legacy behavior of materializing a real Markdown folder note.
+        if (this.host.getPluginSettings().persistVirtualFolderNotes) {
+          this.host.setFolderData(
+            folder.path,
+            getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
+          );
+          return;
+        }
         const file = await this.writeFolderNoteBlock(
           folder,
           formatExplorerBlock(settings, this.host.getBlockDefaults()),
@@ -173,6 +197,29 @@ export class VirtualFolderNoteView extends ItemView {
         await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
       },
     });
+  }
+
+  /**
+   * Turns a virtual folder note into a real Markdown one, carrying over any
+   * stored overrides into the block and dropping the now-redundant data row.
+   */
+  async materialize(): Promise<void> {
+    const folder = this.folder;
+    if (!folder) return;
+
+    const defaults = this.host.getBlockDefaults();
+    const settings = resolveBlockSettings(
+      defaults,
+      this.host.getFolderData(folder.path),
+    );
+    const file = await this.writeFolderNoteBlock(
+      folder,
+      formatExplorerBlock(settings, defaults),
+    );
+    if (!file) return;
+
+    this.host.deleteFolderData(folder.path);
+    await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
   }
 
   private async writeFolderNoteBlock(

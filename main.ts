@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { normalizePath, Plugin } from "obsidian";
 import {
   normalizePluginSettings,
   parseSettings,
@@ -15,16 +15,24 @@ import { registerFileExplorerFolderNoteBehavior } from "./src/explorer/integrati
 import { registerExplorerCommands } from "./src/explorer/integration/commands";
 import { registerFolderNoteRenameSync } from "./src/explorer/integration/folder-note-rename-sync";
 import { registerExplorerReadingMode } from "./src/explorer/integration/reading-mode";
+import { FolderDataStore } from "./src/explorer/data/folder-data-store";
+import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 
 type ExplorerRefresh = () => void;
 
 export default class ExplorerPlugin extends Plugin {
   settings: PluginSettings;
+  private folderDataStore: FolderDataStore;
   private explorerRefreshers = new Set<ExplorerRefresh>();
   private refreshFileExplorerFolderNotes: (() => void) | null = null;
 
   async onload() {
     await this.loadSettings();
+    this.folderDataStore = new FolderDataStore(
+      this.app.vault.adapter,
+      normalizePath(`${this.manifest.dir}/folder-data.json`),
+    );
+    await this.folderDataStore.load();
     this.addSettingTab(new ExplorerSettingsTab(this.app, this));
 
     this.registerView(
@@ -35,8 +43,14 @@ export default class ExplorerPlugin extends Plugin {
           getPluginSettings: () => this.settings,
           savePluginSettings: () => this.saveSettings(),
           registerRefresh: (refresh) => this.registerExplorerRefresh(refresh),
+          getFolderData: (path) => this.folderDataStore.get(path),
+          setFolderData: (path, overrides) =>
+            this.folderDataStore.set(path, overrides),
+          deleteFolderData: (path) => this.folderDataStore.delete(path),
         }),
     );
+
+    registerFolderDataSync(this, this.folderDataStore);
 
     registerExplorerCommands(this, {
       getSettings: () => this.settings,
@@ -70,7 +84,9 @@ export default class ExplorerPlugin extends Plugin {
     registerExplorerReadingMode(this, () => this.settings);
   }
 
-  onunload() {}
+  onunload() {
+    void this.folderDataStore?.flush();
+  }
 
   async loadSettings(): Promise<void> {
     this.settings = normalizePluginSettings(await this.loadData());

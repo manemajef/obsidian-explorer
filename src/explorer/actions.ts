@@ -10,10 +10,8 @@ import {
   type ExplorerLocation,
 } from "./navigation/folder-notes";
 import { resolveHomePageNoteInboxPath } from "./navigation/homepage";
-import {
-  createFolderNoteFileWithConfirmation,
-  type SavePluginSettings,
-} from "./lib/folder-note";
+import { openVirtualFolderNote } from "./navigation/virtual-folder-note";
+import { type SavePluginSettings } from "./lib/folder-note";
 import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
 import type { PluginSettings } from "./settings";
 import { ExplorerFileNode, ExplorerFolderNode } from "./lib/nodes";
@@ -93,20 +91,16 @@ export class ExplorerActions {
     );
   }
 
-  async saveCurrentFolderNote(): Promise<void> {
-    const file = await createFolderNoteFileWithConfirmation(
-      this.app,
-      this.currentFolder,
-      this.settings,
-      this.savePluginSettings,
-    );
-    if (file) {
-      await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
-    }
-  }
-
   async createFolder(): Promise<void> {
-    await promptAndCreateFolder(this.app, this.currentFolder.path);
+    const createFolderNote = this.settings.createFolderNoteOnNewFolder;
+    const folder = await promptAndCreateFolder(
+      this.app,
+      this.currentFolder.path,
+      createFolderNote,
+    );
+    if (folder && !createFolderNote) {
+      await openVirtualFolderNote(this.app, folder);
+    }
   }
 
   async createNote(): Promise<void> {

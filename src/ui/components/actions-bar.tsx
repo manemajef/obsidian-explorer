@@ -81,8 +81,6 @@ export function ActionsBar(props: {
       >
         {showParentNavigation ? (
           <ActionItem onClick={() => onGoToParent(false)} icon="undo-2" />
-        ) : onSaveFolderNote ? (
-          <ActionItem onClick={onSaveFolderNote} icon="pen-line" />
         ) : (
           <ActionItem onClick={onOpenSettings} icon={settingsIcon} />
         )}
@@ -91,11 +89,13 @@ export function ActionsBar(props: {
           <MobileEdgeSpace />
           {showParentNavigation && (
             <>
-              {onSaveFolderNote ? (
-                <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
-              ) : (
-                <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-              )}
+              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
+              <MobileSpace />
+            </>
+          )}
+          {onSaveFolderNote && (
+            <>
+              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
               <MobileSpace />
             </>
           )}
@@ -124,10 +124,7 @@ export function ActionsBar(props: {
                 }}
               />
             ) : null}
-            <ActionItem
-              icon={onSaveFolderNote ? "save" : settingsIcon}
-              onClick={onSaveFolderNote ?? onOpenSettings}
-            />
+            <ActionItem icon={settingsIcon} onClick={onOpenSettings} />
           </Group>
         </Bar.Item>
 

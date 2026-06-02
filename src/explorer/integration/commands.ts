@@ -7,6 +7,7 @@ import {
   type ExplorerLocation,
 } from "../navigation/folder-notes";
 import { promptAndCreateFolder } from "../vault/create";
+import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
 import { togglePin } from "../vault/edit";
 import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
@@ -53,7 +54,14 @@ export function registerExplorerCommands(
       }
 
       if (!checking) {
-        void promptAndCreateFolder(app, basePath);
+        const createFolderNote = getSettings().createFolderNoteOnNewFolder;
+        void promptAndCreateFolder(app, basePath, createFolderNote).then(
+          (folder) => {
+            if (folder && !createFolderNote) {
+              void openVirtualFolderNote(app, folder);
+            }
+          },
+        );
       }
 
       return true;
@@ -92,6 +100,24 @@ export function registerExplorerCommands(
           location,
           savePluginSettings: saveSettings,
         });
+      }
+
+      return true;
+    },
+  });
+
+  plugin.addCommand({
+    id: "save-virtual-folder-note",
+    name: "Save folder note as Markdown",
+    checkCallback: (checking: boolean) => {
+      const virtualView = getActiveVirtualFolderNote(app);
+
+      if (!virtualView?.folder || !getSettings().persistVirtualFolderNotes) {
+        return false;
+      }
+
+      if (!checking) {
+        void virtualView.materialize();
       }
 
       return true;

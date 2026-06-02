@@ -18,10 +18,17 @@ interface ExplorerUIProps {
   onOpenSettings: () => void;
   onSavePluginSettings: () => void | Promise<void>;
   onRefresh: () => void;
+  onSaveFolderNote?: () => void | Promise<void>;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
-  const { model, onOpenSettings, onSavePluginSettings, onRefresh } = props;
+  const {
+    model,
+    onOpenSettings,
+    onSavePluginSettings,
+    onRefresh,
+    onSaveFolderNote,
+  } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
 
@@ -134,9 +141,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         }
         onOpenSettings={onOpenSettings}
         onSaveFolderNote={
-          model.location.file
-            ? undefined
-            : () => void actions.saveCurrentFolderNote()
+          onSaveFolderNote ? () => void onSaveFolderNote() : undefined
         }
         onGoToParent={(newLeaf) =>
           void actions.goToParent(model.location, newLeaf)
