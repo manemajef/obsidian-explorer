@@ -359,7 +359,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     label: "Create missing folder notes when",
     description: "Choose when Explorer creates the Markdown note.",
     defaultValue: "manual",
-    options: ["smart", "create", "manual"],
+    options: ["manual", "smart", "create"],
     optionLabels: {
       smart: "Clicking missing links and edits",
       create: "Always create",
@@ -368,7 +368,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
-      visibleWhen: { key: "createFolderNoteOnNewFolder", value: true },
+      // visibleWhen: { key: "createFolderNoteOnNewFolder", value: true },
     },
     legacy: {
       oldDefault: "create",

@@ -74,6 +74,11 @@ export function FolderButtons(props: {
                 e.stopPropagation();
                 void actions.openFolderLink(folder, e.ctrlKey || e.metaKey);
               }}
+              onMouseOver={
+                isMissing && !linkCreatesFolderNote
+                  ? (e) => e.stopPropagation()
+                  : undefined
+              }
             >
               {linkText}
             </InternalLink>

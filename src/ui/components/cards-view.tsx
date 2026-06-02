@@ -47,7 +47,7 @@ export function CardsView(props: {
               }
               onClick={(e) => {
                 if (isInteractiveTouchTarget(e.target)) return;
-                void actions.openFile(file);
+                void actions.openFile(file, e.ctrlKey || e.metaKey);
               }}
             >
               <div className="explorer-card-header">
@@ -58,6 +58,11 @@ export function CardsView(props: {
                     path={file.path}
                     text={file.basename}
                     draggable={false}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      void actions.openFile(file, e.ctrlKey || e.metaKey);
+                    }}
                   />
                 </div>
                 {/* <Bar.Spring /> */}

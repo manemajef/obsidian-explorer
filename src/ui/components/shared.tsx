@@ -7,6 +7,7 @@ export function InternalLink(props: {
   className?: string;
   additionalClasses?: string[];
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onMouseOver?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   children?: React.ReactNode;
   draggable?: boolean;
   tooltip?: string;
@@ -17,6 +18,7 @@ export function InternalLink(props: {
     className,
     additionalClasses,
     onClick,
+    onMouseOver,
     children,
     draggable,
     tooltip,
@@ -40,6 +42,7 @@ export function InternalLink(props: {
       href={path}
       data-tooltip-position="top"
       onClick={onClick}
+      onMouseOver={onMouseOver}
       draggable={draggable}
     >
       {children ?? text}

@@ -31,7 +31,7 @@
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass);
 }
 
-.theme-dark.use-glass .explorer-folders-grid {
+.theme-dark .use-glass .explorer-folders-grid {
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass-hover);
 }
 

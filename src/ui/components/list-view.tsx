@@ -80,6 +80,11 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                 className="explorer-list-note-title"
                 draggable={false}
                 text={file.displayName}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+                }}
               />
               {settings.showTags && file.tags.length > 0 && (
                 <>
@@ -139,7 +144,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
             }
             onClick={(event) => {
               if (isInteractiveTouchTarget(event.target)) return;
-              void props.actions.openFile(file);
+              void props.actions.openFile(file, event.ctrlKey || event.metaKey);
             }}
           >
             <div className="explorer-modern-note__header">
@@ -150,6 +155,11 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                   className="explorer-list-note-title explorer-modern-note__title"
                   draggable={false}
                   text={file.displayName}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+                  }}
                 />
               </Group>
               {!isMobile && settings.showTags && file.tags.length > 0 && (
