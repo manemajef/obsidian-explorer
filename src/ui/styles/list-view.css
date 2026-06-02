@@ -1,10 +1,60 @@
 /* ===== List View ===== */
 
+.explorer-list-container {
+  --explorer-list-font-size: 0.9em;
+  --explorer-list-item-padding: 0.4em var(--explorer-space-1);
+  border-radius: var(--explorer-radius-md);
+  margin-top: 0.5em;
+}
+
+.explorer-modern-list {
+  /* Scoped Component Design Tokens */
+  --explorer-modern-list-font-size: 0.95em; /* Default/Mobile size */
+  --explorer-modern-list-opacity: 0.8;
+  --explorer-modern-list-opacity-hover: 1;
+  --explorer-modern-list-padding-bottom: var(--explorer-space-2);
+  --explorer-modern-list-item-padding: var(--explorer-space-1)
+    var(--explorer-space-4);
+  --explorer-modern-note-gap: var(--explorer-space-2);
+  --explorer-modern-note-padding-top: var(--explorer-space-4);
+  --explorer-modern-note-padding-bottom: var(--explorer-space-2);
+  --explorer-modern-note-padding-top-first: var(--explorer-space-4);
+  --explorer-modern-note-padding-bottom-last: var(--explorer-space-2);
+  --explorer-modern-note-title-color: var(--text-normal);
+
+  padding-bottom: var(--explorer-modern-list-padding-bottom);
+  font-size: var(--explorer-modern-list-font-size);
+  --explorer-glass-radius: 1em;
+  --explorer-glass-hover-scale: 1;
+  background-color: var(--explorer-bg-alt);
+  border-radius: 1em;
+  border: none;
+  box-shadow: var(--explorer-shadow-glass-sm);
+}
+
+.explorer-modern-list--desktop {
+  /* Desktop Overrides - Tightened layout and scaled font-size */
+  --explorer-modern-list-font-size: 0.88em;
+  --explorer-modern-list-padding-bottom: 0;
+  --explorer-modern-list-item-padding: 0 var(--explorer-space-4);
+  --explorer-modern-note-gap: 0;
+  --explorer-modern-note-padding-top: var(--explorer-space-3);
+  --explorer-modern-note-padding-bottom: var(--explorer-space-2);
+  --explorer-modern-note-padding-top-first: var(--explorer-space-4);
+  --explorer-modern-note-padding-bottom-last: var(--explorer-space-4);
+
+  margin-top: var(--explorer-space-4);
+  background: var(--explorer-glass-background);
+  background-color: var(--explorer-bg-alt);
+  box-shadow: none;
+
+  /* border: var(--explorer-border-glass); */
+}
+
 .explorer-list {
-  padding: 0.4em var(--explorer-space-1);
+  padding: var(--explorer-list-item-padding);
   list-style: none;
-  /* font-size: 0.9em; */
-  font-size: var(--list-font-size);
+  font-size: var(--list-font-size, var(--explorer-list-font-size));
 }
 
 .explorer-list.is-dragging {
@@ -50,11 +100,6 @@
   border: 1px solid var(--tag-border-color);
 }
 
-.explorer-list-container {
-  border-radius: var(--explorer-radius-md);
-  margin-top: 0.5em;
-}
-
 .explorer-list.pinned {
   position: relative;
   align-items: center;
@@ -90,25 +135,6 @@
   margin-inline-end: 0.4em;
 }
 
-.explorer-modern-list {
-  padding-bottom: var(--explorer-space-2);
-  --explorer-glass-radius: 1em;
-  --explorer-glass-hover-scale: 1;
-  background-color: var(--explorer-bg-alt);
-  border-radius: 1em;
-  border: none;
-  box-shadow: var(--explorer-shadow-glass-sm);
-}
-
-.explorer-modern-list--desktop {
-  margin-top: var(--explorer-space-4);
-  background: var(--explorer-glass-background);
-  background-color: var(--explorer-bg-alt);
-  box-shadow: none;
-
-  /* border: var(--explorer-border-glass); */
-}
-
 .theme-light .use-glass .explorer-modern-list--desktop {
   background: var(--background-primary);
   box-shadow: var(--explorer-shadow-glass-sm);
@@ -141,19 +167,15 @@
 }
 
 .explorer-modern-list-item {
-  padding: var(--explorer-space-1) var(--explorer-space-4);
-}
-
-.explorer-modern-list--desktop .explorer-modern-list-item {
-  padding: 0 var(--explorer-space-4);
+  padding: var(--explorer-modern-list-item-padding);
 }
 
 .explorer-modern-note {
   display: flex;
   flex-direction: column;
-  gap: var(--explorer-space-2);
-  padding-top: var(--explorer-space-4);
-  padding-bottom: var(--explorer-space-2);
+  gap: var(--explorer-modern-note-gap);
+  padding-top: var(--explorer-modern-note-padding-top);
+  padding-bottom: var(--explorer-modern-note-padding-bottom);
   border-bottom: 1px solid var(--background-modifier-border);
   color: var(--text-normal);
   text-decoration: none;
@@ -161,10 +183,15 @@
   touch-action: manipulation;
 }
 
+.explorer-modern-list-item:first-child .explorer-modern-note {
+  padding-top: var(--explorer-modern-note-padding-top-first);
+}
+
+.explorer-modern-list-item:last-child .explorer-modern-note {
+  padding-bottom: var(--explorer-modern-note-padding-bottom-last);
+}
+
 .explorer-modern-list--desktop .explorer-modern-note {
-  gap: 0;
-  padding-bottom: var(--explorer-space-3);
-  padding-top: var(--explorer-space-4);
   cursor: unset;
 }
 
@@ -208,8 +235,8 @@
 
 .explorer-container a.explorer-modern-note__title,
 .explorer-container a.explorer-modern-note__title.internal-link {
-  color: var(--text-normal);
-  opacity: 0.8;
+  color: var(--explorer-modern-note-title-color);
+  opacity: var(--explorer-modern-list-opacity);
   text-decoration: none;
 }
 
@@ -223,7 +250,7 @@
   .explorer-modern-list--desktop
   .explorer-modern-note:hover
   a.explorer-modern-note__title.internal-link {
-  opacity: 1;
+  opacity: var(--explorer-modern-list-opacity-hover);
 }
 .explorer-modern-note__ext {
   flex: 0 0 auto;
