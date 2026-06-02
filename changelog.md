@@ -1,5 +1,6 @@
 # Explorer changelog
-## 1.3.1(01-06-2026)
+
+## 1.3.1(02-06-2026)
 ### Hompage can can have an inbox for new notes 
 - newly created notes from Hompage would be created at whatever inbox location you decide. default is `./*`  meaning root. 
 ### Bug fixes
@@ -148,7 +149,7 @@ homepage in new tabs — all without leaving your note.
 - The `Only Markdown` displayed-notes option now leaves folder notes out of the
   notes list; folder navigation remains available through folder buttons.
 
-
+היי שלום
 ## 1.1.15 (24-05-26)
 
 ### New
