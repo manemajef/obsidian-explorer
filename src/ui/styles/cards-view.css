@@ -113,7 +113,7 @@
 .explorer-card-link.card-link-normal a,
 .explorer-card-link.card-link-normal a.internal-link {
   color: var(--text-normal);
-  opacity: 0.9;
+  opacity: 0.8;
   font-size: 0.9em;
   font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 }
