@@ -82,7 +82,7 @@
 }
 
 .explorer-divider.divider-lg {
-  height: calc(var(--explorer-space-4) + var(--explorer-space-4));
+  height: var(--explorer-space-6);
 }
 
 /* ------------------------------------------------------------
