@@ -133,11 +133,11 @@ export class VirtualFolderNoteView extends ItemView {
     this.cleanupExplorer = null;
     this.contentEl.empty();
     this.contentEl.addClass("explorer-virtual-folder-note-container");
-    const mainView = this.contentEl.createDiv({
-      cls: "explorer-virtual-folder-note",
-    });
     const folder = this.folder;
     if (!folder) {
+      const mainView = this.contentEl.createDiv({
+        cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered",
+      });
       mainView.createDiv({
         cls: "explorer-virtual-folder-note-missing",
         text: "Folder not found",
@@ -147,11 +147,11 @@ export class VirtualFolderNoteView extends ItemView {
     }
     this.updateHeaderTitle(folder);
 
-    const preview = mainView.createDiv({
-      cls: "markdown-preview-view markdown-rendered",
+    const mainView = this.contentEl.createDiv({
+      cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered",
     });
-    preview.setAttr("data-path", this.sourcePath);
-    const section = preview.createDiv({
+    mainView.setAttr("data-path", this.sourcePath);
+    const section = mainView.createDiv({
       cls: "markdown-preview-sizer markdown-preview-section",
     });
 

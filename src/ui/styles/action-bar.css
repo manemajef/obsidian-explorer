@@ -89,7 +89,10 @@
 
 .action-group:hover,
 .action-group:focus-visible,
-.action-group:focus-within {
+.action-group:focus-within,
+.explorer-container.use-glass .glass-surface.action-group:hover,
+.explorer-container.use-glass .glass-surface.action-group:focus-visible,
+.explorer-container.use-glass .glass-surface.action-group:focus-within {
   transform: none;
 }
 

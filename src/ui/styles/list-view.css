@@ -157,7 +157,7 @@
 
 .theme-dark.is-mobile .use-glass .explorer-modern-list {
   /* background-color: var(--background-primary-alt); */
-  background-color: var(--explorer-glass-background);
+  background: var(--explorer-glass-background);
   /* background-image: linear-gradient(
     rgba(255, 255, 255, 0.08),
     rgba(255, 255, 255, 0.05)
