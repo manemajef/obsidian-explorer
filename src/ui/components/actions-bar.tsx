@@ -84,7 +84,7 @@ export function ActionsBar(props: {
         ) : (
           <ActionItem onClick={onOpenSettings} icon={settingsIcon} />
         )}
-        <ActionSpace minWidth=".5em" />
+        <ActionSpace minWidth=".8em" />
         <ActionGroup>
           <MobileEdgeSpace />
           {showParentNavigation && (

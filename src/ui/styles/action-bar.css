@@ -84,6 +84,7 @@
   padding-inline: var(--explorer-action-group-padding);
   --explorer-glass-radius: var(--explorer-radius-pill);
   --explorer-glass-hover-scale: var(--explorer-hover-scale);
+  min-width: 0;
 }
 
 .action-group:hover,

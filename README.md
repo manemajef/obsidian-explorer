@@ -2,8 +2,8 @@
 
 Browse and organize your vault from inside your notes.
 
-Explorer turns folder notes into file explorer views, with navigation,
-temporary folder views, desktop drag-and-drop, rename, pin, delete, search, and
+Explorer turns folders and folder notes into file explorer views with navigation,
+virtual (file-free) folder views, desktop drag-and-drop, rename, pin, delete, search, and
 configurable display options.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
@@ -13,11 +13,13 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 ## Features
 
 - Card and list views for folder contents
-- Folder buttons, temporary folder views, and configurable folder-note creation
-- Optional hiding of folder-note files in Obsidian's sidebar
+- Virtual (file-free) folder views and physical Markdown folder notes
+- Add or remove physical folder note files with a single button in block settings
+- Optional hiding of folder-note files in Obsidian's sidebar explorer
+- Interactive folder navigation from the Obsidian sidebar (opening virtual or physical views)
 - Desktop drag-and-drop for moving notes and folders
 - Context menu actions for moving folders, renaming and deleting items, and pinning notes
-- Optional matching-folder-note renaming when a folder is renamed
+- Automatic folder and folder-note renaming synchronization on rename
 - Optional homepage navigation and homepage opening in new empty tabs
 - Per-block exclusion of selected nested folders
 - Sorting, pagination, and scoped search within the current Explorer view
@@ -79,46 +81,41 @@ folder note.
 
 ## Navigation
 
-Explorer treats folder notes as navigation pages. A folder note is a Markdown
-file named after its folder:
+Explorer supports both **physical Markdown folder notes** and **virtual (file-free) folder notes**:
 
-```text
-Projects/Projects.md
-```
+- **Physical folder notes:** A standard Markdown file named after its folder (e.g., `Projects/Projects.md`) containing an `explorer` block. This allows you to add custom text, drawings, or other plugins alongside the Explorer block.
+- **Virtual folder notes:** File-free folder views that allow you to browse folders and save custom Explorer setting overrides (such as sort order or card filters) without creating a physical `.md` file on disk. The settings are saved in the plugin's data store (`folder-data.json`).
 
-When you open a folder from Explorer, the plugin looks for the matching folder note. If it does not exist, Explorer creates it with a basic Explorer block.
+### Converting between Virtual and Physical
+
+You can easily convert any folder note using the folder note settings modal:
+
+- **Add file:** Materializes a virtual folder note into a physical Markdown file.
+- **Remove file:** Deletes the Markdown file from disk (discarding its text content) and reverts it to a virtual note, while preserving all of your Explorer block setting overrides.
 
 ### Missing folder notes
 
-When a folder does not have a matching folder note yet, Explorer can open a
-temporary folder view instead of creating a Markdown note immediately.
+When navigating to a folder that does not have a physical Markdown folder note, Explorer can open a temporary (virtual) folder view instead of creating a Markdown note immediately.
 
-The default for new installs is `Links and edits`:
+The default behavior for new installs is `smart` (`Clicking missing links and edits`):
 
-- Clicking the folder card opens a temporary folder view.
-- Clicking the unresolved folder-note link creates the Markdown folder note.
-- Editing or saving a temporary folder view also creates the Markdown folder
-  note.
+- Clicking a folder card or button opens a temporary (virtual) folder view.
+- Clicking an unresolved folder-note link or choosing to edit/save the view's settings creates the physical Markdown folder note.
 
-Other modes are available in `Missing folder notes`:
+Other behaviors can be configured in the plugin settings under **Create missing folder notes when**:
 
-- `Always create` preserves the old behavior and creates missing folder notes
-  during navigation.
-- `Edits only` creates a folder note only when saving or editing a temporary
-  folder view.
+- **Always create** (`create`): Automatically creates a Markdown folder note file when navigating to the folder.
+- **Edits only** (`manual`): Keeps the view virtual and only creates a Markdown folder note file when explicitly clicking "Add file" or saving manual edits to the block config.
 
-Existing users keep the old `Always create` behavior when upgrading unless they
-change this setting.
+Existing users upgrading from older versions retain their existing behavior by default.
 
 ### Obsidian sidebar
 
-Explorer can hide folder-note files from Obsidian's built-in sidebar file tree.
-When this is enabled, clicking a folder name in the sidebar can optionally open
-the matching folder note, or open a temporary folder note when the Markdown note
-does not exist yet.
+Explorer can hide physical folder-note files from Obsidian's built-in sidebar file tree to reduce clutter.
 
-This only handles clicks on the folder name. The collapse arrow and row
-whitespace keep Obsidian's normal sidebar behavior.
+Additionally, you can enable **Open folder views from sidebar explorer**. When enabled, clicking a folder name in the Obsidian sidebar will open the corresponding folder note view (opening the physical note if it exists, or a virtual folder note view if it does not).
+
+This redirection only handles clicks on the folder name itself. Clicking the collapse/expand arrow or row whitespace retains Obsidian's normal sidebar behavior.
 
 ### Homepage
 
@@ -163,11 +160,13 @@ Explorer registers these command palette commands:
 - `Create folder in current note folder`
 - `Go to homepage`
 - `Go to parent folder`
+- `Save folder note as Markdown`
+- `Toggle pin for active note`
 
 `Go to homepage` opens or creates the configured homepage. `Go to parent folder`
 opens the parent folder note, a temporary parent folder view, or the homepage
 when the current note is already in the vault root and homepage navigation is
-enabled.
+enabled. `Save folder note as Markdown` converts a virtual folder note view into a physical Markdown file. `Toggle pin for active note` pins or unpins the active note.
 
 ## Configuration
 
@@ -202,10 +201,10 @@ Supported block settings:
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |
 
 `excludedFolders` hides selected folders and their contents from that Explorer
-block only. Plugin-only settings include missing folder-note behavior, homepage
-behavior, reading-mode handling for folder notes, folder-note rename sync,
-Obsidian sidebar folder-note behavior, nested folder-note display, the parent
-button, glass controls, card icons, and list style defaults.
+block only. Plugin-only settings include missing folder-note creation rules, homepage
+behavior, reading-mode handling, renaming synchronization, hiding folder notes in
+Obsidian's sidebar, opening views from the sidebar click, nested folder-note display,
+parent navigation button, glass controls, card icons, and default list/card styles.
 
 ## Search
 

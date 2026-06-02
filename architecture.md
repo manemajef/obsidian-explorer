@@ -47,7 +47,7 @@ navigation/          use-cases: open/create folder notes, go-to-parent,
 
 vault/   data/       vault/  : vault writes (move, rename, create, block-update)
                      data/   : stateful read/index runtime (session cache,
-                               FolderIndex loader)
+                               FolderIndex loader, FolderDataStore virtual settings)
 
 lib/                 dependency-light helpers + domain types: nodes, listing
 settings/            transforms, folder-note primitives. Framework-free, no
@@ -62,7 +62,7 @@ settings/            transforms, folder-note primitives. Framework-free, no
 - **Pure transform / predicate / domain getter** (no state, no I/O, no host) →
   `lib/`.
 - **Writes to the vault** (rename/move/create/modify) → `vault/`.
-- **Caches or indexes that live for the session** → `data/`.
+- **Caches or indexes that live for the session, or persistent storage (like FolderDataStore)** → `data/`.
 - **A user-facing flow that composes the above** (e.g. "open a folder note") →
   `navigation/`, then surface it on `actions.ts` if the mounted UI needs it.
 - **Anything registered with Obsidian** (command, view, event listener, DOM

@@ -1,5 +1,34 @@
 # Explorer changelog
 
+## newversion (upcoming)
+
+### Virtual (file-free) folder notes
+
+- Folder notes can now exist as virtual notes without creating a physical `.md` file on disk. This keeps your vault clean while still allowing you to customize Explorer settings per folder.
+- Added a button in the folder note block settings to easily toggle between a file-free folder note ("Remove file") and a physical Markdown file ("Add file").
+
+### Smart folder-note creation
+
+- Choose when/how folder notes are created via the "Create missing folder notes when" setting:
+  - `Clicking missing links and edits` (smart mode)
+  - `Always create`
+  - `Edits only` (manual mode)
+- Control whether creating folders from Explorer automatically creates a physical Markdown file or keeps them file-free by default via the `Create folder note on new folder` toggle.
+
+### Seamless renaming & syncing
+
+- Keep folders and their matching folder notes synchronized automatically when either side is renamed.
+- Moving or deleting folders from Explorer or Obsidian's sidebar correctly tracks, moves, or cleans up the virtual folder note configurations.
+
+### Sidebar improvements
+
+- Optionally hide Markdown folder-note files from Obsidian's sidebar file explorer to reduce clutter.
+- Click folder names in the sidebar to open either physical or virtual folder views.
+
+### Layout & styling refinements
+
+- Refined CSS and layouts across card views, list views, and the action bar for a cleaner, more consistent visual style.
+
 ## 1.3.1(02-06-2026)
 
 ### Hompage can can have an inbox for new notes
