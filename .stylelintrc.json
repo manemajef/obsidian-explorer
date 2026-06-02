@@ -18,7 +18,10 @@
     "declaration-property-value-keyword-no-deprecated": null,
     "declaration-block-no-redundant-longhand-properties": null,
     "no-duplicate-selectors": true,
-    "declaration-block-no-duplicate-properties": [true, { "ignore": ["consecutive-duplicates-with-different-values"] }]
+    "declaration-block-no-duplicate-properties": [
+      true,
+      { "ignore": ["consecutive-duplicates-with-different-values"] }
+    ]
   },
   "ignoreFiles": ["styles.css", "node_modules/**", "main.js"]
 }

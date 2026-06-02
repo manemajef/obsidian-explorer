@@ -10,21 +10,24 @@
   --explorer-radius-md: 6px;
   --explorer-radius-lg: 0.8em;
   --explorer-radius-pill: 999px;
-  --explorer-image-glass: rgba(0,0,0,0);
+  --explorer-image-glass: rgba(0, 0, 0, 0);
   --explorer-control-size: 32px;
-  --explorer-glass-background: linear-gradient( 135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.85) 100% ), rgba(0, 0, 0, 0.01);
+  --explorer-glass-background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.85) 100%
+    ),
+    rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
   --explorer-shadow-glass:
-    0 4px 12px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
   --explorer-shadow-glass-sm:
-    0 2px 8px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
   --explorer-shadow-glass-hover:
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
   --explorer-glass-shine: transparent;
   --explorer-hover-scale: 1.05;
@@ -38,19 +41,36 @@
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
   cursor: text;
 }
-.explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
+.explorer-container
+  :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
 }
 .explorer-container.use-glass .clickable-icon {
   --corner-shape: round;
 }
-.explorer-drag-active .explorer-container :where(.explorer-folder-card, .explorer-card, .explorer-list, .explorer-parent-action) > * {
+.explorer-drag-active
+  .explorer-container
+  :where(
+    .explorer-folder-card,
+    .explorer-card,
+    .explorer-list,
+    .explorer-parent-action
+  )
+  > * {
   pointer-events: none;
 }
 .explorer-hide-folder-notes .explorer-native-folder-note {
   display: none;
 }
-.explorer-container :where(a, button, .explorer-card, .explorer-folder-card, .paging-label, .explorer-badge) {
+.explorer-container
+  :where(
+    a,
+    button,
+    .explorer-card,
+    .explorer-folder-card,
+    .paging-label,
+    .explorer-badge
+  ) {
   transition:
     color var(--explorer-hover-transition),
     background-color var(--explorer-hover-transition),
@@ -61,7 +81,15 @@
     text-decoration-color var(--explorer-hover-transition);
 }
 @media (prefers-reduced-motion: reduce) {
-  .explorer-container :where(a, button, .explorer-card, .explorer-folder-card, .paging-label, .explorer-badge) {
+  .explorer-container
+    :where(
+      a,
+      button,
+      .explorer-card,
+      .explorer-folder-card,
+      .paging-label,
+      .explorer-badge
+    ) {
     transition: none;
   }
 }
@@ -78,21 +106,45 @@
   padding: 2px;
 }
 .theme-dark .explorer-container {
-  --explorer-glass-background: linear-gradient( 145deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.01) 100% ), rgba(255, 255, 255, 0.01);
+  --explorer-glass-background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.01) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    ),
+    rgba(255, 255, 255, 0.01);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
-  --explorer-shadow-glass: 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-shadow-glass-sm: 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-glass-image: linear-gradient( rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02), rgba(255,255,255,0.01), rgba(255,255,255,0.03) );
+  --explorer-shadow-glass:
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --explorer-shadow-glass-sm:
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --explorer-glass-image: linear-gradient(
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.03)
+  );
   --explorer-shadow-glass-hover:
-    0 4px 10px rgba(0,0,0,0.08),
-    inset 1px 1px 0 0 rgba(255,255,255,0.08),
-    inset -1px -1px 0 0 rgba(255,255,255,0.03);
-  --explorer-glass-shine: linear-gradient( 135deg, rgba(255, 255, 255, 0.15) 0%, transparent 35%, transparent 65%, rgba(255, 255, 255, 0.15) 100% );
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 1px 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset -1px -1px 0 0 rgba(255, 255, 255, 0.03);
+  --explorer-glass-shine: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 35%,
+    transparent 65%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
   --explorer-bg-interactive: rgba(255, 255, 255, 0.025);
   --explorer-bg-alt: var(--explorer-bg-interactive);
 }
 .theme-dark.is-mobile .explorer-container {
-  --explorer-glass-background: linear-gradient( 145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.04) 100% ), rgba(255, 255, 255, 0.001);
+  --explorer-glass-background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    ),
+    rgba(255, 255, 255, 0.001);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-shadow-glass: 0 3px 10px rgba(0, 0, 0, 0.18);
 }
@@ -137,7 +189,14 @@
   padding-bottom: 2em;
   max-height: 80vh;
 }
-.is-mobile .explorer-container :where(.explorer-folder-card, .explorer-card, .explorer-list, .explorer-modern-note) {
+.is-mobile
+  .explorer-container
+  :where(
+    .explorer-folder-card,
+    .explorer-card,
+    .explorer-list,
+    .explorer-modern-note
+  ) {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -156,7 +215,9 @@
 .explorer-container.use-glass .glass-surface:hover,
 .explorer-container.use-glass .glass-surface:focus-visible,
 .explorer-container.use-glass .glass-surface:focus-within {
-  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(
+    var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
+  );
   z-index: 10;
 }
 .explorer-container.use-glass .glass-surface--shine::after {
@@ -164,7 +225,9 @@
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  box-shadow: inset .5px 1px 0 rgba(255, 255, 255, 0.14), inset -1px -1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
 .bar {
@@ -195,7 +258,7 @@
   flex-shrink: 0;
 }
 .is-mobile .explorer-separator {
-  margin: .2em var(--explorer-space-5);
+  margin: 0.2em var(--explorer-space-5);
 }
 .explorer-divider {
   display: block;
@@ -222,11 +285,11 @@
   align-items: center;
   border-radius: 50%;
   justify-content: flex-end;
-  padding: .25em .25em;
+  padding: 0.25em 0.25em;
   color: var(--color-red);
   flex: 0;
-  opacity: .7;
-  transition: transform .2s;
+  opacity: 0.7;
+  transition: transform 0.2s;
 }
 .explorer-badge.pin:hover {
   opacity: 1;
@@ -246,7 +309,10 @@
   color: var(--text-muted);
 }
 .tags-container {
-  --explorer-tags-min-height: calc(var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) + var(--tag-padding-y, 0.2em) + 3px);
+  --explorer-tags-min-height: calc(
+    var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) +
+      var(--tag-padding-y, 0.2em) + 3px
+  );
   background: transparent;
   border-radius: var(--tag-radius, var(--explorer-radius-pill));
   box-sizing: border-box;
@@ -370,7 +436,7 @@
 .is-mobile .explorer-folder-card {
   grid-column: span 2;
   max-width: none;
-  padding: 1.15em .5em;
+  padding: 1.15em 0.5em;
   border-radius: 16px;
 }
 @media (width >= 800px) {
@@ -415,10 +481,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--explorer-space-3);
-  margin-top: .25em;
+  margin-top: 0.25em;
 }
 .is-mobile .explorer-cards-grid {
-  grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 22vw, 180px), 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(120px, 22vw, 180px), 1fr)
+  );
   margin-top: unset;
 }
 .explorer-card {
@@ -443,8 +512,6 @@
   outline-offset: 2px;
   background-color: var(--background-modifier-hover);
   box-shadow: var(--bases-cards-shadow-hover);
-}
-.is-mobile .explorer-card {
 }
 .explorer-card:hover {
   box-shadow: var(--bases-cards-shadow-hover);
@@ -471,7 +538,7 @@
   height: 0.9em;
 }
 .explorer-card-exts {
-  opacity: .8;
+  opacity: 0.8;
   display: flex;
   align-items: center;
   gap: var(--explorer-space-1);
@@ -508,6 +575,8 @@
 .explorer-card-link.card-link-normal a,
 .explorer-card-link.card-link-normal a.internal-link {
   color: var(--text-normal);
+  opacity: 0.9;
+  font-size: 0.9em;
   font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 }
 .explorer-container .explorer-card-footer:hover a,
@@ -518,7 +587,7 @@
   padding-top: var(--explorer-space-2);
 }
 .explorer-card-tags-container {
-  opacity: .9;
+  opacity: 0.9;
   font-size: 0.9em;
 }
 .explorer-card-tags-container .value-list-item,
@@ -571,7 +640,7 @@
 .explorer-list {
   padding: 0.4em var(--explorer-space-1);
   list-style: none;
-  font-size: 0.9em;
+  font-size: var(--list-font-size);
 }
 .explorer-list.is-dragging {
   opacity: 0.5;
@@ -590,12 +659,12 @@
   border-radius: var(--explorer-radius-sm);
 }
 .explorer-list-tags {
-  margin-inline-start: .5em;
-  margin-block: -.1em;
-  font-size: .9em;
+  margin-inline-start: 0.5em;
+  margin-block: -0.1em;
+  font-size: 0.9em;
 }
 .list-tags-separator {
-  margin-inline-end: .5em;
+  margin-inline-end: 0.5em;
 }
 .explorer-list-tags > * {
   flex: 0 0 auto;
@@ -605,7 +674,7 @@
 }
 .explorer-list-container {
   border-radius: var(--explorer-radius-md);
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 .explorer-list.pinned {
   position: relative;
@@ -614,16 +683,16 @@
 }
 .explorer-list-pin {
   position: absolute;
-  inset-inline-start: -.2em;
+  inset-inline-start: -0.2em;
   display: inline-flex;
   line-height: 0;
 }
 .explorer-list-pin.with-bullets {
-  inset-inline-start: -.4em;
+  inset-inline-start: -0.4em;
 }
 .explorer-list-container .explorer-list-pin .pin {
   margin: 0;
-  padding: .25em;
+  padding: 0.25em;
 }
 .explorer-list-pin .pin svg {
   display: block;
@@ -631,8 +700,8 @@
   height: 1rem;
 }
 .explorer-modern-list .pin {
-  margin-top: .4em;
-  margin-inline-end: .4em;
+  margin-top: 0.4em;
+  margin-inline-end: 0.4em;
 }
 .explorer-modern-list {
   padding-bottom: var(--explorer-space-2);
@@ -687,8 +756,8 @@
 }
 .explorer-modern-list--desktop .explorer-modern-note {
   gap: 0;
-  padding-bottom: var(--explorer-space-2);
-  padding-top: var(--explorer-space-3);
+  padding-bottom: var(--explorer-space-3);
+  padding-top: var(--explorer-space-4);
   cursor: unset;
 }
 .explorer-modern-note-last {
@@ -725,13 +794,18 @@
 .explorer-container a.explorer-modern-note__title,
 .explorer-container a.explorer-modern-note__title.internal-link {
   color: var(--text-normal);
-  opacity: .8;
+  opacity: 0.8;
   text-decoration: none;
 }
-.explorer-container .explorer-modern-list--desktop a.explorer-modern-note__title.internal-link:hover {
+.explorer-container
+  .explorer-modern-list--desktop
+  a.explorer-modern-note__title.internal-link:hover {
   text-decoration: underline;
 }
-.explorer-container .explorer-modern-list--desktop .explorer-modern-note:hover a.explorer-modern-note__title.internal-link {
+.explorer-container
+  .explorer-modern-list--desktop
+  .explorer-modern-note:hover
+  a.explorer-modern-note__title.internal-link {
   opacity: 1;
 }
 .explorer-modern-note__ext {
@@ -859,7 +933,9 @@
   box-shadow: var(--explorer-shadow-glass);
 }
 .theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:hover,
-.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:focus-visible {
+.theme-dark.is-mobile
+  .explorer-container.use-glass
+  .paging-load-more:focus-visible {
   background: rgba(255, 255, 255, 0.028);
   border-color: rgba(255, 255, 255, 0.09);
 }
@@ -908,7 +984,9 @@
 }
 .explorer-container.use-glass .action-item:hover,
 .explorer-container.use-glass .action-item:focus-visible {
-  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(
+    var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
+  );
   z-index: 10;
 }
 .explorer-container:not(.use-glass) .action-item {
@@ -952,7 +1030,9 @@
   padding-block: 0;
   padding-inline: 6px;
 }
-.is-mobile .explorer-container.use-glass :where(.action-item, .action-group-item) {
+.is-mobile
+  .explorer-container.use-glass
+  :where(.action-item, .action-group-item) {
   width: auto;
   height: auto;
   min-width: 0;
@@ -1010,7 +1090,8 @@
 }
 .explorer-search__input input {
   min-width: 250px;
-  padding: var(--explorer-space-5) 3em var(--explorer-space-5) var(--explorer-space-4);
+  padding: var(--explorer-space-5) 3em var(--explorer-space-5)
+    var(--explorer-space-4);
   background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border-hover);
   border-radius: var(--explorer-radius-pill);
@@ -1061,7 +1142,7 @@
   color: var(--text-muted);
   line-height: var(--line-height-normal);
 }
-.explorer-confirmation-dialog-checkbox input[type=checkbox] {
+.explorer-confirmation-dialog-checkbox input[type="checkbox"] {
   flex: 0 0 auto;
   margin: 0;
 }

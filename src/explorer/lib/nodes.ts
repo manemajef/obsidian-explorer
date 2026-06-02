@@ -72,7 +72,7 @@ export class ExplorerFileNode {
 
   get parentExplorerFolder(): TFolder | null {
     return this.isFolderNote
-      ? this.file.parent?.parent ?? null
+      ? (this.file.parent?.parent ?? null)
       : this.file.parent;
   }
 
@@ -108,15 +108,16 @@ export class ExplorerFileNode {
     if (this.cachedTags) return this.cachedTags;
     const cache = this.app.metadataCache.getFileCache(this.file);
     this.cachedTags = cache
-      ? getAllTags(cache)?.map((tag) => tag.replace(/^#+\s*/g, "")) ?? []
+      ? (getAllTags(cache)?.map((tag) => tag.replace(/^#+\s*/g, "")) ?? [])
       : [];
     return this.cachedTags;
   }
 
   get frontmatter(): Record<string, unknown> | undefined {
     if (this.cachedFrontmatter) return this.cachedFrontmatter;
-    this.cachedFrontmatter =
-      this.app.metadataCache.getFileCache(this.file)?.frontmatter;
+    this.cachedFrontmatter = this.app.metadataCache.getFileCache(
+      this.file,
+    )?.frontmatter;
     return this.cachedFrontmatter;
   }
 
@@ -195,8 +196,8 @@ export class ExplorerFolderNode {
   get folderNoteNode(): ExplorerFileNode | null {
     const folderNote = this.folderNote;
     return folderNote
-      ? this.nodeFactory?.createFileNode(folderNote) ??
-          new ExplorerFileNode(this.app, folderNote)
+      ? (this.nodeFactory?.createFileNode(folderNote) ??
+          new ExplorerFileNode(this.app, folderNote))
       : null;
   }
 

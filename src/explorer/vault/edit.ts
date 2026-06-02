@@ -64,7 +64,9 @@ async function renameFile(
   const destinationPath = childPath(file.parent, filename);
   if (destinationPath === file.path) return false;
   if (app.vault.getAbstractFileByPath(destinationPath)) {
-    new Notice(`Could not rename ${file.name}: an item with that name already exists.`);
+    new Notice(
+      `Could not rename ${file.name}: an item with that name already exists.`,
+    );
     return false;
   }
 
@@ -89,7 +91,9 @@ async function renameFolder(
   const destinationPath = childPath(folder.parent, name);
   if (destinationPath === sourcePath) return false;
   if (app.vault.getAbstractFileByPath(destinationPath)) {
-    new Notice(`Could not rename ${sourceName}: an item with that name already exists.`);
+    new Notice(
+      `Could not rename ${sourceName}: an item with that name already exists.`,
+    );
     return false;
   }
 
@@ -117,7 +121,9 @@ async function renameFolder(
         app.vault.getAbstractFileByPath(movedFolderNotePath);
       if (!(movedFolderNote instanceof TFile)) {
         await rollBackFolderRename(app, folder, sourcePath);
-        new Notice("Could not rename folder: its folder note could not be found.");
+        new Notice(
+          "Could not rename folder: its folder note could not be found.",
+        );
         return false;
       }
 
@@ -148,7 +154,9 @@ async function rollBackFolderRename(
   try {
     await app.fileManager.renameFile(folder, sourcePath);
   } catch {
-    new Notice("The folder was renamed, but its folder note could not be synchronized.");
+    new Notice(
+      "The folder was renamed, but its folder note could not be synchronized.",
+    );
   }
 }
 
@@ -159,5 +167,7 @@ function isValidName(name: string): boolean {
 }
 
 function childPath(parent: TFolder | null, name: string): string {
-  return normalizePath(parent?.isRoot() ? name : `${parent?.path ?? ""}/${name}`);
+  return normalizePath(
+    parent?.isRoot() ? name : `${parent?.path ?? ""}/${name}`,
+  );
 }

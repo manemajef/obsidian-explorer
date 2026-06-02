@@ -396,9 +396,7 @@ function coercePluginSettingValue<K extends PluginSettingKey>(
   }
 
   if (field.kind === "folder-picker") {
-    return (
-      normalizeFolderPaths(value) ?? fallback
-    ) as PluginGlobalSettings[K];
+    return (normalizeFolderPaths(value) ?? fallback) as PluginGlobalSettings[K];
   }
 
   return (

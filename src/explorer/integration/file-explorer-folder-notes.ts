@@ -51,14 +51,24 @@ export function registerFileExplorerFolderNoteBehavior(
       subtree: true,
     });
 
-    plugin.registerDomEvent(doc, "click", (evt) => {
-      void handleFileExplorerFolderClick(app, getSettings(), evt);
-    }, true);
-    plugin.registerDomEvent(doc, "auxclick", (evt) => {
-      if (evt.button !== 2) {
+    plugin.registerDomEvent(
+      doc,
+      "click",
+      (evt) => {
         void handleFileExplorerFolderClick(app, getSettings(), evt);
-      }
-    }, true);
+      },
+      true,
+    );
+    plugin.registerDomEvent(
+      doc,
+      "auxclick",
+      (evt) => {
+        if (evt.button !== 2) {
+          void handleFileExplorerFolderClick(app, getSettings(), evt);
+        }
+      },
+      true,
+    );
 
     refresh();
   };
@@ -133,10 +143,7 @@ function getFileExplorerItemElement(el: HTMLElement): HTMLElement {
   return item instanceof HTMLElement ? item : el;
 }
 
-function getFileExplorerItem(
-  app: App,
-  path: string,
-): FileExplorerItem | null {
+function getFileExplorerItem(app: App, path: string): FileExplorerItem | null {
   for (const leaf of app.workspace.getLeavesOfType("file-explorer")) {
     const view = (leaf as unknown as FileExplorerLeafView).view;
     const item = view?.fileItems?.[path];

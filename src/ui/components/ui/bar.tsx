@@ -1,6 +1,4 @@
-import React, {
-  PropsWithChildren,
-} from "react";
+import React, { PropsWithChildren } from "react";
 
 /* ────────────────────────────────
    Bar
@@ -11,11 +9,7 @@ type BarProps = PropsWithChildren<{
 }>;
 
 export function Bar({ children, className }: BarProps) {
-  return (
-    <div className={`bar ${className ?? ""}`}>
-      {children}
-    </div>
-  );
+  return <div className={`bar ${className ?? ""}`}>{children}</div>;
 }
 
 /* ────────────────────────────────

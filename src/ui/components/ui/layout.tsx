@@ -63,8 +63,6 @@ export function Divider(props: {
   const { className, size = "sm" } = props;
 
   return (
-    <div
-      className={`explorer-divider divider-${size} ${className ?? ""}`}
-    />
+    <div className={`explorer-divider divider-${size} ${className ?? ""}`} />
   );
 }

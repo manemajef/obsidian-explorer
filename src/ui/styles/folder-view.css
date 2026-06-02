@@ -6,14 +6,10 @@
   gap: var(--explorer-space-3);
 }
 
-
 .explorer-folders-grid::after {
   content: "";
   flex: 999 1 0;
 }
-
-
-
 
 .explorer-folder-card {
   box-sizing: border-box;
@@ -38,7 +34,6 @@
   max-width: 220px;
   min-width: 0;
   text-align: center;
-
 }
 @container (width <= 500px) {
   .explorer-folder-card {
@@ -72,7 +67,6 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
-
 /* .explorer-folder-card--long-name {
   max-width: 180px;
   text-align: center;
@@ -93,8 +87,6 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
-
-
 
 .explorer-folder-card:hover {
   box-shadow: var(--shadow-s);
@@ -119,10 +111,10 @@
 .is-mobile .explorer-folder-card {
   grid-column: span 2;
   max-width: none;
-  padding: 1.15em .5em;
+  padding: 1.15em 0.5em;
   border-radius: 16px;
 }
-@media(width >= 800px) {
+@media (width >= 800px) {
   .is-mobile .explorer-folder-card {
     padding: 1.15em 1.5em;
   }
@@ -135,8 +127,6 @@
 .theme-dark.is-mobile .explorer-folder-card {
   background-color: var(--background-primary-alt);
 }
-
-
 
 /* 
 .theme-dark.is-mobile .use-glass .explorer-folder-card,
@@ -156,10 +146,8 @@
 }
 
 .theme-dark .explorer-folder-card:hover {
-
   box-shadow: var(--explorer-shadow-glass-hover);
   /* box-shadow: var(--input-shadow-hover); */
-
 }
 
 .theme-dark .explorer-folder-card.is-drop-target {
@@ -178,7 +166,7 @@
 .explorer-container a.explorer-folder-link,
 .explorer-container a.explorer-folder-link.internal-link {
   /* font-weight: var(--font-semibold); */
-  font-weight: calc(var(--font-weight) + var(--bold-modifier) );
+  font-weight: calc(var(--font-weight) + var(--bold-modifier));
 
   color: var(--text-normal);
   text-decoration: none;

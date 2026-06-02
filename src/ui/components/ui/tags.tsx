@@ -7,7 +7,11 @@ export function Tag(props: {
   children: React.ReactNode;
 }) {
   const { className, style, children } = props;
-  return <Badge variant="tag" className={className} style={style}>{children}</Badge>;
+  return (
+    <Badge variant="tag" className={className} style={style}>
+      {children}
+    </Badge>
+  );
 }
 
 export function TagsContainer(props: {

@@ -55,22 +55,26 @@ export function showFolderContextMenu(
 
   const menu = beginFileMenu(event, config, folder.folder);
   const folderNote = folder.folderNoteNode;
-  const hasAction = folderNote
-    ? addPinItem(menu, config, folderNote)
-    : false;
+  const hasAction = folderNote ? addPinItem(menu, config, folderNote) : false;
 
   if (hasAction) menu.addSeparator();
   if (!folderNote) {
     menu.addItem((item) =>
-      item.setTitle("Create folder note").setIcon("file-plus-2").onClick(() => {
-        void config.actions.createFolderNote(folder);
-      }),
+      item
+        .setTitle("Create folder note")
+        .setIcon("file-plus-2")
+        .onClick(() => {
+          void config.actions.createFolderNote(folder);
+        }),
     );
   }
   menu.addItem((item) =>
-    item.setTitle("Rename folder").setIcon("pencil").onClick(() => {
-      void config.actions.renameFolder(folder);
-    }),
+    item
+      .setTitle("Rename folder")
+      .setIcon("pencil")
+      .onClick(() => {
+        void config.actions.renameFolder(folder);
+      }),
   );
   menu.addSeparator();
   menu.addItem((item) =>
@@ -173,14 +177,20 @@ function addFolderNoteNavigationItems(
   label: string,
 ): void {
   menu.addItem((item) =>
-    item.setTitle(label).setIcon("folder-open").onClick(() => {
-      void config.actions.openFolder(folder, false);
-    }),
+    item
+      .setTitle(label)
+      .setIcon("folder-open")
+      .onClick(() => {
+        void config.actions.openFolder(folder, false);
+      }),
   );
   menu.addItem((item) =>
-    item.setTitle(`${label} in new tab`).setIcon("folder-plus").onClick(() => {
-      void config.actions.openFolder(folder, true);
-    }),
+    item
+      .setTitle(`${label} in new tab`)
+      .setIcon("folder-plus")
+      .onClick(() => {
+        void config.actions.openFolder(folder, true);
+      }),
   );
 }
 
@@ -209,8 +219,11 @@ function addRenameFileItem(
 ): void {
   const itemName = file.isMarkdown ? "note" : "file";
   menu.addItem((item) =>
-    item.setTitle(`Rename ${itemName}`).setIcon("pencil").onClick(() => {
-      void config.actions.renameFile(file);
-    }),
+    item
+      .setTitle(`Rename ${itemName}`)
+      .setIcon("pencil")
+      .onClick(() => {
+        void config.actions.renameFile(file);
+      }),
   );
 }

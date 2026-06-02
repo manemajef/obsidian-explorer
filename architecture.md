@@ -16,12 +16,12 @@ Both `src/ui/` and `src/explorer/` follow the same three rules:
 3. **Leaves** are sorted by role, and the role is visible from the path. A leaf
    never reaches sideways into a peer or upward into the root.
 
-| | UI (`src/ui/`) | Backend (`src/explorer/`) |
-|---|---|---|
-| Composition root | [`explorer-ui.tsx`](src/ui/explorer-ui.tsx) | [`runtime.tsx`](src/explorer/runtime.tsx) |
-| Data contract | `ExplorerModel` (props) | [`model.ts`](src/explorer/model.ts) |
-| Methods contract | `ExplorerActions` | [`actions.ts`](src/explorer/actions.ts) |
-| Leaves | `components/*-view.tsx` | `lib/ data/ vault/ navigation/ integration/` |
+|                  | UI (`src/ui/`)                              | Backend (`src/explorer/`)                    |
+| ---------------- | ------------------------------------------- | -------------------------------------------- |
+| Composition root | [`explorer-ui.tsx`](src/ui/explorer-ui.tsx) | [`runtime.tsx`](src/explorer/runtime.tsx)    |
+| Data contract    | `ExplorerModel` (props)                     | [`model.ts`](src/explorer/model.ts)          |
+| Methods contract | `ExplorerActions`                           | [`actions.ts`](src/explorer/actions.ts)      |
+| Leaves           | `components/*-view.tsx`                     | `lib/ data/ vault/ navigation/ integration/` |
 
 The UI render path touches **only** `model` + `actions`. That is what lets you
 edit `cards-view.tsx` without thinking about `list-view.tsx`.

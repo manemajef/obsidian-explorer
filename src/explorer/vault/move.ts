@@ -8,8 +8,7 @@ export function canMoveIntoFolder(
   if (!(source instanceof TFolder)) return true;
 
   return (
-    source.path !== target.path &&
-    !target.path.startsWith(`${source.path}/`)
+    source.path !== target.path && !target.path.startsWith(`${source.path}/`)
   );
 }
 
@@ -27,7 +26,9 @@ export async function moveIntoFolder(
 
   const destinationPath = normalizePath(`${target.path}/${source.name}`);
   if (app.vault.getAbstractFileByPath(destinationPath)) {
-    new Notice(`Could not move ${source.name}: an item with that name already exists.`);
+    new Notice(
+      `Could not move ${source.name}: an item with that name already exists.`,
+    );
     return false;
   }
 

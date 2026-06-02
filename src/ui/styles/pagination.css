@@ -101,7 +101,9 @@
 }
 
 .theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:hover,
-.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:focus-visible {
+.theme-dark.is-mobile
+  .explorer-container.use-glass
+  .paging-load-more:focus-visible {
   background: rgba(255, 255, 255, 0.028);
   border-color: rgba(255, 255, 255, 0.09);
 }

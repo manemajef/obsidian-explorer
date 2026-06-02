@@ -1,11 +1,15 @@
 # Explorer changelog
 
 ## 1.3.1(02-06-2026)
-### Hompage can can have an inbox for new notes 
-- newly created notes from Hompage would be created at whatever inbox location you decide. default is `./*`  meaning root. 
+
+### Hompage can can have an inbox for new notes
+
+- newly created notes from Hompage would be created at whatever inbox location you decide. default is `./*` meaning root.
+
 ### Bug fixes
-- shading issues in dark mode in mobile have been fixed 
-- tags have been fixed and no longer act wierd when they feel like 
+
+- shading issues in dark mode in mobile have been fixed
+- tags have been fixed and no longer act wierd when they feel like
 - action icon on mobile now match obsidian by size width and padding to look consistent.
 
 ## 1.3.0 (01-06-2026)
@@ -40,16 +44,22 @@ existing users.
 - Open temporary folder views now keep following their folder when it is renamed.
 
 ### Navigation and UI
+
 #### Mobile `Action bar` Redesign
-Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass` is on). 
+
+Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass` is on).
+
 #### Obsidian sidebar folder notes
+
 - Added settings for hiding folder-note files from Obsidian's sidebar file
   tree.
 - When folder-note files are hidden, clicking folder names in the sidebar can
   now open existing folder notes or temporary folder notes.
 - Sidebar folder-name clicks are strict: collapse arrows and row whitespace keep
   Obsidian's normal sidebar behavior.
-#### Additional Changes 
+
+#### Additional Changes
+
 - The parent button and `Go to parent folder` command now open temporary folder
   views for missing parent folder notes unless the user chooses `Always create`.
 - Missing folder-note links no longer imply note creation when the selected
@@ -59,7 +69,9 @@ Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass
 - The action bar layout was tightened for desktop and mobile.
 
 ## 1.2.5 (29-05-26)
+
 ### Introducing Modern List
+
 ![](./assets/modern-list.png)
 Previously known as `Mobile list`, the modern list is now available on desktop as well. To use it, choose `Modern` under `List style` in the block settings. To return to a regular Markdown list, choose `Markdown`, or choose `Plain Markdown` for a list without bullets.
 
@@ -68,23 +80,23 @@ Previously known as `Mobile list`, the modern list is now available on desktop a
 - You can now choose regular Markdown lists instead of the modern list on mobile from the plugin settings.
 
 ### Bug fixes
+
 - Fixed line wrapping issues in the cards view.
 - List dragging now uses only the title as the drag preview.
 - Input corners are rounded again.
 
 ### Breaking changes
+
 - The `Use bullets in lists` setting was removed. Use the `Plain Markdown` list style instead.
 
-
-
-
 ## 1.2.4 (29-05-26)
-- fix style issues caused by `css` variables value changes in Latest obsidian version `1.130` and additional layout issues.
-- fixed mobile list not opening link when pressed on the edge 
-- added hectic feedback on context menu on mobile 
 
+- fix style issues caused by `css` variables value changes in Latest obsidian version `1.130` and additional layout issues.
+- fixed mobile list not opening link when pressed on the edge
+- added hectic feedback on context menu on mobile
 
 ## 1.2.3 (28-05-26)
+
 - Urgent fix for Mobile folder view grid to have 3 columns again
 
 ## 1.2.2 (28-05-26)
@@ -99,7 +111,6 @@ Previously known as `Mobile list`, the modern list is now available on desktop a
 ## 1.2.1 (27-05-26)
 
 Add drag and drop for mobile as well.
-
 
 ## 1.2.0 (27-05-26)
 
@@ -150,29 +161,30 @@ homepage in new tabs — all without leaving your note.
   notes list; folder navigation remains available through folder buttons.
 
 היי שלום
+
 ## 1.1.15 (24-05-26)
 
 ### New
+
 - Added `sortBy: "nameDesc"` for reverse filename sorting, useful for date-prefixed notes like `YYYY.MM`.
 - Added a confirmation dialog before creating missing folder notes, with a persisted "Don't show again" option (can be toggled via settings)
 
-
-
 ## 1.1.14 (23-05-25)
+
 ### New
-- added `Explorer: toggle pin for active note`  command
+
+- added `Explorer: toggle pin for active note` command
 
 ### Fix
-- fixed visual problems in mobile 
-- Fixed search in mobile while live editing 
 
-
+- fixed visual problems in mobile
+- Fixed search in mobile while live editing
 
 ## 1.1.13 (23-05-26)
 
 ### Improved search:
 
--  Support multi query. For example :`#important #todo @myproject` will search for a file inside `myproject` folder that contains both `#important` and `#todo` tags. 
+- Support multi query. For example :`#important #todo @myproject` will search for a file inside `myproject` folder that contains both `#important` and `#todo` tags.
 - Show exact match first and then weaker matches (if query is `#work` then `#work` will show before `#homework`)
 
 ### Bug fixes
@@ -241,49 +253,61 @@ Add command palette support for basic functionality, polish UI, and general opti
 Full Changelog: 1.1.2...1.1.3
 
 ## 1.1.2 (12-05-26)
+
 - Raise minAppVersion to 1.4.4 for FileManager.processFrontMatter compatibility
 - Use window timer APIs to satisfy Obsidian validator guidance
 - Keep release assets aligned with repository manifest and versions.json
 
 ## 1.1.1 (12-05-26)
+
 - Fix Obsidian compatibility checks
 - Raise minAppVersion to 1.4.0
 - Update versions.json for the new minimum supported Obsidian version
 
 ## 1.1.0 (06-02-26)
+
 UI refresh and mobile improvements.
 
 ## 1.0.1 (01-02-26)
+
 ### What's New
 
-#### Glass UI Redesign  
+#### Glass UI Redesign
+
 Complete visual overhaul with a glass/frosted style — buttons, action bar, folder cards, and badges all use the new aesthetic. Toggleable via the `useGlass` setting.
 
-#### Inline Search  
+#### Inline Search
+
 Search now lives inside the action bar instead of a separate row. Faster too — debounced pipeline with no lag, flat BFS traversal across subfolders, and search by `#tag` or `@foldernote` prefixes.
 
 Atomic Component System  
 New reusable UI primitives: ActionButton, IconButton, Badge, and layout components (Group, Stack, Separator). Cleaner, more consistent look across card and list views.
 
-#### Parent Folder Button  
+#### Parent Folder Button
+
 Replaced breadcrumbs with a simple parent-folder navigation button. Works better on mobile.
 
-#### Pagination Opt-Out  
+#### Pagination Opt-Out
+
 New `usePagination` setting — disable it to show all files at once without page controls.
 
-#### Mobile Polish  
+#### Mobile Polish
+
 Better layout on mobile devices — breadcrumbs hidden, parent button shown instead, improved touch targets.
 
 #### Other Improvements
+
 - Pinned files (`pin: true` / `fav: true` in frontmatter) shown at top with heart icon
 - PDF files properly hidden when `onlyNotes` is enabled
 - RTL pagination direction fix
 - CSS split into component-scoped files for maintainability
 
 ## 1.0.0 (23-01-26)
+
 Initial release
 
 ### Features:
+
 - Card and list view modes
 - Sorting by date, name, or last edited
 - Pagination and search

@@ -191,8 +191,5 @@ function useIncrementalReveal(files: ExplorerFileNode[], pageSize: number) {
 }
 
 function useFileSignature(files: ExplorerFileNode[]): string {
-  return useMemo(
-    () => files.map((file) => file.path).join("\0"),
-    [files],
-  );
+  return useMemo(() => files.map((file) => file.path).join("\0"), [files]);
 }

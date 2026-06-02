@@ -1,6 +1,6 @@
 .explorer-container {
   /* Spacing scale */
-  
+
   --explorer-space-1: 0.25em;
   --explorer-space-2: 0.5em;
   --explorer-space-3: 0.75em;
@@ -13,38 +13,33 @@
   --explorer-radius-md: 6px;
   --explorer-radius-lg: 0.8em;
   --explorer-radius-pill: 999px;
-  --explorer-image-glass: rgba(0,0,0,0);
+  --explorer-image-glass: rgba(0, 0, 0, 0);
 
   /* Control sizes */
   --explorer-control-size: 32px;
 
   /* Glass surfaces */
 
-  --explorer-glass-background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.32) 0%,
-    rgba(255, 255, 255, 0.85) 100%
-  ),
+  --explorer-glass-background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.85) 100%
+    ),
     rgba(0, 0, 0, 0.01);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
   --explorer-shadow-glass:
-    0 4px 12px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-  
-    --explorer-shadow-glass-sm:
-    0 2px 8px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+
+  --explorer-shadow-glass-sm:
+    0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
 
-
-
   --explorer-shadow-glass-hover:
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-    
-    
+
   --explorer-glass-shine: transparent;
 
   /* Motion */
@@ -64,8 +59,8 @@
   cursor: text;
 }
 
-
-.explorer-container :where(button:disabled, [aria-disabled="true"], .paging-dots) {
+.explorer-container
+  :where(button:disabled, [aria-disabled="true"], .paging-dots) {
   cursor: default;
 }
 
@@ -73,12 +68,15 @@
   --corner-shape: round;
 }
 
-.explorer-drag-active .explorer-container :where(
+.explorer-drag-active
+  .explorer-container
+  :where(
     .explorer-folder-card,
     .explorer-card,
     .explorer-list,
     .explorer-parent-action
-  ) > * {
+  )
+  > * {
   pointer-events: none;
 }
 
@@ -86,7 +84,8 @@
   display: none;
 }
 
-.explorer-container :where(
+.explorer-container
+  :where(
     a,
     button,
     .explorer-card,
@@ -105,7 +104,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .explorer-container :where(
+  .explorer-container
+    :where(
       a,
       button,
       .explorer-card,
@@ -136,33 +136,30 @@
 } */
 
 .theme-dark .explorer-container {
-  --explorer-glass-background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.01) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  ),
+  --explorer-glass-background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.01) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    ),
     rgba(255, 255, 255, 0.01);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.02);
   --explorer-shadow-glass:
-    0 4px 10px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 
   --explorer-shadow-glass-sm:
-      0 4px 10px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
- 
---explorer-glass-image: linear-gradient(
- rgba(255, 255, 255, 0.03),
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+
+  --explorer-glass-image: linear-gradient(
+    rgba(255, 255, 255, 0.03),
     rgba(255, 255, 255, 0.02),
-    rgba(255,255,255,0.01),
-    rgba(255,255,255,0.03)
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.03)
   );
 
-
   --explorer-shadow-glass-hover:
-    0 4px 10px rgba(0,0,0,0.08),
-    inset 1px 1px 0 0 rgba(255,255,255,0.08),
-    inset -1px -1px 0 0 rgba(255,255,255,0.03);
+    0 4px 10px rgba(0, 0, 0, 0.08), inset 1px 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset -1px -1px 0 0 rgba(255, 255, 255, 0.03);
 
   --explorer-glass-shine: linear-gradient(
     135deg,
@@ -175,13 +172,13 @@
   --explorer-bg-alt: var(--explorer-bg-interactive);
 }
 
-
 .theme-dark.is-mobile .explorer-container {
-  --explorer-glass-background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.04) 100%
-  ),
+  --explorer-glass-background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    ),
     rgba(255, 255, 255, 0.001);
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-shadow-glass: 0 3px 10px rgba(0, 0, 0, 0.18);
@@ -237,7 +234,9 @@
   max-height: 80vh;
 }
 
-.is-mobile .explorer-container :where(
+.is-mobile
+  .explorer-container
+  :where(
     .explorer-folder-card,
     .explorer-card,
     .explorer-list,

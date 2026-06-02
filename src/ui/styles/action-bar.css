@@ -1,7 +1,6 @@
 /* ===== Actions Bar ===== */
 #explorer-actions {
   direction: ltr;
-
 }
 
 .explorer-actions-start,
@@ -40,7 +39,9 @@
 
 .explorer-container.use-glass .action-item:hover,
 .explorer-container.use-glass .action-item:focus-visible {
-  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(
+    var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
+  );
   z-index: 10;
 }
 
@@ -64,7 +65,6 @@
   outline-offset: 2px;
   background: var(--background-modifier-hover);
 }
-
 
 .action-group {
   display: inline-flex;
@@ -94,7 +94,9 @@
   padding-inline: 6px;
 }
 
-.is-mobile .explorer-container.use-glass :where(.action-item, .action-group-item) {
+.is-mobile
+  .explorer-container.use-glass
+  :where(.action-item, .action-group-item) {
   width: auto;
   height: auto;
   min-width: 0;

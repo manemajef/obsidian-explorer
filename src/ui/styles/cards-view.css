@@ -3,14 +3,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--explorer-space-3);
-  margin-top: .25em;
+  margin-top: 0.25em;
 }
 
-
 .is-mobile .explorer-cards-grid {
-  /* grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); */
-    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 22vw, 180px), 1fr));
-
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(120px, 22vw, 180px), 1fr)
+  );
   margin-top: unset;
 }
 
@@ -38,11 +38,6 @@
   outline-offset: 2px;
   background-color: var(--background-modifier-hover);
   box-shadow: var(--bases-cards-shadow-hover);
-}
-
-.is-mobile .explorer-card {
-  /* box-shadow: var(--explorer-shadow-glass); */
-  /* border: var(--explorer-border-glass); */
 }
 
 .explorer-card:hover {
@@ -74,12 +69,11 @@
 }
 
 .explorer-card-exts {
-  opacity: .8;
+  opacity: 0.8;
   display: flex;
   align-items: center;
   gap: var(--explorer-space-1);
 }
-
 
 .explorer-card-pin-slot {
   display: flex;
@@ -106,21 +100,22 @@
 }
 
 .explorer-card-footer {
-
   color: var(--text-muted);
   font-size: 0.7em;
 }
 
 .explorer-container .explorer-card-footer a,
-.explorer-container .explorer-card-footer a.internal-link, .explorer-container .explorer-card-footer .explorer-card-folder-link {
+.explorer-container .explorer-card-footer a.internal-link,
+.explorer-container .explorer-card-footer .explorer-card-folder-link {
   color: var(--text-muted);
 }
 
-.explorer-card-link.card-link-normal a, .explorer-card-link.card-link-normal a.internal-link {
-color: var(--text-normal);
-/* font-size: .9em; */
-font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
-
+.explorer-card-link.card-link-normal a,
+.explorer-card-link.card-link-normal a.internal-link {
+  color: var(--text-normal);
+  opacity: 0.9;
+  font-size: 0.9em;
+  font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 }
 
 .explorer-container .explorer-card-footer:hover a,
@@ -133,7 +128,7 @@ font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 }
 
 .explorer-card-tags-container {
-  opacity: .9;
+  opacity: 0.9;
   /* margin-top: var(--explorer-space-1); */
   font-size: 0.9em;
 }

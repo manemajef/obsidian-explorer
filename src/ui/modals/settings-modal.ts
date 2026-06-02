@@ -86,12 +86,12 @@ export class ExplorerSettingsModal extends Modal {
           : "Create a Markdown file for this folder note so you can write text in it.",
       )
       .addButton((button) => {
-        button.setButtonText(isFile ? "Remove file" : "Add file").onClick(
-          async () => {
+        button
+          .setButtonText(isFile ? "Remove file" : "Add file")
+          .onClick(async () => {
             await this.conversion?.run();
             this.close();
-          },
-        );
+          });
         if (isFile) button.setWarning();
       });
   }

@@ -47,7 +47,9 @@ export async function createNewNote(
       return;
     }
 
-    await app.workspace.getLeaf(false).openFile(await app.vault.create(notePath, ""));
+    await app.workspace
+      .getLeaf(false)
+      .openFile(await app.vault.create(notePath, ""));
   } catch (e) {
     new Notice(`Failed to create note: ${e}`);
   }

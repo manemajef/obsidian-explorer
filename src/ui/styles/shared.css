@@ -11,7 +11,9 @@
 .explorer-container.use-glass .glass-surface:hover,
 .explorer-container.use-glass .glass-surface:focus-visible,
 .explorer-container.use-glass .glass-surface:focus-within {
-  transform: scale(var(--explorer-glass-hover-scale, var(--explorer-hover-scale)));
+  transform: scale(
+    var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
+  );
   z-index: 10;
 }
 
@@ -21,7 +23,7 @@
   inset: -1px;
   border-radius: inherit;
   box-shadow:
-    inset .5px 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
     inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
@@ -52,7 +54,7 @@
 
 .explorer-separator {
   min-width: 1px;
-  min-height: max-content; 
+  min-height: max-content;
   margin: 0 var(--explorer-space-5);
   border-inline-start: 1px solid var(--background-modifier-border);
   align-self: stretch;
@@ -60,7 +62,7 @@
 }
 
 .is-mobile .explorer-separator {
-  margin: .2em var(--explorer-space-5);
+  margin: 0.2em var(--explorer-space-5);
 }
 
 .explorer-divider {
@@ -83,7 +85,6 @@
   height: calc(var(--explorer-space-4) + var(--explorer-space-4));
 }
 
-
 /* ------------------------------------------------------------
    Badges
    ------------------------------------------------------------ */
@@ -93,17 +94,16 @@
   padding: 0.1em 0.5em;
 }
 
-
 .explorer-badge.pin {
   display: inline-flex;
   align-items: center;
   border-radius: 50%;
   justify-content: flex-end;
-  padding: .25em .25em;
+  padding: 0.25em 0.25em;
   color: var(--color-red);
-  flex:0;
-  opacity: .7;
-  transition: transform .2s;
+  flex: 0;
+  opacity: 0.7;
+  transition: transform 0.2s;
 }
 .explorer-badge.pin:hover {
   opacity: 1;
@@ -126,7 +126,10 @@
 }
 
 .tags-container {
-  --explorer-tags-min-height: calc(var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) + var(--tag-padding-y, 0.2em) + 3px);
+  --explorer-tags-min-height: calc(
+    var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) +
+      var(--tag-padding-y, 0.2em) + 3px
+  );
   background: transparent;
   border-radius: var(--tag-radius, var(--explorer-radius-pill));
   box-sizing: border-box;

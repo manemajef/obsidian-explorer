@@ -29,6 +29,7 @@ Add an Explorer block to any folder note:
 
 ````markdown
 ```explorer
+
 ```
 ````
 

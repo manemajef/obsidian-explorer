@@ -134,10 +134,7 @@ export function ActionsBar(props: {
           <Group className="explorer-actions-controls">
             <ActionGroup>
               {onSaveFolderNote && (
-                <ActionGroupItem
-                  icon="pen-line"
-                  onClick={onSaveFolderNote}
-                />
+                <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
               )}
               <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
               <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
