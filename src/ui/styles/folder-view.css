@@ -149,7 +149,9 @@
 
 .explorer-container a.explorer-folder-link,
 .explorer-container a.explorer-folder-link.internal-link {
-  font-weight: var(--font-semibold);
+  /* font-weight: var(--font-semibold); */
+  font-weight: calc(var(--font-weight) + var(--bold-modifier) );
+
   color: var(--text-normal);
   text-decoration: none;
   cursor: pointer;

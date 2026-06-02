@@ -106,13 +106,20 @@
 }
 
 .explorer-card-footer {
-  opacity: 0.5;
+
+  color: var(--text-muted);
   font-size: 0.7em;
 }
 
 .explorer-container .explorer-card-footer a,
-.explorer-container .explorer-card-footer a.internal-link {
-  color: var(--text-normal);
+.explorer-container .explorer-card-footer a.internal-link, .explorer-container .explorer-card-footer .explorer-card-folder-link {
+  color: var(--text-muted);
+}
+
+.explorer-card-link.card-link-normal a, .explorer-card-link.card-link-normal a.internal-link {
+color: var(--text-normal);
+font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
+
 }
 
 .explorer-container .explorer-card-footer:hover a,
@@ -126,7 +133,7 @@
 
 .explorer-card-tags-container {
   opacity: .9;
-  margin-top: var(--explorer-space-2);
+  /* margin-top: var(--explorer-space-1); */
   font-size: 0.9em;
 }
 

@@ -469,6 +469,16 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       order: 10,
     },
   }),
+  useLinkColorInCard: booleanField({
+    label: "Use link color in card header",
+    description: "Turn off to use text color in cards link instead",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "appearance",
+      order: 10.2,
+    },
+  }),
   ShowIconsInCards: booleanField({
     label: "Show icons in cards view",
     description: "Show icons in card footers.",

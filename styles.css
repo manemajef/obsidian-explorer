@@ -379,7 +379,7 @@
 }
 .explorer-container a.explorer-folder-link,
 .explorer-container a.explorer-folder-link.internal-link {
-  font-weight: var(--font-semibold);
+  font-weight: calc(var(--font-weight) + var(--bold-modifier));
   color: var(--text-normal);
   text-decoration: none;
   cursor: pointer;
@@ -476,12 +476,18 @@
   margin: var(--explorer-space-1) 0;
 }
 .explorer-card-footer {
-  opacity: 0.5;
+  color: var(--text-muted);
   font-size: 0.7em;
 }
 .explorer-container .explorer-card-footer a,
-.explorer-container .explorer-card-footer a.internal-link {
+.explorer-container .explorer-card-footer a.internal-link,
+.explorer-container .explorer-card-footer .explorer-card-folder-link {
+  color: var(--text-muted);
+}
+.explorer-card-link.card-link-normal a,
+.explorer-card-link.card-link-normal a.internal-link {
   color: var(--text-normal);
+  font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 }
 .explorer-container .explorer-card-footer:hover a,
 .explorer-container .explorer-card-footer:hover a.internal-link {
@@ -492,7 +498,6 @@
 }
 .explorer-card-tags-container {
   opacity: .9;
-  margin-top: var(--explorer-space-2);
   font-size: 0.9em;
 }
 .explorer-card-tags-container .value-list-item,
