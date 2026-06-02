@@ -1,4 +1,12 @@
 # Explorer changelog
+## 1.3.1(01-06-2026)
+### Hompage can can have an inbox for new notes 
+- newly created notes from Hompage would be created at whatever inbox location you decide. default is `./*`  meaning root. 
+### Bug fixes
+- shading issues in dark mode in mobile have been fixed 
+- tags have been fixed and no longer act wierd when they feel like 
+- action icon on mobile now match obsidian by size width and padding to look consistent.
+
 ## 1.3.0 (01-06-2026)
 
 This release changes how Explorer handles folders that do not yet have folder
