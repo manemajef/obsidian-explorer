@@ -20,6 +20,24 @@ type SettingFieldContext = {
   sourcePath: string;
 };
 
+type FolderPickerControlOptions = {
+  app: App;
+  value: string[];
+  availableFolders: string[];
+  placeholder?: string;
+  selectedContainerClass: string;
+  addButtonText?: string;
+  onChange: (paths: string[]) => void;
+  single?: boolean;
+  renderSelected?: boolean;
+  emptyName?: string;
+  emptyDescription?: string;
+  selectedDescription?: string;
+  clearButtonText?: string;
+  emptyButtonText?: string;
+  normalizeInput?: (path: string) => string;
+};
+
 class FolderSuggest extends AbstractInputSuggest<string> {
   constructor(
     app: App,
@@ -128,54 +146,116 @@ function renderFolderPicker(
     return;
   }
 
-  const availableFolders = getDescendantFolderPaths(context);
-  let selected = [...value];
-  let input = "";
-  let search: SearchComponent;
-  const selectedEl = container.createDiv("explorer-excluded-folders");
+  renderFolderPickerControl(container, setting, {
+    app: context.app,
+    value,
+    availableFolders: getDescendantFolderPaths(context),
+    placeholder,
+    selectedContainerClass: "explorer-excluded-folders",
+    addButtonText: "Exclude",
+    onChange: (paths) => {
+      onChange(key, paths as BlockSettings[typeof key]);
+    },
+  });
+}
 
-  const update = (paths: string[]): void => {
-    selected = paths;
-    onChange(key, paths as BlockSettings[typeof key]);
-    renderSelectedFolders();
-  };
-  const add = (path: string): void => {
-    const normalized = path.trim();
-    if (
-      !availableFolders.includes(normalized) ||
-      selected.includes(normalized)
-    ) {
+export function renderFolderPickerControl(
+  container: HTMLElement,
+  setting: Setting,
+  options: FolderPickerControlOptions,
+): void {
+  const {
+    app,
+    availableFolders,
+    placeholder,
+    selectedContainerClass,
+    addButtonText,
+    onChange,
+    single = false,
+    renderSelected = true,
+    emptyName,
+    emptyDescription,
+    selectedDescription,
+    clearButtonText = "Remove",
+    emptyButtonText,
+    normalizeInput = (path) => path.trim(),
+  } = options;
+  let selected = [...options.value];
+  let input = single ? (selected[0] ?? "") : "";
+  let search: SearchComponent | null = null;
+  const selectedEl = renderSelected
+    ? container.createDiv(selectedContainerClass)
+    : null;
+
+  const renderSelectedFolders = (): void => {
+    if (!selectedEl) return;
+    selectedEl.empty();
+    if (selected.length === 0 && emptyName) {
+      const emptySetting = new Setting(selectedEl).setName(emptyName);
+      if (emptyDescription) emptySetting.setDesc(emptyDescription);
+      if (emptyButtonText) {
+        emptySetting.addButton((button) => {
+          button.setButtonText(emptyButtonText).setDisabled(true);
+        });
+      }
       return;
     }
-    update([...selected, normalized]);
-    search.setValue("");
-    input = "";
-  };
-  const renderSelectedFolders = (): void => {
-    selectedEl.empty();
+
     for (const path of selected) {
-      new Setting(selectedEl).setName(path).addButton((button) => {
-        button.setButtonText("Remove").onClick(() => {
-          update(selected.filter((selectedPath) => selectedPath !== path));
+      const selectedSetting = new Setting(selectedEl).setName(path);
+      if (selectedDescription) selectedSetting.setDesc(selectedDescription);
+      selectedSetting.addButton((button) => {
+        button.setButtonText(clearButtonText).onClick(() => {
+          onUpdate(selected.filter((selectedPath) => selectedPath !== path));
         });
       });
     }
   };
+  const onUpdate = (paths: string[]): void => {
+    selected = paths;
+    onChange(paths);
+    renderSelectedFolders();
+  };
+  const add = (path: string): void => {
+    const normalized = normalizeInput(path);
+    if (single && normalized === "") {
+      onUpdate([]);
+      search?.setValue("");
+      input = "";
+      return;
+    }
+
+    if (!availableFolders.includes(normalized)) return;
+    if (!single && selected.includes(normalized)) return;
+
+    onUpdate(single ? [normalized] : [...selected, normalized]);
+    search?.setValue(single ? normalized : "");
+    input = single ? normalized : "";
+  };
 
   setting.addSearch((component) => {
     search = component;
-    component.setPlaceholder(placeholder ?? "").onChange((value) => {
-      input = value;
+    component
+      .setPlaceholder(placeholder ?? "")
+      .setValue(input)
+      .onChange((value) => {
+        input = value;
+        if (!single) return;
+
+        const normalized = normalizeInput(value);
+        if (normalized === "") {
+          onUpdate([]);
+        } else if (availableFolders.includes(normalized)) {
+          onUpdate([normalized]);
+        }
+      });
+    new FolderSuggest(app, component.inputEl, availableFolders).onSelect(add);
+  });
+  if (addButtonText) {
+    setting.addButton((button) => {
+      button.setButtonText(addButtonText).onClick(() => add(input));
     });
-    new FolderSuggest(
-      context.app,
-      component.inputEl,
-      availableFolders,
-    ).onSelect((path) => add(path));
-  });
-  setting.addButton((button) => {
-    button.setButtonText("Exclude").onClick(() => add(input));
-  });
+  }
 
   renderSelectedFolders();
 }

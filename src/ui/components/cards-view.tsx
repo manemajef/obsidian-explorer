@@ -12,6 +12,7 @@ import {
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
+import { TagList } from "./ui/tags";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -35,7 +36,11 @@ export function CardsView(props: {
                 actions.app,
                 file.dropTargetFolder,
                 (sourcePath, folder, fromFolderNote) =>
-                  actions.movePathIntoFolder(sourcePath, folder, fromFolderNote),
+                  actions.movePathIntoFolder(
+                    sourcePath,
+                    folder,
+                    fromFolderNote,
+                  ),
               )}
               onContextMenuCapture={(event) =>
                 showFileContextMenu(event, contextMenu, file)
@@ -79,13 +84,10 @@ export function CardsView(props: {
               </div>
 
               {settings.showTags && file.tags.length > 0 && (
-                <div className="explorer-card-tags-container explorer-cards-row">
-                  {file.tags.map((t) => (
-                    <Badge key={t} variant="tag">
-                      {t}
-                    </Badge>
-                  ))}
-                </div>
+                <TagList
+                  tags={file.tags}
+                  className="explorer-card-tags-container explorer-cards-row"
+                />
               )}
 
               <div className="explorer-card-footer explorer-cards-row">
@@ -112,13 +114,8 @@ function CardFooter(props: {
   actions: ExplorerActions;
   currentFolderPath: string;
 }): React.JSX.Element | null {
-  const {
-    file,
-    extForCard,
-    showIconsInCards,
-    actions,
-    currentFolderPath,
-  } = props;
+  const { file, extForCard, showIconsInCards, actions, currentFolderPath } =
+    props;
 
   switch (extForCard) {
     case "ctime":

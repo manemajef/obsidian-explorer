@@ -1,4 +1,4 @@
-import { App, Notice, Plugin, TFile, WorkspaceLeaf } from "obsidian";
+import { App, Notice, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { PluginSettings } from "../settings";
 
 const HOME_PAGE_TEMPLATE =
@@ -132,4 +132,18 @@ export function resolveHomePagePath(
   return basename && !basename.includes("/") && !basename.includes("\\")
     ? `${basename}.md`
     : null;
+}
+
+export function resolveHomePageNoteInboxPath(
+  app: App,
+  settings: PluginSettings,
+  sourcePath: string,
+  fallbackFolderPath: string,
+): string {
+  const homePath = resolveHomePagePath(app, settings);
+  if (!homePath || sourcePath !== homePath) return fallbackFolderPath;
+
+  const inboxPath = settings.homePageNoteInbox[0] ?? "";
+  const inbox = app.vault.getAbstractFileByPath(inboxPath);
+  return inbox instanceof TFolder ? inbox.path : "";
 }

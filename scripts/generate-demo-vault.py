@@ -16,6 +16,7 @@ import argparse
 import random
 import shutil
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 import subprocess
 
@@ -81,6 +82,13 @@ TAGS_POOL = [
 ]
 
 EXTRA_EXTS = [("pdf", 30), ("base", 20), ("png", 10), ("canvas", 5)]
+MAX_PINNED_NOTES = 8
+
+
+@dataclass
+class FrontmatterState:
+    pinned_count: int = 0
+    max_pinned: int = MAX_PINNED_NOTES
 
 
 def slugify(name: str) -> str:
@@ -99,17 +107,16 @@ def make_file_basename(rng: random.Random) -> str:
     return f"{rng.choice(WORDS)}-{rng.choice(WORDS)}-{rng.randint(1, 9999)}"
 
 
-def make_frontmatter(rng: random.Random) -> str | None:
-    pinned_so_far = 0
+def make_frontmatter(rng: random.Random, state: FrontmatterState) -> str | None:
     fields: list[str] = []
     if rng.random() < 0.4:
         n = rng.randint(1, 3)
         tags = rng.sample(TAGS_POOL, n)
         fields.append("tags:")
         fields.extend(f"  - {t}" for t in tags)
-    if rng.random() < 0.08 and pinned_so_far <= 30:
+    if rng.random() < 0.08 and state.pinned_count < state.max_pinned:
         fields.append("pin: true")
-        pinned_so_far += 1
+        state.pinned_count += 1
     if rng.random() < 0.3:
         desc = " ".join(rng.choices(WORDS, k=rng.randint(4, 10)))
         fields.append(f"description: {desc}")
@@ -143,9 +150,9 @@ def build_folder_tree(
     return folders
 
 
-def write_markdown(path: Path, rng: random.Random) -> None:
+def write_markdown(path: Path, rng: random.Random, state: FrontmatterState) -> None:
     parts = [
-        make_frontmatter(rng),
+        make_frontmatter(rng, state),
         f"# {path.stem.replace('-', ' ').title()}\n\n",
         make_body(rng),
     ]
@@ -156,7 +163,9 @@ def write_extra(path: Path) -> None:
     path.write_bytes(b"")
 
 
-def write_folder_notes(rng: random.Random, folders: list[Path], root: Path) -> int:
+def write_folder_notes(
+    rng: random.Random, folders: list[Path], root: Path, state: FrontmatterState
+) -> int:
     count = 0
     for folder in folders:
         if folder == root:
@@ -164,14 +173,14 @@ def write_folder_notes(rng: random.Random, folders: list[Path], root: Path) -> i
         if rng.random() < 0.5:
             note = folder / f"{folder.name}.md"
             if not note.exists():
-                fm = make_frontmatter(rng) or ""
-                note.write_text("\n```explorer\n````")
+                fm = make_frontmatter(rng, state) or ""
+                note.write_text(f"{fm}\n```explorer\n```\n", encoding="utf-8")
                 count += 1
     return count
 
 
 def populate_files(
-    rng: random.Random, folders: list[Path], n_files: int
+    rng: random.Random, folders: list[Path], n_files: int, state: FrontmatterState
 ) -> tuple[int, int]:
     md_count = 0
     extra_count = 0
@@ -200,7 +209,7 @@ def populate_files(
             path = folder / f"{base}.md"
             if path.exists():
                 continue
-            write_markdown(path, rng)
+            write_markdown(path, rng, state)
             md_count += 1
     return md_count, extra_count
 
@@ -250,20 +259,22 @@ def main() -> int:
     shutil.rmtree(hot_reload_dir / ".git")
 
     rng = random.Random(args.seed)
+    frontmatter_state = FrontmatterState()
     print(
         f"Building {args.folders} folders under {root} (max depth {args.max_depth})..."
     )
     folders = build_folder_tree(rng, root, args.folders, args.max_depth)
 
     print("Writing folder notes...")
-    fn_count = write_folder_notes(rng, folders, root)
+    fn_count = write_folder_notes(rng, folders, root, frontmatter_state)
 
     print(f"Writing ~{args.files} files...")
-    md_count, extra_count = populate_files(rng, folders, args.files)
+    md_count, extra_count = populate_files(rng, folders, args.files, frontmatter_state)
 
     print(
         f"Done. Folders: {len(folders) - 1}, folder notes: {fn_count}, "
-        f"md files: {md_count}, extras: {extra_count}, total files: "
+        f"md files: {md_count}, extras: {extra_count}, pins: "
+        f"{frontmatter_state.pinned_count}, total files: "
         f"{md_count + extra_count + fn_count}"
     )
     print(f"Open in Obsidian: {root}")

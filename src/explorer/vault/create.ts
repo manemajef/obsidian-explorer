@@ -1,4 +1,4 @@
-import { App, Notice, TFile } from "obsidian";
+import { App, Notice, TFile, normalizePath } from "obsidian";
 import { promptForName } from "../../ui/modals/prompt-modal";
 import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
 
@@ -8,8 +8,8 @@ export async function createFolderWithNote(
   name: string,
   template = FOLDERNOTE_TEMPLATE,
 ): Promise<void> {
-  const folderPath = `${basePath}/${name}`;
-  const folderNotePath = `${folderPath}/${name}.md`;
+  const folderPath = normalizePath(`${basePath}/${name}`);
+  const folderNotePath = normalizePath(`${folderPath}/${name}.md`);
 
   try {
     if (!app.vault.getAbstractFileByPath(folderPath)) {
@@ -29,7 +29,7 @@ export async function createNewNote(
   basePath: string,
   name: string,
 ): Promise<void> {
-  const notePath = `${basePath}/${name}.md`;
+  const notePath = normalizePath(`${basePath}/${name}.md`);
 
   try {
     const existing = app.vault.getAbstractFileByPath(notePath);

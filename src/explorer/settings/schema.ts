@@ -351,6 +351,19 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
+  homePageNoteInbox: folderPickerField({
+    label: "Inbox for homepage notes",
+    description:
+      "Create notes from the homepage in this folder. Leave empty for the vault root.",
+    defaultValue: [],
+    placeholder: "Choose an inbox folder",
+    ui: {
+      surfaces: ["plugin"],
+      section: "homepage",
+      order: 4,
+      visibleWhen: { key: "useHomePage", value: true },
+    },
+  }),
   forceReadingMode: booleanField({
     label: "Always open folder notes in reading mode",
     description:

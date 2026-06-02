@@ -9,6 +9,7 @@ import {
   openFolderNote,
   type ExplorerLocation,
 } from "./navigation/folder-notes";
+import { resolveHomePageNoteInboxPath } from "./navigation/homepage";
 import {
   createFolderNoteFileWithConfirmation,
   type SavePluginSettings,
@@ -109,7 +110,15 @@ export class ExplorerActions {
   }
 
   async createNote(): Promise<void> {
-    await promptAndCreateNote(this.app, this.currentFolder.path);
+    await promptAndCreateNote(
+      this.app,
+      resolveHomePageNoteInboxPath(
+        this.app,
+        this.settings,
+        this.sourcePath,
+        this.currentFolder.path,
+      ),
+    );
   }
 
   async movePathIntoFolder(

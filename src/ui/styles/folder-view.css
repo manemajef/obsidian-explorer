@@ -5,6 +5,7 @@
   gap: var(--explorer-space-4);
 }
 
+
 .explorer-folders-grid::after {
   content: "";
   flex: 999 1 0;
@@ -45,6 +46,9 @@
   max-width: 220px;
   min-width: 0;
   text-align: center;
+  /* flex: 0 1 auto;
+
+  max-width: min(220px, 30vw); */
 }
 
 /* .explorer-folder-card--long-name {
@@ -86,7 +90,8 @@
 .theme-dark .explorer-folder-card {
   border: none;
   /* box-shadow: var(--input-shadow); */
-  background: var(--explorer-glass-background);
+  background-color: var(--explorer-glass-background);
+  background-image: var(--explorer-glass-image);
 }
 
 .is-mobile .explorer-folder-card {

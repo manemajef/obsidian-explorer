@@ -127,7 +127,8 @@
   box-sizing: content-box;
   flex: 0 0 auto;
   line-height: 0;
-  padding: 11px;
+  /* padding: 10px;  */
+  padding: calc((var(--view-header-height) - var(--icon-l)) / 2);
 }
 
 .explorer-container:not(.use-glass) .action-group-item {

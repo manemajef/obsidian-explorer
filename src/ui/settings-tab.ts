@@ -14,7 +14,10 @@ import {
   isBlockSettingVisible,
   isPluginSettingVisible,
 } from "../explorer/settings";
-import { renderSettingField } from "./render-setting-field";
+import {
+  renderFolderPickerControl,
+  renderSettingField,
+} from "./render-setting-field";
 import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
 
 type SectionMeta = {
@@ -214,6 +217,11 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       return;
     }
 
+    if (field.kind === "folder-picker") {
+      this.renderPluginFolderPicker(containerEl, setting, key);
+      return;
+    }
+
     setting.addText((text) => {
       text
         .setPlaceholder(field.placeholder?.(this.app.vault.getName()) ?? "")
@@ -224,6 +232,38 @@ export class ExplorerSettingsTab extends PluginSettingTab {
             value as PluginGlobalSettings[typeof key],
           );
         });
+    });
+  }
+
+  private renderPluginFolderPicker(
+    containerEl: HTMLElement,
+    setting: Setting,
+    key: PluginSettingKey,
+  ): void {
+    const field = PLUGIN_SETTINGS_SCHEMA[key];
+    if (field.kind !== "folder-picker") return;
+
+    const availableFolders = this.app.vault
+      .getAllFolders()
+      .map((folder) => folder.path)
+      .filter((path) => path !== "/")
+      .sort((a, b) => a.localeCompare(b));
+
+    renderFolderPickerControl(containerEl, setting, {
+      app: this.app,
+      value: this.plugin.settings[key] as string[],
+      availableFolders,
+      placeholder: "Vault root",
+      selectedContainerClass: "explorer-plugin-folder-picker",
+      single: true,
+      renderSelected: false,
+      normalizeInput: (path) => path.trim().replace(/^\/+|\/+$/g, ""),
+      onChange: (paths) => {
+        void this.updatePluginSetting(
+          key,
+          paths as PluginGlobalSettings[typeof key],
+        );
+      },
     });
   }
 

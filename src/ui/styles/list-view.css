@@ -26,20 +26,9 @@
 }
 
 .explorer-list-tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border-radius: var(--explorer-radius-pill);
-  justify-content: flex-start;
   margin-inline-start: .5em;
   margin-block: -.1em;
-  padding-block: .1em;
-  gap: 0.25em;
   font-size: .9em;
-
-
 }
 
 .list-tags-separator {
@@ -134,12 +123,27 @@
 .use-glass .explorer-modern-list {
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);
+  background-color: var(--explorer-glass-background);
+  /* background-image: linear-gradient(
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.05)
+  ); */
+  background-image: var(--explorer-glass-image);
 }
+
 
 
 .theme-dark.is-mobile .use-glass .explorer-modern-list {
-  background-color: var(--background-primary-alt);
+  /* background-color: var(--background-primary-alt); */
+  background-color: var(--explorer-glass-background);
+  /* background-image: linear-gradient(
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.05)
+  ); */
+  background-image: var(--explorer-glass-image);
+  box-shadow: var(--explorer-shadow-glass);
 }
+
 
 
 .explorer-modern-list-item {
@@ -200,8 +204,7 @@
   min-width: 0;
   max-width: 60%;
   gap: 0.25em;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-block: 0.15em;
   /* scrollbar-width: thin; */
 }
@@ -233,9 +236,7 @@
 }
 
 .explorer-modern-note__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25em;
+  max-width: 100%;
   min-width: 0;
 }
 
@@ -259,10 +260,7 @@
   }
 
   .is-mobile .explorer-modern-note__tags {
-    flex-wrap: nowrap;
-    justify-content: flex-end;
-    overflow-x: auto;
-    overflow-y: hidden;
+    max-width: 100%;
   }
 }
 

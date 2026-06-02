@@ -14,7 +14,7 @@ import {
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
-
+import { TagList } from "./ui/tags";
 type ListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
@@ -81,15 +81,13 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                 draggable={false}
                 text={file.displayName}
               />
-              {file.tags.length > 0 && <span className="list-tags-separator" />}
-              <div className="explorer-list-tags">
-                {settings.showTags &&
-                  file.tags.map((t) => (
-                    <Badge key={t} variant="tag">
-                      {t}
-                    </Badge>
-                  ))}
-              </div>
+              {settings.showTags && file.tags.length > 0 && (
+                <>
+                  <span className="list-tags-separator" />
+                  <TagList tags={file.tags} className="explorer-list-tags" />
+                </>
+              )}
+
               {file.extensionLabel && (
                 <>
                   <Bar.Spring />
@@ -156,11 +154,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
               </Group>
               {!isMobile && settings.showTags && file.tags.length > 0 && (
                 <Group className="explorer-modern-note__desktop-tags">
-                  {file.tags.map((t) => (
-                    <Badge key={t} variant="tag">
-                      {t}
-                    </Badge>
-                  ))}
+                  <TagList tags={file.tags} />
                 </Group>
               )}
               {file.extensionLabel && (
@@ -174,15 +168,12 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
             </div>
 
             <div className="explorer-modern-note__footer">
-              <div className="explorer-modern-note__tags">
-                {settings.showTags &&
-                  isMobile &&
-                  file.tags.map((t) => (
-                    <Badge key={t} variant="tag">
-                      {t}
-                    </Badge>
-                  ))}
-              </div>
+              {settings.showTags && isMobile && (
+                <TagList
+                  tags={file.tags}
+                  className="explorer-modern-note__tags"
+                />
+              )}
             </div>
           </div>
 
