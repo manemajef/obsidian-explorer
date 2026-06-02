@@ -165,8 +165,6 @@ export class VirtualFolderNoteView extends ItemView {
     // });
     const explorerContainer = section.createDiv();
 
-    const persist = this.host.getPluginSettings().persistVirtualFolderNotes;
-
     this.cleanupExplorer = await mountExplorer({
       app: this.app,
       container: explorerContainer,
@@ -175,26 +173,18 @@ export class VirtualFolderNoteView extends ItemView {
       getBlockDefaults: this.host.getBlockDefaults,
       getPluginSettings: this.host.getPluginSettings,
       savePluginSettings: this.host.savePluginSettings,
-      initialOverrides: persist ? this.host.getFolderData(folder.path) : {},
+      initialOverrides: this.host.getFolderData(folder.path),
       registerRefresh: this.host.registerRefresh,
       onSaveFolderNote: () => this.materialize(),
+      folderNote: { isFile: false, convert: () => this.materialize() },
       replaceExplorerBlock: async (settings) => {
-        // When persistence is enabled, changing a per-view setting writes to
-        // the data store and the folder stays virtual. Otherwise fall back to
-        // the legacy behavior of materializing a real Markdown folder note.
-        if (this.host.getPluginSettings().persistVirtualFolderNotes) {
-          this.host.setFolderData(
-            folder.path,
-            getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
-          );
-          return;
-        }
-        const file = await this.writeFolderNoteBlock(
-          folder,
-          formatExplorerBlock(settings, this.host.getBlockDefaults()),
+        // Changing a per-view setting on a file-free note always persists to
+        // the data store — it never silently creates a file. Use the "Add file"
+        // action (materialize) to create a Markdown folder note explicitly.
+        this.host.setFolderData(
+          folder.path,
+          getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
         );
-        if (!file) return false;
-        await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
       },
     });
   }

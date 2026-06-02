@@ -112,7 +112,7 @@ export function registerExplorerCommands(
     checkCallback: (checking: boolean) => {
       const virtualView = getActiveVirtualFolderNote(app);
 
-      if (!virtualView?.folder || !getSettings().persistVirtualFolderNotes) {
+      if (!virtualView?.folder) {
         return false;
       }
 

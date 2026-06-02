@@ -55,32 +55,28 @@ export function FolderButtons(props: {
               void actions.openFolder(folder, e.ctrlKey || e.metaKey);
             }}
           >
-            {linkCreatesFolderNote ? (
-              <InternalLink
-                path={folderNotePath}
-                className="explorer-folder-link"
-                additionalClasses={
-                  isMissing
-                    ? ["is-unresolved", "explorer-folder-link--missing"]
-                    : undefined
-                }
-                draggable={false}
-                tooltip={
-                  isMissing ? `Create folder note ${folder.name}.md` : undefined
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  void actions.openFolderLink(folder, e.ctrlKey || e.metaKey);
-                }}
-              >
-                {linkText}
-              </InternalLink>
-            ) : (
-              <span className="explorer-folder-link explorer-folder-link--missing">
-                {linkText}
-              </span>
-            )}
+            <InternalLink
+              path={folderNotePath}
+              className="explorer-folder-link"
+              additionalClasses={
+                isMissing
+                  ? ["is-unresolved", "explorer-folder-link--missing"]
+                  : undefined
+              }
+              draggable={false}
+              tooltip={
+                isMissing && linkCreatesFolderNote
+                  ? `Create folder note ${folder.name}.md`
+                  : undefined
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                void actions.openFolderLink(folder, e.ctrlKey || e.metaKey);
+              }}
+            >
+              {linkText}
+            </InternalLink>
           </div>
         );
       })}

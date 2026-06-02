@@ -416,6 +416,11 @@ function getExistingUserFallback<K extends PluginSettingKey>(
   if (key === "syncFolderNotes") {
     return false as PluginGlobalSettings[K];
   }
+  // Existing installs kept creating a Markdown folder note for every new
+  // folder; preserve that. New installs default to file-free folders.
+  if (key === "createFolderNoteOnNewFolder") {
+    return true as PluginGlobalSettings[K];
+  }
   return fallback;
 }
 

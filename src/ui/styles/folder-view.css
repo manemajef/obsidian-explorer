@@ -166,12 +166,13 @@
   box-shadow: var(--input-shadow-hover);
 }
 
-.explorer-folder-card--missing {
+/* .explorer-folder-card--missing {
   opacity: 0.7;
-}
+} */
 
 .explorer-folder-link--missing {
-  color: var(--text-muted);
+  /* color: var(--text-muted); */
+  font-weight: var(--font-weight);
 }
 
 .explorer-container a.explorer-folder-link,
@@ -187,4 +188,5 @@
 .explorer-container a.explorer-folder-link:hover,
 .explorer-container a.explorer-folder-link.internal-link:hover {
   text-decoration: none;
+  color: var(--text-normal);
 }

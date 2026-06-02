@@ -301,13 +301,24 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
 });
 
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
+  createFolderNoteOnNewFolder: booleanField({
+    label: "Create Markdown folder notes for new folders",
+    description:
+      "When you create a folder from Explorer, also create a Markdown folder note file. Off keeps new folders file-free — you can add a file later from the folder note's settings.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+      order: 0.5,
+    },
+  }),
   missingFolderNoteBehavior: enumField({
-    label: "Missing folder notes",
+    label: "Create missing folder notes when",
     description: "Choose when Explorer creates the Markdown note.",
-    defaultValue: "smart",
+    defaultValue: "manual",
     options: ["smart", "create", "manual"],
     optionLabels: {
-      smart: "Links and edits",
+      smart: "Clicking missing links and edits",
       create: "Always create",
       manual: "Edits only",
     },
@@ -315,17 +326,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "navigation",
       order: 1,
-    },
-  }),
-  createFolderNoteOnNewFolder: booleanField({
-    label: "Create a folder note for new folders",
-    description:
-      "When creating a folder from Explorer, also create a Markdown folder note. Off keeps new folders as virtual folder notes.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 2,
     },
   }),
   useHomePage: booleanField({
@@ -439,17 +439,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "navigation",
       order: 6.9,
-    },
-  }),
-  persistVirtualFolderNotes: booleanField({
-    label: "Store virtual folder note settings without creating files",
-    description:
-      "Save per-folder Explorer settings to plugin storage instead of creating a Markdown folder note. Lets virtual folder notes keep custom settings on their own.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 6.95,
     },
   }),
   hideFolderNotesInFileExplorer: booleanField({

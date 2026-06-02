@@ -118,6 +118,7 @@
 
 .explorer-card-link.card-link-normal a, .explorer-card-link.card-link-normal a.internal-link {
 color: var(--text-normal);
+/* font-size: .9em; */
 font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
 
 }

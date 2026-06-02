@@ -7,6 +7,11 @@ import {
 } from "../../explorer/settings";
 import { renderSettingField } from "../render-setting-field";
 
+export type FolderNoteConversionAction = {
+  isFile: boolean;
+  run: () => void | Promise<void>;
+};
+
 // Per-block settings UI (applies to a single explorer code block).
 export class ExplorerSettingsModal extends Modal {
   settings: BlockSettings;
@@ -17,6 +22,7 @@ export class ExplorerSettingsModal extends Modal {
     settings: BlockSettings,
     private readonly sourcePath: string,
     onSettingsChange: (settings: BlockSettings) => void,
+    private readonly conversion?: FolderNoteConversionAction,
   ) {
     super(app);
     this.settings = { ...settings };
@@ -58,12 +64,36 @@ export class ExplorerSettingsModal extends Modal {
       );
     }
 
+    this.renderConversion(contentEl);
+
     new Setting(contentEl).addButton((button) => {
       button
         .setButtonText("Close")
         .setCta()
         .onClick(() => this.close());
     });
+  }
+
+  private renderConversion(contentEl: HTMLElement): void {
+    if (!this.conversion) return;
+    const { isFile } = this.conversion;
+
+    new Setting(contentEl)
+      .setName(isFile ? "Markdown file" : "No file")
+      .setDesc(
+        isFile
+          ? "Remove the Markdown file but keep this folder note and its settings."
+          : "Create a Markdown file for this folder note so you can write text in it.",
+      )
+      .addButton((button) => {
+        button.setButtonText(isFile ? "Remove file" : "Add file").onClick(
+          async () => {
+            await this.conversion?.run();
+            this.close();
+          },
+        );
+        if (isFile) button.setWarning();
+      });
   }
 
   onClose() {

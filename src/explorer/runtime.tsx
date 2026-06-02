@@ -36,6 +36,12 @@ export type ExplorerMount = {
     sourcePath: string,
   ) => Promise<boolean | void>;
   onSaveFolderNote?: () => void | Promise<void>;
+  folderNote?: FolderNoteConversion;
+};
+
+export type FolderNoteConversion = {
+  isFile: boolean;
+  convert: (settings: BlockSettings) => void | Promise<void>;
 };
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
@@ -54,6 +60,7 @@ export async function renderExplorerBlock(
   savePluginSettings: () => void | Promise<void>,
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
+  folderNote?: FolderNoteConversion,
 ): Promise<void> {
   const child = new MarkdownRenderChild(container);
   const cleanup = await mountExplorer({
@@ -65,6 +72,7 @@ export async function renderExplorerBlock(
     savePluginSettings,
     initialOverrides,
     registerRefresh,
+    folderNote,
     replaceExplorerBlock: async (newSettings, sourcePath) => {
       await updateExplorerBlock(
         app,
@@ -152,6 +160,12 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   }
 
   const openSettings = (): void => {
+    const conversion = input.folderNote
+      ? {
+          isFile: input.folderNote.isFile,
+          run: () => input.folderNote?.convert(effectiveSettings),
+        }
+      : undefined;
     new ExplorerSettingsModal(
       app,
       effectiveSettings,
@@ -172,6 +186,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
           return render();
         });
       },
+      conversion,
     ).open();
   };
 
