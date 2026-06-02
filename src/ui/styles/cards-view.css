@@ -1,4 +1,16 @@
 /* ===== Note Cards ===== */
+.explorer-card-link--normal {
+  --explorer-card-link-color: var(--text-normal);
+  --explorer-card-link-opacity: 0.9;
+}
+
+.theme-dark .explorer-card-link--normal {
+  --explorer-card-link-opacity: 0.8;
+  --explorer-card-link-font-weight: calc(
+    var(--font-weight) + var(--bold-modifier) * 0.5
+  );
+}
+
 .explorer-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -15,6 +27,18 @@
 }
 
 .explorer-card {
+  /* Scoped Component Design Tokens */
+  --explorer-card-link-font-size: 0.9em;
+  --explorer-card-link-font-weight: calc(
+    var(--font-weight) + var(--bold-modifier) * 0.2
+  );
+  --explorer-card-link-color: var(--link-color, var(--text-accent));
+  --explorer-card-link-opacity: 1;
+  --explorer-card-link-line-height: 1.25;
+  --explorer-card-footer-font-size: calc(
+    var(--explorer-card-link-font-size) * 0.8
+  );
+
   padding: var(--explorer-space-2);
   padding-bottom: var(--explorer-space-1);
   margin: 0 1px;
@@ -101,7 +125,7 @@
 
 .explorer-card-footer {
   color: var(--text-muted);
-  font-size: 0.7em;
+  font-size: var(--explorer-card-footer-font-size);
 }
 
 .explorer-container .explorer-card-footer a,
@@ -110,12 +134,23 @@
   color: var(--text-muted);
 }
 
-.explorer-card-link.card-link-normal a,
-.explorer-card-link.card-link-normal a.internal-link {
-  color: var(--text-normal);
-  opacity: 0.8;
-  font-size: 0.9em;
-  font-weight: calc(var(--font-weight) + var(--bold-modifier) / 4);
+.explorer-card-link {
+  line-height: var(--explorer-card-link-line-height);
+}
+
+.explorer-card-link a,
+.explorer-card-link a.internal-link {
+  color: var(--explorer-card-link-color);
+  opacity: var(--explorer-card-link-opacity);
+  font-size: var(--explorer-card-link-font-size);
+  font-weight: var(--explorer-card-link-font-weight);
+  line-height: var(--explorer-card-link-line-height);
+}
+
+.explorer-card-link a:hover,
+.explorer-card-link a.internal-link:hover {
+  opacity: 1;
+  color: var(--text-accent);
 }
 
 .explorer-container .explorer-card-footer:hover a,

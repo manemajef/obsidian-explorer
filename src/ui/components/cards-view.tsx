@@ -52,7 +52,7 @@ export function CardsView(props: {
             >
               <div className="explorer-card-header">
                 <div
-                  className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "card-link-accent" : "card-link-normal"}`}
+                  className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
                 >
                   <InternalLink
                     path={file.path}
