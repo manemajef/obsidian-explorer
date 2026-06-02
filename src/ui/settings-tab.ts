@@ -6,7 +6,7 @@ import {
   PLUGIN_SETTINGS_SCHEMA,
   PluginGlobalSettings,
   PluginSettingKey,
-  SettingsSection,
+  SETTING_SECTIONS,
   createDefaultPluginSettings,
   getPluginSettingKeysForSection,
   getSettingKeysForSurface,
@@ -20,63 +20,15 @@ import {
 } from "./render-setting-field";
 import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
 
-type SectionMeta = {
-  title: string;
-  description?: string;
-};
-
-const SECTION_ORDER: SettingsSection[] = [
-  "navigation",
-  "sidebarFolderNotes",
-  "homepage",
-  "appearance",
-  "behavior",
-  "core",
-  "display",
-];
-
-const DEFAULT_BLOCK_SECTION_ORDER: SettingsSection[] = [
-  "core",
-  "display",
-  "behavior",
-];
-
-const SECTION_META: Record<SettingsSection, SectionMeta> = {
-  core: {
-    title: "Block defaults",
-    description: "These can be overridden per code block.",
-  },
-  behavior: {
-    title: "Behavior",
-  },
-  display: {
-    title: "Default display",
-    description: "Visibility defaults for new blocks.",
-  },
-  appearance: {
-    title: "Appearance",
-    description: "Plugin-wide visuals that apply to every explorer.",
-  },
-  navigation: {
-    title: "Navigation",
-  },
-  sidebarFolderNotes: {
-    title: "Folder notes in Obsidian sidebar",
-  },
-  homepage: {
-    title: "Homepage",
-  },
-};
-
 function compareBySection(
   a: BlockSettingKey,
   b: BlockSettingKey,
-  sectionOrder: SettingsSection[],
 ): number {
   const aSection = getSettingSection(a);
   const bSection = getSettingSection(b);
   const sectionDiff =
-    sectionOrder.indexOf(aSection) - sectionOrder.indexOf(bSection);
+    SETTING_SECTIONS.findIndex((s) => s.id === aSection) -
+    SETTING_SECTIONS.findIndex((s) => s.id === bSection);
 
   if (sectionDiff !== 0) {
     return sectionDiff;
@@ -102,22 +54,21 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     const settings = this.plugin.settings.defaultBlockSettings;
     const defaultBlockKeys = getSettingKeysForSurface("plugin")
       .filter((key) => isBlockSettingVisible(key, settings))
-      .sort((a, b) => compareBySection(a, b, DEFAULT_BLOCK_SECTION_ORDER));
+      .sort((a, b) => compareBySection(a, b));
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
-    for (const section of SECTION_ORDER) {
-      const sectionKeys = getPluginSettingKeysForSection(section).filter(
+    for (const section of SETTING_SECTIONS) {
+      const sectionKeys = getPluginSettingKeysForSection(section.id).filter(
         (key) => isPluginSettingVisible(key, this.plugin.settings),
       );
       if (sectionKeys.length === 0) {
         continue;
       }
 
-      const meta = SECTION_META[section];
-      new Setting(containerEl).setName(meta.title).setHeading();
-      if (meta.description) {
+      new Setting(containerEl).setName(section.title).setHeading();
+      if (section.description) {
         containerEl.createEl("p", {
-          text: meta.description,
+          text: section.description,
           cls: "setting-item-description",
         });
       }
@@ -128,11 +79,11 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     }
 
     if (defaultBlockKeys.length > 0) {
-      const meta = SECTION_META.core;
-      new Setting(containerEl).setName(meta.title).setHeading();
-      if (meta.description) {
+      const coreSection = SETTING_SECTIONS.find((s) => s.id === "core")!;
+      new Setting(containerEl).setName(coreSection.title).setHeading();
+      if (coreSection.description) {
         containerEl.createEl("p", {
-          text: meta.description,
+          text: coreSection.description,
           cls: "setting-item-description",
         });
       }

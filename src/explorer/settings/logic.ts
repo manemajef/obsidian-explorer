@@ -9,10 +9,11 @@ import {
   PluginGlobalSettings,
   PluginSettingKey,
   PluginSettings,
+  SETTING_SECTIONS,
   SettingsSection,
   SettingsSurface,
 } from "./schema";
-import type { AnySettingField } from "./types";
+import type { AnySettingField, BlockField } from "./types";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -23,9 +24,14 @@ const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
 );
 
 const LEGACY_BLOCK_KEYS = new Set(
-  BLOCK_SETTING_KEYS.flatMap(
-    (key) => BLOCK_SETTINGS_SCHEMA[key].legacy?.blockKeys ?? [],
-  ),
+  BLOCK_SETTING_KEYS.flatMap((key) => {
+    const field = BLOCK_SETTINGS_SCHEMA[key] as BlockField;
+    const legacy = field.legacy;
+    if (legacy && "blockKeys" in legacy) {
+      return legacy.blockKeys;
+    }
+    return [];
+  }),
 );
 
 export function getSettingKeyForBlockKey(
@@ -84,16 +90,6 @@ export function shouldDisplayNotes(settings: BlockSettings): boolean {
   return settings.displayedNotes !== "none";
 }
 
-const SETTING_SECTION_SORT_ORDER: SettingsSection[] = [
-  "core",
-  "display",
-  "behavior",
-  "appearance",
-  "homepage",
-  "navigation",
-  "sidebarFolderNotes",
-];
-
 export function getSettingKeysForSurface(
   surface: SettingsSurface,
 ): BlockSettingKey[] {
@@ -110,11 +106,11 @@ export function getSettingKeysForSurface(
     }
 
     const sectionDiff =
-      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[a].ui.section) -
-      SETTING_SECTION_SORT_ORDER.indexOf(BLOCK_SETTINGS_SCHEMA[b].ui.section);
+      SETTING_SECTIONS.findIndex((s) => s.id === BLOCK_SETTINGS_SCHEMA[a].ui.section) -
+      SETTING_SECTIONS.findIndex((s) => s.id === BLOCK_SETTINGS_SCHEMA[b].ui.section);
     return (
       sectionDiff ||
-      BLOCK_SETTINGS_SCHEMA[a].ui.order - BLOCK_SETTINGS_SCHEMA[b].ui.order
+      BLOCK_SETTING_KEYS.indexOf(a) - BLOCK_SETTING_KEYS.indexOf(b)
     );
   });
 }
@@ -136,9 +132,6 @@ export function getPluginSettingKeysForSection(
 ): PluginSettingKey[] {
   return PLUGIN_SETTING_KEYS.filter(
     (key) => PLUGIN_SETTINGS_SCHEMA[key].ui.section === section,
-  ).sort(
-    (a, b) =>
-      PLUGIN_SETTINGS_SCHEMA[a].ui.order - PLUGIN_SETTINGS_SCHEMA[b].ui.order,
   );
 }
 
@@ -247,9 +240,29 @@ function applyLegacySettingAliases(
   const normalized = { ...source };
 
   for (const key of BLOCK_SETTING_KEYS) {
-    const legacyValue = BLOCK_SETTINGS_SCHEMA[key].legacy?.resolve(source);
-    if (legacyValue !== undefined) {
-      normalized[key] = legacyValue;
+    const field = BLOCK_SETTINGS_SCHEMA[key] as BlockField;
+    const legacy = field.legacy;
+    if (!legacy) continue;
+
+    if ("resolve" in legacy) {
+      const legacyValue = legacy.resolve(source);
+      if (legacyValue !== undefined) {
+        normalized[key] = legacyValue;
+      }
+    } else if ("predecessor" in legacy && legacy.predecessor) {
+      const predecessor = legacy.predecessor;
+      if (predecessor in source) {
+        const predValue = source[predecessor];
+        if (legacy.valueMap && predValue !== undefined) {
+          const keyStr = typeof predValue === "string" || typeof predValue === "number" || typeof predValue === "boolean" ? String(predValue) : "";
+          const mappedValue = legacy.valueMap[keyStr];
+          if (mappedValue !== undefined) {
+            normalized[key] = mappedValue;
+          }
+        } else {
+          normalized[key] = predValue;
+        }
+      }
     }
   }
 
@@ -404,24 +417,6 @@ function coercePluginSettingValue<K extends PluginSettingKey>(
   ) as PluginGlobalSettings[K];
 }
 
-function getExistingUserFallback<K extends PluginSettingKey>(
-  key: K,
-  fallback: PluginGlobalSettings[K],
-): PluginGlobalSettings[K] {
-  if (key === "missingFolderNoteBehavior") {
-    return "create" as PluginGlobalSettings[K];
-  }
-  if (key === "syncFolderNotes") {
-    return false as PluginGlobalSettings[K];
-  }
-  // Existing installs kept creating a Markdown folder note for every new
-  // folder; preserve that. New installs default to file-free folders.
-  if (key === "createFolderNoteOnNewFolder") {
-    return true as PluginGlobalSettings[K];
-  }
-  return fallback;
-}
-
 export function normalizePluginSettings(raw: unknown): PluginSettings {
   const pluginDefaults = createDefaultPluginSettings();
 
@@ -431,14 +426,43 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
   const rawBlockDefaults = isRecord(raw.defaultBlockSettings)
     ? raw.defaultBlockSettings
     : {};
+
   for (const key of PLUGIN_SETTING_KEYS) {
-    const sourceValue = key in raw ? raw[key] : rawBlockDefaults[key];
-    const fallback =
-      key in raw || key in rawBlockDefaults
-        ? pluginDefaults[key]
-        : getExistingUserFallback(key, pluginDefaults[key]);
+    const field = PLUGIN_SETTINGS_SCHEMA[key] as AnySettingField;
+    const legacy = field.legacy;
+
+    let sourceValue: unknown = undefined;
+    let hasValue = false;
+
+    if (key in raw) {
+      sourceValue = raw[key];
+      hasValue = true;
+    } else if (key in rawBlockDefaults) {
+      sourceValue = rawBlockDefaults[key];
+      hasValue = true;
+    }
+
+    if (!hasValue && legacy && "predecessor" in legacy && legacy.predecessor) {
+      const predecessor = legacy.predecessor;
+      if (predecessor in raw) {
+        const predValue = raw[predecessor];
+        if (legacy.valueMap && predValue !== undefined) {
+          const keyStr = typeof predValue === "string" || typeof predValue === "number" || typeof predValue === "boolean" ? String(predValue) : "";
+          sourceValue = legacy.valueMap[keyStr];
+        } else {
+          sourceValue = predValue;
+        }
+        hasValue = true;
+      }
+    }
+
+    let fallback = pluginDefaults[key];
+    if (legacy && "oldDefault" in legacy && legacy.oldDefault !== undefined) {
+      fallback = legacy.oldDefault as typeof fallback;
+    }
+
     (globalSettings as Record<PluginSettingKey, unknown>)[key] =
-      coercePluginSettingValue(key, sourceValue, fallback);
+      coercePluginSettingValue(key, hasValue ? sourceValue : undefined, fallback);
   }
 
   return {

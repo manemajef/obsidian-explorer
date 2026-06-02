@@ -1,12 +1,6 @@
 export type SettingsSurface = "plugin" | "block";
-export type SettingsSection =
-  | "core"
-  | "behavior"
-  | "homepage"
-  | "display"
-  | "appearance"
-  | "navigation"
-  | "sidebarFolderNotes";
+
+import type { SettingsSection } from "./schema";
 
 type SettingVisibility = {
   key?: string;
@@ -17,7 +11,6 @@ type SettingVisibility = {
 export type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
   section: SettingsSection;
-  order: number;
   surfaceOrder?: Partial<Record<SettingsSurface, number>>;
   labels?: Partial<Record<SettingsSurface, string>>;
   visibleWhen?: SettingVisibility;
@@ -28,11 +21,19 @@ export type LegacySettingAlias<T> = {
   resolve: (source: Record<string, unknown>) => T | undefined;
 };
 
+export type DeclarativeLegacySetting<T> = {
+  predecessor?: string;
+  valueMap?: Record<string, T>;
+  preserveOldDefault?: boolean;
+  oldDefault?: T;
+};
+
 type BaseSettingField<T> = {
   label: string;
   description?: string;
   defaultValue: T;
   ui: SettingUiMeta;
+  legacy?: DeclarativeLegacySetting<unknown> | LegacySettingAlias<unknown>;
 };
 
 export type EnumSettingField<T extends string> = BaseSettingField<T> & {
@@ -83,7 +84,7 @@ export type BlockField = (
   | FolderPickerSettingField
 ) & {
   blockKey: string;
-  legacy?: LegacySettingAlias<unknown>;
+  legacy?: DeclarativeLegacySetting<unknown> | LegacySettingAlias<unknown>;
 };
 
 export const enumField = <
@@ -129,7 +130,7 @@ export const folderPickerField = <
 type DefinedBlockSchema<T extends Record<string, BlockField>> = {
   [K in keyof T]: T[K] & {
     description?: string;
-    legacy?: LegacySettingAlias<unknown>;
+    legacy?: DeclarativeLegacySetting<unknown> | LegacySettingAlias<unknown>;
     ui: SettingUiMeta;
   };
 };

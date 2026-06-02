@@ -20,7 +20,6 @@ export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
 export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
 export type MissingFolderNoteBehavior = "smart" | "create" | "manual";
-export type SidebarFolderClickBehavior = "nothing" | "existing" | "virtual";
 export type CardExt =
   | "folder"
   | "ctime"
@@ -29,7 +28,52 @@ export type CardExt =
   | "none"
   | "default";
 
-export type { SettingField, SettingsSection, SettingsSurface } from "./types";
+export const SETTING_SECTIONS = [
+  {
+    id: "navigation",
+    title: "Navigation",
+    description: undefined,
+  },
+  {
+    id: "foldernotes",
+    title: "Folder Notes",
+    description: "Markdown folder notes behaviour",
+  },
+  {
+    id: "homepage",
+    title: "Homepage",
+    description: undefined,
+  },
+  {
+    id: "visibility",
+    title: "Visibility",
+    description: "Control visibility of elements in the UI",
+  },
+  {
+    id: "appearance",
+    title: "Appearance",
+    description: "Plugin-wide visuals that apply to every explorer.",
+  },
+  {
+    id: "core",
+    title: "Block defaults",
+    description: "These can be overridden per code block.",
+  },
+  {
+    id: "display",
+    title: "Default display",
+    description: "Visibility defaults for new blocks.",
+  },
+  {
+    id: "behavior",
+    title: "Behavior",
+    description: undefined,
+  },
+] as const;
+
+export type SettingsSection = (typeof SETTING_SECTIONS)[number]["id"];
+
+export type { SettingField, SettingsSurface } from "./types";
 
 function hasOwn(source: Record<string, unknown>, key: string): boolean {
   return key in source;
@@ -76,20 +120,6 @@ function resolveLegacyDisplayedNotes(
 }
 
 export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
-  showTags: booleanField({
-    label: "Display tags",
-    description: "Show tags in list and card views.",
-    blockKey: "showTags",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 5,
-      surfaceOrder: { block: 70 },
-      labels: { plugin: "Default tag display" },
-    },
-  }),
-
   view: enumField({
     label: "View",
     description: "How to display files.",
@@ -103,32 +133,8 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 10,
       surfaceOrder: { block: 10 },
       labels: { plugin: "Default view" },
-    },
-  }),
-
-  cardExt: enumField({
-    label: "Card footer",
-    description: "What to show in the card footer.",
-    blockKey: "cardExt",
-    defaultValue: "default",
-    options: ["folder", "ctime", "mtime", "desc", "none", "default"],
-    optionLabels: {
-      folder: "Folder",
-      ctime: "Created",
-      mtime: "Modified",
-      desc: "Description",
-      none: "None",
-      default: "Default",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 10,
-      surfaceOrder: { block: 60 },
-      labels: { plugin: "Default card footer", block: "Card info" },
     },
   }),
 
@@ -146,7 +152,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 11,
       surfaceOrder: { block: 11 },
       visibleWhen: { key: "view", value: "list" },
     },
@@ -168,36 +173,8 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 20,
       surfaceOrder: { block: 20 },
       labels: { plugin: "Default sort" },
-    },
-  }),
-
-  showFolders: booleanField({
-    label: "Show folders",
-    description: "Show folder buttons.",
-    blockKey: "showFolders",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 20,
-      surfaceOrder: { block: 40 },
-    },
-  }),
-
-  excludedFolders: folderPickerField({
-    label: "Excluded folders",
-    description: "Hide selected nested folders and everything inside them.",
-    blockKey: "excludedFolders",
-    defaultValue: [],
-    placeholder: "Choose a nested folder",
-    ui: {
-      surfaces: ["block"],
-      section: "display",
-      order: 25,
-      surfaceOrder: { block: 110 },
     },
   }),
 
@@ -213,35 +190,8 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 30,
       surfaceOrder: { block: 30 },
       labels: { plugin: "Default depth" },
-    },
-  }),
-
-  displayedNotes: enumField({
-    label: "Displayed notes",
-    description:
-      "Show supported files, only Markdown files, all files, or no notes.",
-    blockKey: "displayedNotes",
-    defaultValue: "supported",
-    options: ["supported", "markdown", "all", "none"],
-    optionLabels: {
-      supported: "Supported files",
-      markdown: "Only Markdown",
-      all: "All files",
-      none: "None",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      order: 30,
-      surfaceOrder: { block: 50 },
-      labels: { plugin: "Displayed notes" },
-    },
-    legacy: {
-      blockKeys: ["showNotes", "onlyNotes", "showUnsupportedFiles"],
-      resolve: resolveLegacyDisplayedNotes,
     },
   }),
 
@@ -260,7 +210,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 40,
       surfaceOrder: { block: 80 },
       labels: { plugin: "Pagination style" },
     },
@@ -281,9 +230,93 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      order: 50,
       surfaceOrder: { block: 90 },
       labels: { plugin: "Default page size" },
+    },
+  }),
+
+  showTags: booleanField({
+    label: "Display tags",
+    description: "Show tags in list and card views.",
+    blockKey: "showTags",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "display",
+      surfaceOrder: { block: 70 },
+      labels: { plugin: "Default tag display" },
+    },
+  }),
+
+  cardExt: enumField({
+    label: "Card footer",
+    description: "What to show in the card footer.",
+    blockKey: "cardExt",
+    defaultValue: "default",
+    options: ["folder", "ctime", "mtime", "desc", "none", "default"],
+    optionLabels: {
+      folder: "Folder",
+      ctime: "Created",
+      mtime: "Modified",
+      desc: "Description",
+      none: "None",
+      default: "Default",
+    },
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "display",
+      surfaceOrder: { block: 60 },
+      labels: { plugin: "Default card footer", block: "Card info" },
+    },
+  }),
+
+  showFolders: booleanField({
+    label: "Show folders",
+    description: "Show folder buttons.",
+    blockKey: "showFolders",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "display",
+      surfaceOrder: { block: 40 },
+    },
+  }),
+
+  excludedFolders: folderPickerField({
+    label: "Excluded folders",
+    description: "Hide selected nested folders and everything inside them.",
+    blockKey: "excludedFolders",
+    defaultValue: [],
+    placeholder: "Choose a nested folder",
+    ui: {
+      surfaces: ["block"],
+      section: "display",
+      surfaceOrder: { block: 110 },
+    },
+  }),
+
+  displayedNotes: enumField({
+    label: "Displayed notes",
+    description:
+      "Show supported files, only Markdown files, all files, or no notes.",
+    blockKey: "displayedNotes",
+    defaultValue: "supported",
+    options: ["supported", "markdown", "all", "none"],
+    optionLabels: {
+      supported: "Supported files",
+      markdown: "Only Markdown",
+      all: "All files",
+      none: "None",
+    },
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "display",
+      surfaceOrder: { block: 50 },
+      labels: { plugin: "Displayed notes" },
+    },
+    legacy: {
+      blockKeys: ["showNotes", "onlyNotes", "showUnsupportedFiles"],
+      resolve: resolveLegacyDisplayedNotes,
     },
   }),
 
@@ -302,7 +335,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "behavior",
-      order: 50,
       surfaceOrder: { block: 100 },
       labels: { plugin: "Default text direction" },
     },
@@ -317,8 +349,10 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: false,
     ui: {
       surfaces: ["plugin"],
-      section: "navigation",
-      order: 1,
+      section: "foldernotes",
+    },
+    legacy: {
+      oldDefault: true,
     },
   }),
   missingFolderNoteBehavior: enumField({
@@ -333,8 +367,84 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
     ui: {
       surfaces: ["plugin"],
+      section: "foldernotes",
+      visibleWhen: { key: "createFolderNoteOnNewFolder", value: true },
+    },
+    legacy: {
+      oldDefault: "create",
+    },
+  }),
+  forceReadingMode: booleanField({
+    label: "Always open folder notes in reading mode",
+    description:
+      "Open folder notes in reading mode even when the default mode is editing.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "foldernotes",
+    },
+  }),
+  askForFolderNoteCreation: booleanField({
+    label: "Ask before creating folder notes",
+    description:
+      "Show a confirmation dialog before creating a folder note from a folder click.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "foldernotes",
+      visibleWhen: { key: "missingFolderNoteBehaviour", value: "create" },
+    },
+  }),
+  syncFolderNotes: booleanField({
+    label: "Sync folder notes on rename",
+    description:
+      "Keep folders and their matching folder notes synchronized when either is renamed.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "foldernotes",
+    },
+    legacy: {
+      oldDefault: false,
+    },
+  }),
+  displayNestedFolderNotes: booleanField({
+    label: "Display nested folder notes as notes",
+    description:
+      "When nested notes are shown, include folder notes in the notes list.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "visibility",
+    },
+  }),
+
+  hideFolderNotesInFileExplorer: booleanField({
+    label: "Hide folder-note files in Obsidian sidebar",
+    description:
+      "Hide Markdown folder-note files from Obsidian's built-in file tree.",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "visibility",
+    },
+  }),
+  openFolderViewFromSidebar: booleanField({
+    label: "Open folder views from sidebar explorer",
+    description:
+      "Open explorer folders when clicking their name in the Obsidian sidebar.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
       section: "navigation",
-      order: 2,
+    },
+    legacy: {
+      predecessor: "sidebarFolderClickBehavior",
+      valueMap: {
+        nothing: false,
+        virtual: true,
+        existing: true,
+      },
     },
   }),
   useHomePage: booleanField({
@@ -345,7 +455,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "homepage",
-      order: 3,
     },
   }),
   openHomePageInNewTabs: booleanField({
@@ -354,8 +463,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: false,
     ui: {
       surfaces: ["plugin"],
-      section: "homepage",
-      order: 4,
+      section: "navigation",
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
@@ -367,7 +475,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "homepage",
-      order: 5,
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
@@ -380,81 +487,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "homepage",
-      order: 6,
       visibleWhen: { key: "useHomePage", value: true },
-    },
-  }),
-  forceReadingMode: booleanField({
-    label: "Always open folder notes in reading mode",
-    description:
-      "Open folder notes in reading mode even when the default mode is editing.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 7,
-    },
-  }),
-  askForFolderNoteCreation: booleanField({
-    label: "Ask before creating folder notes",
-    description:
-      "Show a confirmation dialog before creating a folder note from a folder click.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 8,
-    },
-  }),
-  displayNestedFolderNotes: booleanField({
-    label: "Display nested folder notes as notes",
-    description:
-      "When nested notes are shown, include folder notes in the notes list.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 9,
-    },
-  }),
-  syncFolderNotes: booleanField({
-    label: "Sync folder notes on rename",
-    description:
-      "Keep folders and their matching folder notes synchronized when either is renamed.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-      order: 10,
-    },
-  }),
-  hideFolderNotesInFileExplorer: booleanField({
-    label: "Hide folder-note files in Obsidian sidebar",
-    description:
-      "Hide Markdown folder-note files from Obsidian's built-in file tree.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "sidebarFolderNotes",
-      order: 11,
-    },
-  }),
-  sidebarFolderClickBehavior: enumField({
-    label: "When clicking folder names in the sidebar",
-    description:
-      "Choose what happens when clicking a folder name instead of the collapse arrow or row whitespace.",
-    defaultValue: "nothing",
-    options: ["nothing", "existing", "virtual"],
-    optionLabels: {
-      nothing: "Do nothing",
-      existing: "Open folder note if it exists",
-      virtual: "Open folder note or temporary folder note",
-    },
-    ui: {
-      surfaces: ["plugin"],
-      section: "sidebarFolderNotes",
-      order: 12,
-      visibleWhen: { key: "hideFolderNotesInFileExplorer", value: true },
     },
   }),
   alwaysUseModernListInMobile: booleanField({
@@ -465,7 +498,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "appearance",
-      order: 13,
       visibleWhen: { platform: "mobile" },
     },
   }),
@@ -476,7 +508,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "appearance",
-      order: 14,
     },
   }),
   useLinkColorInCard: booleanField({
@@ -486,7 +517,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "appearance",
-      order: 15,
     },
   }),
   ShowIconsInCards: booleanField({
@@ -496,7 +526,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "appearance",
-      order: 16,
     },
   }),
   showParentButton: booleanField({
@@ -505,8 +534,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
-      section: "appearance",
-      order: 17,
+      section: "visibility",
     },
   }),
 });
