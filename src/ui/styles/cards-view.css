@@ -15,7 +15,7 @@
 
 .explorer-card-link--normal {
   --explorer-card-link-color: var(--text-normal);
-  --explorer-card-link-opacity: 0.7;
+  --explorer-card-link-opacity: 0.8;
 }
 
 .theme-dark .explorer-card-link--normal {

@@ -11,7 +11,7 @@
   --explorer-action-group-padding: 0;
   --explorer-action-group-gap: var(--explorer-space-1);
   --explorer-action-group-item-radius: var(--explorer-radius-md);
-  --explorer-action-desktop-padding: 3px;
+  --explorer-action-desktop-padding: 4px;
 }
 
 .theme-dark #explorer-actions {
@@ -30,7 +30,7 @@
     var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
   );
 
-  --explorer-action-group-padding: 0 3px;
+  --explorer-action-group-padding: 3px;
   --explorer-action-group-gap: 2px;
   --explorer-action-group-item-radius: 50%;
 }
@@ -44,7 +44,15 @@
 .use-glass .action-seperator {
   display: none;
 }
+.theme-light:not(.is-mobile) .use-glass .action-group,
+.theme-light:not(.is-mobile) .use-glass .action-item {
+  /* width: calc(var(--explorer-control-size) + 4px); */
+  height: calc(var(--explorer-control-size) + 2px);
+}
 
+.theme-light:not(.is-mobile) .use-glass .action-item {
+  width: calc(var(--explorer-control-size) + 2px);
+}
 .action-item,
 .action-group-item {
   display: inline-flex;
@@ -55,7 +63,6 @@
   height: var(--explorer-control-size);
   min-width: var(--explorer-control-size);
   min-height: var(--explorer-control-size);
-  padding: var(--explorer-action-desktop-padding);
   appearance: none;
   -webkit-appearance: none;
 }
