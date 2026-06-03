@@ -106,8 +106,12 @@ export function getSettingKeysForSurface(
     }
 
     const sectionDiff =
-      SETTING_SECTIONS.findIndex((s) => s.id === BLOCK_SETTINGS_SCHEMA[a].ui.section) -
-      SETTING_SECTIONS.findIndex((s) => s.id === BLOCK_SETTINGS_SCHEMA[b].ui.section);
+      SETTING_SECTIONS.findIndex(
+        (s) => s.id === BLOCK_SETTINGS_SCHEMA[a].ui.section,
+      ) -
+      SETTING_SECTIONS.findIndex(
+        (s) => s.id === BLOCK_SETTINGS_SCHEMA[b].ui.section,
+      );
     return (
       sectionDiff ||
       BLOCK_SETTING_KEYS.indexOf(a) - BLOCK_SETTING_KEYS.indexOf(b)
@@ -254,7 +258,12 @@ function applyLegacySettingAliases(
       if (predecessor in source) {
         const predValue = source[predecessor];
         if (legacy.valueMap && predValue !== undefined) {
-          const keyStr = typeof predValue === "string" || typeof predValue === "number" || typeof predValue === "boolean" ? String(predValue) : "";
+          const keyStr =
+            typeof predValue === "string" ||
+            typeof predValue === "number" ||
+            typeof predValue === "boolean"
+              ? String(predValue)
+              : "";
           const mappedValue = legacy.valueMap[keyStr];
           if (mappedValue !== undefined) {
             normalized[key] = mappedValue;
@@ -447,7 +456,12 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
       if (predecessor in raw) {
         const predValue = raw[predecessor];
         if (legacy.valueMap && predValue !== undefined) {
-          const keyStr = typeof predValue === "string" || typeof predValue === "number" || typeof predValue === "boolean" ? String(predValue) : "";
+          const keyStr =
+            typeof predValue === "string" ||
+            typeof predValue === "number" ||
+            typeof predValue === "boolean"
+              ? String(predValue)
+              : "";
           sourceValue = legacy.valueMap[keyStr];
         } else {
           sourceValue = predValue;
@@ -462,7 +476,11 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
     }
 
     (globalSettings as Record<PluginSettingKey, unknown>)[key] =
-      coercePluginSettingValue(key, hasValue ? sourceValue : undefined, fallback);
+      coercePluginSettingValue(
+        key,
+        hasValue ? sourceValue : undefined,
+        fallback,
+      );
   }
 
   return {

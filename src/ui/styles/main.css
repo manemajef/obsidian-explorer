@@ -123,9 +123,7 @@
   margin: 0;
   padding: 0;
 }
-.is-mobile .explorer-virtual-folder-note {
-  padding: var(--file-margins);
-}
+
 .markdown-source-view.mod-cm6.is-mobile .explorer-container {
   padding: 2px;
   /* margin-top: 6px; */
@@ -189,7 +187,6 @@
   --explorer-action-icon-size: var(--icon-l);
 }
 
-
 .explorer-virtual-folder-note .markdown-preview-sizer {
   box-sizing: border-box;
   max-width: var(--file-line-width, 700px);
@@ -202,7 +199,7 @@
 .explorer-virtual-folder-note .explorer-container {
   max-width: var(--max-width);
   width: var(--line-width);
-  margin-inline: var(--content-margin) !important;
+  margin-inline: var(--content-margin);
 }
 
 .explorer-virtual-title-container {

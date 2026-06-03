@@ -70,23 +70,31 @@
 .explorer-container .load-more-text {
   color: var(--text-muted);
 }
-
-.explorer-container.use-glass .paging-load-more {
-  border: var(--explorer-border-glass);
-  /* box-shadow: var(--explorer-shadow-glass); */
-  /* background: var(--explorer-glass-background); */
+.theme-dark .explorer-container .load-more-text {
+  color: var(--text-normal);
 }
 
-.theme-dark:not(.is-mobile) .explorer-container.use-glass .paging-load-more {
-  border-color: rgba(255, 255, 255, 0.08);
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); */
+.explorer-container.use-glass .paging-load-more {
+  /* border: var(--explorer-border-glass); */
+  box-shadow: var(--explorer-shadow-glass-sm);
+  /* background: var(--explorer-glass-background); */
+  backdrop-filter: var(--raised-blur);
+  /* box-shadow: var(--shadow-xs); */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--raised-background);
+}
+
+.theme-dark .explorer-container.use-glass .paging-load-more {
+  border: none;
+  background: rgba(255, 255, 255, 0.001);
 }
 
 .explorer-container .paging-load-more:hover,
 .explorer-container .paging-load-more:focus-visible {
   color: var(--text-normal);
   background: unset;
-  border-color: var(--background-modifier-border-hover);
+  /* border-color: var(--background-modifier-border-hover); */
+  box-shadow: var(--explorer-shadow-glass);
 }
 
 .theme-dark .explorer-container.use-glass .paging-load-more:hover,

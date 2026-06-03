@@ -83,7 +83,10 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
-                  void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+                  void props.actions.openFile(
+                    file,
+                    event.ctrlKey || event.metaKey,
+                  );
                 }}
               />
               {settings.showTags && file.tags.length > 0 && (
@@ -158,7 +161,10 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+                    void props.actions.openFile(
+                      file,
+                      event.ctrlKey || event.metaKey,
+                    );
                   }}
                 />
               </Group>

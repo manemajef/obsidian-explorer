@@ -7,33 +7,39 @@
 `runtime.tsx` is the composition root. It initializes the workspace-level `ExplorerSession` cache and the vault-level refresh handlers, builds the `ExplorerModel` data structure for a given folder block, and mounts the React-based `ExplorerUI`.
 
 `src/explorer/settings/` owns plugin-wide and block-overridden settings:
+
 - `schema.ts` -> declarative definitions for setting fields, defaults, constraints, and visibility conditions.
 - `types.ts` -> machinery for field schemas and validator types.
 - `logic.ts` -> default block configurations, normalization, schema migration helpers, parse/serialize overrides.
 - `index.ts` -> public settings API export.
 
 `src/explorer/vault/` owns file and folder mutations:
+
 - `create.ts` -> workflows for creating folders and notes.
 - `edit.ts` -> pinning, unpinning, and updating folder-note frontmatter.
 - `move.ts` -> moves notes and folders (validating and triggering renames via fileManager).
 - `block-update.ts` -> formats and writes block settings back to the active Markdown block.
 
 `src/explorer/navigation/` manages navigation behaviors:
+
 - `folder-notes.ts` -> detects folder notes, handles open/create navigation, and goes to parent folder.
 - `homepage.ts` -> resolves homepages, initializes template files, and handles empty-tab hooks.
 - `virtual-folder-note.ts` -> registry type and utilities for opening dynamic (virtual) folder views.
 
 `src/explorer/data/` owns session caches and persistence:
+
 - `session.ts` -> cache for folder contents, memoizing indexes by path and configuration options.
 - `folder-index.ts` -> implements the BFS/DFS file/folder scanner (direct vs. deep traversal).
 - `folder-data-store.ts` -> FolderDataStore class persisting block settings overrides for file-free folder notes (saved to `folder-data.json`).
 
 `src/explorer/lib/` houses pure helper functions and domain objects:
+
 - `nodes.ts` -> file and folder wrapper objects (ExplorerFileNode, ExplorerFolderNode) with lazy getter caches.
 - `listing.ts` -> search query compilation, sorting rules, and filtering criteria.
 - `folder-note.ts` -> low-level folder-note detection and file creation logic.
 
 `src/explorer/integration/` registers handlers for Obsidian host interfaces:
+
 - `commands.ts` -> registers Command Palette commands.
 - `file-explorer-folder-notes.ts` -> sidebar tree integrations (collapsing rows, intercepting clicks, hiding files).
 - `folder-data-sync.ts` -> event handlers that sync virtual folder note settings upon rename/move/delete.
@@ -43,6 +49,7 @@
 - `virtual-folder-note-view.ts` -> ItemView for displaying file-free folder note blocks in Obsidian workspace leafs.
 
 `src/ui/` houses the React components, styles, and states:
+
 - `explorer-ui.tsx` -> composition root of the React view (cards, lists, pagination, action bars).
 - `explorer-state.ts` -> React hooks that compile listings, manage debounce search, pagination, and refresh ticks.
 - `context-menu.ts` -> context menus for right-clicks on folders/notes.

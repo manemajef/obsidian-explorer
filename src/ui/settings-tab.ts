@@ -20,10 +20,7 @@ import {
 } from "./render-setting-field";
 import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
 
-function compareBySection(
-  a: BlockSettingKey,
-  b: BlockSettingKey,
-): number {
+function compareBySection(a: BlockSettingKey, b: BlockSettingKey): number {
   const aSection = getSettingSection(a);
   const bSection = getSettingSection(b);
   const sectionDiff =

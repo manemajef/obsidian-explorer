@@ -48,7 +48,7 @@
 }
 
 .theme-dark.is-mobile .explorer-folders-grid {
-  --explorer-folder-card-background: var(--background-primary-alt);
+  --explorer-folder-card-background: var(--raised-background);
 }
 
 .explorer-folders-grid::after {
