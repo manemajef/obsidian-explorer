@@ -3,19 +3,19 @@
   /* Scoped Component Design Tokens */
   --explorer-card-link-font-size: 0.9em;
   --explorer-card-link-font-weight: calc(
-    var(--font-weight) + var(--bold-modifier) * 0.2
+    var(--font-weight) + var(--bold-modifier) * 0.5
   );
   --explorer-card-link-color: var(--link-color, var(--text-accent));
   --explorer-card-link-opacity: 1;
   --explorer-card-link-line-height: 1.25;
   --explorer-card-footer-font-size: calc(
-    var(--explorer-card-link-font-size) * 0.8
+    var(--explorer-card-link-font-size) * 0.7
   );
 }
 
 .explorer-card-link--normal {
   --explorer-card-link-color: var(--text-normal);
-  --explorer-card-link-opacity: 0.9;
+  --explorer-card-link-opacity: 0.7;
 }
 
 .theme-dark .explorer-card-link--normal {
