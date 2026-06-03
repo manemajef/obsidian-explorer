@@ -28,7 +28,6 @@
   pointer-events: none;
 }
 .theme-light:not(.theme-dark) .use-glass .glass-surface--shine {
-  backdrop-filter: var(--raised-blur);
   box-shadow: var(--raised-shadow);
   border: 1px solid rgba(0, 0, 0, 0.07);
   background: var(--explorer-glass-background);
@@ -36,10 +35,11 @@
 
 .is-mobile:not(.theme-dark) .use-glass .glass-surface--shine {
   background: var(--raised-background);
-
+  backdrop-filter: var(--raised-blur);
   border: var(--raised-mask-border-width) solid transparent;
   background-clip: padding-box;
 }
+
 /* .is-mobile.theme-light
   .explorer-container.use-glass
   .glass-surface--shine::after {
