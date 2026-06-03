@@ -46,13 +46,13 @@
 }
 .theme-light:not(.is-mobile) .use-glass .action-group,
 .theme-light:not(.is-mobile) .use-glass .action-item {
-  /* width: calc(var(--explorer-control-size) + 4px); */
   height: calc(var(--explorer-control-size) + 2px);
 }
 
 .theme-light:not(.is-mobile) .use-glass .action-item {
   width: calc(var(--explorer-control-size) + 2px);
 }
+
 .action-item,
 .action-group-item {
   display: inline-flex;
@@ -63,6 +63,7 @@
   height: var(--explorer-control-size);
   min-width: var(--explorer-control-size);
   min-height: var(--explorer-control-size);
+  padding: var(--explorer-action-desktop-padding);
   appearance: none;
   -webkit-appearance: none;
 }

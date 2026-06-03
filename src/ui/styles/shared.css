@@ -35,6 +35,7 @@
 
 .is-mobile:not(.theme-dark) .use-glass .glass-surface--shine {
   background: var(--raised-background);
+  -webkit-backdrop-filter: var(--raised-blur);
   backdrop-filter: var(--raised-blur);
   border: var(--raised-mask-border-width) solid transparent;
   background-clip: padding-box;
