@@ -130,9 +130,28 @@
   height: 1rem;
 }
 
+.explorer-modern-note__header {
+  position: relative;
+}
+
 .explorer-modern-list .pin {
-  margin-top: 0.4em;
-  margin-inline-end: 0.4em;
+  position: absolute;
+  left: -0.75em;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  height: 1.2em;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.explorer-modern-list .pin:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.explorer-modern-list .pin svg {
+  transform: translateY(15%);
 }
 
 .theme-light .use-glass .explorer-modern-list--desktop {
@@ -217,6 +236,13 @@
   font-size: var(--font-text-size);
   line-height: 1.35;
   word-break: break-word;
+}
+.explorer-modern-note__title.is-pinned {
+  margin-inline-start: 1.15em;
+}
+
+.is-mobile .explorer-modern-note__title.is-pinned {
+  margin-inline-start: 1.35em;
 }
 
 .explorer-modern-note__desktop-tags {

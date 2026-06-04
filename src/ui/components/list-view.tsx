@@ -155,7 +155,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                 <Pin file={file} actions={props.actions} />
                 <InternalLink
                   path={file.path}
-                  className="explorer-list-note-title explorer-modern-note__title"
+                  className={`explorer-list-note-title explorer-modern-note__title ${file.isPinned ? "is-pinned" : ""}`}
                   draggable={false}
                   text={file.displayName}
                   onClick={(event) => {

@@ -68,7 +68,7 @@ export function ActionsBar(props: {
         </Bar>
       </div>
     );
-  if (isMobile)
+  if (isMobile && (!onSaveFolderNote || !showParentNavigation))
     return (
       <div
         style={{
@@ -106,6 +106,50 @@ export function ActionsBar(props: {
           <ActionGroupItem onClick={onSearchToggle} icon="search" />
           <MobileEdgeSpace />
         </ActionGroup>
+      </div>
+    );
+  if (isMobile)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+        id="explorer-actions"
+      >
+        <ActionGroup>
+          <MobileEdgeSpace />
+          {showParentNavigation ? (
+            <ActionGroupItem
+              onClick={() => onGoToParent(false)}
+              icon="undo-2"
+            />
+          ) : (
+            <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
+          )}
+          {showParentNavigation && (
+            <>
+              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
+
+          {onSaveFolderNote && (
+            <>
+              <MobileSpace />
+              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
+            </>
+          )}
+          <MobileEdgeSpace />
+        </ActionGroup>
+        <ActionSpace minWidth=".8em" />
+
+        <ActionItem onClick={onSearchToggle} icon="search" />
       </div>
     );
 
