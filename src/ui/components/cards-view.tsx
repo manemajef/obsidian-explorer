@@ -70,18 +70,19 @@ export function CardsView(props: {
                 <span style={{ width: ".5em" }} />
 
                 <div className="explorer-card-exts">
-                  <div
-                    className="explorer-card-pin-slot"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {file.isMarkdown && <Pin file={file} actions={actions} />}
-                  </div>
                   {file.isFolderNote && (
                     <Icon
                       name="folder"
                       className="explorer-card-folder-note-icon"
                     />
                   )}
+                  <div
+                    className="explorer-card-pin-slot"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {file.isMarkdown && <Pin file={file} actions={actions} />}
+                  </div>
+
                   {!file.isFolderNote && file.extensionLabel ? (
                     <Badge variant="ext" className="explorer-card-ext-badge">
                       {file.extensionLabel}

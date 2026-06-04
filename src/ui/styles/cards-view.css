@@ -105,7 +105,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: end;
-  margin-inline-start: 0.5em;
+  /* margin-inline-start: 0.1em; */
   gap: 0.25em;
   max-height: 5.75em;
   overflow-y: auto;

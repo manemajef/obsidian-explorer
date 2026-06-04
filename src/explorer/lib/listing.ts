@@ -55,7 +55,7 @@ export function filterDisplayedFiles(
       return [];
     case "markdown":
       return visibleFiles.filter(
-        (file) => file.isMarkdown && !file.isFolderNote,
+        (file) => file.isMarkdown && !(file.isFolderNote && !file.isPinned),
       );
     case "supported":
       return visibleFiles.filter((file) =>

@@ -49,7 +49,9 @@ export function ActionsBar(props: {
   const MobileEdgeSpace = () => (
     <span style={{ width: ".5em", flexShrink: 1 }} />
   );
-  const settingsIcon = "settings-2";
+  const settingsIcon = Platform.isMobile ? "ellipsis" : "settings-2";
+  // const settingsIcon = "ellipsis";
+  const isUseNewLayout = true;
 
   if (isMobile && searchMode)
     return (
@@ -152,7 +154,57 @@ export function ActionsBar(props: {
         <ActionItem onClick={onSearchToggle} icon="search" />
       </div>
     );
+  if (isUseNewLayout)
+    return (
+      <div id="explorer-actions">
+        <Bar>
+          <Bar.Item>
+            <Group gap={2} className="explorer-actions-start">
+              {showParentNavigation ? (
+                <ActionItem
+                  icon="undo-2"
+                  className="explorer-parent-action"
+                  {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
+                  onClick={() => {
+                    onGoToParent(false);
+                  }}
+                />
+              ) : (
+                <ActionItem icon={settingsIcon} onClick={onOpenSettings} />
+              )}
+            </Group>
+          </Bar.Item>
 
+          <Bar.Spring />
+
+          <Bar.Item className="explorer-actions-end">
+            <Group className="explorer-actions-controls">
+              <ActionGroup>
+                {showParentNavigation && (
+                  <ActionGroupItem
+                    icon={settingsIcon}
+                    onClick={onOpenSettings}
+                  />
+                )}
+
+                <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+                <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
+                {onSaveFolderNote && (
+                  <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
+                )}
+              </ActionGroup>
+              {useGlass ? <span style={{ width: ".6em" }} /> : <Separator />}
+              <Search
+                searchMode={searchMode}
+                searchQuery={searchQuery}
+                onSearchToggle={onSearchToggle}
+                onSearchInput={onSearchInput}
+              />
+            </Group>
+          </Bar.Item>
+        </Bar>
+      </div>
+    );
   return (
     <div id="explorer-actions">
       <Bar>

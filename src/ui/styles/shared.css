@@ -30,7 +30,8 @@
 .theme-light:not(.theme-dark) .use-glass .glass-surface--shine {
   box-shadow: var(--raised-shadow);
   border: 1px solid rgba(0, 0, 0, 0.07);
-  background: var(--explorer-glass-background);
+  /* background: var(--explorer-glass-background); */
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .is-mobile:not(.theme-dark) .use-glass .glass-surface--shine {
