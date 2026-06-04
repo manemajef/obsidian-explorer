@@ -188,7 +188,8 @@
 }
 
 .explorer-card-ext-badge,
-.explorer-card-folder-link {
+.explorer-card-folder-link,
+.explorer-card-date {
   opacity: 0.8;
 }
 

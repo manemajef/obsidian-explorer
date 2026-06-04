@@ -5,6 +5,7 @@ import {
   isFolderNote,
 } from "./folder-note";
 import { togglePin } from "../vault/edit";
+import { getPreviewForNote } from "./content-peek";
 
 export type ExplorerNode = ExplorerFileNode | ExplorerFolderNode;
 
@@ -19,11 +20,24 @@ export class ExplorerFileNode {
   private cachedFrontmatter: Record<string, unknown> | undefined;
   private cachedTags: string[] | undefined;
   private cachedIsPinned: boolean | undefined;
+  private cachedPreview: string | undefined;
 
   constructor(
     readonly app: App,
     readonly file: TFile,
   ) {}
+
+  get preview(): string | undefined {
+    return this.cachedPreview;
+  }
+
+  async loadPreview(): Promise<string | undefined> {
+    if (this.cachedPreview !== undefined) {
+      return this.cachedPreview;
+    }
+    this.cachedPreview = await getPreviewForNote(this.app, this.file);
+    return this.preview;
+  }
 
   get path(): string {
     return this.file.path;

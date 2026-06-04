@@ -13,6 +13,7 @@ import {
   type ContextMenuConfig,
 } from "../context-menu";
 import { TagList } from "./ui/tags";
+import { Preview } from "./ui/preview";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -50,62 +51,109 @@ export function CardsView(props: {
                 void actions.openFile(file, e.ctrlKey || e.metaKey);
               }}
             >
-              <div className="explorer-card-header">
-                <div
-                  className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
-                >
-                  <InternalLink
-                    path={file.path}
-                    text={file.basename}
-                    draggable={false}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      void actions.openFile(file, e.ctrlKey || e.metaKey);
-                    }}
-                  />
-                </div>
-                {/* <Bar.Spring /> */}
-                {/* <Bar.Item /> */}
-                <span style={{ width: ".5em" }} />
-
-                <div className="explorer-card-exts">
-                  {file.isFolderNote && (
-                    <Icon
-                      name="folder"
-                      className="explorer-card-folder-note-icon"
-                    />
-                  )}
+              <div>
+                <div className="explorer-card-header">
                   <div
-                    className="explorer-card-pin-slot"
-                    onClick={(e) => e.stopPropagation()}
+                    className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
                   >
-                    {file.isMarkdown && <Pin file={file} actions={actions} />}
+                    <InternalLink
+                      path={file.path}
+                      text={file.basename}
+                      draggable={false}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        void actions.openFile(file, e.ctrlKey || e.metaKey);
+                      }}
+                    />
                   </div>
+                  {/* <Bar.Spring /> */}
+                  {/* <Bar.Item /> */}
+                  <span style={{ width: ".5em" }} />
 
-                  {!file.isFolderNote && file.extensionLabel ? (
-                    <Badge variant="ext" className="explorer-card-ext-badge">
-                      {file.extensionLabel}
-                    </Badge>
-                  ) : null}
+                  <div className="explorer-card-exts">
+                    {file.isFolderNote && (
+                      <Icon
+                        name="folder"
+                        className="explorer-card-folder-note-icon"
+                      />
+                    )}
+                    <div
+                      className="explorer-card-pin-slot"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {file.isMarkdown && <Pin file={file} actions={actions} />}
+                    </div>
+
+                    {!file.isFolderNote && file.extensionLabel ? (
+                      <Badge variant="ext" className="explorer-card-ext-badge">
+                        {file.extensionLabel}
+                      </Badge>
+                    ) : null}
+                  </div>
                 </div>
+                <div
+                  style={{
+                    fontSize: ".6em",
+                    opacity: 0.8,
+                  }}
+                  className="explorer-card-footer"
+                >
+                  <Preview file={file} />
+                </div>
+
+                {settings.showTags && file.tags.length > 0 && (
+                  <TagList
+                    tags={file.tags}
+                    className="explorer-card-tags-container explorer-cards-row"
+                  />
+                )}
               </div>
 
-              {settings.showTags && file.tags.length > 0 && (
-                <TagList
-                  tags={file.tags}
-                  className="explorer-card-tags-container explorer-cards-row"
-                />
-              )}
-
-              <div className="explorer-card-footer explorer-cards-row">
-                <CardFooter
+              <div
+                className="explorer-card-footer explorer-cards-row"
+                style={{ display: "flex", gap: ".5em", alignItems: "center" }}
+              >
+                {/* <CardFooter
                   file={file}
                   extForCard={extForCard}
                   actions={actions}
                   showIconsInCards={pluginSettings.ShowIconsInCards}
                   currentFolderPath={model.folder.path}
-                />
+                /> */}
+                {file.parentExplorerFolder !== model.folder && (
+                  <span
+                    className="explorer-card-folder-link"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void actions.openFolder(
+                        model.folder,
+                        e.ctrlKey || e.metaKey,
+                      );
+                    }}
+                  >
+                    {pluginSettings.ShowIconsInCards && (
+                      <Icon
+                        name="folder-closed"
+                        className="explorer-card-folder-icon"
+                      />
+                    )}
+                    {model.folder.name} |
+                  </span>
+                )}
+
+                {extForCard === "ctime" && (
+                  <span className="explorer-card-date">
+                    {" "}
+                    {diffDays(file.createdAt)}
+                  </span>
+                )}
+                {["mtime", "folder", "description"].includes(extForCard) && (
+                  <span className="explorer-card-date">
+                    {" "}
+                    {diffDays(file.modifiedAt)}{" "}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -147,6 +195,8 @@ function CardFooter(props: {
           )}
 
           {folder.name}
+
+          <span style={{ textAlign: "end" }}>| 09 April</span>
         </span>
       );
     }
