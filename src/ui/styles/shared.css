@@ -42,6 +42,13 @@
   background-clip: padding-box;
 }
 
+.spacer {
+  flex: 1;
+}
+.gapper {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
 /* .is-mobile.theme-light
   .explorer-container.use-glass
   .glass-surface--shine::after {

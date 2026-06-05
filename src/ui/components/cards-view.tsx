@@ -2,18 +2,17 @@ import React from "react";
 import { ExplorerModel } from "../../explorer/model";
 import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { diffDays } from "../../utils";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
+import { Gapper, Group, Spacer, Stack } from "./ui/layout";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import {
   isInteractiveTouchTarget,
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
-import { TagList } from "./ui/tags";
-import { Preview } from "./ui/preview";
+import { FolderTimeRow, NoteTags, NotePreview } from "./ui/note-metadata";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -22,8 +21,7 @@ export function CardsView(props: {
   actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const { model, files, extForCard, actions, contextMenu } = props;
-  const { settings, pluginSettings } = model;
+  const { model, files, actions, contextMenu } = props;
 
   return (
     <div className="explorer-cards-view">
@@ -51,33 +49,37 @@ export function CardsView(props: {
                 void actions.openFile(file, e.ctrlKey || e.metaKey);
               }}
             >
-              <div>
-                <div className="explorer-card-header">
+              <Stack>
+                <Group className="explorer-card-header">
                   <div
                     className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
                   >
-                    {file.isFolderNote && (
-                      <span span="explorer-card-ext">
-                        <Icon
-                          name="folder"
-                          className="explorer-card-folder-note-icon"
-                        />
-                      </span>
-                    )}
-                    <InternalLink
-                      path={file.path}
-                      text={file.basename}
-                      draggable={false}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        void actions.openFile(file, e.ctrlKey || e.metaKey);
-                      }}
-                    />
+                    <Group>
+                      {file.isFolderNote && (
+                        <Group className="explorer-card-ext">
+                          <Icon
+                            name="folder"
+                            className="explorer-card-folder-note-icon"
+                          />
+                          <Gapper size="var(--explorer-space-1)" />
+                        </Group>
+                      )}
+
+                      <InternalLink
+                        path={file.path}
+                        text={file.basename}
+                        draggable={false}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          void actions.openFile(file, e.ctrlKey || e.metaKey);
+                        }}
+                      />
+                    </Group>
                   </div>
-                  {/* <Bar.Spring /> */}
-                  {/* <Bar.Item /> */}
+
                   <span style={{ width: ".5em" }} />
+                  <Spacer />
 
                   <div className="explorer-card-exts">
                     <div
@@ -93,70 +95,18 @@ export function CardsView(props: {
                       </Badge>
                     ) : null}
                   </div>
-                </div>
-                <div
-                  style={{
-                    fontSize: ".6em",
-                    opacity: 0.8,
-                  }}
-                  className="explorer-card-footer"
-                >
-                  <Preview file={file} className="explorer-card-preview" />
+                </Group>
+                <div className="explorer-card-preview-wrapper">
+                  <NotePreview file={file} />
                 </div>
 
-                {settings.showTags && file.tags.length > 0 && (
-                  <TagList
-                    tags={file.tags}
-                    className="explorer-card-tags-container explorer-cards-row"
-                  />
-                )}
-              </div>
+                <div className="explorer-card-tags-wrapper">
+                  <NoteTags file={file} model={model} />
+                </div>
+              </Stack>
 
-              <div
-                className="explorer-card-footer explorer-cards-row"
-                style={{ display: "flex", gap: ".5em", alignItems: "center" }}
-              >
-                {/* <CardFooter
-                  file={file}
-                  extForCard={extForCard}
-                  actions={actions}
-                  showIconsInCards={pluginSettings.ShowIconsInCards}
-                  currentFolderPath={model.folder.path}
-                /> */}
-                {file.parentExplorerFolder !== model.folder &&
-                  file.parentExplorerFolder && (
-                    <span
-                      className="explorer-card-folder-link"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        void actions.openFolder(
-                          model.folder,
-                          e.ctrlKey || e.metaKey,
-                        );
-                      }}
-                    >
-                      {pluginSettings.ShowIconsInCards && (
-                        <Icon
-                          name="folder-closed"
-                          className="explorer-card-folder-icon"
-                        />
-                      )}
-                      {file.parentExplorerFolder.name} |
-                    </span>
-                  )}
-
-                {extForCard === "ctime" && (
-                  <span className="explorer-card-date">
-                    {" "}
-                    {diffDays(file.createdAt)}
-                  </span>
-                )}
-                {["mtime", "folder", "description"].includes(extForCard) && (
-                  <span className="explorer-card-date">
-                    {" "}
-                    {diffDays(file.modifiedAt)}{" "}
-                  </span>
-                )}
+              <div className="explorer-card-metadata-wrapper">
+                <FolderTimeRow file={file} model={model} actions={actions} />
               </div>
             </div>
           </div>
@@ -164,56 +114,4 @@ export function CardsView(props: {
       </div>
     </div>
   );
-}
-
-function CardFooter(props: {
-  file: ExplorerFileNode;
-  extForCard: string;
-  showIconsInCards: boolean;
-  actions: ExplorerActions;
-  currentFolderPath: string;
-}): React.JSX.Element | null {
-  const { file, extForCard, showIconsInCards, actions, currentFolderPath } =
-    props;
-
-  switch (extForCard) {
-    case "ctime":
-      return <span>{diffDays(file.createdAt)}</span>;
-    case "mtime":
-      return <span>{diffDays(file.modifiedAt)}</span>;
-    case "folder": {
-      const folder = file.parentExplorerFolder;
-      if (!folder || !folder.name) return null;
-      if (folder.path === currentFolderPath) return null;
-      return (
-        <span
-          className="explorer-card-folder-link"
-          onClick={(e) => {
-            e.stopPropagation();
-            void actions.openFolder(folder, e.ctrlKey || e.metaKey);
-          }}
-        >
-          {showIconsInCards && (
-            <Icon name="folder-closed" className="explorer-card-folder-icon" />
-          )}
-
-          {folder.name}
-
-          <span style={{ textAlign: "end" }}>| 09 April</span>
-        </span>
-      );
-    }
-    case "desc":
-      if (!file.description) return null;
-      return (
-        <span>
-          {file.description.slice(0, 60)}
-          {file.description.length > 60 ? "..." : ""}
-        </span>
-      );
-    case "none":
-      return null;
-  }
-
-  return null;
 }

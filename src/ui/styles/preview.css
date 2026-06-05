@@ -2,3 +2,142 @@
   color: var(--text-muted);
   font-size: 0.9em;
 }
+
+/* ===== Reusable Note Metadata Rows ===== */
+
+/* List view metadata container (retains exact Run 1 layout) */
+.explorer-note-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  margin-top: var(--explorer-space-1);
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+/* Compact override for desktop modern list view */
+.explorer-modern-list--desktop .explorer-note-metadata {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--explorer-space-3);
+  margin-top: var(--explorer-space-1);
+  font-size: 0.82em;
+}
+
+.explorer-modern-list--desktop .explorer-metadata-preview-row {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Row 1: Folder & Timestamp */
+.explorer-metadata-folder-time-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+}
+
+.explorer-metadata-folder-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.explorer-metadata-folder-link:hover {
+  color: var(--text-accent);
+  text-decoration: underline;
+}
+
+.explorer-metadata-folder-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-end: var(--explorer-space-1);
+  opacity: 0.75;
+}
+
+.explorer-metadata-folder-icon svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.explorer-metadata-folder-name {
+  font-weight: 500;
+}
+
+.explorer-metadata-separator {
+  display: inline-block;
+  width: 1px;
+  height: 0.9em;
+  background-color: var(--background-modifier-border);
+  margin-inline: var(--explorer-space-2);
+  align-self: center;
+}
+
+.explorer-metadata-date {
+  opacity: 0.95;
+}
+
+/* Row 2: Tags */
+.explorer-metadata-tags-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.explorer-metadata-tags {
+  margin-block: 0;
+  width: 100%;
+}
+
+/* Row 3: Preview snippet */
+.explorer-metadata-preview-row {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.explorer-metadata-preview {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.95em;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Card Layout Specifics ===== */
+
+/* Custom sizes for card metadata elements matching the Run 1 container scale */
+.explorer-card-preview-wrapper .explorer-metadata-preview {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.35;
+}
+
+.explorer-card-preview-wrapper {
+  font-size: 0.78em;
+  margin-top: var(--explorer-space-2);
+}
+
+.explorer-card-tags-wrapper {
+  font-size: 0.78em;
+  margin-top: var(--explorer-space-1);
+}
+
+.explorer-card-metadata-wrapper {
+  font-size: var(--explorer-card-footer-font-size, 0.63em);
+  margin-top: var(--explorer-space-2);
+}
+
+.explorer-card-metadata-wrapper .explorer-metadata-folder-time-row {
+  font-size: 1em; /* inherits the footer font size */
+  opacity: 0.95;
+}

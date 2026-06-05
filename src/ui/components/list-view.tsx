@@ -5,7 +5,7 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
-import { Group } from "./ui/layout";
+import { Group, Spacer, Stack } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
 import { draggableProps, folderDropProps } from "../drag-drop";
@@ -16,6 +16,7 @@ import {
 } from "../context-menu";
 import { TagList } from "./ui/tags";
 import { Preview } from "./ui/preview";
+import { NoteMetadata, NoteTags, NotePreview } from "./ui/note-metadata";
 import { diffDays } from "src/utils";
 type ListViewProps = {
   model: ExplorerModel;
@@ -142,7 +143,7 @@ const ListWithPreview = (props: ListViewProps): React.JSX.Element => {
           <div
             key={file.path}
             onClick={(e) => {
-              props.actions.openFile(file, false);
+              void props.actions.openFile(file, false);
             }}
             style={{ marginBlock: ".75em" }}
           >
@@ -171,8 +172,198 @@ const ListWithPreview = (props: ListViewProps): React.JSX.Element => {
     </div>
   );
 };
-
 const ModernListView = (props: ListViewProps): React.JSX.Element => {
+  const { model, files } = props;
+  const { settings } = model;
+  const isMobile = Platform.isMobile;
+  const desktopClass = isMobile ? "" : " explorer-modern-list--desktop";
+
+  return (
+    <div className={`explorer-modern-list${desktopClass}`}>
+      {files.map((file, i) => (
+        <div key={file.path} className="explorer-modern-list-item">
+          <div
+            className={`explorer-modern-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-modern-note-last" : ""}`}
+            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
+            {...folderDropProps(
+              props.actions.app,
+              file.dropTargetFolder,
+              (sourcePath, folder, fromFolderNote) =>
+                props.actions.movePathIntoFolder(
+                  sourcePath,
+                  folder,
+                  fromFolderNote,
+                ),
+            )}
+            onContextMenuCapture={(event) =>
+              showFileContextMenu(event, props.contextMenu, file)
+            }
+            onClick={(event) => {
+              if (isInteractiveTouchTarget(event.target)) return;
+              void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+            }}
+          >
+            <Stack>
+              <Group>
+                <div className="explorer-modern-note__header">
+                  <Group>
+                    <Pin file={file} actions={props.actions} />
+
+                    <InternalLink
+                      path={file.path}
+                      className={`explorer-list-note-title explorer-modern-note__title ${file.isPinned ? "is-pinned" : ""}`}
+                      draggable={false}
+                      text={file.displayName}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        void props.actions.openFile(
+                          file,
+                          event.ctrlKey || event.metaKey,
+                        );
+                      }}
+                    />
+                  </Group>
+                </div>
+
+                <Spacer />
+                {!isMobile && settings.showTags && file.tags.length > 0 && (
+                  <Group className="explorer-modern-note__desktop-tags">
+                    <TagList tags={file.tags} />
+                  </Group>
+                )}
+                {file.extensionLabel && (
+                  <Badge
+                    variant="ext-filled"
+                    className="explorer-modern-note__ext"
+                  >
+                    {file.extensionLabel}
+                  </Badge>
+                )}
+              </Group>
+              <Group>
+                <div
+                  className="explorer-note-metadata"
+                  style={{ overflow: "hidden", textWrap: "nowrap" }}
+                >
+                  <NoteMetadata
+                    file={file}
+                    model={model}
+                    actions={props.actions}
+                  />
+                  {isMobile && <NoteTags file={file} model={model} />}
+                  <span style={{ overflow: "hidden" }}>
+                    <NotePreview file={file} maxChar={60} />
+                  </span>
+                </div>
+              </Group>
+            </Stack>
+          </div>
+
+          {i < files.length - 1 && (
+            <div className="explorer-modern-note__divider" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ModernListViewOld2 = (props: ListViewProps): React.JSX.Element => {
+  const { model, files } = props;
+  const { settings } = model;
+  const isMobile = Platform.isMobile;
+  const desktopClass = isMobile ? "" : " explorer-modern-list--desktop";
+
+  return (
+    <div className={`explorer-modern-list${desktopClass}`}>
+      {files.map((file, i) => (
+        <div key={file.path} className="explorer-modern-list-item">
+          <div
+            className={`explorer-modern-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-modern-note-last" : ""}`}
+            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
+            {...folderDropProps(
+              props.actions.app,
+              file.dropTargetFolder,
+              (sourcePath, folder, fromFolderNote) =>
+                props.actions.movePathIntoFolder(
+                  sourcePath,
+                  folder,
+                  fromFolderNote,
+                ),
+            )}
+            onContextMenuCapture={(event) =>
+              showFileContextMenu(event, props.contextMenu, file)
+            }
+            onClick={(event) => {
+              if (isInteractiveTouchTarget(event.target)) return;
+              void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+            }}
+          >
+            <Group>
+              <Stack>
+                <div className="explorer-modern-note__header">
+                  <Group>
+                    <Pin file={file} actions={props.actions} />
+
+                    <InternalLink
+                      path={file.path}
+                      className={`explorer-list-note-title explorer-modern-note__title ${file.isPinned ? "is-pinned" : ""}`}
+                      draggable={false}
+                      text={file.displayName}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        void props.actions.openFile(
+                          file,
+                          event.ctrlKey || event.metaKey,
+                        );
+                      }}
+                    />
+                  </Group>
+                </div>
+                <div
+                  className="explorer-note-metadata"
+                  style={{ overflow: "hidden", textWrap: "nowrap" }}
+                >
+                  <NoteMetadata
+                    file={file}
+                    model={model}
+                    actions={props.actions}
+                  />
+                  {isMobile && <NoteTags file={file} model={model} />}
+                  <span style={{ overflow: "hidden" }}>
+                    <NotePreview file={file} maxChar={60} />
+                  </span>
+                </div>
+              </Stack>
+              <Spacer />
+              {!isMobile && settings.showTags && file.tags.length > 0 && (
+                <Group className="explorer-modern-note__desktop-tags">
+                  <TagList tags={file.tags} />
+                </Group>
+              )}
+              {file.extensionLabel && (
+                <Badge
+                  variant="ext-filled"
+                  className="explorer-modern-note__ext"
+                >
+                  {file.extensionLabel}
+                </Badge>
+              )}
+            </Group>
+          </div>
+
+          {i < files.length - 1 && (
+            <div className="explorer-modern-note__divider" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ModernListViewOld = (props: ListViewProps): React.JSX.Element => {
   const { model, files } = props;
   const { settings } = model;
   const isMobile = Platform.isMobile;
@@ -237,13 +428,10 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
               )}
             </div>
 
-            <div className="explorer-modern-note__footer">
-              {settings.showTags && isMobile && (
-                <TagList
-                  tags={file.tags}
-                  className="explorer-modern-note__tags"
-                />
-              )}
+            <div className="explorer-note-metadata">
+              <NoteMetadata file={file} model={model} actions={props.actions} />
+              {isMobile && <NoteTags file={file} model={model} />}
+              <NotePreview file={file} maxChar={60} />
             </div>
           </div>
 

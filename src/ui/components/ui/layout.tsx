@@ -66,3 +66,57 @@ export function Divider(props: {
     <div className={`explorer-divider divider-${size} ${className ?? ""}`} />
   );
 }
+
+export function Spacer(props: {
+  className?: string;
+  minWidth?: string;
+  maxWidth?: string;
+}) {
+  const { className } = props;
+  const minWidth = props.minWidth ?? 0;
+  const maxWidth = props.maxWidth ?? "none";
+  return (
+    <div
+      className="spacer"
+      style={{ minWidth: minWidth, maxWidth: maxWidth }}
+    />
+  );
+}
+
+// export function Gapper(props: {
+//   className?: string;
+//   minWidth?: string;
+//   maxWidth?: string;
+// }) {
+//   const className = `gapper ${props.className ?? ""}`;
+//   const minWidth = props.minWidth ?? "var(--explorer-space-2)";
+//   const maxWidth = props.maxWidth ?? "var(--explorer-space-2)";
+//   return (
+//     <div
+//       className={className}
+//       style={{ minWidth: minWidth, maxWidth: maxWidth }}
+//     />
+//   );
+// }
+export function Gapper({
+  className,
+  size = "var(--explorer-space-2)",
+  maxWidth = "999px",
+}: {
+  className?: string;
+  size?: string;
+  maxWidth?: string;
+}) {
+  return (
+    <div
+      className={`gapper ${className ?? ""}`}
+      style={{
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: size,
+        minWidth: size,
+        maxWidth,
+      }}
+    />
+  );
+}
