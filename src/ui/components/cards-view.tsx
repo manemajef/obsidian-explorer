@@ -56,6 +56,14 @@ export function CardsView(props: {
                   <div
                     className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
                   >
+                    {file.isFolderNote && (
+                      <span span="explorer-card-ext">
+                        <Icon
+                          name="folder"
+                          className="explorer-card-folder-note-icon"
+                        />
+                      </span>
+                    )}
                     <InternalLink
                       path={file.path}
                       text={file.basename}
@@ -72,12 +80,6 @@ export function CardsView(props: {
                   <span style={{ width: ".5em" }} />
 
                   <div className="explorer-card-exts">
-                    {file.isFolderNote && (
-                      <Icon
-                        name="folder"
-                        className="explorer-card-folder-note-icon"
-                      />
-                    )}
                     <div
                       className="explorer-card-pin-slot"
                       onClick={(e) => e.stopPropagation()}
@@ -99,7 +101,7 @@ export function CardsView(props: {
                   }}
                   className="explorer-card-footer"
                 >
-                  <Preview file={file} />
+                  <Preview file={file} className="explorer-card-preview" />
                 </div>
 
                 {settings.showTags && file.tags.length > 0 && (
@@ -121,26 +123,27 @@ export function CardsView(props: {
                   showIconsInCards={pluginSettings.ShowIconsInCards}
                   currentFolderPath={model.folder.path}
                 /> */}
-                {file.parentExplorerFolder !== model.folder && (
-                  <span
-                    className="explorer-card-folder-link"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      void actions.openFolder(
-                        model.folder,
-                        e.ctrlKey || e.metaKey,
-                      );
-                    }}
-                  >
-                    {pluginSettings.ShowIconsInCards && (
-                      <Icon
-                        name="folder-closed"
-                        className="explorer-card-folder-icon"
-                      />
-                    )}
-                    {model.folder.name} |
-                  </span>
-                )}
+                {file.parentExplorerFolder !== model.folder &&
+                  file.parentExplorerFolder && (
+                    <span
+                      className="explorer-card-folder-link"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void actions.openFolder(
+                          model.folder,
+                          e.ctrlKey || e.metaKey,
+                        );
+                      }}
+                    >
+                      {pluginSettings.ShowIconsInCards && (
+                        <Icon
+                          name="folder-closed"
+                          className="explorer-card-folder-icon"
+                        />
+                      )}
+                      {file.parentExplorerFolder.name} |
+                    </span>
+                  )}
 
                 {extForCard === "ctime" && (
                   <span className="explorer-card-date">

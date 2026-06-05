@@ -5,14 +5,16 @@ const { useEffect, useState } = React;
 export function Preview({
   file,
   className,
+  maxChar,
 }: {
   file: ExplorerFileNode;
   className?: string;
+  maxChar?: number;
 }) {
   const [preview, setPreview] = useState("");
 
   useEffect(() => {
-    void file.loadPreview().then((preview) => {
+    void file.loadPreview(maxChar).then((preview) => {
       setPreview(preview ?? "");
     });
   }, [file]);

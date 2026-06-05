@@ -15,6 +15,8 @@ import {
   type ContextMenuConfig,
 } from "../context-menu";
 import { TagList } from "./ui/tags";
+import { Preview } from "./ui/preview";
+import { diffDays } from "src/utils";
 type ListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
@@ -32,6 +34,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
     (Platform.isMobile && pluginSettings.alwaysUseModernListInMobile);
 
   if (shouldUseModernList) {
+    // return <ListWithPreview {...props} />;
     return <ModernListView {...props} />;
   }
   const useBullet = settings.listStyle === "markdown";
@@ -119,6 +122,56 @@ export function ListView(props: ListViewProps): React.JSX.Element {
   );
 }
 
+const ListWithPreview = (props: ListViewProps): React.JSX.Element => {
+  const { model, files } = props;
+  const { settings } = model;
+  const isMobile = Platform.isMobile;
+  const n = files.length;
+  return (
+    <div
+      style={{
+        marginInline: ".2em",
+        paddingBlock: "1em",
+        paddingInline: "1em",
+        background: "var(--background-primary-alt",
+        borderRadius: "24px",
+      }}
+    >
+      {files.map((file, i) => (
+        <>
+          <div
+            key={file.path}
+            onClick={(e) => {
+              props.actions.openFile(file, false);
+            }}
+            style={{ marginBlock: ".75em" }}
+          >
+            <Group>
+              <span>{file.basename}</span>
+            </Group>
+            <div style={{ fontSize: ".8em", opacity: 0.7 }}>
+              <span style={{ paddingInlineEnd: ".75em" }}>
+                {diffDays(file.modifiedAt)}{" "}
+              </span>
+              <Preview file={file} />
+            </div>
+          </div>
+          {i < n - 1 && (
+            <div
+              style={{
+                height: ".5px",
+                width: "100%",
+                opacity: ".8",
+                borderBottom: "1px solid var(--background-modifier-border)",
+              }}
+            />
+          )}
+        </>
+      ))}
+    </div>
+  );
+};
+
 const ModernListView = (props: ListViewProps): React.JSX.Element => {
   const { model, files } = props;
   const { settings } = model;
@@ -153,6 +206,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
             <div className="explorer-modern-note__header">
               <Group>
                 <Pin file={file} actions={props.actions} />
+
                 <InternalLink
                   path={file.path}
                   className={`explorer-list-note-title explorer-modern-note__title ${file.isPinned ? "is-pinned" : ""}`}

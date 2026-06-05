@@ -1,6 +1,12 @@
 import { App, TFile } from "obsidian";
 
-export async function getPreviewForNote(app: App, file: TFile) {
+export async function getPreviewForNote(
+  app: App,
+  file: TFile,
+  charNum?: number,
+) {
+  if (file.extension !== "md") return;
+  const maxLength = charNum ?? 80;
   const content = await app.vault.cachedRead(file);
   if (!content) return "";
   const bodyContent = content.replace(/^---\n[\s\S]*?\n---\n/, "");
@@ -11,8 +17,8 @@ export async function getPreviewForNote(app: App, file: TFile) {
     .replace(/\[(.*?)\]\(.*?\)/g, "$1") // simplify markdown links
     .replace(/[*_~`]/g, "") // remove formatting marks
     .trim();
-  let snippet = plainText.slice(0, 100);
-  if (plainText.length > 100) {
+  let snippet = plainText.slice(0, maxLength);
+  if (plainText.length > maxLength) {
     snippet = snippet.slice(0, snippet.lastIndexOf(" ")) + "...";
   }
   return snippet;

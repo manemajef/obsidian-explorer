@@ -31,11 +31,11 @@ export class ExplorerFileNode {
     return this.cachedPreview;
   }
 
-  async loadPreview(): Promise<string | undefined> {
+  async loadPreview(maxCar: number | undefined): Promise<string | undefined> {
     if (this.cachedPreview !== undefined) {
       return this.cachedPreview;
     }
-    this.cachedPreview = await getPreviewForNote(this.app, this.file);
+    this.cachedPreview = await getPreviewForNote(this.app, this.file, maxCar);
     return this.preview;
   }
 
