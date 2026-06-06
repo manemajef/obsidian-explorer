@@ -156,6 +156,23 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       visibleWhen: { key: "view", value: "list" },
     },
   }),
+  compactCards: booleanField({
+    label: "Compact cards",
+    description: "Turn on to make cards dencer and fit more in the view",
+    defaultValue: true,
+    blockKey: "compactCards",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      surfaceOrder: { block: 11.1 },
+      visibleWhen: { key: "view", value: "cards" },
+    },
+  }),
+  // compact: booleanField({
+  //   label: "Compact view",
+  //   description: "Compact view to fit more content. emmits previews",
+  //   defaultValue: false,
+  // })
 
   sortBy: enumField({
     label: "Sort by",

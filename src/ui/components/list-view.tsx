@@ -5,7 +5,7 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
-import { Group, Spacer, Stack } from "./ui/layout";
+import { Gap, Group, Spacer, Stack } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
 import { draggableProps, folderDropProps } from "../drag-drop";
@@ -16,7 +16,7 @@ import {
 } from "../context-menu";
 import { TagList } from "./ui/tags";
 import { Preview } from "./ui/preview";
-import { NoteMetadata, NoteTags, NotePreview } from "./ui/note-metadata";
+import { NoteDate, NoteFolderDate, NotePreview } from "./ui/note-metadata";
 import { diffDays } from "src/utils";
 type ListViewProps = {
   model: ExplorerModel;
@@ -24,6 +24,28 @@ type ListViewProps = {
   actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 };
+
+function NoteTags({
+  file,
+  model,
+  size = "sm",
+}: {
+  file: ExplorerFileNode;
+  model: ExplorerModel;
+  size?: React.ComponentProps<typeof TagList>["size"];
+}) {
+  if (!model.settings.showTags || file.tags.length === 0) return null;
+
+  return (
+    <div className="explorer-metadata-tags-row">
+      <TagList
+        tags={file.tags}
+        className="explorer-metadata-tags"
+        size={size}
+      />
+    </div>
+  );
+}
 
 export function ListView(props: ListViewProps): React.JSX.Element {
   const { files } = props;
@@ -208,7 +230,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
               void props.actions.openFile(file, event.ctrlKey || event.metaKey);
             }}
           >
-            <Stack>
+            <Stack gap={0}>
               <Group>
                 <div className="explorer-modern-note__header">
                   <Group>
@@ -232,12 +254,17 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                 </div>
 
                 <Spacer />
-
+                {/* <NoteFolderDate
+                  file={file}
+                  model={model}
+                  actions={props.actions}
+                /> */}
                 {!isMobile && settings.showTags && file.tags.length > 0 && (
                   <Group className="explorer-modern-note__desktop-tags">
                     <TagList tags={file.tags} size="sm" />
                   </Group>
                 )}
+
                 {file.extensionLabel && (
                   <Badge
                     variant="ext-filled"
@@ -252,15 +279,16 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                   className="explorer-note-metadata"
                   style={{ overflow: "hidden", textWrap: "nowrap" }}
                 >
-                  <NoteMetadata
+                  <NoteFolderDate
                     file={file}
                     model={model}
                     actions={props.actions}
                   />
                   {isMobile && <NoteTags file={file} model={model} size="sm" />}
-                  <span style={{ overflow: "hidden" }}>
-                    <NotePreview file={file} maxChar={60} />
-                  </span>
+
+                  {/* <span style={{ overflow: "hidden" }}>
+                    <NotePreview file={file} maxChar={40} />
+                  </span> */}
                 </div>
               </Group>
             </Stack>
@@ -341,8 +369,8 @@ const ModernMobileListView = (props: ListViewProps): React.JSX.Element => {
                 )}
               </Group>
 
-              <Stack>
-                <div
+              <Group>
+                {/* <div
                   className="explorer-note-metadata"
                   style={{ overflow: "hidden", textWrap: "nowrap" }}
                 >
@@ -350,13 +378,19 @@ const ModernMobileListView = (props: ListViewProps): React.JSX.Element => {
                   <span style={{ overflow: "hidden" }}>
                     <NotePreview file={file} maxChar={60} />
                   </span>
-                  <NoteMetadata
+                  <NoteFolderDate
                     file={file}
                     model={model}
                     actions={props.actions}
                   />
-                </div>
-              </Stack>
+                </div> */}
+                <NoteDate
+                  file={file}
+                  model={model}
+                  // actions={props.actions}
+                />
+                <NotePreview file={file} maxChar={30} />
+              </Group>
             </Stack>
           </div>
 
@@ -426,7 +460,7 @@ const ModernListViewOld2 = (props: ListViewProps): React.JSX.Element => {
                   className="explorer-note-metadata"
                   style={{ overflow: "hidden", textWrap: "nowrap" }}
                 >
-                  <NoteMetadata
+                  <NoteFolderDate
                     file={file}
                     model={model}
                     actions={props.actions}
@@ -529,7 +563,11 @@ const ModernListViewOld = (props: ListViewProps): React.JSX.Element => {
             </div>
 
             <div className="explorer-note-metadata">
-              <NoteMetadata file={file} model={model} actions={props.actions} />
+              <NoteFolderDate
+                file={file}
+                model={model}
+                actions={props.actions}
+              />
               {isMobile && <NoteTags file={file} model={model} size="sm" />}
               <NotePreview file={file} maxChar={60} />
             </div>

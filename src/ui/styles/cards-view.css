@@ -32,14 +32,17 @@
 
 .explorer-cards-grid {
   display: grid;
-  /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 
   gap: var(--explorer-space-3);
   margin-block: 0.25em;
 }
 
-.is-mobile .explorer-cards-grid {
+.explorer-cards-grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.is-mobile .explorer-cards-grid:note(.explorer-cards-grid--compact) {
   /* turn on grid that forces 2 cols layout if show preview is false */
   /* grid-template-columns: repeat(
     auto-fit,

@@ -12,14 +12,9 @@ import {
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
-import {
-  FolderTimeRow,
-  NoteTags,
-  NotePreview,
-  MetaDate,
-  MetaTextSeparator,
-} from "./ui/note-metadata";
-import { Small } from "./ui/text";
+import { NoteFolderDate, NotePreview } from "./ui/note-metadata";
+import { TagList } from "./ui/tags";
+import { cn } from "./ui/action";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -29,11 +24,16 @@ export function CardsView(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { model, files, actions, contextMenu } = props;
-  const shouldShowFolder = model.settings.depth > 0;
+  const compact = model.settings.compactCards;
 
   return (
     <div className="explorer-cards-view">
-      <div className="explorer-cards-grid">
+      <div
+        className={cn(
+          "explorer-cards-grid",
+          model.settings.compactCards && "explorer-cards-grid--compact",
+        )}
+      >
         {files.map((file) => {
           const showTags = model.settings.showTags && file.tags.length > 0;
 
@@ -108,36 +108,26 @@ export function CardsView(props: {
                 </Group>
               </Group>
               <Spring />
-              {/* <Gap size={1} /> */}
-              {/* <Small as="div" className="explorer-card-preview-wrapper"> */}
-              {!shouldShowFolder && (
-                <>
-                  <MetaDate date={file.modifiedAt} />
-                  <MetaTextSeparator />
-                </>
-              )}
-
-              <NotePreview file={file} />
-              {/* </Small> */}
+              {<NotePreview file={file} maxChar={compact ? 70 : 120} />}
 
               {showTags && (
                 <div className="explorer-card-tags-wrapper">
-                  <NoteTags file={file} model={model} size="xs" />
-                </div>
-              )}
-              {shouldShowFolder && (
-                <>
-                  <Spring />
-
-                  <div className="explorer-card-metadata-wrapper">
-                    <FolderTimeRow
-                      file={file}
-                      model={model}
-                      actions={actions}
+                  <div className="explorer-metadata-tags-row">
+                    <TagList
+                      tags={file.tags}
+                      className="explorer-metadata-tags"
+                      size="xs"
                     />
                   </div>
-                </>
+                </div>
               )}
+              <>
+                <Spring />
+
+                <div className="explorer-card-metadata-wrapper">
+                  <NoteFolderDate file={file} model={model} actions={actions} />
+                </div>
+              </>
             </Stack>
           );
         })}

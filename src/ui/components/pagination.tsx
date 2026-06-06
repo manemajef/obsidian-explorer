@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
 import { Group } from "./ui/layout";
@@ -58,16 +58,21 @@ export function PaginationModern(
   props: PaginationModernProps,
 ): React.JSX.Element {
   const { canLoadMore, onLoadMore, useGlass } = props;
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Group justify="center">
       <button
         type="button"
+        ref={buttonRef}
         className={cn(
           "clickable-icon paging-load-more ",
-          useGlass &&
-            "glass-surface glass-surface--shine pagination-modern-glass",
+          useGlass && false && "glass-surface  pagination-modern-glass",
         )}
-        onClick={onLoadMore}
+        onClick={() => {
+          buttonRef.current?.blur();
+          onLoadMore();
+        }}
         disabled={!canLoadMore}
       >
         <span className="load-more-text">Load more</span>
