@@ -178,6 +178,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 <PaginationModern
                   canLoadMore={canLoadMore}
                   onLoadMore={loadMore}
+                  useGlass={model.pluginSettings.useGlass}
                 />
               ) : (
                 <Pagination

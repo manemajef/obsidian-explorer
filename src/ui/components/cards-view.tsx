@@ -19,6 +19,7 @@ import {
   MetaDate,
   MetaTextSeparator,
 } from "./ui/note-metadata";
+import { Small } from "./ui/text";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -106,20 +107,22 @@ export function CardsView(props: {
                   ) : null}
                 </Group>
               </Group>
+              <Spring />
+              {/* <Gap size={1} /> */}
+              {/* <Small as="div" className="explorer-card-preview-wrapper"> */}
+              {!shouldShowFolder && (
+                <>
+                  <MetaDate date={file.modifiedAt} />
+                  <MetaTextSeparator />
+                </>
+              )}
 
-              <div className="explorer-card-preview-wrapper">
-                {!shouldShowFolder && (
-                  <>
-                    <MetaDate date={file.modifiedAt} />
-                    <MetaTextSeparator />
-                  </>
-                )}
-                <NotePreview file={file} />
-              </div>
+              <NotePreview file={file} />
+              {/* </Small> */}
 
               {showTags && (
                 <div className="explorer-card-tags-wrapper">
-                  <NoteTags file={file} model={model} />
+                  <NoteTags file={file} model={model} size="xs" />
                 </div>
               )}
               {shouldShowFolder && (

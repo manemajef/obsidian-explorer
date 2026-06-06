@@ -16,7 +16,7 @@
   --explorer-modern-list-item-padding: var(--explorer-space-1)
     var(--explorer-space-4);
   --explorer-modern-note-gap: var(--explorer-space-2);
-  --explorer-modern-note-padding-top: var(--explorer-space-4);
+  --explorer-modern-note-padding-top: var(--explorer-space-2);
   --explorer-modern-note-padding-bottom: var(--explorer-space-2);
   --explorer-modern-note-padding-top-first: var(--explorer-space-4);
   --explorer-modern-note-padding-bottom-last: var(--explorer-space-2);
@@ -80,7 +80,6 @@
 .explorer-list-tags {
   margin-inline-start: 0.5em;
   margin-block: -0.1em;
-  font-size: 0.9em;
 }
 
 .list-tags-separator {
@@ -159,12 +158,9 @@
   flex-direction: column;
   gap: var(--explorer-space-1);
   margin-top: var(--explorer-space-1);
-  font-size: 0.85em;
-  line-height: 1.4;
 }
 
 .explorer-note-metadata .explorer-metadata-preview {
-  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -176,7 +172,6 @@
   align-items: center;
   gap: var(--explorer-space-3);
   margin-top: var(--explorer-space-1);
-  font-size: 0.82em;
 }
 
 .explorer-modern-list--desktop .explorer-metadata-preview {

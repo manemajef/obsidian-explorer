@@ -2,6 +2,11 @@
 
 ## newversion (upcoming)
 
+### Preview
+
+- [x] display preview in cards and modern list view
+- [ ] option to disable preview
+
 ### Virtual (file-free) folder notes
 
 - Folder notes can now exist as virtual notes without creating a physical `.md` file on disk. This keeps your vault clean while still allowing you to customize Explorer settings per folder.

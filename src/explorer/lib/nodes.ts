@@ -5,7 +5,7 @@ import {
   isFolderNote,
 } from "./folder-note";
 import { togglePin } from "../vault/edit";
-import { getPreviewForNote } from "./content-peek";
+import { getPreviewForNote, truncatePreview } from "./get-preview";
 
 export type ExplorerNode = ExplorerFileNode | ExplorerFolderNode;
 
@@ -32,11 +32,10 @@ export class ExplorerFileNode {
   }
 
   async loadPreview(maxCar: number | undefined): Promise<string | undefined> {
-    if (this.cachedPreview !== undefined) {
-      return this.cachedPreview;
+    if (this.cachedPreview === undefined) {
+      this.cachedPreview = await getPreviewForNote(this.app, this.file);
     }
-    this.cachedPreview = await getPreviewForNote(this.app, this.file, maxCar);
-    return this.preview;
+    return truncatePreview(this.cachedPreview, maxCar);
   }
 
   get path(): string {

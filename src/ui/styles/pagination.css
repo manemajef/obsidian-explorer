@@ -66,7 +66,12 @@
   border-radius: var(--explorer-radius-pill);
   font-weight: var(--font-medium);
 }
-
+.explorer-container .paging-load-more.glass-surface {
+  border-radius: var(--explorer-radius-pill);
+  min-width: min-content;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
 .explorer-container .load-more-text {
   color: var(--text-muted);
 }
@@ -78,7 +83,7 @@
   /* border: var(--explorer-border-glass); */
   box-shadow: var(--explorer-shadow-glass-sm);
   /* background: var(--explorer-glass-background); */
-  backdrop-filter: var(--raised-blur);
+  /* backdrop-filter: var(--raised-blur); */
   /* box-shadow: var(--shadow-xs); */
   border: 1px solid rgba(0, 0, 0, 0.05);
   background: var(--raised-background);

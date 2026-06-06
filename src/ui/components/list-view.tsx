@@ -33,7 +33,8 @@ export function ListView(props: ListViewProps): React.JSX.Element {
   const shouldUseModernList =
     settings.listStyle === "modern" ||
     (Platform.isMobile && pluginSettings.alwaysUseModernListInMobile);
-
+  if (shouldUseModernList && Platform.isMobile)
+    return <ModernMobileListView {...props} />;
   if (shouldUseModernList) {
     // return <ListWithPreview {...props} />;
     return <ModernListView {...props} />;
@@ -96,7 +97,11 @@ export function ListView(props: ListViewProps): React.JSX.Element {
               {settings.showTags && file.tags.length > 0 && (
                 <>
                   <span className="list-tags-separator" />
-                  <TagList tags={file.tags} className="explorer-list-tags" />
+                  <TagList
+                    tags={file.tags}
+                    className="explorer-list-tags"
+                    size="md"
+                  />
                 </>
               )}
 
@@ -227,9 +232,10 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                 </div>
 
                 <Spacer />
+
                 {!isMobile && settings.showTags && file.tags.length > 0 && (
                   <Group className="explorer-modern-note__desktop-tags">
-                    <TagList tags={file.tags} />
+                    <TagList tags={file.tags} size="sm" />
                   </Group>
                 )}
                 {file.extensionLabel && (
@@ -251,12 +257,106 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                     model={model}
                     actions={props.actions}
                   />
-                  {isMobile && <NoteTags file={file} model={model} />}
+                  {isMobile && <NoteTags file={file} model={model} size="sm" />}
                   <span style={{ overflow: "hidden" }}>
                     <NotePreview file={file} maxChar={60} />
                   </span>
                 </div>
               </Group>
+            </Stack>
+          </div>
+
+          {i < files.length - 1 && (
+            <div className="explorer-modern-note__divider" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ModernMobileListView = (props: ListViewProps): React.JSX.Element => {
+  const { model, files } = props;
+  const { settings } = model;
+  const isMobile = Platform.isMobile;
+  const desktopClass = isMobile ? "" : " explorer-modern-list--desktop";
+
+  return (
+    <div className={`explorer-modern-list${desktopClass}`}>
+      {files.map((file, i) => (
+        <div key={file.path} className="explorer-modern-list-item">
+          <div
+            className={`explorer-modern-note${file.isPinned ? " pinned" : ""}${i >= files.length - 1 ? " explorer-modern-note-last" : ""}`}
+            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
+            {...folderDropProps(
+              props.actions.app,
+              file.dropTargetFolder,
+              (sourcePath, folder, fromFolderNote) =>
+                props.actions.movePathIntoFolder(
+                  sourcePath,
+                  folder,
+                  fromFolderNote,
+                ),
+            )}
+            onContextMenuCapture={(event) =>
+              showFileContextMenu(event, props.contextMenu, file)
+            }
+            onClick={(event) => {
+              if (isInteractiveTouchTarget(event.target)) return;
+              void props.actions.openFile(file, event.ctrlKey || event.metaKey);
+            }}
+          >
+            <Stack>
+              <Group>
+                <div className="explorer-modern-note__header">
+                  <Group>
+                    <Pin file={file} actions={props.actions} />
+
+                    <InternalLink
+                      path={file.path}
+                      className={`explorer-list-note-title explorer-modern-note__title ${file.isPinned ? "is-pinned" : ""}`}
+                      draggable={false}
+                      text={file.displayName}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        void props.actions.openFile(
+                          file,
+                          event.ctrlKey || event.metaKey,
+                        );
+                      }}
+                    />
+                  </Group>
+                </div>
+
+                <Spacer />
+
+                {file.extensionLabel && (
+                  <Badge
+                    variant="ext-filled"
+                    className="explorer-modern-note__ext"
+                  >
+                    {file.extensionLabel}
+                  </Badge>
+                )}
+              </Group>
+
+              <Stack>
+                <div
+                  className="explorer-note-metadata"
+                  style={{ overflow: "hidden", textWrap: "nowrap" }}
+                >
+                  {isMobile && <NoteTags file={file} model={model} size="sm" />}
+                  <span style={{ overflow: "hidden" }}>
+                    <NotePreview file={file} maxChar={60} />
+                  </span>
+                  <NoteMetadata
+                    file={file}
+                    model={model}
+                    actions={props.actions}
+                  />
+                </div>
+              </Stack>
             </Stack>
           </div>
 
@@ -331,7 +431,7 @@ const ModernListViewOld2 = (props: ListViewProps): React.JSX.Element => {
                     model={model}
                     actions={props.actions}
                   />
-                  {isMobile && <NoteTags file={file} model={model} />}
+                  {isMobile && <NoteTags file={file} model={model} size="sm" />}
                   <span style={{ overflow: "hidden" }}>
                     <NotePreview file={file} maxChar={60} />
                   </span>
@@ -340,7 +440,7 @@ const ModernListViewOld2 = (props: ListViewProps): React.JSX.Element => {
               <Spacer />
               {!isMobile && settings.showTags && file.tags.length > 0 && (
                 <Group className="explorer-modern-note__desktop-tags">
-                  <TagList tags={file.tags} />
+                  <TagList tags={file.tags} size="sm" />
                 </Group>
               )}
               {file.extensionLabel && (
@@ -415,7 +515,7 @@ const ModernListViewOld = (props: ListViewProps): React.JSX.Element => {
               </Group>
               {!isMobile && settings.showTags && file.tags.length > 0 && (
                 <Group className="explorer-modern-note__desktop-tags">
-                  <TagList tags={file.tags} />
+                  <TagList tags={file.tags} size="sm" />
                 </Group>
               )}
               {file.extensionLabel && (
@@ -430,7 +530,7 @@ const ModernListViewOld = (props: ListViewProps): React.JSX.Element => {
 
             <div className="explorer-note-metadata">
               <NoteMetadata file={file} model={model} actions={props.actions} />
-              {isMobile && <NoteTags file={file} model={model} />}
+              {isMobile && <NoteTags file={file} model={model} size="sm" />}
               <NotePreview file={file} maxChar={60} />
             </div>
           </div>

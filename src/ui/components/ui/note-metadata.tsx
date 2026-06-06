@@ -6,7 +6,7 @@ import { resolveCardFooterMode } from "src/explorer/lib/listing";
 import { diffDays } from "src/utils";
 import { Icon } from "../shared";
 import { Group } from "./layout";
-import { TagList } from "./tags";
+import { TagList, type TagSize } from "./tags";
 import { Small } from "./text";
 import { Preview } from "./preview";
 
@@ -22,11 +22,7 @@ export function MetaDate({
   className?: string;
 }) {
   return (
-    <Small
-      className={cn("explorer-metadata-date", className)}
-      size="md"
-      tone="muted"
-    >
+    <Small className={cn("explorer-metadata-date", className)}>
       {diffDays(date)}
     </Small>
   );
@@ -50,9 +46,6 @@ export function MetaFolder({
     <Small
       as="span"
       className={cn("explorer-metadata-folder-link", className)}
-      hover
-      size="md"
-      tone="muted"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -106,7 +99,11 @@ export function MetaTime({
   const dateVal = isCtime ? file.createdAt : file.modifiedAt;
 
   return (
-    <Group className={cn("explorer-metadata-folder-time-row", className)} wrap>
+    <Group
+      className={cn("explorer-metadata-folder-time-row", className)}
+      gap={0}
+      wrap
+    >
       {showFolder && showTime && <MetaSeparator />}
       {showTime && <MetaDate date={dateVal} />}
     </Group>
@@ -137,7 +134,11 @@ export function MetaFolderDate({
   const dateVal = isCtime ? file.createdAt : file.modifiedAt;
 
   return (
-    <Group className={cn("explorer-metadata-folder-time-row", className)} wrap>
+    <Group
+      className={cn("explorer-metadata-folder-time-row", className)}
+      gap={0}
+      wrap
+    >
       {showFolder && <MetaFolder file={file} model={model} actions={actions} />}
       {showFolder && showTime && <MetaSeparator />}
       {showTime && <MetaDate date={dateVal} />}
@@ -165,17 +166,23 @@ export function NoteTags({
   file,
   model,
   className,
+  size = "sm",
 }: {
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
+  size?: TagSize;
 }) {
   const { settings } = model;
   if (!settings.showTags || !file.tags || file.tags.length === 0) return null;
 
   return (
     <div className={cn("explorer-metadata-tags-row", className)}>
-      <TagList tags={file.tags} className="explorer-metadata-tags" />
+      <TagList
+        tags={file.tags}
+        className="explorer-metadata-tags"
+        size={size}
+      />
     </div>
   );
 }
@@ -190,12 +197,7 @@ export function NotePreview({
   maxChar?: number;
 }) {
   return (
-    <Small
-      as="span"
-      className={cn("explorer-metadata-preview", className)}
-      size="md"
-      tone="muted"
-    >
+    <Small as="span" className={cn("explorer-metadata-preview", className)}>
       <Preview file={file} maxChar={maxChar} />
     </Small>
   );

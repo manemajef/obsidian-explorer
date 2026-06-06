@@ -14,6 +14,7 @@
   transform: scale(
     var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
   );
+
   z-index: 10;
 }
 
@@ -87,13 +88,9 @@
   ------------------------------------------------------------ */
 .explorer-small {
   color: var(--explorer-small-color, var(--text-muted));
-  font-size: var(--explorer-small-size, 0.85em);
-  line-height: var(--explorer-small-line-height, 1.35);
-  opacity: var(--explorer-small-opacity, 1);
-}
-
-.explorer-small--normal {
-  --explorer-small-color: var(--text-normal);
+  font-size: var(--font-ui-smaller);
+  font-weight: var(--font-light);
+  /* line-height: 1.2; */
 }
 
 .explorer-small--muted {
@@ -104,58 +101,34 @@
   --explorer-small-color: var(--text-faint);
 }
 
+.explorer-small--normal {
+  --explorer-small-color: var(--text-normal);
+}
+
 .explorer-small--accent {
   --explorer-small-color: var(--text-accent);
 }
 
-.explorer-small--xs {
-  --explorer-small-size: 0.78em;
-}
-
-.explorer-small--sm {
-  --explorer-small-size: 0.85em;
-}
-
-.explorer-small--md {
-  --explorer-small-size: 0.95em;
-}
-
-.explorer-small--hover {
-  transition:
-    color var(--anim-duration-fast) ease,
-    opacity var(--anim-duration-fast) ease;
-}
-
-.explorer-small--hover:hover,
-.explorer-small--hover:focus-visible {
-  color: var(--text-accent);
-  opacity: 1;
-}
-
-.explorer-small--truncate {
-  display: block;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* Nested small text shouldn't shrink twice. */
+.explorer-small .explorer-small {
+  font-size: 1em;
 }
 
 /* ----------------------------------------------------------
   Shared note metadata
   ------------------------------------------------------------ */
-.explorer-metadata-folder-time-row {
-  color: var(--text-muted);
-}
-
 .explorer-metadata-folder-link {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  font-weight: var(--font-normal);
   text-decoration: none;
+  transition: color var(--anim-duration-fast) ease;
 }
 
 .explorer-metadata-folder-link:hover,
 .explorer-metadata-folder-link:focus-visible {
+  color: var(--text-accent);
   text-decoration: underline;
 }
 
@@ -168,12 +141,8 @@
 }
 
 .explorer-metadata-folder-icon svg {
-  width: 1.1em;
-  height: 1.1em;
-}
-
-.explorer-metadata-folder-name {
-  font-weight: 500;
+  width: 1em;
+  height: 1em;
 }
 
 .explorer-metadata-separator {
@@ -193,12 +162,8 @@
   align-self: center;
   border-inline-start: 1.2px solid var(--text-faint);
   display: inline-block;
-  /* height: 1.15em; */
-  height: 1em;
+  height: 1.15em;
   margin-inline: var(--explorer-space-1);
-  /* transform: translateY(0.15em); */
-  transform: translateY(15%);
-  /* vertical-align: middle; */
   white-space: nowrap;
   width: 0;
 }
@@ -333,6 +298,18 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding-block: 2px;
+}
+
+.tags-container--xs {
+  font-size: 0.78em;
+}
+
+.tags-container--sm {
+  font-size: 1em;
+}
+
+.tags-container--md {
+  font-size: 0.9em;
 }
 
 .tags-container__row {

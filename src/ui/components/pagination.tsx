@@ -2,7 +2,7 @@ import React from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
 import { Group } from "./ui/layout";
-
+import { cn } from "./ui/action";
 const PAGING_LABEL_BASE = "paging-label";
 const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
 const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
@@ -45,22 +45,28 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  useGlass?: boolean;
 };
 
 type PaginationModernProps = {
   canLoadMore: boolean;
   onLoadMore: () => void;
+  useGlass?: boolean;
 };
 
 export function PaginationModern(
   props: PaginationModernProps,
 ): React.JSX.Element {
-  const { canLoadMore, onLoadMore } = props;
+  const { canLoadMore, onLoadMore, useGlass } = props;
   return (
     <Group justify="center">
       <button
         type="button"
-        className="clickable-icon paging-load-more"
+        className={cn(
+          "clickable-icon paging-load-more ",
+          useGlass &&
+            "glass-surface glass-surface--shine pagination-modern-glass",
+        )}
         onClick={onLoadMore}
         disabled={!canLoadMore}
       >

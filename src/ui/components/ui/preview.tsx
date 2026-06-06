@@ -12,9 +12,10 @@ export function Preview({
   maxChar?: number;
 }) {
   const [preview, setPreview] = useState("");
+  const effectiveMaxChar = maxChar ?? 100;
 
   useEffect(() => {
-    void file.loadPreview(maxChar).then((preview) => {
+    void file.loadPreview(effectiveMaxChar).then((preview) => {
       setPreview(preview ?? "");
     });
   }, [file]);
