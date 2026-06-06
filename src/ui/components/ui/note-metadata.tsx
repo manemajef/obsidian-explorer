@@ -5,41 +5,34 @@ import { ExplorerActions } from "src/explorer/actions";
 import { resolveCardFooterMode } from "src/explorer/lib/listing";
 import { diffDays } from "src/utils";
 import { Icon } from "../shared";
+import { Group } from "./layout";
 import { TagList } from "./tags";
+import { Small } from "./text";
 import { Preview } from "./preview";
 
-export function MetaTime({
-  file,
-  model,
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function MetaDate({
+  date,
   className,
 }: {
-  file: ExplorerFileNode;
-  model: ExplorerModel;
+  date: number;
   className?: string;
 }) {
-  const { settings, pluginSettings } = model;
-  const extForCard = resolveCardFooterMode(settings);
-
-  if (extForCard === "none") return null;
-
-  const parentFolder = file.parentExplorerFolder;
-  const showFolder = parentFolder && parentFolder !== model.folder;
-
-  const showTime = extForCard !== "none";
-  const isCtime = extForCard === "ctime";
-  const dateVal = isCtime ? file.createdAt : file.modifiedAt;
-  const timeStr = diffDays(dateVal);
   return (
-    <div className={`explorer-metadata-folder-time-row ${className ?? ""}`}>
-      {showFolder && showTime && (
-        <span className="explorer-metadata-separator" aria-hidden="true" />
-      )}
-      {showTime && <span className="explorer-metadata-date">{timeStr}</span>}
-    </div>
+    <Small
+      className={cn("explorer-metadata-date", className)}
+      size="md"
+      tone="muted"
+    >
+      {diffDays(date)}
+    </Small>
   );
 }
 
-export function FolderTimeRow({
+export function MetaFolder({
   file,
   model,
   actions,
@@ -50,7 +43,57 @@ export function FolderTimeRow({
   actions: ExplorerActions;
   className?: string;
 }) {
-  const { settings, pluginSettings } = model;
+  const parentFolder = file.parentExplorerFolder;
+  if (!parentFolder || parentFolder === model.folder) return null;
+
+  return (
+    <Small
+      as="span"
+      className={cn("explorer-metadata-folder-link", className)}
+      hover
+      size="md"
+      tone="muted"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void actions.openFolder(parentFolder, e.ctrlKey || e.metaKey);
+      }}
+    >
+      {model.pluginSettings.ShowIconsInCards && (
+        <Icon name="folder-closed" className="explorer-metadata-folder-icon" />
+      )}
+      <span className="explorer-metadata-folder-name">{parentFolder.name}</span>
+    </Small>
+  );
+}
+
+export function MetaSeparator(): React.JSX.Element {
+  return <span className="explorer-metadata-separator" aria-hidden="true" />;
+}
+
+export function MetaTextSeparator({
+  className,
+}: {
+  className?: string;
+}): React.JSX.Element {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn("explorer-metadata-text-separator", className)}
+    />
+  );
+}
+
+export function MetaTime({
+  file,
+  model,
+  className,
+}: {
+  file: ExplorerFileNode;
+  model: ExplorerModel;
+  className?: string;
+}) {
+  const { settings } = model;
   const extForCard = resolveCardFooterMode(settings);
 
   if (extForCard === "none") return null;
@@ -61,35 +104,60 @@ export function FolderTimeRow({
   const showTime = extForCard !== "none";
   const isCtime = extForCard === "ctime";
   const dateVal = isCtime ? file.createdAt : file.modifiedAt;
-  const timeStr = diffDays(dateVal);
 
   return (
-    <div className={`explorer-metadata-folder-time-row ${className ?? ""}`}>
-      {showFolder && (
-        <span
-          className="explorer-metadata-folder-link"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            void actions.openFolder(parentFolder, e.ctrlKey || e.metaKey);
-          }}
-        >
-          {pluginSettings.ShowIconsInCards && (
-            <Icon
-              name="folder-closed"
-              className="explorer-metadata-folder-icon"
-            />
-          )}
-          <span className="explorer-metadata-folder-name">
-            {parentFolder.name}
-          </span>
-        </span>
-      )}
-      {showFolder && showTime && (
-        <span className="explorer-metadata-separator" aria-hidden="true" />
-      )}
-      {showTime && <span className="explorer-metadata-date">{timeStr}</span>}
-    </div>
+    <Group className={cn("explorer-metadata-folder-time-row", className)} wrap>
+      {showFolder && showTime && <MetaSeparator />}
+      {showTime && <MetaDate date={dateVal} />}
+    </Group>
+  );
+}
+
+export function MetaFolderDate({
+  file,
+  model,
+  actions,
+  className,
+}: {
+  file: ExplorerFileNode;
+  model: ExplorerModel;
+  actions: ExplorerActions;
+  className?: string;
+}) {
+  const { settings } = model;
+  const extForCard = resolveCardFooterMode(settings);
+
+  if (extForCard === "none") return null;
+
+  const parentFolder = file.parentExplorerFolder;
+  const showFolder = parentFolder && parentFolder !== model.folder;
+
+  const showTime = extForCard !== "none";
+  const isCtime = extForCard === "ctime";
+  const dateVal = isCtime ? file.createdAt : file.modifiedAt;
+
+  return (
+    <Group className={cn("explorer-metadata-folder-time-row", className)} wrap>
+      {showFolder && <MetaFolder file={file} model={model} actions={actions} />}
+      {showFolder && showTime && <MetaSeparator />}
+      {showTime && <MetaDate date={dateVal} />}
+    </Group>
+  );
+}
+
+export function FolderTimeRow(props: {
+  file: ExplorerFileNode;
+  model: ExplorerModel;
+  actions: ExplorerActions;
+  className?: string;
+}) {
+  return (
+    <MetaFolderDate
+      file={props.file}
+      model={props.model}
+      actions={props.actions}
+      className={props.className}
+    />
   );
 }
 
@@ -106,7 +174,7 @@ export function NoteTags({
   if (!settings.showTags || !file.tags || file.tags.length === 0) return null;
 
   return (
-    <div className={`explorer-metadata-tags-row ${className ?? ""}`}>
+    <div className={cn("explorer-metadata-tags-row", className)}>
       <TagList tags={file.tags} className="explorer-metadata-tags" />
     </div>
   );
@@ -122,13 +190,14 @@ export function NotePreview({
   maxChar?: number;
 }) {
   return (
-    <div className={`explorer-metadata-preview-row ${className ?? ""}`}>
-      <Preview
-        file={file}
-        maxChar={maxChar}
-        className="explorer-metadata-preview"
-      />
-    </div>
+    <Small
+      as="span"
+      className={cn("explorer-metadata-preview", className)}
+      size="md"
+      tone="muted"
+    >
+      <Preview file={file} maxChar={maxChar} />
+    </Small>
   );
 }
 
@@ -141,5 +210,5 @@ export function NoteMetadata({
   model: ExplorerModel;
   actions: ExplorerActions;
 }) {
-  return <FolderTimeRow file={file} model={model} actions={actions} />;
+  return <MetaFolderDate file={file} model={model} actions={actions} />;
 }

@@ -5,14 +5,20 @@ import { ExplorerActions } from "../../explorer/actions";
 import { Icon, InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Pin } from "./ui/pin";
-import { Gapper, Group, Spacer, Stack } from "./ui/layout";
+import { Gap, Group, Spacer, Spring, Stack } from "./ui/layout";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import {
   isInteractiveTouchTarget,
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
-import { FolderTimeRow, NoteTags, NotePreview } from "./ui/note-metadata";
+import {
+  FolderTimeRow,
+  NoteTags,
+  NotePreview,
+  MetaDate,
+  MetaTextSeparator,
+} from "./ui/note-metadata";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -22,13 +28,17 @@ export function CardsView(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { model, files, actions, contextMenu } = props;
+  const shouldShowFolder = model.settings.depth > 0;
 
   return (
     <div className="explorer-cards-view">
       <div className="explorer-cards-grid">
-        {files.map((file) => (
-          <div key={file.path}>
-            <div
+        {files.map((file) => {
+          const showTags = model.settings.showTags && file.tags.length > 0;
+
+          return (
+            <Stack
+              key={file.path}
               className="explorer-card"
               {...draggableProps(file.dragSource, file.dragFromFolderNote)}
               {...folderDropProps(
@@ -49,68 +59,85 @@ export function CardsView(props: {
                 void actions.openFile(file, e.ctrlKey || e.metaKey);
               }}
             >
-              <Stack>
-                <Group className="explorer-card-header">
-                  <div
-                    className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
-                  >
-                    <Group>
-                      {file.isFolderNote && (
-                        <Group className="explorer-card-ext">
-                          <Icon
-                            name="folder"
-                            className="explorer-card-folder-note-icon"
-                          />
-                          <Gapper size="var(--explorer-space-1)" />
-                        </Group>
-                      )}
-
-                      <InternalLink
-                        path={file.path}
-                        text={file.basename}
-                        draggable={false}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          void actions.openFile(file, e.ctrlKey || e.metaKey);
-                        }}
+              <Group align="start" className="explorer-card-header">
+                <Group
+                  align="start"
+                  className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
+                  minWidth={0}
+                >
+                  {file.isFolderNote && (
+                    <Group className="explorer-card-ext" shrink={false}>
+                      <Icon
+                        name="folder"
+                        className="explorer-card-folder-note-icon"
                       />
+                      <Gap size={1} />
                     </Group>
-                  </div>
+                  )}
 
-                  <span style={{ width: ".5em" }} />
-                  <Spacer />
-
-                  <div className="explorer-card-exts">
-                    <div
-                      className="explorer-card-pin-slot"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {file.isMarkdown && <Pin file={file} actions={actions} />}
-                    </div>
-
-                    {!file.isFolderNote && file.extensionLabel ? (
-                      <Badge variant="ext" className="explorer-card-ext-badge">
-                        {file.extensionLabel}
-                      </Badge>
-                    ) : null}
-                  </div>
+                  <InternalLink
+                    path={file.path}
+                    text={file.basename}
+                    draggable={false}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      void actions.openFile(file, e.ctrlKey || e.metaKey);
+                    }}
+                  />
                 </Group>
-                <div className="explorer-card-preview-wrapper">
-                  <NotePreview file={file} />
-                </div>
 
+                <Spacer />
+
+                <Group
+                  className="explorer-card-exts"
+                  gap={1}
+                  shrink={false}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="explorer-card-pin-slot">
+                    {file.isMarkdown && <Pin file={file} actions={actions} />}
+                  </div>
+
+                  {!file.isFolderNote && file.extensionLabel ? (
+                    <Badge variant="ext" className="explorer-card-ext-badge">
+                      {file.extensionLabel}
+                    </Badge>
+                  ) : null}
+                </Group>
+              </Group>
+
+              <div className="explorer-card-preview-wrapper">
+                {!shouldShowFolder && (
+                  <>
+                    <MetaDate date={file.modifiedAt} />
+                    <MetaTextSeparator />
+                  </>
+                )}
+                <NotePreview file={file} />
+              </div>
+
+              {showTags && (
                 <div className="explorer-card-tags-wrapper">
                   <NoteTags file={file} model={model} />
                 </div>
-              </Stack>
+              )}
+              {shouldShowFolder && (
+                <>
+                  <Spring />
 
-              <div className="explorer-card-metadata-wrapper">
-                <FolderTimeRow file={file} model={model} actions={actions} />
-              </div>
-            </div>
-          </div>
-        ))}
+                  <div className="explorer-card-metadata-wrapper">
+                    <FolderTimeRow
+                      file={file}
+                      model={model}
+                      actions={actions}
+                    />
+                  </div>
+                </>
+              )}
+            </Stack>
+          );
+        })}
       </div>
     </div>
   );

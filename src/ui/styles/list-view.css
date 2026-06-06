@@ -154,6 +154,36 @@
   transform: translateY(15%);
 }
 
+.explorer-note-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  margin-top: var(--explorer-space-1);
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.explorer-note-metadata .explorer-metadata-preview {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.explorer-modern-list--desktop .explorer-note-metadata {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--explorer-space-3);
+  margin-top: var(--explorer-space-1);
+  font-size: 0.82em;
+}
+
+.explorer-modern-list--desktop .explorer-metadata-preview {
+  flex: 1;
+  min-width: 0;
+}
+
 .theme-light .use-glass .explorer-modern-list--desktop {
   background: var(--background-primary);
   box-shadow: var(--explorer-shadow-glass-sm);

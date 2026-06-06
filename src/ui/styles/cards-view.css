@@ -15,9 +15,6 @@
   padding-bottom: var(--explorer-space-1);
   margin: 0 1px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   background-color: var(--bases-cards-background);
   box-shadow: var(--bases-cards-shadow);
   border-radius: var(--bases-cards-radius);
@@ -67,14 +64,6 @@
   box-shadow: var(--bases-cards-shadow-hover);
 }
 
-.explorer-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex: 1;
-  margin-bottom: 0.5em;
-}
-
 .explorer-card-folder-note-icon {
   display: inline-flex;
   align-items: center;
@@ -93,9 +82,6 @@
 
 .explorer-card-exts {
   opacity: 0.8;
-  display: flex;
-  align-items: center;
-  gap: var(--explorer-space-1);
 }
 
 .explorer-card-pin-slot {
@@ -118,21 +104,6 @@
   max-width: 0.9em;
 }
 
-.explorer-cards-row {
-  margin: var(--explorer-space-1) 0;
-}
-
-.explorer-card-footer {
-  color: var(--text-muted);
-  font-size: var(--explorer-card-footer-font-size);
-}
-
-.explorer-container .explorer-card-footer a,
-.explorer-container .explorer-card-footer a.internal-link,
-.explorer-container .explorer-card-footer .explorer-card-folder-link {
-  color: var(--text-muted);
-}
-
 .explorer-card-link {
   line-height: var(--explorer-card-link-line-height);
 }
@@ -152,29 +123,6 @@
   color: var(--text-accent);
 }
 
-.explorer-container .explorer-card-footer:hover a,
-.explorer-container .explorer-card-footer:hover a.internal-link {
-  color: var(--text-accent);
-}
-
-.explorer-card-body {
-  padding-top: var(--explorer-space-2);
-}
-
-.explorer-card-tags-container {
-  opacity: 0.9;
-  /* margin-top: var(--explorer-space-1); */
-  font-size: 0.9em;
-}
-
-.explorer-card-tags-container .value-list-item,
-.explorer-card-tags-container .tag {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-
 .explorer-card-exts .explorer-badge {
   display: flex;
   justify-content: center;
@@ -184,44 +132,38 @@
   opacity: 1;
 }
 
-.explorer-card-ext-badge,
-.explorer-card-folder-link,
-.explorer-card-date {
+.explorer-card-ext-badge {
   opacity: 0.8;
 }
 
 .explorer-card-ext-badge:hover,
-.explorer-card-ext-badge:focus-visible,
-.explorer-card-folder-link:hover,
-.explorer-card-folder-link:focus-visible {
+.explorer-card-ext-badge:focus-visible {
   opacity: 1;
-}
-
-.explorer-container .explorer-card-folder-link {
-  color: var(--text-normal);
-  text-decoration: none;
-  cursor: pointer;
-  display: flex;
-  gap: var(--explorer-space-1);
-  align-items: center;
-  max-width: max-content;
-}
-
-.explorer-container .explorer-card-folder-link:hover {
-  text-decoration: underline;
 }
 
 .explorer-card-exts .explorer-badge.pin svg {
   transform: scale(1.3);
 }
 
-.explorer-card-folder-icon {
-  transform: scale(0.7);
-  opacity: 0.9;
-  display: flex;
-  align-items: center;
+.explorer-card-preview-wrapper {
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 0.78em;
+  line-height: 1.35;
+  overflow: hidden;
 }
 
-.explorer-card-preview {
-  overflow-wrap: anywhere;
+.explorer-card-tags-wrapper {
+  font-size: 0.78em;
+}
+
+.explorer-card-metadata-wrapper {
+  font-size: var(--explorer-card-footer-font-size, 0.63em);
+}
+
+.explorer-card-metadata-wrapper .explorer-metadata-folder-time-row {
+  font-size: 1em;
+  opacity: 0.95;
 }

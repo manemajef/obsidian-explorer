@@ -45,9 +45,174 @@
 .spacer {
   flex: 1;
 }
+
+.spring {
+  min-width: 0;
+}
+
+.gap {
+  --explorer-gap-size: 0;
+  --explorer-gap-max-size: none;
+
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+.gap--x {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.gap--y {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
+.explorer-group > .gap--auto {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.explorer-stack > .gap--auto {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
 .gapper {
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------
+  Text
+  ------------------------------------------------------------ */
+.explorer-small {
+  color: var(--explorer-small-color, var(--text-muted));
+  font-size: var(--explorer-small-size, 0.85em);
+  line-height: var(--explorer-small-line-height, 1.35);
+  opacity: var(--explorer-small-opacity, 1);
+}
+
+.explorer-small--normal {
+  --explorer-small-color: var(--text-normal);
+}
+
+.explorer-small--muted {
+  --explorer-small-color: var(--text-muted);
+}
+
+.explorer-small--faint {
+  --explorer-small-color: var(--text-faint);
+}
+
+.explorer-small--accent {
+  --explorer-small-color: var(--text-accent);
+}
+
+.explorer-small--xs {
+  --explorer-small-size: 0.78em;
+}
+
+.explorer-small--sm {
+  --explorer-small-size: 0.85em;
+}
+
+.explorer-small--md {
+  --explorer-small-size: 0.95em;
+}
+
+.explorer-small--hover {
+  transition:
+    color var(--anim-duration-fast) ease,
+    opacity var(--anim-duration-fast) ease;
+}
+
+.explorer-small--hover:hover,
+.explorer-small--hover:focus-visible {
+  color: var(--text-accent);
+  opacity: 1;
+}
+
+.explorer-small--truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------
+  Shared note metadata
+  ------------------------------------------------------------ */
+.explorer-metadata-folder-time-row {
+  color: var(--text-muted);
+}
+
+.explorer-metadata-folder-link {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.explorer-metadata-folder-link:hover,
+.explorer-metadata-folder-link:focus-visible {
+  text-decoration: underline;
+}
+
+.explorer-metadata-folder-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-end: var(--explorer-space-1);
+  opacity: 0.75;
+}
+
+.explorer-metadata-folder-icon svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.explorer-metadata-folder-name {
+  font-weight: 500;
+}
+
+.explorer-metadata-separator {
+  display: inline-block;
+  width: 1px;
+  height: 0.9em;
+  background-color: var(--background-modifier-border);
+  margin-inline: var(--explorer-space-2);
+  align-self: center;
+}
+
+.explorer-metadata-date {
+  white-space: nowrap;
+}
+
+.explorer-metadata-text-separator {
+  align-self: center;
+  border-inline-start: 1.2px solid var(--text-faint);
+  display: inline-block;
+  /* height: 1.15em; */
+  height: 1em;
+  margin-inline: var(--explorer-space-1);
+  /* transform: translateY(0.15em); */
+  transform: translateY(15%);
+  /* vertical-align: middle; */
+  white-space: nowrap;
+  width: 0;
+}
+
+.explorer-metadata-tags-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.explorer-metadata-tags {
+  margin-block: 0;
+  width: 100%;
 }
 /* .is-mobile.theme-light
   .explorer-container.use-glass

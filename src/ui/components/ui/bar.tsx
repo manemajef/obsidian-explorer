@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from "react";
+import { Spring, type SpringProps } from "./layout";
 
 /* ────────────────────────────────
    Bar
@@ -8,9 +9,14 @@ type BarProps = PropsWithChildren<{
   className?: string;
 }>;
 
-export function Bar({ children, className }: BarProps) {
+type BarComponent = ((props: BarProps) => React.JSX.Element) & {
+  Item: typeof Item;
+  Spring: typeof BarSpring;
+};
+
+export const Bar = (({ children, className }: BarProps) => {
   return <div className={`bar ${className ?? ""}`}>{children}</div>;
-}
+}) as BarComponent;
 
 /* ────────────────────────────────
    Item (fixed)
@@ -29,32 +35,12 @@ function Item({ children, minWidth = 24, className }: ItemProps) {
   );
 }
 
-/* ────────────────────────────────
-   Spring (flexible)
-──────────────────────────────── */
-
-type SpringProps = PropsWithChildren<{
-  weight?: number;
-  minWidth?: number;
-  className?: string;
-}>;
-
-function Spring({
-  children,
-  weight = 1,
-  minWidth = 0,
-  className,
-}: SpringProps) {
+function BarSpring({ className, ...props }: SpringProps): React.JSX.Element {
   return (
-    <div
+    <Spring
       className={`bar-spring ${className ?? ""}`}
-      style={{
-        flexGrow: weight,
-        minWidth,
-      }}
-    >
-      {children}
-    </div>
+      {...props}
+    />
   );
 }
 
@@ -63,6 +49,6 @@ function Spring({
 ──────────────────────────────── */
 
 Bar.Item = Item;
-Bar.Spring = Spring;
+Bar.Spring = BarSpring;
 
 export default Bar;
