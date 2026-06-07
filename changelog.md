@@ -1,6 +1,6 @@
 # Explorer changelog
 
-## newversion (upcoming)
+## newversion (upcoming) (1.4.0)
 
 ### Preview
 
