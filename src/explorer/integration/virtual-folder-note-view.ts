@@ -136,8 +136,11 @@ export class VirtualFolderNoteView extends ItemView {
     this.contentEl.addClass("explorer-virtual-folder-note-container");
     const folder = this.folder;
     if (!folder) {
-      const mainView = this.contentEl.createDiv({
-        cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered",
+      const readingView = this.contentEl.createDiv({
+        cls: "markdown-reading-view",
+      });
+      const mainView = readingView.createDiv({
+        cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered is-readable-line-width",
       });
       mainView.createDiv({
         cls: "explorer-virtual-folder-note-missing",
@@ -148,8 +151,11 @@ export class VirtualFolderNoteView extends ItemView {
     }
     this.updateHeaderTitle(folder);
 
-    const mainView = this.contentEl.createDiv({
-      cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered",
+    const readingView = this.contentEl.createDiv({
+      cls: "markdown-reading-view",
+    });
+    const mainView = readingView.createDiv({
+      cls: "explorer-virtual-folder-note markdown-preview-view markdown-rendered is-readable-line-width",
     });
     mainView.setAttr("data-path", this.sourcePath);
     const section = mainView.createDiv({

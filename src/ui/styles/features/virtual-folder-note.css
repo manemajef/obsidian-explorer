@@ -2,22 +2,20 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 0;
+  padding: var(--file-margins);
 }
 
-.explorer-virtual-folder-note .markdown-preview-sizer {
-  box-sizing: border-box;
-  max-width: var(--file-line-width, 700px);
-  margin-inline: auto;
-  padding-inline: 0;
-  width: 100%;
+.is-mobile .explorer-virtual-folder-note {
+  padding-top: 0;
 }
 
-.explorer-virtual-folder-note .virtual-folder-title-container,
-.explorer-virtual-folder-note .explorer-container {
-  max-width: var(--max-width);
-  width: var(--line-width);
-  margin-inline: var(--content-margin);
+.is-phone
+  .mod-root
+  .workspace-leaf-content
+  .view-content.explorer-virtual-folder-note-container
+  .markdown-reading-view
+  > .explorer-virtual-folder-note {
+  padding-top: 0;
 }
 
 .explorer-virtual-title-container {
