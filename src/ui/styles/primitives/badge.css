@@ -1,7 +1,7 @@
 .explorer-badge {
   font-size: var(--explorer-badge-font-size, 0.7em);
   border-radius: var(--explorer-radius-md);
-  padding: 0.1em 0.5em;
+  /* padding: 0.1em 0.5em; */
 }
 
 .explorer-badge[data-badge-size="xs"],
