@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Platform, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
@@ -32,6 +32,27 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
   const listContainerRef = useRef<HTMLDivElement>(null);
+
+  const currentPage =
+    explorerState.paginationKind === "classic" && explorerState.totalPages > 1
+      ? explorerState.currentPage
+      : undefined;
+  const prevPageRef = useRef(currentPage);
+
+  useEffect(() => {
+    if (
+      currentPage !== undefined &&
+      prevPageRef.current !== undefined &&
+      prevPageRef.current !== currentPage
+    ) {
+      listContainerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+    prevPageRef.current = currentPage;
+  }, [currentPage]);
 
   const {
     searchMode,
@@ -187,22 +208,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                   totalPages={classicPagination?.totalPages ?? 1}
                   onPageChange={(page) => {
                     classicPagination?.setPage(page);
-                    const element = listContainerRef.current;
-                    const scrollContainer = element?.closest(
-                      ".markdown-preview-view, .view-content",
-                    );
-                    if (element && scrollContainer) {
-                      const elementRect = element.getBoundingClientRect();
-                      const containerRect = scrollContainer.getBoundingClientRect();
-                      const targetScrollTop =
-                        scrollContainer.scrollTop +
-                        elementRect.top -
-                        containerRect.top;
-                      scrollContainer.scrollTo({
-                        top: targetScrollTop,
-                        behavior: "smooth",
-                      });
-                    }
                   }}
                   useGlass={model.pluginSettings.useGlass}
                 />
