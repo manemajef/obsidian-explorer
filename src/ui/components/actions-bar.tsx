@@ -54,6 +54,7 @@ export function ActionsBar(props: {
   const settingsIcon = "settings-2";
   // const settingsIcon = "ellipsis";
   const isUseNewLayout = true;
+  const useLeftTabMobile = false;
 
   if (isMobile && searchMode)
     return (
@@ -113,7 +114,7 @@ export function ActionsBar(props: {
         <StandaloneAction onClick={onSearchToggle} icon="search" />
       </div>
     );
-  if (isMobile && !onSaveFolderNote)
+  if (isMobile && !onSaveFolderNote && useLeftTabMobile)
     return (
       <div
         id="explorer-actions"
