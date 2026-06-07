@@ -7,10 +7,11 @@ import {
   ActionSpace,
   cn,
 } from "./ui/action";
-import { Gap, Group } from "./ui/layout";
+import { Gap, Group, Spring } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
+import { canGoToParentFolderNote } from "src/explorer/navigation/folder-notes";
 
 export function ActionsBar(props: {
   app: App;
@@ -50,7 +51,7 @@ export function ActionsBar(props: {
   const StandaloneAction = compactActionBar ? ActionGroupItem : ActionItem;
   const MobileSpace = () => <Gap inline size=".5em" />;
   const MobileEdgeSpace = () => <Gap inline size=".5em" />;
-  const settingsIcon = Platform.isMobile ? "ellipsis" : "settings-2";
+  const settingsIcon = "settings-2";
   // const settingsIcon = "ellipsis";
   const isUseNewLayout = true;
 
@@ -75,7 +76,72 @@ export function ActionsBar(props: {
         </Bar>
       </div>
     );
+  if (isMobile && !showParentNavigation)
+    return (
+      <div
+        id="explorer-actions"
+        className={cn("explorer-actions-mobile-layout", actionClassName)}
+      >
+        {showParentNavigation ? (
+          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
+        ) : (
+          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
+        )}
+        {/* <ActionSpace minWidth=".8em" /> */}
+        <Spring />
+        <ActionGroup>
+          <MobileEdgeSpace />
+          {showParentNavigation && (
+            <>
+              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
+              <MobileSpace />
+            </>
+          )}
+          {onSaveFolderNote && (
+            <>
+              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
+          <MobileEdgeSpace />
+        </ActionGroup>
+        <ActionSpace maxWidth="1em" minWidth=".5em" />
 
+        <StandaloneAction onClick={onSearchToggle} icon="search" />
+      </div>
+    );
+  if (isMobile && !onSaveFolderNote)
+    return (
+      <div
+        id="explorer-actions"
+        className={cn("explorer-actions-mobile-layout", actionClassName)}
+      >
+        <ActionGroup>
+          <MobileEdgeSpace />
+          <ActionGroupItem onClick={() => onGoToParent(false)} icon="undo-2" />
+          <MobileSpace />
+          <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
+          <MobileSpace />
+
+          {onSaveFolderNote && (
+            <>
+              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
+              <MobileSpace />
+            </>
+          )}
+          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <MobileSpace />
+          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
+
+          <MobileEdgeSpace />
+        </ActionGroup>
+        <ActionSpace />
+        <StandaloneAction onClick={onSearchToggle} icon="search" />
+      </div>
+    );
   if (isMobile && (!onSaveFolderNote || !showParentNavigation))
     return (
       <div

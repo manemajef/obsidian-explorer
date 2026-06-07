@@ -37,8 +37,11 @@
   gap: var(--explorer-space-3);
   margin-block: 0.25em;
 }
+.explorer-cards-grid.explorer-cards-grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
 
-.explorer-cards-grid--compact {
+.is-mobile .explorer-cards-grid--compact {
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
