@@ -6,11 +6,13 @@ import {
   forwardRef,
   useEffect,
   useRef,
+  type ButtonHTMLAttributes,
+  type JSX,
   type ReactNode,
   type HTMLAttributes,
 } from "react";
 import { setIcon } from "obsidian";
-import { GlassSurface } from "./glass";
+import { Surface } from "./surface";
 
 export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -32,50 +34,61 @@ type ActionItemVariantProps = {
 
 export interface ActionItemProps
   extends
-    Omit<HTMLAttributes<HTMLButtonElement>, "children">,
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">,
     ActionItemVariantProps {}
 
-export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
-  ({ icon, active, shine = true, className, ...props }, ref) => (
-    <GlassSurface
-      ref={ref}
-      as="button"
-      type="button"
+export function ActionItem({
+  icon,
+  active,
+  shine = true,
+  className,
+  ...props
+}: ActionItemProps): JSX.Element {
+  return (
+    <Surface
+      active={active}
       shine={shine}
       interactive
+      radius="circle"
       className={cn(
-        "action-item clickable-icon",
+        "action-item",
         active && "action-item--active",
         className,
       )}
-      {...props}
     >
-      <ActionIcon name={icon} />
-    </GlassSurface>
-  ),
-);
-ActionItem.displayName = "ActionItem";
+      <button
+        type="button"
+        className="action-item-button clickable-icon"
+        {...props}
+      >
+        <ActionIcon name={icon} />
+      </button>
+    </Surface>
+  );
+}
 
 export interface ActionGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   shine?: boolean;
 }
 
-export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
-  ({ children, shine = true, className, ...props }, ref) => (
-    <GlassSurface
-      ref={ref}
-      as="div"
+export function ActionGroup({
+  children,
+  shine = true,
+  className,
+  ...props
+}: ActionGroupProps): JSX.Element {
+  return (
+    <Surface
       shine={shine}
       radius="pill"
       className={cn("action-group", className)}
       {...props}
     >
       {children}
-    </GlassSurface>
-  ),
-);
-ActionGroup.displayName = "ActionGroup";
+    </Surface>
+  );
+}
 
 export interface ActionGroupItemProps extends Omit<
   HTMLAttributes<HTMLButtonElement>,

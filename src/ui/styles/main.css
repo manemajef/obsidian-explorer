@@ -20,13 +20,14 @@
 
   /* Glass surfaces */
 
-  --explorer-glass-background:
+  /* --explorer-glass-background:
     linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.32) 0%,
       rgba(255, 255, 255, 0.85) 100%
     ),
-    rgba(0, 0, 0, 0.01);
+    rgba(0, 0, 0, 0.01); */
+  --explorer-glass-background: var(--raised-background);
   --explorer-border-glass: 1px solid rgba(0, 0, 0, 0.08);
   --explorer-shadow-glass:
     0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85),
@@ -35,6 +36,10 @@
   --explorer-shadow-glass-sm:
     0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
+
+  --explorer-raised-shadow-sm:
+    0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
+    var(--shadow-edges);
 
   --explorer-shadow-glass-hover:
     0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85),

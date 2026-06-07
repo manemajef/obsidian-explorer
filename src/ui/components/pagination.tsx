@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
 import { Divider, Group } from "./ui/layout";
 import { cn } from "./ui/action";
-import { GlassSurface } from "./ui/glass";
+import { Surface } from "./ui/surface";
 const PAGING_LABEL_BASE = "paging-label";
 const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
 const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
@@ -63,33 +63,35 @@ type PaginationModernProps = {
 export function PaginationModern(
   props: PaginationModernProps,
 ): React.JSX.Element {
-  const { canLoadMore, onLoadMore, useGlass } = props;
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const Container = useGlass ? GlassSurface : "button";
+  const { canLoadMore, onLoadMore } = props;
 
   return (
     <Group justify="center">
-      <Container
-        ref={buttonRef}
-        type="button"
-        className="clickable-icon paging-load-more"
-        {...(useGlass && { as: "button", shine: true, radius: "pill" })}
-        onClick={() => {
-          buttonRef.current?.blur();
-          onLoadMore();
-        }}
-        disabled={!canLoadMore}
+      <Surface
+        className="paging-load-more"
+        // elevation="sm"
+        interactive={canLoadMore}
+        radius="pill"
       >
-        <span className="load-more-text">Load more</span>
-        <Icon name="chevrons-down" className="paging-load-more-icon" />
-      </Container>
+        <button
+          type="button"
+          className="clickable-icon paging-load-more-button"
+          onClick={(event) => {
+            event.currentTarget.blur();
+            onLoadMore();
+          }}
+          disabled={!canLoadMore}
+        >
+          <span className="load-more-text">Load more</span>
+          <Icon name="chevrons-down" className="paging-load-more-icon" />
+        </button>
+      </Surface>
     </Group>
   );
 }
 
 export function Pagination(props: PaginationProps): React.JSX.Element {
-  const { currentPage, totalPages, onPageChange, useGlass } = props;
+  const { currentPage, totalPages, onPageChange } = props;
   const isMobile = Platform.isMobile;
   const page = currentPage;
 
@@ -104,16 +106,12 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
   );
   const canGoPrev = currentPage > 0;
   const canGoNext = currentPage < totalPages - 1;
-  const Container = useGlass ? GlassSurface : "div";
 
   return (
     <>
       <Divider />
       <Group justify="center">
-        <Container
-          className="paging-control"
-          {...(useGlass && { shine: true, radius: "pill" })}
-        >
+        <Surface className="paging-control" elevation="sm" radius="pill">
           <PageNav
             icon="chevron-left"
             disabled={!canGoPrev}
@@ -156,7 +154,7 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
               if (currentPage < totalPages - 1) onPageChange(currentPage + 1);
             }}
           />
-        </Container>
+        </Surface>
       </Group>
     </>
   );
