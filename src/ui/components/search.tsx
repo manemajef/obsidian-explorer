@@ -1,14 +1,22 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { ActionItem } from "./ui/action";
+import { ActionGroupItem, ActionItem } from "./ui/action";
 
 export function Search(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
+  compactActionBar?: boolean;
 }): React.JSX.Element {
-  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
+  const {
+    searchMode,
+    searchQuery,
+    onSearchToggle,
+    onSearchInput,
+    compactActionBar = false,
+  } = props;
+  const SearchButton = compactActionBar ? ActionGroupItem : ActionItem;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -18,7 +26,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <ActionItem icon="search" onClick={onSearchToggle} />;
+    return <SearchButton icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -44,7 +52,7 @@ export function Search(props: {
         />
       </div>
       <div className="explorer-search__clear">
-        <ActionItem
+        <SearchButton
           icon="x"
           onClick={onSearchToggle}
           className="cancel-search-btn"

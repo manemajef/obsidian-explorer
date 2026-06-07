@@ -20,13 +20,6 @@ export type DirectionMode = "rtl" | "ltr" | "auto";
 export type PaginationStyle = "modern" | "classic" | "none";
 export type DisplayedNotes = "supported" | "markdown" | "all" | "none";
 export type MissingFolderNoteBehavior = "smart" | "create" | "manual";
-export type CardExt =
-  | "folder"
-  | "ctime"
-  | "mtime"
-  | "desc"
-  | "none"
-  | "default";
 
 export const SETTING_SECTIONS = [
   {
@@ -133,8 +126,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 10 },
-      labels: { plugin: "Default view" },
     },
   }),
 
@@ -152,7 +143,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 11 },
       visibleWhen: { key: "view", value: "list" },
     },
   }),
@@ -164,8 +154,24 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 11.1 },
       visibleWhen: { key: "view", value: "cards" },
+    },
+  }),
+  compactActionBar: booleanField({
+    label: "Compact action bar",
+    description: "Use plain, tighter action bar controls.",
+    defaultValue: false,
+    blockKey: "compactActionBar",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+    },
+    legacy: {
+      blockKeys: ["useGlass"],
+      resolve: (source) => {
+        const useGlass = coerceLegacyBoolean(source.useGlass);
+        return useGlass === undefined ? undefined : !useGlass;
+      },
     },
   }),
   // compact: booleanField({
@@ -190,8 +196,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 20 },
-      labels: { plugin: "Default sort" },
     },
   }),
 
@@ -207,8 +211,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 30 },
-      labels: { plugin: "Default depth" },
     },
   }),
 
@@ -227,8 +229,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 80 },
-      labels: { plugin: "Pagination style" },
     },
     legacy: {
       blockKeys: ["usePagination"],
@@ -247,8 +247,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      surfaceOrder: { block: 90 },
-      labels: { plugin: "Default page size" },
     },
   }),
 
@@ -260,30 +258,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "display",
-      surfaceOrder: { block: 70 },
-      labels: { plugin: "Default tag display" },
-    },
-  }),
-
-  cardExt: enumField({
-    label: "Card footer",
-    description: "What to show in the card footer.",
-    blockKey: "cardExt",
-    defaultValue: "default",
-    options: ["folder", "ctime", "mtime", "desc", "none", "default"],
-    optionLabels: {
-      folder: "Folder",
-      ctime: "Created",
-      mtime: "Modified",
-      desc: "Description",
-      none: "None",
-      default: "Default",
-    },
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "display",
-      surfaceOrder: { block: 60 },
-      labels: { plugin: "Default card footer", block: "Card info" },
     },
   }),
 
@@ -295,7 +269,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "display",
-      surfaceOrder: { block: 40 },
     },
   }),
 
@@ -308,7 +281,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["block"],
       section: "display",
-      surfaceOrder: { block: 110 },
     },
   }),
 
@@ -328,8 +300,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "display",
-      surfaceOrder: { block: 50 },
-      labels: { plugin: "Displayed notes" },
     },
     legacy: {
       blockKeys: ["showNotes", "onlyNotes", "showUnsupportedFiles"],
@@ -352,8 +322,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "behavior",
-      surfaceOrder: { block: 100 },
-      labels: { plugin: "Default text direction" },
     },
   }),
 });
@@ -409,7 +377,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
-      visibleWhen: { key: "missingFolderNoteBehaviour", value: "create" },
+      visibleWhen: { key: "missingFolderNoteBehavior", value: "create" },
     },
   }),
   syncFolderNotes: booleanField({
@@ -516,15 +484,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "appearance",
       visibleWhen: { platform: "mobile" },
-    },
-  }),
-  useGlass: booleanField({
-    label: "Use glass action bar",
-    description: "Use the glass style for action bar controls.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
     },
   }),
   useLinkColorInCard: booleanField({

@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExplorerModel } from "../explorer/model";
-import {
-  buildExplorerListing,
-  resolveCardFooterMode,
-} from "../explorer/lib/listing";
+import { buildExplorerListing } from "../explorer/lib/listing";
 import { ExplorerFileNode } from "../explorer/lib/nodes";
+import { Platform } from "obsidian";
 
 type PaginationKind = "classic" | "load-more" | "none";
 
@@ -44,8 +42,9 @@ export function useExplorerState(model: ExplorerModel) {
       ? "load-more"
       : settings.paginationStyle;
   const activeFiles = search.mode ? search.listing : browseListing;
-  const classic = useClassicPagination(activeFiles, settings.pageSize);
-  const loadMore = useIncrementalReveal(activeFiles, settings.pageSize);
+  const effectivePageSize = getEffectivePageSize(settings);
+  const classic = useClassicPagination(activeFiles, effectivePageSize);
+  const loadMore = useIncrementalReveal(activeFiles, effectivePageSize);
   const pagination =
     paginationKind == "classic"
       ? classic
@@ -64,7 +63,6 @@ export function useExplorerState(model: ExplorerModel) {
     toggleSearch: search.toggle,
     setSearchQuery: search.setQuery,
     refreshMetadata,
-    extForCard: resolveCardFooterMode(settings),
     ...pagination,
     visibleFiles: pagination.visibleFiles,
   };
@@ -188,6 +186,23 @@ function useIncrementalReveal(files: ExplorerFileNode[], pageSize: number) {
     loadMore: useCallback(() => setVisibleCount((n) => n + size), [size]),
     paginationKind: "load-more" as const,
   };
+}
+
+function getEffectivePageSize(
+  settings: Pick<
+    ExplorerModel["settings"],
+    "pageSize" | "view" | "compactCards"
+  >,
+): number {
+  const multiple =
+    settings.view === "cards"
+      ? settings.compactCards && !Platform.isMobile
+        ? 3
+        : 2
+      : 1;
+  return (
+    settings.pageSize + ((multiple - (settings.pageSize % multiple)) % multiple)
+  );
 }
 
 function useFileSignature(files: ExplorerFileNode[]): string {

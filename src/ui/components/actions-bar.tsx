@@ -5,8 +5,9 @@ import {
   ActionGroup,
   ActionGroupItem,
   ActionSpace,
+  cn,
 } from "./ui/action";
-import { Group, Separator } from "./ui/layout";
+import { Group } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
@@ -25,7 +26,7 @@ export function ActionsBar(props: {
   searchQuery: string;
   onSearchInput: (query: string) => void;
   showParentNavigation: boolean;
-  useGlass: boolean;
+  compactActionBar: boolean;
 }): React.JSX.Element {
   const {
     app,
@@ -41,10 +42,12 @@ export function ActionsBar(props: {
     onSearchToggle,
     onSearchInput,
     showParentNavigation,
-    useGlass,
+    compactActionBar,
   } = props;
 
   const isMobile = Platform.isMobile;
+  const actionClassName = cn(compactActionBar && "explorer-actions--compact");
+  const StandaloneAction = compactActionBar ? ActionGroupItem : ActionItem;
   const MobileSpace = () => <span style={{ width: ".5em", flexShrink: 1 }} />;
   const MobileEdgeSpace = () => (
     <span style={{ width: ".5em", flexShrink: 1 }} />
@@ -55,7 +58,10 @@ export function ActionsBar(props: {
 
   if (isMobile && searchMode)
     return (
-      <div id="explorer-actions" className="explorer-actions-mobile-search">
+      <div
+        id="explorer-actions"
+        className={cn("explorer-actions-mobile-search", actionClassName)}
+      >
         <Bar>
           <Bar.Spring />
           <Bar.Item>
@@ -64,12 +70,14 @@ export function ActionsBar(props: {
               searchQuery={searchQuery}
               onSearchToggle={onSearchToggle}
               onSearchInput={onSearchInput}
+              compactActionBar={compactActionBar}
             />
           </Bar.Item>
           <Bar.Spring />
         </Bar>
       </div>
     );
+
   if (isMobile && (!onSaveFolderNote || !showParentNavigation))
     return (
       <div
@@ -80,11 +88,12 @@ export function ActionsBar(props: {
           width: "100%",
         }}
         id="explorer-actions"
+        className={actionClassName}
       >
         {showParentNavigation ? (
-          <ActionItem onClick={() => onGoToParent(false)} icon="undo-2" />
+          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
         ) : (
-          <ActionItem onClick={onOpenSettings} icon={settingsIcon} />
+          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
         )}
         <ActionSpace minWidth=".8em" />
         <ActionGroup>
@@ -120,6 +129,7 @@ export function ActionsBar(props: {
           width: "100%",
         }}
         id="explorer-actions"
+        className={actionClassName}
       >
         <ActionGroup>
           <MobileEdgeSpace />
@@ -151,17 +161,17 @@ export function ActionsBar(props: {
         </ActionGroup>
         <ActionSpace minWidth=".8em" />
 
-        <ActionItem onClick={onSearchToggle} icon="search" />
+        <StandaloneAction onClick={onSearchToggle} icon="search" />
       </div>
     );
   if (isUseNewLayout)
     return (
-      <div id="explorer-actions">
+      <div id="explorer-actions" className={actionClassName}>
         <Bar>
           <Bar.Item>
             <Group gap={2} className="explorer-actions-start">
               {showParentNavigation ? (
-                <ActionItem
+                <StandaloneAction
                   icon="undo-2"
                   className="explorer-parent-action"
                   {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
@@ -170,7 +180,10 @@ export function ActionsBar(props: {
                   }}
                 />
               ) : (
-                <ActionItem icon={settingsIcon} onClick={onOpenSettings} />
+                <StandaloneAction
+                  icon={settingsIcon}
+                  onClick={onOpenSettings}
+                />
               )}
             </Group>
           </Bar.Item>
@@ -193,12 +206,13 @@ export function ActionsBar(props: {
                   <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
                 )}
               </ActionGroup>
-              {useGlass ? <span style={{ width: ".6em" }} /> : <Separator />}
+              <span className="explorer-action-gap" />
               <Search
                 searchMode={searchMode}
                 searchQuery={searchQuery}
                 onSearchToggle={onSearchToggle}
                 onSearchInput={onSearchInput}
+                compactActionBar={compactActionBar}
               />
             </Group>
           </Bar.Item>
@@ -206,12 +220,12 @@ export function ActionsBar(props: {
       </div>
     );
   return (
-    <div id="explorer-actions">
+    <div id="explorer-actions" className={actionClassName}>
       <Bar>
         <Bar.Item>
           <Group gap={2} className="explorer-actions-start">
             {showParentNavigation ? (
-              <ActionItem
+              <StandaloneAction
                 icon="undo-2"
                 className="explorer-parent-action"
                 {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
@@ -220,7 +234,7 @@ export function ActionsBar(props: {
                 }}
               />
             ) : null}
-            <ActionItem icon={settingsIcon} onClick={onOpenSettings} />
+            <StandaloneAction icon={settingsIcon} onClick={onOpenSettings} />
           </Group>
         </Bar.Item>
 
@@ -235,12 +249,13 @@ export function ActionsBar(props: {
               <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
               <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
             </ActionGroup>
-            {useGlass ? <span style={{ width: ".6em" }} /> : <Separator />}
+            <span className="explorer-action-gap" />
             <Search
               searchMode={searchMode}
               searchQuery={searchQuery}
               onSearchToggle={onSearchToggle}
               onSearchInput={onSearchInput}
+              compactActionBar={compactActionBar}
             />
           </Group>
         </Bar.Item>

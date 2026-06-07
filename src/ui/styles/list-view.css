@@ -178,7 +178,7 @@
   min-width: 0;
 }
 
-.theme-light .use-glass .explorer-modern-list--desktop {
+.theme-light .explorer-container .explorer-modern-list--desktop {
   background: var(--background-primary);
   box-shadow: var(--explorer-shadow-glass-sm);
 }
@@ -187,7 +187,7 @@
   background-color: var(--background-primary-alt);
 }
 
-.use-glass .explorer-modern-list {
+.explorer-container .explorer-modern-list {
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);
   background-color: var(--explorer-glass-background);
@@ -198,7 +198,7 @@
   background-image: var(--explorer-glass-image);
 }
 
-.theme-dark.is-mobile .use-glass .explorer-modern-list {
+.theme-dark.is-mobile .explorer-container .explorer-modern-list {
   /* background-color: var(--background-primary-alt); */
   background: var(--explorer-glass-background);
   /* background-image: linear-gradient(

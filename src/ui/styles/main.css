@@ -70,7 +70,7 @@
   cursor: default;
 }
 
-.explorer-container.use-glass .clickable-icon {
+.explorer-container .clickable-icon {
   --corner-shape: round;
 }
 

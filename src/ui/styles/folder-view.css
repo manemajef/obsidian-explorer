@@ -26,12 +26,12 @@
   --explorer-folder-card-shadow-drop: var(--input-shadow-hover);
 }
 
-.use-glass .explorer-folders-grid {
+.explorer-container .explorer-folders-grid {
   --explorer-folder-card-shadow: var(--explorer-shadow-glass-sm);
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass);
 }
 
-.theme-dark .use-glass .explorer-folders-grid {
+.theme-dark .explorer-container .explorer-folders-grid {
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass-hover);
 }
 

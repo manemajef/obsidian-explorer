@@ -61,9 +61,10 @@
   margin-inline: auto;
   border: 1px solid var(--background-modifier-border);
   border-radius: var(--explorer-radius-pill);
+  background: var(--raised-background);
   font-weight: var(--font-medium);
 }
-.explorer-container.use-glass .paging-load-more.explorer-surface {
+.explorer-container .paging-load-more.explorer-surface {
   border-radius: var(--explorer-radius-pill);
 
   min-width: min-content;
@@ -96,17 +97,7 @@
   /* font: inherit; */
 }
 
-.explorer-container.use-glass .paging-load-more {
-  /* border: var(--explorer-border-glass); */
-  /* box-shadow: var(--explorer-shadow-glass-sm); */
-  /* background: var(--explorer-glass-background); */
-  /* backdrop-filter: var(--raised-blur); */
-  /* box-shadow: var(--shadow-xs); */
-  /* border: 1px solid rgba(0, 0, 0, 0.05); */
-  background: var(--raised-background);
-}
-
-.theme-dark .explorer-container.use-glass .paging-load-more {
+.theme-dark .explorer-container .paging-load-more {
   /* border: none; */
   background: rgba(255, 255, 255, 0.001);
 }
@@ -119,22 +110,20 @@
   box-shadow: var(--explorer-surface-shadow, var(--explorer-shadow-glass));
 }
 
-.theme-dark .explorer-container.use-glass .paging-load-more:hover,
-.theme-dark .explorer-container.use-glass .paging-load-more:focus-within {
+.theme-dark .explorer-container .paging-load-more:hover,
+.theme-dark .explorer-container .paging-load-more:focus-within {
   /* border-color: rgba(255, 255, 255, 0.12); */
   background: rgba(255, 255, 255, 0.02);
 }
 
-.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more {
+.theme-dark.is-mobile .explorer-container .paging-load-more {
   background: rgba(255, 255, 255, 0.018);
   border: var(--explorer-border-glass);
   box-shadow: var(--explorer-shadow-glass);
 }
 
-.theme-dark.is-mobile .explorer-container.use-glass .paging-load-more:hover,
-.theme-dark.is-mobile
-  .explorer-container.use-glass
-  .paging-load-more:focus-within {
+.theme-dark.is-mobile .explorer-container .paging-load-more:hover,
+.theme-dark.is-mobile .explorer-container .paging-load-more:focus-within {
   background: rgba(255, 255, 255, 0.028);
   border-color: rgba(255, 255, 255, 0.09);
 }
@@ -149,8 +138,7 @@
   color: var(--text-accent);
 }
 
-/* ===== Glassmorphism Pagination ===== */
-.explorer-container.use-glass .paging-control {
+.explorer-container .paging-control {
   background: rgba(255, 255, 255, 0.018);
 
   --explorer-glass-radius: var(--explorer-radius-pill);
@@ -162,13 +150,13 @@
   border-radius: var(--explorer-radius-pill);
 }
 
-.explorer-container.use-glass .paging-control-nums {
+.explorer-container .paging-control-nums {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.explorer-container.use-glass .paging-label {
+.explorer-container .paging-label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -186,24 +174,22 @@
   transition: all 0.2s ease;
 }
 
-.theme-light:not(.is-mobile) .explorer-container.use-glass .paging-label {
+.theme-light:not(.is-mobile) .explorer-container .paging-label {
   height: calc(var(--explorer-control-size) + 2px);
   width: calc(var(--explorer-control-size) + 2px);
 }
 
-.explorer-container.use-glass .paging-label:not(.paging-dots):hover {
+.explorer-container .paging-label:not(.paging-dots):hover {
   color: var(--text-normal);
   transform: scale(var(--explorer-hover-scale, 1.05));
   z-index: 10;
 }
 
-.explorer-container.use-glass
-  .paging-label:not(.active-page, .paging-dots):hover {
+.explorer-container .paging-label:not(.active-page, .paging-dots):hover {
   background-color: var(--background-modifier-hover);
 }
 
-/* Selected page (active-page) in glass mode */
-.explorer-container.use-glass .paging-label.active-page {
+.explorer-container .paging-label.active-page {
   background-color: var(--background-modifier-hover);
   color: var(--text-normal);
   border: none;
@@ -211,14 +197,14 @@
   z-index: 10;
 }
 
-.explorer-container.use-glass .paging-icon {
+.explorer-container .paging-icon {
   margin: 0;
   padding: 0;
   font-size: var(--icon-m);
   color: var(--text-normal);
 }
 
-.explorer-container.use-glass .paging-dots {
+.explorer-container .paging-dots {
   cursor: default;
   opacity: 0.5;
   width: var(--explorer-control-size);
@@ -228,8 +214,7 @@
   justify-content: center;
 }
 
-/* Mobile Glass overrides */
-.is-mobile .explorer-container.use-glass .paging-control {
+.is-mobile .explorer-container .paging-control {
   font-size: inherit;
   padding-block: 6px;
   padding-inline: 8px;

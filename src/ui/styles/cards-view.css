@@ -126,9 +126,11 @@
 }
 
 .explorer-card-link a:hover,
-.explorer-card-link a.internal-link:hover {
+.explorer-card-link a:focus-visible,
+.explorer-card-link a.internal-link:hover,
+.explorer-card-link a.internal-link:focus-visible {
   opacity: 1;
-  color: var(--text-accent);
+  color: var(--explorer-card-link-color);
 }
 
 .explorer-card-exts .explorer-badge {

@@ -1,4 +1,4 @@
-import { App, TAbstractFile, TFolder } from "obsidian";
+import { App, TAbstractFile, TFile, TFolder } from "obsidian";
 import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
 import { moveIntoFolder } from "./vault/move";
 import {
@@ -28,6 +28,9 @@ export class ExplorerActions {
     private readonly savePluginSettings: SavePluginSettings | undefined,
     private readonly refresh: () => void,
     private readonly refreshMetadata: () => void,
+    private readonly removeFolderNoteFile:
+      | ((file: TFile) => void | Promise<void>)
+      | undefined,
   ) {}
 
   get currentFolderPath(): string {
@@ -164,7 +167,13 @@ export class ExplorerActions {
 
   async deleteFolderNote(folder: ExplorerFolderNode): Promise<void> {
     const folderNote = folder.folderNote;
-    if (folderNote) await this.deleteAndRefresh(folderNote);
+    if (!folderNote) return;
+    if (this.removeFolderNoteFile) {
+      await this.removeFolderNoteFile(folderNote);
+      this.refresh();
+      return;
+    }
+    await this.deleteAndRefresh(folderNote);
   }
 
   async togglePin(file: ExplorerFileNode): Promise<void> {

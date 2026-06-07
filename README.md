@@ -195,7 +195,6 @@ Supported block settings:
 | `pageSize`        | `6-100`                                               |
 | `showFolders`     | `true`, `false`                                       |
 | `showTags`        | `true`, `false`                                       |
-| `cardExt`         | `folder`, `ctime`, `mtime`, `desc`, `none`, `default` |
 | `displayedNotes`  | `supported`, `markdown`, `all`, `none`                |
 | `excludedFolders` | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
 | `textDirection`   | `auto`, `ltr`, `rtl`                                  |

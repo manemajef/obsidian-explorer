@@ -90,10 +90,8 @@ export function ActionGroup({
   );
 }
 
-export interface ActionGroupItemProps extends Omit<
-  HTMLAttributes<HTMLButtonElement>,
-  "children"
-> {
+export interface ActionGroupItemProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   icon: string;
   active?: boolean;
 }

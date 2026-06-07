@@ -13,7 +13,7 @@
   z-index: 10;
 }
 
-.explorer-container.use-glass .explorer-surface {
+.explorer-container .explorer-surface {
   position: relative;
   background: var(--explorer-glass-background);
   border: var(--explorer-border-glass);
@@ -24,13 +24,11 @@
   );
 }
 
-.explorer-container.use-glass .explorer-surface[data-elevation="none"] {
+.explorer-container .explorer-surface[data-elevation="none"] {
   --explorer-surface-shadow: none;
 }
 
-.theme-dark
-  .explorer-container.use-glass
-  .explorer-surface[data-elevation="sm"] {
+.theme-dark .explorer-container .explorer-surface[data-elevation="sm"] {
   /* --explorer-surface-shadow: var(--explorer-shadow-glass-sm); */
   --explorer-surface-shadow: var(--shadow-xs);
   /* --explorer-surface-shadow: var(--explorer-raised-shadow-sm); */
@@ -39,16 +37,16 @@
 }
 
 .theme-light:not(.theme-dark)
-  .explorer-container.use-glass
+  .explorer-container
   .explorer-surface[data-elevation="sm"] {
   --explorer-surface-shadow: var(--explorer-raised-shadow-sm);
 }
 
-.theme-dark .explorer-container.use-glass .explorer-surface[data-shine="true"] {
+.theme-dark .explorer-container .explorer-surface[data-shine="true"] {
   box-shadow: var(--explorer-surface-shadow, unset);
 }
 
-.explorer-container.use-glass .explorer-surface[data-shine="true"]::after {
+.explorer-container .explorer-surface[data-shine="true"]::after {
   content: "";
   position: absolute;
   inset: -1px;
@@ -58,14 +56,19 @@
     inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
-.theme-light:not(.theme-dark) .use-glass .explorer-surface[data-shine="true"] {
+
+.theme-light:not(.theme-dark)
+  .explorer-container
+  .explorer-surface[data-shine="true"] {
   box-shadow: var(--explorer-surface-shadow, var(--raised-shadow));
   border: 1px solid rgba(0, 0, 0, 0.07);
   /* background: var(--explorer-glass-background); */
   background: rgba(255, 255, 255, 0.2);
 }
 
-.is-mobile:not(.theme-dark) .use-glass .explorer-surface[data-shine="true"] {
+.is-mobile:not(.theme-dark)
+  .explorer-container
+  .explorer-surface[data-shine="true"] {
   background: var(--raised-background);
   -webkit-backdrop-filter: var(--raised-blur);
   backdrop-filter: var(--raised-blur);
@@ -222,12 +225,6 @@
   margin-block: 0;
   width: 100%;
 }
-/* .is-mobile.theme-light
-  .explorer-container.use-glass
-  .explorer-surface[data-shine="true"]::after {
-  display: none;
-} */
-
 /* ----------------------------------------------------------
   Layout
   helpers

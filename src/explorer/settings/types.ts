@@ -11,8 +11,6 @@ type SettingVisibility = {
 export type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
   section: SettingsSection;
-  surfaceOrder?: Partial<Record<SettingsSurface, number>>;
-  labels?: Partial<Record<SettingsSurface, string>>;
   visibleWhen?: SettingVisibility;
 };
 

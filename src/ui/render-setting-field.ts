@@ -11,9 +11,10 @@ import {
   BlockSettings,
   SettingsSurface,
   getEnumOptionLabel,
-  getSettingLabel,
   isPaginationEnabled,
 } from "../explorer/settings";
+
+const PAGE_SIZE_PRESETS = [6, 12, 18, 24, 30, 36, 48, 60] as const;
 
 type SettingFieldContext = {
   app: App;
@@ -76,7 +77,7 @@ export function renderSettingField(
   context?: SettingFieldContext,
 ): void {
   const field = BLOCK_SETTINGS_SCHEMA[key];
-  const setting = new Setting(container).setName(getSettingLabel(key, surface));
+  const setting = new Setting(container).setName(field.label);
 
   if (field.description) {
     setting.setDesc(field.description);
@@ -86,6 +87,25 @@ export function renderSettingField(
     setting.addToggle((toggle) => {
       toggle.setValue(settings[key] as boolean).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
+      });
+    });
+  } else if (field.kind === "number" && key === "pageSize") {
+    setting.addDropdown((dropdown) => {
+      const currentValue =
+        typeof settings[key] === "number" && Number.isFinite(settings[key])
+          ? settings[key]
+          : field.defaultValue;
+      const options = PAGE_SIZE_PRESETS.includes(
+        currentValue as (typeof PAGE_SIZE_PRESETS)[number],
+      )
+        ? PAGE_SIZE_PRESETS
+        : [...PAGE_SIZE_PRESETS, currentValue].sort((a, b) => a - b);
+
+      for (const preset of options) {
+        dropdown.addOption(String(preset), String(preset));
+      }
+      dropdown.setValue(String(currentValue)).onChange((value) => {
+        onChange(key, Number.parseInt(value, 10));
       });
     });
   } else if (field.kind === "number") {

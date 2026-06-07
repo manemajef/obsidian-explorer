@@ -1,5 +1,10 @@
 import { App, TFile } from "obsidian";
-import { BlockSettings, getBlockSettingsOverrides } from "../settings";
+import {
+  BlockSettings,
+  getBlockSettingsOverrides,
+  parseSettings,
+  resolveBlockSettings,
+} from "../settings";
 import { FolderDataStore } from "../data/folder-data-store";
 import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
 import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
@@ -16,15 +21,54 @@ export async function removeFolderNoteFile(
   settings: BlockSettings,
   blockDefaults: BlockSettings,
 ): Promise<void> {
+  await removeFolderNoteFileWithOverrides(
+    app,
+    store,
+    file,
+    getBlockSettingsOverrides(settings, blockDefaults),
+  );
+}
+
+export async function removeFolderNoteFileByReadingBlock(
+  app: App,
+  store: FolderDataStore,
+  file: TFile,
+  blockDefaults: BlockSettings,
+): Promise<void> {
+  const settings = await readFolderNoteBlockSettings(app, file, blockDefaults);
+  await removeFolderNoteFileWithOverrides(
+    app,
+    store,
+    file,
+    getBlockSettingsOverrides(settings, blockDefaults),
+  );
+}
+
+async function removeFolderNoteFileWithOverrides(
+  app: App,
+  store: FolderDataStore,
+  file: TFile,
+  overrides: Partial<BlockSettings>,
+): Promise<void> {
   const folder = file.parent;
   if (!folder) return;
 
   const confirmed = await confirmRemoval(app, file.basename);
   if (!confirmed) return;
 
-  store.set(folder.path, getBlockSettingsOverrides(settings, blockDefaults));
+  store.set(folder.path, overrides);
   await app.fileManager.trashFile(file);
   await openVirtualFolderNote(app, folder);
+}
+
+async function readFolderNoteBlockSettings(
+  app: App,
+  file: TFile,
+  blockDefaults: BlockSettings,
+): Promise<BlockSettings> {
+  const content = await app.vault.cachedRead(file);
+  const source = content.match(/```explorer\s*\n([\s\S]*?)```/)?.[1] ?? "";
+  return resolveBlockSettings(blockDefaults, parseSettings(source));
 }
 
 function confirmRemoval(app: App, name: string): Promise<boolean> {

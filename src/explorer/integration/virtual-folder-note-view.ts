@@ -35,6 +35,7 @@ export type VirtualFolderNoteHost = {
     overrides: Partial<BlockSettings>,
   ) => void;
   deleteFolderData: (folderPath: string) => void;
+  removeFolderNoteFile?: (file: TFile) => void | Promise<void>;
 };
 
 export class VirtualFolderNoteView extends ItemView {
@@ -177,6 +178,7 @@ export class VirtualFolderNoteView extends ItemView {
       registerRefresh: this.host.registerRefresh,
       onSaveFolderNote: () => this.materialize(),
       folderNote: { isFile: false, convert: () => this.materialize() },
+      removeFolderNoteFile: this.host.removeFolderNoteFile,
       replaceExplorerBlock: async (settings) => {
         // Changing a per-view setting on a file-free note always persists to
         // the data store — it never silently creates a file. Use the "Add file"

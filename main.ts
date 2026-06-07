@@ -9,7 +9,10 @@ import {
   type FolderNoteConversion,
 } from "./src/explorer/runtime";
 import { isFolderNote } from "./src/explorer/lib/folder-note";
-import { removeFolderNoteFile } from "./src/explorer/integration/folder-note-conversion";
+import {
+  removeFolderNoteFile,
+  removeFolderNoteFileByReadingBlock,
+} from "./src/explorer/integration/folder-note-conversion";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import { registerHomePageNewTabs } from "./src/explorer/navigation/homepage";
 import {
@@ -52,6 +55,13 @@ export default class ExplorerPlugin extends Plugin {
           setFolderData: (path, overrides) =>
             this.folderDataStore.set(path, overrides),
           deleteFolderData: (path) => this.folderDataStore.delete(path),
+          removeFolderNoteFile: (file) =>
+            removeFolderNoteFileByReadingBlock(
+              this.app,
+              this.folderDataStore,
+              file,
+              this.settings.defaultBlockSettings,
+            ),
         }),
     );
 
@@ -81,6 +91,13 @@ export default class ExplorerPlugin extends Plugin {
           parseSettings(source),
           (refresh) => this.registerExplorerRefresh(refresh),
           this.buildFolderNoteConversion(ctx.sourcePath),
+          (file) =>
+            removeFolderNoteFileByReadingBlock(
+              this.app,
+              this.folderDataStore,
+              file,
+              this.settings.defaultBlockSettings,
+            ),
         );
       },
     );

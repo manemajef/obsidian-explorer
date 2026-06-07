@@ -51,13 +51,11 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  useGlass?: boolean;
 };
 
 type PaginationModernProps = {
   canLoadMore: boolean;
   onLoadMore: () => void;
-  useGlass?: boolean;
 };
 
 export function PaginationModern(

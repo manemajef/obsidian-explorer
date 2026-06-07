@@ -5,6 +5,7 @@ import {
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
   TAbstractFile,
+  TFile,
   TFolder,
 } from "obsidian";
 import type { EventRef } from "obsidian";
@@ -37,6 +38,7 @@ export type ExplorerMount = {
   ) => Promise<boolean | void>;
   onSaveFolderNote?: () => void | Promise<void>;
   folderNote?: FolderNoteConversion;
+  removeFolderNoteFile?: (file: TFile) => void | Promise<void>;
 };
 
 export type FolderNoteConversion = {
@@ -61,6 +63,7 @@ export async function renderExplorerBlock(
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
   folderNote?: FolderNoteConversion,
+  removeFolderNoteFile?: (file: TFile) => void | Promise<void>,
 ): Promise<void> {
   const child = new MarkdownRenderChild(container);
   const cleanup = await mountExplorer({
@@ -73,6 +76,7 @@ export async function renderExplorerBlock(
     initialOverrides,
     registerRefresh,
     folderNote,
+    removeFolderNoteFile,
     replaceExplorerBlock: async (newSettings, sourcePath) => {
       await updateExplorerBlock(
         app,
@@ -198,7 +202,10 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       blockOverrides,
     );
     container.setAttribute("dir", resolveDirection(effectiveSettings));
-    container.toggleClass("use-glass", pluginSettings.useGlass);
+    container.toggleClass(
+      "explorer-compact-action-bar",
+      effectiveSettings.compactActionBar,
+    );
 
     const model = await buildExplorerModel({
       app,
@@ -221,6 +228,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
         onSavePluginSettings={savePluginSettings}
         onRefresh={queueRefresh}
         onSaveFolderNote={input.onSaveFolderNote}
+        onRemoveFolderNoteFile={input.removeFolderNoteFile}
       />,
     );
   };

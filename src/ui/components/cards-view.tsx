@@ -19,7 +19,6 @@ import { cn } from "./ui/action";
 export function CardsView(props: {
   model: ExplorerModel;
   files: ExplorerFileNode[];
-  extForCard: string;
   actions: ExplorerActions;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {

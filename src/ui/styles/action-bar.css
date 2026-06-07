@@ -3,13 +3,12 @@
   direction: ltr;
 
   /* Scoped Component Design Tokens */
-  --explorer-action-item-radius: var(--explorer-radius-md);
-  --explorer-action-item-color: var(--text-muted);
+  --explorer-action-item-radius: 50%;
+  --explorer-action-item-color: var(--text-normal);
   --explorer-action-item-hover-color: var(--text-normal);
-
-  --explorer-action-group-padding: 0;
-  --explorer-action-group-gap: var(--explorer-space-1);
-  --explorer-action-group-item-radius: var(--explorer-radius-md);
+  --explorer-action-group-padding: 3px;
+  --explorer-action-group-gap: 2px;
+  --explorer-action-group-item-radius: 50%;
   --explorer-action-desktop-padding: 4px;
 }
 
@@ -21,16 +20,73 @@
   --explorer-action-desktop-padding: 0;
 }
 
-.explorer-container.use-glass #explorer-actions {
-  --explorer-action-item-radius: 50%;
-  --explorer-action-item-color: var(--text-normal);
-  --explorer-action-item-hover-color: var(--text-normal);
+.explorer-action-gap {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 0.6em;
+}
 
-  /* --explorer-action-group-padding: 3px; */
-  --explorer-action-group-padding: 3px;
-
+.explorer-container.explorer-compact-action-bar #explorer-actions {
+  --explorer-action-desktop-padding: 2px;
+  --explorer-action-group-padding: 0;
   --explorer-action-group-gap: 2px;
-  --explorer-action-group-item-radius: 50%;
+  --explorer-action-item-color: var(--text-muted);
+  --explorer-action-item-radius: var(--explorer-radius-md);
+  --explorer-action-group-item-radius: var(--explorer-radius-md);
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-surface {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-surface[data-shine="true"]::after {
+  display: none;
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-surface[data-interactive="true"]:hover,
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-surface[data-interactive="true"]:focus-visible,
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-surface[data-interactive="true"]:focus-within {
+  transform: none;
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .explorer-action-gap {
+  width: 0.25em;
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  :where(.action-item, .action-item-button, .action-group-item) {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.25em 0.35em;
+  line-height: 0;
+}
+
+.explorer-container.explorer-compact-action-bar #explorer-actions .action-item {
+  flex-basis: auto;
+}
+
+.explorer-container.explorer-compact-action-bar
+  #explorer-actions
+  .action-group {
+  height: auto;
+  min-height: 0;
 }
 
 .explorer-actions-start,
@@ -39,17 +95,14 @@
   min-width: 0;
 }
 
-.use-glass .action-seperator {
-  display: none;
-}
-.theme-light:not(.is-mobile) .use-glass .action-group,
-.theme-light:not(.is-mobile) .use-glass .action-item {
+/* .theme-light:not(.is-mobile) .explorer-container .action-group,
+.theme-light:not(.is-mobile) .explorer-container .action-item {
   height: calc(var(--explorer-control-size) + 2px);
 }
 
-.theme-light:not(.is-mobile) .use-glass .action-item {
+.theme-light:not(.is-mobile) .explorer-container .action-item {
   width: calc(var(--explorer-control-size) + 2px);
-}
+} */
 
 .action-item,
 .action-item-button,
@@ -117,8 +170,7 @@
   min-width: 0;
 }
 
-
-.is-mobile .explorer-container.use-glass .action-group {
+.is-mobile .explorer-container .action-group {
   height: auto;
   min-height: 0;
   padding-block: 0;
@@ -126,7 +178,7 @@
 }
 
 .is-mobile
-  .explorer-container.use-glass
+  .explorer-container
   :where(.action-item, .action-item-button, .action-group-item) {
   width: auto;
   height: auto;
@@ -135,8 +187,12 @@
   line-height: 0;
 }
 
-.explorer-container.use-glass .clickable-icon {
+.explorer-container .clickable-icon {
   color: var(--text-normal);
+}
+
+.explorer-container.explorer-compact-action-bar .clickable-icon {
+  color: var(--text-muted);
 }
 
 .action-group-item {
@@ -147,13 +203,13 @@
   flex: 0 1 auto;
 }
 
-.is-mobile .explorer-container.use-glass .action-icon,
-.is-mobile .explorer-container.use-glass .action-icon svg {
+.is-mobile .explorer-container .action-icon,
+.is-mobile .explorer-container .action-icon svg {
   width: var(--explorer-action-icon-size);
   height: var(--explorer-action-icon-size);
 }
 
-.is-mobile .explorer-container.use-glass .action-icon {
+.is-mobile .explorer-container .action-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;

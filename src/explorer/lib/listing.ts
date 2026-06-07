@@ -31,11 +31,6 @@ export function buildExplorerListing(input: {
   return queriedFiles;
 }
 
-export function resolveCardFooterMode(settings: BlockSettings): string {
-  if (settings.cardExt !== "default") return settings.cardExt;
-  return settings.depth > 0 ? "folder" : "mtime";
-}
-
 export function shouldIndexFile(file: TFile): boolean {
   return !isFolderNote(file) && !isExcludedExplorerFile(file);
 }

@@ -96,15 +96,6 @@ export function getSettingKeysForSurface(
   return BLOCK_SETTING_KEYS.filter((key) =>
     BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
   ).sort((a, b) => {
-    const surfaceA = BLOCK_SETTINGS_SCHEMA[a].ui.surfaceOrder?.[surface];
-    const surfaceB = BLOCK_SETTINGS_SCHEMA[b].ui.surfaceOrder?.[surface];
-    if (surfaceA !== undefined || surfaceB !== undefined) {
-      return (
-        (surfaceA ?? Number.MAX_SAFE_INTEGER) -
-        (surfaceB ?? Number.MAX_SAFE_INTEGER)
-      );
-    }
-
     const sectionDiff =
       SETTING_SECTIONS.findIndex(
         (s) => s.id === BLOCK_SETTINGS_SCHEMA[a].ui.section,
@@ -117,14 +108,6 @@ export function getSettingKeysForSurface(
       BLOCK_SETTING_KEYS.indexOf(a) - BLOCK_SETTING_KEYS.indexOf(b)
     );
   });
-}
-
-export function getSettingLabel(
-  key: BlockSettingKey,
-  surface: SettingsSurface,
-): string {
-  const field = BLOCK_SETTINGS_SCHEMA[key];
-  return field.ui.labels?.[surface] ?? field.label;
 }
 
 export function getSettingSection(key: BlockSettingKey): SettingsSection {

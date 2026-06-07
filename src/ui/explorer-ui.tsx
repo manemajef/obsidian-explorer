@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Platform, TFolder } from "obsidian";
+import { Platform, TFile, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
 import { ExplorerFileNode } from "../explorer/lib/nodes";
@@ -19,6 +19,7 @@ interface ExplorerUIProps {
   onSavePluginSettings: () => void | Promise<void>;
   onRefresh: () => void;
   onSaveFolderNote?: () => void | Promise<void>;
+  onRemoveFolderNoteFile?: (file: TFile) => void | Promise<void>;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
@@ -28,6 +29,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     onSavePluginSettings,
     onRefresh,
     onSaveFolderNote,
+    onRemoveFolderNoteFile,
   } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
@@ -63,7 +65,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     canLoadMore,
     loadMore,
     paginationKind,
-    extForCard,
     refreshMetadata,
   } = explorerState;
 
@@ -78,6 +79,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         onSavePluginSettings,
         onRefresh,
         refreshMetadata,
+        onRemoveFolderNoteFile,
       ),
     [
       app,
@@ -88,6 +90,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       onSavePluginSettings,
       onRefresh,
       refreshMetadata,
+      onRemoveFolderNoteFile,
     ],
   );
   const onMoveIntoFolder = useCallback(
@@ -105,16 +108,18 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     settings.showFolders && model.folders.length > 0 && !searchMode;
   const showNotes = shouldDisplayNotes(settings);
   const isCardsView = settings.view === "cards";
+  const compactActionBar = settings.compactActionBar;
 
-  const filesDividerSize = isCardsView || Platform.isMobile ? "lg" : "sm";
+  const filesDividerSize =
+    compactActionBar && !showFolders
+      ? "sm"
+      : isCardsView || Platform.isMobile
+        ? "lg"
+        : "sm";
   // : !Platform.isMobile && model.folders.length <= 0
   //   ? "sm"
   //   : "md";
-  const folderDivider = Platform.isMobile
-    ? model.pluginSettings.useGlass
-      ? "md"
-      : "sm"
-    : "md";
+  const folderDivider = compactActionBar ? "sm" : "md";
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -123,7 +128,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           <CardsView
             model={model}
             files={files}
-            extForCard={extForCard}
             actions={actions}
             contextMenu={contextMenu}
           />
@@ -139,7 +143,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         />
       );
     },
-    [actions, contextMenu, extForCard, model, settings.view],
+    [actions, contextMenu, model, settings.view],
   );
 
   const showLoadMore = paginationKind === "load-more" && canLoadMore;
@@ -174,7 +178,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         searchMode={searchMode}
         searchQuery={searchQuery}
         onSearchInput={setSearchQuery}
-        useGlass={model.pluginSettings.useGlass}
+        compactActionBar={compactActionBar}
       />
       {showFolders && (
         <>
@@ -200,7 +204,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 <PaginationModern
                   canLoadMore={canLoadMore}
                   onLoadMore={loadMore}
-                  useGlass={model.pluginSettings.useGlass}
                 />
               ) : (
                 <Pagination
@@ -209,7 +212,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                   onPageChange={(page) => {
                     classicPagination?.setPage(page);
                   }}
-                  useGlass={model.pluginSettings.useGlass}
                 />
               )}
             </>
