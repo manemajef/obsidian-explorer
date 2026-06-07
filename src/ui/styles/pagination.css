@@ -101,6 +101,9 @@
   border-radius: inherit;
   /* font: inherit; */
 }
+.is-mobile .explorer-container .paging-load-more-button {
+  padding: var(--explorer-space-4) var(--explorer-space-6);
+}
 
 .theme-dark .explorer-container .paging-load-more {
   /* border: none; */
