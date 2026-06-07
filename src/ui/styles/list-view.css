@@ -105,8 +105,8 @@
   --explorer-modern-list-padding-bottom: 0;
   --explorer-modern-list-item-padding: 0 var(--explorer-space-4);
   --explorer-note-row-gap: 0;
-  --explorer-note-row-padding-top: var(--explorer-space-3);
-  --explorer-note-row-padding-bottom: var(--explorer-space-2);
+  --explorer-note-row-padding-top: var(--explorer-space-2);
+  --explorer-note-row-padding-bottom: var(--explorer-space-1);
   --explorer-note-row-padding-top-first: var(--explorer-space-4);
   --explorer-note-row-padding-bottom-last: var(--explorer-space-4);
 

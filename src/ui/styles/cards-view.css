@@ -41,10 +41,11 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-.is-mobile .explorer-cards-grid--compact {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+@media (width < 430px) {
+  .is-mobile .explorer-cards-grid--compact {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
 }
-
 .is-mobile .explorer-cards-grid:not(.explorer-cards-grid--compact) {
   /* turn on grid that forces 2 cols layout if show preview is false */
   /* grid-template-columns: repeat(

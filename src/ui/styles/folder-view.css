@@ -74,7 +74,7 @@
   }
 }
 
-@media (width <= 800px) {
+@media (width <= 700px) {
   .is-mobile .explorer-folders-grid {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));

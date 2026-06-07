@@ -5,7 +5,7 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
-import { Group, Spacer, Stack } from "./ui/layout";
+import { Gap, Group, Spacer, Stack } from "./ui/layout";
 import { Pin } from "./ui/pin";
 import Bar from "./ui/bar";
 import { draggableProps, folderDropProps } from "../drag-drop";
@@ -171,7 +171,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                       file={file}
                       actions={props.actions}
                       className="explorer-note-row__title"
-                      weight="bold"
+                      weight={Platform.isMobile ? "bold" : "medium"}
                     />
                   </div>
 
@@ -195,10 +195,11 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                     <NoteDatePreview
                       file={file}
                       model={props.model}
-                      maxChar={layout === "mobile" ? 160 : 90}
+                      maxChar={layout === "mobile" ? 120 : 90}
                     />
                   </div>
 
+                  <Gap size={4} />
                   {layout === "desktop" && (
                     <NoteTags
                       file={file}
