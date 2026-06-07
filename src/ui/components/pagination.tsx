@@ -94,7 +94,7 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
   const page = currentPage;
 
   const useLeftDots = isMobile ? page > 1 : page > 2;
-  const useRightDots = isMobile ? page < totalPages - 2 : page < totalPages - 3;
+  const useRightDots = isMobile ? page < totalPages - 1 : page < totalPages - 3;
 
   const leftPages = [isMobile ? -10000 : page - 2, page - 1].filter(
     (p) => p > 0,

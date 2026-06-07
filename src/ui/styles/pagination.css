@@ -22,6 +22,7 @@
   border-radius: var(--explorer-radius-pill);
   cursor: pointer;
   opacity: 0.6;
+  color: var(--text-muted);
 }
 
 .paging-label:hover,
@@ -190,10 +191,15 @@
 }
 
 .explorer-container .paging-label.active-page {
-  background-color: var(--background-modifier-hover);
-  color: var(--text-normal);
-  border: none;
-  box-shadow: none;
+  background-color: var(--background-primary-alt);
+  color: var(--text-accent);
+  /* box-shadow: var(--shadow-xs); */
+
+  /* border: none; */
+  /* border: 1px solid var(--background-modifier-border); */
+  background: var(--explorer-background-glass);
+
+  border: var(--explorer-border-glass);
   z-index: 10;
 }
 
