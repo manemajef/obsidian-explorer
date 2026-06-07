@@ -38,7 +38,7 @@ export function useExplorerState(model: ExplorerModel) {
   const search = useSearchState(model, metadataTick);
   const paginationKind: PaginationKind = search.mode
     ? "load-more"
-    : settings.paginationStyle === "modern"
+    : settings.paginationStyle === "modern" || Platform.isMobile
       ? "load-more"
       : settings.paginationStyle;
   const activeFiles = search.mode ? search.listing : browseListing;

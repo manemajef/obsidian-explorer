@@ -229,6 +229,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
+      visibleWhen: { key: "platform", value: "desktop" },
     },
     legacy: {
       blockKeys: ["usePagination"],
