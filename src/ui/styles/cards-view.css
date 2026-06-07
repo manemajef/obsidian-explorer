@@ -46,21 +46,14 @@
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
-.is-mobile .explorer-cards-grid:not(.explorer-cards-grid--compact) {
-  /* turn on grid that forces 2 cols layout if show preview is false */
-  /* grid-template-columns: repeat(
-    auto-fit,
-    minmax(clamp(120px, 22vw, 180px), 1fr)
-  ); */
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  margin-top: unset;
+
+@media (width <= 700px) {
+  .is-mobile .explorer-cards-grid:not(.explorer-cards-grid--compact) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-top: unset;
+  }
 }
 
-/* @media (width < 420px) {
-  .is-mobile .explorer-cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-} */
 .explorer-card.is-dragging {
   opacity: 0.5;
 }

@@ -84,10 +84,10 @@
   .is-mobile .explorer-folders-grid::after {
     content: none;
   }
-}
 
-.is-mobile .explorer-folders-grid--sparse {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  .is-mobile .explorer-folders-grid--sparse {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }
 
 .explorer-folder-card {
@@ -130,12 +130,14 @@
   box-shadow: var(--explorer-folder-card-shadow-hover);
 }
 
-.is-mobile .explorer-folder-card {
-  grid-column: span 2;
-}
+@media (width <= 700px) {
+  .is-mobile .explorer-folder-card {
+    grid-column: span 2;
+  }
 
-.is-mobile .explorer-folder-card--long-name {
-  grid-column: span 3;
+  .is-mobile .explorer-folder-card--long-name {
+    grid-column: span 3;
+  }
 }
 
 .explorer-folder-link--missing {
