@@ -11,7 +11,6 @@ import { Gap, Group, Spring } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
-import { canGoToParentFolderNote } from "src/explorer/navigation/folder-notes";
 
 export function ActionsBar(props: {
   app: App;
