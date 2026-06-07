@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "../shared";
 
-type BadgeVariant = "ext" | "ext-filled" | "pin" | "tag";
+type BadgeVariant = "ext" | "ext-filled" | "pin";
 type BadgeSize = "xs" | "sm" | "md";
 
 function cn(...classes: (string | false | null | undefined)[]) {
@@ -46,20 +46,6 @@ export function Badge(props: {
       </span>
     );
   }
-  if (variant == "tag") {
-    return (
-      <span
-        className={cn(classes, "value-list-item", "value-list-item-tag")}
-        data-badge-size={size}
-        data-badge-variant={variant}
-        style={style}
-        onClick={onClick}
-      >
-        <a className="tag explorer-badge__tag-label">{children}</a>
-      </span>
-    );
-  }
-
   return (
     <span
       className={classes}

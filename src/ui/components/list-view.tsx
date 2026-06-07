@@ -93,7 +93,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                     tags={file.tags}
                     className="explorer-list-tags"
                     overflow="hidden"
-                    size="md"
+                    size="sm"
                   />
                 </>
               )}
@@ -192,11 +192,15 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                         actions={props.actions}
                       />
                     )}
-                    <NoteDatePreview
-                      file={file}
-                      model={props.model}
-                      maxChar={layout === "mobile" ? 120 : 90}
-                    />
+                    <div
+                      style={{ maxWidth: layout === "mobile" ? "none" : "80%" }}
+                    >
+                      <NoteDatePreview
+                        file={file}
+                        model={props.model}
+                        maxChar={layout === "mobile" ? 120 : 90}
+                      />
+                    </div>
                   </div>
 
                   <Gap size={4} />

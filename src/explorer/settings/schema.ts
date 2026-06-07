@@ -157,23 +157,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       visibleWhen: { key: "view", value: "cards" },
     },
   }),
-  compactActionBar: booleanField({
-    label: "Compact action bar",
-    description: "Use plain, tighter action bar controls.",
-    defaultValue: false,
-    blockKey: "compactActionBar",
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-    },
-    legacy: {
-      blockKeys: ["useGlass"],
-      resolve: (source) => {
-        const useGlass = coerceLegacyBoolean(source.useGlass);
-        return useGlass === undefined ? undefined : !useGlass;
-      },
-    },
-  }),
   // compact: booleanField({
   //   label: "Compact view",
   //   description: "Compact view to fit more content. emmits previews",
@@ -229,7 +212,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      visibleWhen: { key: "platform", value: "desktop" },
+      visibleWhen: { platform: "desktop" },
     },
     legacy: {
       blockKeys: ["usePagination"],
@@ -251,6 +234,23 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
   }),
 
+  compactActionBar: booleanField({
+    label: "Compact action bar",
+    description: "Use plain, tighter action bar controls.",
+    defaultValue: false,
+    blockKey: "compactActionBar",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+    },
+    legacy: {
+      blockKeys: ["useGlass"],
+      resolve: (source) => {
+        const useGlass = coerceLegacyBoolean(source.useGlass);
+        return useGlass === undefined ? undefined : !useGlass;
+      },
+    },
+  }),
   showTags: booleanField({
     label: "Display tags",
     description: "Show tags in list and card views.",

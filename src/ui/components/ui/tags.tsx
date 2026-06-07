@@ -1,5 +1,4 @@
 import React from "react";
-import { Badge } from "./badge";
 
 export type TagSize = "xs" | "sm" | "md";
 
@@ -9,14 +8,24 @@ function cn(...classes: (string | false | null | undefined)[]) {
 
 export function Tag(props: {
   className?: string;
+  size?: TagSize;
   style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
-  const { className, style, children } = props;
+  const { className, size = "sm", style, children } = props;
   return (
-    <Badge variant="tag" className={className} style={style}>
-      {children}
-    </Badge>
+    <span
+      className={cn(
+        "explorer-tag",
+        "value-list-item",
+        "value-list-item-tag",
+        className,
+      )}
+      data-tag-size={size}
+      style={style}
+    >
+      <a className="tag explorer-tag__label">{children}</a>
+    </span>
   );
 }
 
@@ -27,7 +36,13 @@ export function TagsContainer(props: {
   style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
-  const { className, overflow = "scroll", size = "sm", style, children } = props;
+  const {
+    className,
+    overflow = "scroll",
+    size = "sm",
+    style,
+    children,
+  } = props;
   return (
     <div
       className={cn("tags-container", "explorer-tags", className)}
@@ -63,9 +78,9 @@ export function TagList(props: {
       style={style}
     >
       {tags.map((tag) => (
-        <Badge key={tag} size={size} variant="tag">
+        <Tag key={tag} size={size}>
           {tag}
-        </Badge>
+        </Tag>
       ))}
     </BadgeScrollContainer>
   );

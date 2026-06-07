@@ -67,13 +67,13 @@ export function PaginationModern(
     <Group justify="center">
       <Surface
         className="paging-load-more"
-        // elevation="sm"
+        elevation="sm"
         interactive={canLoadMore}
         radius="pill"
       >
         <button
           type="button"
-          className="clickable-icon paging-load-more-button"
+          className="paging-load-more-button"
           onClick={(event) => {
             event.currentTarget.blur();
             onLoadMore();

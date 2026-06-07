@@ -107,22 +107,23 @@ export function CardsView(props: {
                 </Group>
               </Group>
               <Spring />
-              <NotePreview
-                file={file}
-                className={cn(
-                  "explorer-card-preview",
-                  compact && "explorer-card-preview--compact",
-                )}
-                maxChar={compact ? 120 : 320}
-              />
-
+              <div style={{ maxWidth: compact ? "none" : "80%" }}>
+                <NotePreview
+                  file={file}
+                  className={cn(
+                    "explorer-card-preview",
+                    compact && "explorer-card-preview--compact",
+                  )}
+                  maxChar={compact ? 120 : 200}
+                />
+              </div>
               {showTags && (
                 <NoteTags
                   file={file}
                   model={model}
                   className="explorer-card-tags-wrapper"
                   overflow="scroll"
-                  size="md"
+                  size="sm"
                 />
               )}
               <>

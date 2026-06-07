@@ -50,10 +50,33 @@
   width: 100%;
 }
 
-.tags-container .explorer-badge--tag,
-.tags-container .explorer-badge__tag-label {
+.explorer-tag {
+  align-items: center;
+  border-radius: var(--tag-radius, var(--explorer-radius-pill));
+  display: inline-flex;
   flex: 0 0 auto;
+  font-size: var(--explorer-tag-font-size, var(--font-ui-small, 13px));
+}
+
+.explorer-tag[data-tag-size="xs"] {
+  --explorer-tag-font-size: 11px;
+}
+
+.explorer-tag[data-tag-size="sm"] {
+  --explorer-tag-font-size: var(--font-ui-smaller, 12px);
+}
+
+.explorer-tag[data-tag-size="md"] {
+  --explorer-tag-font-size: var(--font-ui-small, 13px);
+}
+
+.explorer-container .explorer-tag > .explorer-tag__label.tag {
+  border-radius: inherit;
+  flex: 0 0 auto;
+  font-size: inherit;
+  line-height: 1.4;
   overflow-wrap: normal;
+  padding: 0.1em 0.5em;
   white-space: nowrap;
   word-break: normal;
 }

@@ -98,6 +98,7 @@
   --explorer-note-row-padding-bottom: var(--explorer-space-1);
   --explorer-note-row-padding-top-first: var(--explorer-space-3);
   --explorer-note-row-padding-bottom-last: var(--explorer-space-1);
+  background-color: var(--raised-background);
 }
 
 .explorer-modern-list[data-layout="desktop"] {

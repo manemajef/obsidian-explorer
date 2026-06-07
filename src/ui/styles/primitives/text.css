@@ -2,7 +2,7 @@
   color: var(--explorer-small-color, var(--text-muted));
   font-size: var(--font-ui-smaller);
   /* font-weight: var(--font-light); */
-  font-weight: calc(var(--font-normal) * 0.95);
+  font-weight: var(--font-normal);
   /* opacity: 0.9; */
 }
 
