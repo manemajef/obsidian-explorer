@@ -122,7 +122,7 @@ export function CardsView(props: {
                   model={model}
                   className="explorer-card-tags-wrapper"
                   overflow="scroll"
-                  size="xs"
+                  size="md"
                 />
               )}
               <>
