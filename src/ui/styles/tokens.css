@@ -42,6 +42,13 @@
   --explorer-bg-interactive: rgba(0, 0, 0, 0.005);
   --explorer-bg-alt: rgba(0, 0, 0, 0.02);
   --input-corner-shape: round;
+
+  /* colors */
+  --explorer-color-muted: color-mix(
+    in srgb,
+    var(--text-normal) 65%,
+    transparent
+  );
 }
 
 .theme-dark .explorer-container {

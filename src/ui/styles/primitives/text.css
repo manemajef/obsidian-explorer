@@ -3,11 +3,11 @@
   font-size: var(--font-ui-smaller);
   /* font-weight: var(--font-light); */
   font-weight: calc(var(--font-normal) * 0.95);
-  opacity: 0.9;
+  /* opacity: 0.9; */
 }
 
 .explorer-small--muted {
-  --explorer-small-color: var(--text-muted);
+  --explorer-small-color: var(--explorer-color-muted);
 }
 
 .explorer-small--faint {
