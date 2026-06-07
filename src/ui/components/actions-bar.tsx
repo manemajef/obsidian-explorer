@@ -7,7 +7,7 @@ import {
   ActionSpace,
   cn,
 } from "./ui/action";
-import { Group } from "./ui/layout";
+import { Gap, Group } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
 import { Bar } from "./ui/bar";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
@@ -48,10 +48,8 @@ export function ActionsBar(props: {
   const isMobile = Platform.isMobile;
   const actionClassName = cn(compactActionBar && "explorer-actions--compact");
   const StandaloneAction = compactActionBar ? ActionGroupItem : ActionItem;
-  const MobileSpace = () => <span style={{ width: ".5em", flexShrink: 1 }} />;
-  const MobileEdgeSpace = () => (
-    <span style={{ width: ".5em", flexShrink: 1 }} />
-  );
+  const MobileSpace = () => <Gap inline size=".5em" />;
+  const MobileEdgeSpace = () => <Gap inline size=".5em" />;
   const settingsIcon = Platform.isMobile ? "ellipsis" : "settings-2";
   // const settingsIcon = "ellipsis";
   const isUseNewLayout = true;
@@ -81,14 +79,8 @@ export function ActionsBar(props: {
   if (isMobile && (!onSaveFolderNote || !showParentNavigation))
     return (
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
         id="explorer-actions"
-        className={actionClassName}
+        className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
         {showParentNavigation ? (
           <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
@@ -122,14 +114,8 @@ export function ActionsBar(props: {
   if (isMobile)
     return (
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
         id="explorer-actions"
-        className={actionClassName}
+        className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
         <ActionGroup>
           <MobileEdgeSpace />

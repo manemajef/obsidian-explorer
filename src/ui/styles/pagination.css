@@ -43,6 +43,10 @@
   opacity: 1;
 }
 
+.paging-icon[data-disabled="true"] {
+  opacity: 0.2;
+}
+
 .paging-label.active-page {
   opacity: 1;
   color: var(--text-accent);
@@ -191,13 +195,12 @@
 }
 
 .explorer-container .paging-label.active-page {
-  background-color: var(--background-primary-alt);
+  background: var(--explorer-background-glass);
   color: var(--text-accent);
   /* box-shadow: var(--shadow-xs); */
 
   /* border: none; */
   /* border: 1px solid var(--background-modifier-border); */
-  background: var(--explorer-background-glass);
 
   border: var(--explorer-border-glass);
   z-index: 10;

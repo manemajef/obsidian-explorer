@@ -2,8 +2,7 @@ import React from "react";
 import { ExplorerModel } from "../../explorer/model";
 import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { Icon, InternalLink } from "./shared";
-import { Badge } from "./ui/badge";
+import { Icon } from "./shared";
 import { Pin } from "./ui/pin";
 import { Gap, Group, Spacer, Spring, Stack } from "./ui/layout";
 import { draggableProps, folderDropProps } from "../drag-drop";
@@ -13,8 +12,8 @@ import {
   type ContextMenuConfig,
 } from "../context-menu";
 import { NoteFolderDate, NotePreview } from "./ui/note-metadata";
-import { TagList } from "./ui/tags";
 import { cn } from "./ui/action";
+import { NoteExtensionBadge, NoteTags, NoteTitle } from "./note-parts";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -75,15 +74,12 @@ export function CardsView(props: {
                     </Group>
                   )}
 
-                  <InternalLink
-                    path={file.path}
+                  <NoteTitle
+                    file={file}
+                    actions={actions}
                     text={file.basename}
-                    draggable={false}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      void actions.openFile(file, e.ctrlKey || e.metaKey);
-                    }}
+                    variant="card-title"
+                    // weight="medium"
                   />
                 </Group>
 
@@ -96,14 +92,18 @@ export function CardsView(props: {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="explorer-card-pin-slot">
-                    {file.isMarkdown && <Pin file={file} actions={actions} />}
+                    {file.isMarkdown && (
+                      <Pin file={file} actions={actions} placement="card" />
+                    )}
                   </div>
 
-                  {!file.isFolderNote && file.extensionLabel ? (
-                    <Badge variant="ext" className="explorer-card-ext-badge">
-                      {file.extensionLabel}
-                    </Badge>
-                  ) : null}
+                  {!file.isFolderNote && (
+                    <NoteExtensionBadge
+                      file={file}
+                      className="explorer-card-ext-badge"
+                      filled={false}
+                    />
+                  )}
                 </Group>
               </Group>
               <Spring />
@@ -117,15 +117,13 @@ export function CardsView(props: {
               />
 
               {showTags && (
-                <div className="explorer-card-tags-wrapper">
-                  <div className="explorer-metadata-tags-row">
-                    <TagList
-                      tags={file.tags}
-                      className="explorer-metadata-tags"
-                      size="xs"
-                    />
-                  </div>
-                </div>
+                <NoteTags
+                  file={file}
+                  model={model}
+                  className="explorer-card-tags-wrapper"
+                  overflow="scroll"
+                  size="xs"
+                />
               )}
               <>
                 <Spring />

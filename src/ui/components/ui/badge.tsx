@@ -2,20 +2,43 @@ import React from "react";
 import { Icon } from "../shared";
 
 type BadgeVariant = "ext" | "ext-filled" | "pin" | "tag";
+type BadgeSize = "xs" | "sm" | "md";
+
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export function Badge(props: {
   variant: BadgeVariant;
   className?: string;
+  "data-pin-placement"?: string;
+  size?: BadgeSize;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }): React.JSX.Element {
-  const { variant, className, style, children, onClick } = props;
+  const {
+    variant,
+    className,
+    "data-pin-placement": pinPlacement,
+    size = "sm",
+    style,
+    children,
+    onClick,
+  } = props;
+  const classes = cn(
+    "explorer-badge",
+    `explorer-badge--${variant}`,
+    className,
+  );
 
   if (variant === "pin") {
     return (
       <span
-        className={`explorer-badge pin ${className ?? ""}`}
+        className={classes}
+        data-badge-size={size}
+        data-badge-variant={variant}
+        data-pin-placement={pinPlacement}
         style={style}
         onClick={onClick}
       >
@@ -26,18 +49,22 @@ export function Badge(props: {
   if (variant == "tag") {
     return (
       <span
-        className={`value-list-item value-list-item-tag ${className ?? ""}`}
+        className={cn(classes, "value-list-item", "value-list-item-tag")}
+        data-badge-size={size}
+        data-badge-variant={variant}
         style={style}
         onClick={onClick}
       >
-        <a className="tag">{children}</a>
+        <a className="tag explorer-badge__tag-label">{children}</a>
       </span>
     );
   }
 
   return (
     <span
-      className={`explorer-badge ${variant} ${className ?? ""}`}
+      className={classes}
+      data-badge-size={size}
+      data-badge-variant={variant}
       style={style}
       onClick={onClick}
     >

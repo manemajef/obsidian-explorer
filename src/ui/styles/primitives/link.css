@@ -1,0 +1,86 @@
+.explorer-container a.internal-link.explorer-link {
+  color: var(--explorer-link-color);
+  font-weight: var(--explorer-link-weight, inherit);
+  text-decoration: var(--explorer-link-decoration, none);
+  text-decoration-color: currentcolor;
+}
+
+.explorer-container a.internal-link.explorer-link:hover,
+.explorer-container a.internal-link.explorer-link:focus-visible {
+  color: var(--explorer-link-hover-color, var(--explorer-link-color));
+  text-decoration: var(
+    --explorer-link-hover-decoration,
+    var(--explorer-link-decoration, underline)
+  );
+}
+
+.explorer-link[data-link-tone="normal"],
+.explorer-link[data-link-variant="note-title"],
+.explorer-link[data-link-variant="folder"],
+.explorer-link[data-link-variant="card-title"] {
+  --explorer-link-color: var(--text-normal);
+  --explorer-link-hover-color: var(--text-normal);
+}
+
+.explorer-link[data-link-tone="muted"] {
+  --explorer-link-color: var(--text-muted);
+  --explorer-link-hover-color: var(--text-normal);
+}
+
+.explorer-link[data-link-tone="accent"] {
+  --explorer-link-color: var(--link-color, var(--text-accent));
+  --explorer-link-hover-color: var(--link-color-hover, var(--text-accent));
+}
+
+.explorer-link[data-link-tone="inherit"] {
+  --explorer-link-color: inherit;
+  --explorer-link-hover-color: inherit;
+}
+
+.explorer-link[data-link-weight="normal"] {
+  --explorer-link-weight: var(--font-normal);
+}
+
+.explorer-link[data-link-weight="medium"] {
+  --explorer-link-weight: var(--font-medium);
+}
+
+.explorer-link[data-link-weight="bold"] {
+  --explorer-link-weight: calc(var(--font-weight) + var(--bold-modifier));
+}
+
+.explorer-link[data-link-weight="inherit"] {
+  --explorer-link-weight: inherit;
+}
+
+.explorer-link[data-link-variant="note-title"],
+.explorer-link[data-link-variant="default"] {
+  --explorer-link-decoration: none;
+  --explorer-link-hover-decoration: underline;
+}
+
+.explorer-link[data-link-variant="folder"],
+.explorer-link[data-link-variant="card-title"] {
+  --explorer-link-decoration: none;
+  --explorer-link-hover-decoration: none;
+}
+
+.explorer-link[data-link-decoration="none"] {
+  --explorer-link-decoration: none;
+  --explorer-link-hover-decoration: none;
+}
+
+.explorer-link[data-link-decoration="hover"] {
+  --explorer-link-decoration: none;
+  --explorer-link-hover-decoration: underline;
+}
+
+.explorer-link[data-link-decoration="always"] {
+  --explorer-link-decoration: underline;
+  --explorer-link-hover-decoration: underline;
+}
+
+.explorer-link,
+.explorer-link * {
+  cursor: pointer;
+}

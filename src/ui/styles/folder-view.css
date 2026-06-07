@@ -142,16 +142,15 @@
   font-weight: var(--font-weight);
 }
 
-.explorer-container a.explorer-folder-link,
-.explorer-container a.explorer-folder-link.internal-link {
+.explorer-folder-link {
+  --explorer-link-color: var(--text-normal);
+  --explorer-link-hover-color: var(--text-normal);
+  --explorer-link-weight: calc(var(--font-weight) + var(--bold-modifier));
+
   font-weight: calc(var(--font-weight) + var(--bold-modifier));
-  color: var(--text-normal);
-  text-decoration: none;
   cursor: pointer;
 }
 
-.explorer-container a.explorer-folder-link:hover,
-.explorer-container a.explorer-folder-link.internal-link:hover {
-  text-decoration: none;
-  color: var(--text-normal);
+.explorer-folder-link:hover {
+  cursor: pointer;
 }

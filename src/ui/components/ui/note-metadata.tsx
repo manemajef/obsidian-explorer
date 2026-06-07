@@ -130,7 +130,7 @@ export function NotePreview({
   return (
     <Small as="span" className={cn("explorer-metadata-preview", className)}>
       {isLoading ? (
-        <span style={{ color: "rgba(0,0,0,0)" }}>
+        <span className="explorer-preview-placeholder">
           {"W".repeat(effectiveMaxChar)}
         </span>
       ) : (

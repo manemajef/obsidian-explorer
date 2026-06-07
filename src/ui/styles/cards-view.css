@@ -39,7 +39,7 @@
 }
 
 .explorer-cards-grid--compact {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .is-mobile .explorer-cards-grid:not(.explorer-cards-grid--compact) {
@@ -116,21 +116,19 @@
   line-height: var(--explorer-card-link-line-height);
 }
 
-.explorer-card-link a,
-.explorer-card-link a.internal-link {
-  color: var(--explorer-card-link-color);
+.explorer-card-link .explorer-link--card-title {
+  --explorer-link-color: var(--explorer-card-link-color);
+  --explorer-link-hover-color: var(--explorer-card-link-color);
+  --explorer-link-weight: var(--explorer-card-link-font-weight);
+
   opacity: var(--explorer-card-link-opacity);
   font-size: var(--explorer-card-link-font-size);
-  font-weight: var(--explorer-card-link-font-weight);
   line-height: var(--explorer-card-link-line-height);
 }
 
-.explorer-card-link a:hover,
-.explorer-card-link a:focus-visible,
-.explorer-card-link a.internal-link:hover,
-.explorer-card-link a.internal-link:focus-visible {
+.explorer-card-link .explorer-link--card-title:hover,
+.explorer-card-link .explorer-link--card-title:focus-visible {
   opacity: 1;
-  color: var(--explorer-card-link-color);
 }
 
 .explorer-card-exts .explorer-badge {
@@ -151,7 +149,7 @@
   opacity: 1;
 }
 
-.explorer-card-exts .explorer-badge.pin svg {
+.explorer-card-exts .explorer-badge--pin svg {
   transform: scale(1.3);
 }
 

@@ -58,6 +58,7 @@ export function FolderButtons(props: {
             <InternalLink
               path={folderNotePath}
               className="explorer-folder-link"
+              variant="folder"
               additionalClasses={
                 isMissing
                   ? ["is-unresolved", "explorer-folder-link--missing"]

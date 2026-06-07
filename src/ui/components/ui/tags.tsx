@@ -22,17 +22,20 @@ export function Tag(props: {
 
 export function TagsContainer(props: {
   className?: string;
+  overflow?: "scroll" | "hidden" | "wrap";
   size?: TagSize;
   style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
-  const { className, size = "sm", style, children } = props;
+  const { className, overflow = "scroll", size = "sm", style, children } = props;
   return (
     <div
-      className={cn("tags-container", `tags-container--${size}`, className)}
+      className={cn("tags-container", "explorer-tags", className)}
+      data-tags-overflow={overflow}
+      data-tags-size={size}
       style={style}
     >
-      <div className="tags-container__row">{children}</div>
+      <div className="tags-container__row explorer-tags__row">{children}</div>
     </div>
   );
 }
@@ -46,15 +49,21 @@ export function BadgeScrollContainer(
 export function TagList(props: {
   tags: string[];
   className?: string;
+  overflow?: React.ComponentProps<typeof TagsContainer>["overflow"];
   size?: TagSize;
   style?: React.CSSProperties;
 }): React.JSX.Element | null {
-  const { tags, className, size = "sm", style } = props;
+  const { tags, className, overflow, size = "sm", style } = props;
   if (tags.length === 0) return null;
   return (
-    <BadgeScrollContainer className={className} size={size} style={style}>
+    <BadgeScrollContainer
+      className={className}
+      overflow={overflow}
+      size={size}
+      style={style}
+    >
       {tags.map((tag) => (
-        <Badge key={tag} variant="tag">
+        <Badge key={tag} size={size} variant="tag">
           {tag}
         </Badge>
       ))}

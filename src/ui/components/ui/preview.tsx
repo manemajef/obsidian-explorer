@@ -58,7 +58,7 @@ export function Preview({
   const placeholder = "W".repeat(effectiveMaxChar);
 
   if (isLoading)
-    return <span style={{ color: "rgba(0,0,0,0)" }}>{placeholder}</span>;
+    return <span className="explorer-preview-placeholder">{placeholder}</span>;
 
   if (!hasPreview) return null;
 

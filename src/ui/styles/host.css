@@ -1,0 +1,93 @@
+.explorer-container {
+  scroll-margin-top: 10em;
+  cursor: default;
+  margin-bottom: 2em;
+}
+
+.explorer-container :where(input, textarea, [contenteditable="true"]) {
+  cursor: text;
+}
+
+.explorer-container
+  :where(button:disabled, [aria-disabled="true"], .paging-dots) {
+  cursor: default;
+}
+
+.explorer-container .clickable-icon {
+  --corner-shape: round;
+}
+
+.explorer-drag-active
+  .explorer-container
+  :where(
+    .explorer-folder-card,
+    .explorer-card,
+    .explorer-list,
+    .explorer-parent-action
+  )
+  > * {
+  pointer-events: none;
+}
+
+.explorer-hide-folder-notes .explorer-native-folder-note {
+  display: none;
+}
+
+.explorer-container
+  :where(
+    a,
+    button,
+    .explorer-card,
+    .explorer-folder-card,
+    .paging-label,
+    .explorer-badge
+  ) {
+  transition:
+    color var(--explorer-hover-transition),
+    background-color var(--explorer-hover-transition),
+    border-color var(--explorer-hover-transition),
+    opacity var(--explorer-hover-transition),
+    transform var(--explorer-hover-transition),
+    box-shadow var(--explorer-hover-transition),
+    text-decoration-color var(--explorer-hover-transition);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explorer-container
+    :where(
+      a,
+      button,
+      .explorer-card,
+      .explorer-folder-card,
+      .paging-label,
+      .explorer-badge
+    ) {
+    transition: none;
+  }
+}
+
+.markdown-source-view.mod-cm6.is-mobile .explorer-container {
+  padding: 2px;
+}
+
+.is-mobile .modal {
+  padding-bottom: 2em;
+  max-height: 80vh;
+}
+
+.is-mobile
+  .explorer-container
+  :where(
+    .explorer-folder-card,
+    .explorer-card,
+    .explorer-list,
+    .explorer-note-row
+  ) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.workspace-leaf-content .view-content.explorer-virtual-folder-note-container {
+  padding: 0;
+}

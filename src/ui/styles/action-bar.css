@@ -95,6 +95,13 @@
   min-width: 0;
 }
 
+.explorer-actions-mobile-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 /* .theme-light:not(.is-mobile) .explorer-container .action-group,
 .theme-light:not(.is-mobile) .explorer-container .action-item {
   height: calc(var(--explorer-control-size) + 2px);

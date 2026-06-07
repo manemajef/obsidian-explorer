@@ -1,0 +1,93 @@
+.spacer {
+  flex: 1;
+}
+
+.spring {
+  min-width: 0;
+}
+
+.gap {
+  --explorer-gap-size: 0;
+  --explorer-gap-max-size: none;
+
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+.gap--x {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.gap--y {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
+.explorer-group > .gap--auto {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.explorer-stack > .gap--auto {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
+.gapper {
+  flex-shrink: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.bar-item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+
+.bar-spring {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.explorer-separator {
+  min-width: 1px;
+  min-height: max-content;
+  margin: 0 var(--explorer-space-5);
+  border-inline-start: 1px solid var(--background-modifier-border);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.is-mobile .explorer-separator {
+  margin: 0.2em var(--explorer-space-5);
+}
+
+.explorer-divider {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+
+.explorer-divider.divider-sm {
+  height: var(--explorer-space-4);
+}
+
+.explorer-divider.divider-md {
+  height: var(--explorer-space-6);
+}
+
+.explorer-divider.divider-lg {
+  height: var(--explorer-space-6);
+}

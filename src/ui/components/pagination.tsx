@@ -17,7 +17,7 @@ function PageNav(props: {
   return (
     <span
       className={cn(PAGING_ICON_CLASS)}
-      style={{ opacity: props.disabled ? 0.2 : 1 }}
+      data-disabled={props.disabled || undefined}
       onClick={onClick}
     >
       <Icon name={icon} />

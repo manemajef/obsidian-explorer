@@ -1,5 +1,14 @@
-@import "./main.css";
-@import "./shared.css";
+/* Import order is the ownership contract: tokens, host, primitives, components, features. */
+@import "./tokens.css";
+@import "./host.css";
+@import "./primitives/surface.css";
+@import "./primitives/layout.css";
+@import "./primitives/text.css";
+@import "./primitives/badge.css";
+@import "./primitives/tags.css";
+@import "./primitives/link.css";
+@import "./primitives/icon.css";
+@import "./components/note-metadata.css";
 @import "./folder-view.css";
 @import "./cards-view.css";
 @import "./list-view.css";
@@ -7,3 +16,4 @@
 @import "./action-bar.css";
 @import "./search.css";
 @import "./modal.css";
+@import "./features/virtual-folder-note.css";

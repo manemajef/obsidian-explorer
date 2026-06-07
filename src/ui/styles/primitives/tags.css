@@ -1,0 +1,59 @@
+.tags-container {
+  --explorer-tags-min-height: calc(
+    var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) +
+      var(--tag-padding-y, 0.2em) + 3px
+  );
+  --explorer-tags-gap: var(--explorer-space-2);
+
+  background: transparent;
+  border-radius: var(--tag-radius, var(--explorer-radius-pill));
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: var(--explorer-tags-min-height);
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 2px;
+}
+
+.tags-container[data-tags-size="xs"] {
+  --explorer-tags-gap: var(--explorer-space-1);
+}
+
+.tags-container[data-tags-size="sm"] {
+  --explorer-tags-gap: var(--explorer-space-2);
+}
+
+.tags-container[data-tags-size="md"] {
+  --explorer-tags-gap: var(--explorer-space-2);
+}
+
+.tags-container__row {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--explorer-tags-gap);
+  min-height: calc(var(--explorer-tags-min-height) - 4px);
+  width: max-content;
+}
+
+.tags-container[data-tags-overflow="hidden"] {
+  overflow: hidden;
+}
+
+.tags-container[data-tags-overflow="wrap"] {
+  overflow: visible;
+}
+
+.tags-container[data-tags-overflow="wrap"] .tags-container__row {
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.tags-container .explorer-badge--tag,
+.tags-container .explorer-badge__tag-label {
+  flex: 0 0 auto;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  word-break: normal;
+}
