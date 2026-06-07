@@ -92,11 +92,14 @@
       rgba(255, 255, 255, 0.04) 100%
     ),
     rgba(255, 255, 255, 0.001);
+
   --explorer-border-glass: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-shadow-glass: 0 3px 10px rgba(0, 0, 0, 0.18);
 }
 
 .is-mobile .explorer-container {
   --explorer-control-size: 44px;
-  --explorer-action-icon-size: var(--icon-l);
+  --explorer-action-icon-size: calc(
+    var(--icon-l) * 0.5 + var(--icon-size) * 0.5
+  );
 }
