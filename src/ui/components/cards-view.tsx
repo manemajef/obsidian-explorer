@@ -108,7 +108,14 @@ export function CardsView(props: {
                 </Group>
               </Group>
               <Spring />
-              {<NotePreview file={file} maxChar={compact ? 70 : 120} />}
+              <NotePreview
+                file={file}
+                className={cn(
+                  "explorer-card-preview",
+                  compact && "explorer-card-preview--compact",
+                )}
+                maxChar={compact ? 120 : 320}
+              />
 
               {showTags && (
                 <div className="explorer-card-tags-wrapper">

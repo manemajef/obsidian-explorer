@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { Platform } from "obsidian";
 import { Icon } from "./shared";
-import { Group } from "./ui/layout";
+import { Divider, Group } from "./ui/layout";
 import { cn } from "./ui/action";
+import { GlassSurface } from "./ui/glass";
 const PAGING_LABEL_BASE = "paging-label";
 const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
 const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
@@ -10,10 +11,15 @@ const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
 function PageNav(props: {
   icon: "chevron-left" | "chevron-right";
   onClick: () => void;
+  disabled?: boolean;
 }): React.JSX.Element {
   const { icon, onClick } = props;
   return (
-    <span className={PAGING_ICON_CLASS} onClick={onClick}>
+    <span
+      className={cn(PAGING_ICON_CLASS)}
+      style={{ opacity: props.disabled ? 0.2 : 1 }}
+      onClick={onClick}
+    >
       <Icon name={icon} />
     </span>
   );
@@ -60,15 +66,15 @@ export function PaginationModern(
   const { canLoadMore, onLoadMore, useGlass } = props;
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  const Container = useGlass ? GlassSurface : "button";
+
   return (
     <Group justify="center">
-      <button
-        type="button"
+      <Container
         ref={buttonRef}
-        className={cn(
-          "clickable-icon paging-load-more ",
-          useGlass && false && "glass-surface  pagination-modern-glass",
-        )}
+        type="button"
+        className="clickable-icon paging-load-more"
+        {...(useGlass && { as: "button", shine: true, radius: "pill" })}
         onClick={() => {
           buttonRef.current?.blur();
           onLoadMore();
@@ -77,13 +83,13 @@ export function PaginationModern(
       >
         <span className="load-more-text">Load more</span>
         <Icon name="chevrons-down" className="paging-load-more-icon" />
-      </button>
+      </Container>
     </Group>
   );
 }
 
 export function Pagination(props: PaginationProps): React.JSX.Element {
-  const { currentPage, totalPages, onPageChange } = props;
+  const { currentPage, totalPages, onPageChange, useGlass } = props;
   const isMobile = Platform.isMobile;
   const page = currentPage;
 
@@ -96,51 +102,62 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
   const rightPages = [page + 1, isMobile ? totalPages + 1 : page + 2].filter(
     (p) => p < totalPages - 1,
   );
+  const canGoPrev = currentPage > 0;
+  const canGoNext = currentPage < totalPages - 1;
+  const Container = useGlass ? GlassSurface : "div";
 
   return (
-    <Group justify="center">
-      <div className="paging-control">
-        <PageNav
-          icon="chevron-left"
-          onClick={() => {
-            if (currentPage > 0) onPageChange(currentPage - 1);
-          }}
-        />
+    <>
+      <Divider />
+      <Group justify="center">
+        <Container
+          className="paging-control"
+          {...(useGlass && { shine: true, radius: "pill" })}
+        >
+          <PageNav
+            icon="chevron-left"
+            disabled={!canGoPrev}
+            onClick={() => {
+              if (currentPage > 0) onPageChange(currentPage - 1);
+            }}
+          />
 
-        <div className="paging-control-nums">
-          {page !== 0 ? (
-            <PageNum value={1} onClick={() => onPageChange(0)} />
-          ) : null}
+          <div className="paging-control-nums">
+            {page !== 0 ? (
+              <PageNum value={1} onClick={() => onPageChange(0)} />
+            ) : null}
 
-          {useLeftDots ? <PageDots /> : null}
+            {useLeftDots ? <PageDots /> : null}
 
-          {leftPages.map((p) => (
-            <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
-          ))}
+            {leftPages.map((p) => (
+              <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
+            ))}
 
-          <PageNum value={page + 1} active />
+            <PageNum value={page + 1} active />
 
-          {rightPages.map((p) => (
-            <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
-          ))}
+            {rightPages.map((p) => (
+              <PageNum key={p} value={p + 1} onClick={() => onPageChange(p)} />
+            ))}
 
-          {useRightDots ? <PageDots /> : null}
+            {useRightDots ? <PageDots /> : null}
 
-          {page !== totalPages - 1 ? (
-            <PageNum
-              value={totalPages}
-              onClick={() => onPageChange(totalPages - 1)}
-            />
-          ) : null}
-        </div>
+            {page !== totalPages - 1 ? (
+              <PageNum
+                value={totalPages}
+                onClick={() => onPageChange(totalPages - 1)}
+              />
+            ) : null}
+          </div>
 
-        <PageNav
-          icon="chevron-right"
-          onClick={() => {
-            if (currentPage < totalPages - 1) onPageChange(currentPage + 1);
-          }}
-        />
-      </div>
-    </Group>
+          <PageNav
+            icon="chevron-right"
+            disabled={!canGoNext}
+            onClick={() => {
+              if (currentPage < totalPages - 1) onPageChange(currentPage + 1);
+            }}
+          />
+        </Container>
+      </Group>
+    </>
   );
 }

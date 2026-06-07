@@ -30,7 +30,9 @@
     var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
   );
 
+  /* --explorer-action-group-padding: 3px; */
   --explorer-action-group-padding: 3px;
+
   --explorer-action-group-gap: 2px;
   --explorer-action-group-item-radius: 50%;
 }
@@ -102,14 +104,6 @@
   min-width: 0;
 }
 
-.action-group:hover,
-.action-group:focus-visible,
-.action-group:focus-within,
-.explorer-container.use-glass .glass-surface.action-group:hover,
-.explorer-container.use-glass .glass-surface.action-group:focus-visible,
-.explorer-container.use-glass .glass-surface.action-group:focus-within {
-  transform: none;
-}
 
 .is-mobile .explorer-container.use-glass .action-group {
   height: auto;

@@ -8,9 +8,13 @@
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.explorer-container.use-glass .glass-surface:hover,
-.explorer-container.use-glass .glass-surface:focus-visible,
-.explorer-container.use-glass .glass-surface:focus-within {
+.theme-dark .explorer-container.use-glass .glass-surface.glass-surface--shine {
+  box-shadow: unset;
+}
+
+.explorer-container.use-glass .glass-surface.glass-surface--interactive:hover,
+.explorer-container.use-glass .glass-surface.glass-surface--interactive:focus-visible,
+.explorer-container.use-glass .glass-surface.glass-surface--interactive:focus-within {
   transform: scale(
     var(--explorer-glass-hover-scale, var(--explorer-hover-scale))
   );
@@ -155,6 +159,19 @@
 }
 
 .explorer-metadata-date {
+  white-space: nowrap;
+}
+
+.explorer-metadata-date-preview-row {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.explorer-metadata-preview {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -346,3 +363,20 @@
 .explorer-container a * {
   cursor: pointer;
 }
+
+/* ------------------------------------------------------------
+   Icon Alignment
+   ------------------------------------------------------------ */
+.explorer-container svg {
+  display: block;
+}
+
+.explorer-container span[class*="icon"],
+.explorer-container span[class*="Icon"],
+.explorer-container .action-icon,
+.explorer-container .paging-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+

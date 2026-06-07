@@ -53,6 +53,7 @@
   scroll-margin-top: 10em;
   /* Live Preview renders inside CodeMirror, whose text cursor can otherwise leak into the block. */
   cursor: default;
+  margin-bottom: 2em;
 }
 
 .explorer-container :where(input, textarea, [contenteditable="true"]) {

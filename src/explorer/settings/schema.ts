@@ -240,9 +240,9 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     label: "Page size",
     description: "Number of items per page.",
     blockKey: "pageSize",
-    defaultValue: 15,
+    defaultValue: 30,
     min: 6,
-    max: 100,
+    max: 60,
     step: 1,
     ui: {
       surfaces: ["plugin", "block"],

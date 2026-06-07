@@ -10,6 +10,7 @@ import {
   type HTMLAttributes,
 } from "react";
 import { setIcon } from "obsidian";
+import { GlassSurface } from "./glass";
 
 export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -36,19 +37,21 @@ export interface ActionItemProps
 
 export const ActionItem = forwardRef<HTMLButtonElement, ActionItemProps>(
   ({ icon, active, shine = true, className, ...props }, ref) => (
-    <button
+    <GlassSurface
       ref={ref}
+      as="button"
       type="button"
+      shine={shine}
+      interactive
       className={cn(
-        "action-item clickable-icon glass-surface",
-        shine && "glass-surface--shine",
+        "action-item clickable-icon",
         active && "action-item--active",
         className,
       )}
       {...props}
     >
       <ActionIcon name={icon} />
-    </button>
+    </GlassSurface>
   ),
 );
 ActionItem.displayName = "ActionItem";
@@ -60,17 +63,16 @@ export interface ActionGroupProps extends HTMLAttributes<HTMLDivElement> {
 
 export const ActionGroup = forwardRef<HTMLDivElement, ActionGroupProps>(
   ({ children, shine = true, className, ...props }, ref) => (
-    <div
+    <GlassSurface
       ref={ref}
-      className={cn(
-        "action-group glass-surface",
-        shine && "glass-surface--shine",
-        className,
-      )}
+      as="div"
+      shine={shine}
+      radius="pill"
+      className={cn("action-group", className)}
       {...props}
     >
       {children}
-    </div>
+    </GlassSurface>
   ),
 );
 ActionGroup.displayName = "ActionGroup";

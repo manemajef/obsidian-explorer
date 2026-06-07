@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Platform, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
@@ -31,6 +31,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
+  const listContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     searchMode,
@@ -166,7 +167,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       )}
 
       {showNotes && (
-        <div className="explorer-files-container">
+        <div className="explorer-files-container" ref={listContainerRef}>
           <Divider size={filesDividerSize} />
 
           <div>{renderFiles(visibleFiles)}</div>
@@ -184,7 +185,26 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
                 <Pagination
                   currentPage={classicPagination?.currentPage ?? 0}
                   totalPages={classicPagination?.totalPages ?? 1}
-                  onPageChange={classicPagination?.setPage ?? (() => undefined)}
+                  onPageChange={(page) => {
+                    classicPagination?.setPage(page);
+                    const element = listContainerRef.current;
+                    const scrollContainer = element?.closest(
+                      ".markdown-preview-view, .view-content",
+                    );
+                    if (element && scrollContainer) {
+                      const elementRect = element.getBoundingClientRect();
+                      const containerRect = scrollContainer.getBoundingClientRect();
+                      const targetScrollTop =
+                        scrollContainer.scrollTop +
+                        elementRect.top -
+                        containerRect.top;
+                      scrollContainer.scrollTo({
+                        top: targetScrollTop,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  useGlass={model.pluginSettings.useGlass}
                 />
               )}
             </>

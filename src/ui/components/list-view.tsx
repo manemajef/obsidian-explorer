@@ -16,7 +16,12 @@ import {
 } from "../context-menu";
 import { TagList } from "./ui/tags";
 import { Preview } from "./ui/preview";
-import { NoteDate, NoteFolderDate, NotePreview } from "./ui/note-metadata";
+import {
+  NoteDatePreview,
+  NoteFolder,
+  NoteFolderDate,
+  NotePreview,
+} from "./ui/note-metadata";
 import { diffDays } from "src/utils";
 type ListViewProps = {
   model: ExplorerModel;
@@ -259,11 +264,11 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                   model={model}
                   actions={props.actions}
                 /> */}
-                {!isMobile && settings.showTags && file.tags.length > 0 && (
+                {/* {!isMobile && settings.showTags && file.tags.length > 0 && (
                   <Group className="explorer-modern-note__desktop-tags">
                     <TagList tags={file.tags} size="sm" />
                   </Group>
-                )}
+                )} */}
 
                 {file.extensionLabel && (
                   <Badge
@@ -274,22 +279,22 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                   </Badge>
                 )}
               </Group>
-              <Group>
-                <div
-                  className="explorer-note-metadata"
-                  style={{ overflow: "hidden", textWrap: "nowrap" }}
-                >
-                  <NoteFolderDate
+              <Group className="explorer-modern-note__metadata-row">
+                <div className="explorer-note-metadata">
+                  <NoteFolder
                     file={file}
                     model={model}
                     actions={props.actions}
                   />
-                  {isMobile && <NoteTags file={file} model={model} size="sm" />}
+                  <NoteDatePreview file={file} model={model} maxChar={90} />
 
-                  {/* <span style={{ overflow: "hidden" }}>
-                    <NotePreview file={file} maxChar={40} />
-                  </span> */}
+                  {isMobile && <NoteTags file={file} model={model} size="sm" />}
                 </div>
+                {!isMobile && settings.showTags && file.tags.length > 0 && (
+                  <Group className="explorer-modern-note__desktop-tags">
+                    <TagList tags={file.tags} size="sm" />
+                  </Group>
+                )}
               </Group>
             </Stack>
           </div>
@@ -384,12 +389,7 @@ const ModernMobileListView = (props: ListViewProps): React.JSX.Element => {
                     actions={props.actions}
                   />
                 </div> */}
-                <NoteDate
-                  file={file}
-                  model={model}
-                  // actions={props.actions}
-                />
-                <NotePreview file={file} maxChar={30} />
+                <NoteDatePreview file={file} model={model} maxChar={160} />
               </Group>
             </Stack>
           </div>

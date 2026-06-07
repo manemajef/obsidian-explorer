@@ -2,12 +2,11 @@ import React from "react";
 import { ExplorerFileNode } from "src/explorer/lib/nodes";
 import { ExplorerModel } from "src/explorer/model";
 import { ExplorerActions } from "src/explorer/actions";
-import { resolveCardFooterMode } from "src/explorer/lib/listing";
 import { diffDays } from "src/utils";
 import { Icon } from "../shared";
 import { Group } from "./layout";
 import { Small } from "./text";
-import { Preview } from "./preview";
+import { useNotePreview } from "./preview";
 
 function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -22,15 +21,9 @@ function getNoteDate(
   file: ExplorerFileNode,
   model: ExplorerModel,
 ): number | null {
-  // const dateBy = resolveCardFooterMode(model.settings);
-
-  // if (dateBy === "ctime") return file.createdAt;
-  // if (dateBy === "mtime") return file.modifiedAt;
   if (["newest", "oldest"].includes(model.settings.sortBy))
     return file.createdAt;
   return file.modifiedAt;
-
-  // return null;
 }
 
 export function NoteDate({
@@ -127,9 +120,54 @@ export function NotePreview({
   className?: string;
   maxChar?: number;
 }) {
+  const effectiveMaxChar = maxChar ?? 100;
+  const { isLoading, preview, hasPreview } = useNotePreview(file, {
+    maxChar: effectiveMaxChar,
+  });
+
+  if (!isLoading && !hasPreview) return null;
+
   return (
     <Small as="span" className={cn("explorer-metadata-preview", className)}>
-      <Preview file={file} maxChar={maxChar} />
+      {isLoading ? (
+        <span style={{ color: "rgba(0,0,0,0)" }}>
+          {"W".repeat(effectiveMaxChar)}
+        </span>
+      ) : (
+        preview
+      )}
     </Small>
+  );
+}
+
+export function NoteDatePreview({
+  file,
+  model,
+  className,
+  maxChar,
+}: {
+  file: ExplorerFileNode;
+  model: ExplorerModel;
+  className?: string;
+  maxChar?: number;
+}): React.JSX.Element | null {
+  const showDate = getNoteDate(file, model) != null;
+  const { preview, hasPreview } = useNotePreview(file, { maxChar });
+
+  if (!showDate && !hasPreview) return null;
+
+  return (
+    <Group
+      className={cn("explorer-metadata-date-preview-row", className)}
+      gap={0}
+    >
+      {showDate && <NoteDate file={file} model={model} />}
+      {showDate && hasPreview && <NoteMetadataSeparator />}
+      {hasPreview && (
+        <Small as="span" className="explorer-metadata-preview">
+          {preview}
+        </Small>
+      )}
+    </Group>
   );
 }

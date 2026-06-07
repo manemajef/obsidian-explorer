@@ -2,6 +2,13 @@ import type { App, TFile } from "obsidian";
 
 const DEFAULT_PREVIEW_LENGTH = 500;
 const SOURCE_READ_LIMIT = 8000;
+type PreviewSegmentKind = "heading" | "paragraph" | "listItem";
+
+type PreviewSegment = {
+  breakBefore: boolean;
+  kind: PreviewSegmentKind;
+  text: string;
+};
 const LATEX_COMMANDS: Record<string, string> = {
   alpha: "alpha",
   beta: "beta",
@@ -113,13 +120,92 @@ export function truncatePreview(
 }
 
 export function buildPreviewText(content: string): string {
-  const readableLines = stripBlocks(content)
-    .split(/\r?\n/)
-    .map(cleanLine)
-    .filter(isReadablePreviewLine);
-
-  const preview = normalizeWhitespace(readableLines.join(" "));
+  const preview = serializePreviewSegments(readPreviewSegments(content));
   return truncatePreview(preview, DEFAULT_PREVIEW_LENGTH) ?? "";
+}
+
+function readPreviewSegments(content: string): PreviewSegment[] {
+  const segments: PreviewSegment[] = [];
+  let breakBefore = false;
+
+  for (const line of stripBlocks(content).split(/\r?\n/)) {
+    if (!line.trim()) {
+      breakBefore = segments.length > 0;
+      continue;
+    }
+
+    const segment = parsePreviewSegment(line, breakBefore);
+    if (segment) {
+      segments.push(segment);
+      breakBefore = false;
+    }
+  }
+
+  return segments;
+}
+
+function parsePreviewSegment(
+  line: string,
+  breakBefore: boolean,
+): PreviewSegment | null {
+  const kind = getPreviewSegmentKind(line);
+  const text = cleanLine(line);
+
+  if (!isReadablePreviewLine(text)) return null;
+
+  return { breakBefore, kind, text };
+}
+
+function getPreviewSegmentKind(line: string): PreviewSegmentKind {
+  if (/^\s{0,3}#{1,6}\s+/.test(line)) return "heading";
+  return /^\s*(?:[-*+]|\d+[.)])\s+/.test(line) ? "listItem" : "paragraph";
+}
+
+function serializePreviewSegments(segments: PreviewSegment[]): string {
+  let preview: PreviewSegment | null = null;
+
+  for (const segment of segments) {
+    if (!preview) {
+      preview = segment;
+      continue;
+    }
+
+    preview = joinPreviewSegments(preview, segment);
+  }
+
+  return normalizeWhitespace(preview?.text ?? "");
+}
+
+function joinPreviewSegments(
+  previous: PreviewSegment,
+  segment: PreviewSegment,
+): PreviewSegment {
+  return {
+    breakBefore: false,
+    kind: segment.kind,
+    text: `${previous.text}${previewSeparator(previous, segment)}${segment.text}`,
+  };
+}
+
+function previewSeparator(
+  previous: PreviewSegment,
+  segment: PreviewSegment,
+): string {
+  if (previous.kind === "heading" && segment.kind === "paragraph") return ": ";
+  if (previous.kind === "listItem" && segment.kind === "listItem") return ", ";
+  if (
+    previous.kind === "paragraph" &&
+    segment.kind === "paragraph" &&
+    !segment.breakBefore
+  ) {
+    return " ";
+  }
+
+  return sentenceSeparator(previous.text);
+}
+
+function sentenceSeparator(text: string): string {
+  return /[.!?;:]$/.test(text.trimEnd()) ? " " : ". ";
 }
 
 function stripBlocks(content: string): string {

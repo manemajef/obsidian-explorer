@@ -20,7 +20,7 @@ export class ExplorerFileNode {
   private cachedFrontmatter: Record<string, unknown> | undefined;
   private cachedTags: string[] | undefined;
   private cachedIsPinned: boolean | undefined;
-  private cachedPreview: string | undefined;
+  private cachedPreview: string | null | undefined;
 
   constructor(
     readonly app: App,
@@ -28,14 +28,15 @@ export class ExplorerFileNode {
   ) {}
 
   get preview(): string | undefined {
-    return this.cachedPreview;
+    return this.cachedPreview ?? undefined;
   }
 
-  async loadPreview(maxCar: number | undefined): Promise<string | undefined> {
+  async loadPreview(maxChar: number | undefined): Promise<string | undefined> {
     if (this.cachedPreview === undefined) {
-      this.cachedPreview = await getPreviewForNote(this.app, this.file);
+      this.cachedPreview =
+        (await getPreviewForNote(this.app, this.file)) ?? null;
     }
-    return truncatePreview(this.cachedPreview, maxCar);
+    return truncatePreview(this.cachedPreview ?? undefined, maxChar);
   }
 
   get path(): string {

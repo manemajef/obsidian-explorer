@@ -149,10 +149,6 @@
   transform: translateY(-50%) scale(1.05);
 }
 
-.explorer-modern-list .pin svg {
-  transform: translateY(15%);
-}
-
 .explorer-note-metadata {
   display: flex;
   flex-direction: column;
@@ -170,8 +166,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex: 1 1 0;
   gap: var(--explorer-space-3);
   margin-top: var(--explorer-space-1);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .explorer-modern-list--desktop .explorer-metadata-preview {
@@ -272,16 +271,28 @@
 
 .explorer-modern-note__desktop-tags {
   flex: 0 1 auto;
+  width: max-content;
   min-width: 0;
   max-width: 60%;
   gap: 0.25em;
-  overflow: visible;
+  overflow: hidden;
   padding-block: 0.15em;
   /* scrollbar-width: thin; */
 }
 
 .explorer-modern-note__desktop-tags > * {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.explorer-modern-note__metadata-row {
+  width: 100%;
+  min-width: 0;
+}
+
+.explorer-modern-note__desktop-tags .tags-container {
+  width: max-content;
+  max-width: 100%;
 }
 
 .explorer-container a.explorer-modern-note__title,
