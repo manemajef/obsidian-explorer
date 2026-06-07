@@ -17,7 +17,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-inline-end: var(--explorer-space-1);
+  margin-inline-end: var(--explorer-space-2);
   opacity: 0.75;
 }
 
@@ -35,6 +35,11 @@
   align-self: center;
 }
 
+.explorer-metadata-separator--dot {
+  opacity: 0.8;
+  padding-inline: 3px;
+  transform: scale(0.8);
+}
 .explorer-metadata-date {
   white-space: nowrap;
 }

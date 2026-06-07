@@ -78,8 +78,16 @@ export function NoteFolder({
   );
 }
 
-function NoteMetadataSeparator(): React.JSX.Element {
-  return <span className="explorer-metadata-separator" aria-hidden="true" />;
+function NoteMetadataSeparator({
+  separator,
+}: {
+  separator?: "dot" | "line";
+}): React.JSX.Element {
+  if (!separator || separator === "dot")
+    return <span className="explorer-metadata-separator--dot">•</span>;
+  return (
+    <span className="explorer-metadata-separator" aria-hidden="true"></span>
+  );
 }
 
 export function NoteFolderDate({
