@@ -84,7 +84,11 @@ function NoteMetadataSeparator({
   separator?: "dot" | "line";
 }): React.JSX.Element {
   if (!separator || separator === "dot")
-    return <span className="explorer-metadata-separator--dot">•</span>;
+    return (
+      <Small as="span" className="explorer-metadata-separator--dot">
+        •
+      </Small>
+    );
   return (
     <span className="explorer-metadata-separator" aria-hidden="true"></span>
   );

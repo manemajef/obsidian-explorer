@@ -36,9 +36,11 @@
 }
 
 .explorer-metadata-separator--dot {
-  opacity: 0.8;
+  opacity: 0.75;
   padding-inline: 3px;
-  transform: scale(0.8);
+  transform: scale(1.2);
+  font-size: 0.8em;
+  line-height: 1;
 }
 .explorer-metadata-date {
   white-space: nowrap;
