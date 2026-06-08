@@ -192,16 +192,16 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                         actions={props.actions}
                       />
                     )}
-                    <div
-                      style={{ maxWidth: layout === "mobile" ? "none" : "80%" }}
-                    >
-                      <NoteDatePreview
-                        file={file}
-                        model={props.model}
-                        maxChar={layout === "mobile" ? 120 : 90}
-                      />
-                    </div>
+                    {/* <div
+                      style={{ maxWidth: layout === "mobile" ? "none" : "95%" }}
+                    > */}
+                    <NoteDatePreview
+                      file={file}
+                      model={props.model}
+                      maxChar={layout === "mobile" ? 120 : 90}
+                    />
                   </div>
+                  {/* </div> */}
 
                   <Gap size={4} />
                   {layout === "desktop" && (
