@@ -82,9 +82,16 @@
   --explorer-note-row-title-color: var(--text-normal);
   --explorer-glass-radius: 1em;
   --explorer-glass-hover-scale: 1;
+  --explorer-link-font-size: 0.9em;
+  --explorer-link-font-weight: calc(
+    var(--font-weight) + var(--bold-modifier) * 0.8
+  );
+  --explorer-link-color: var(--link-color, var(--text-accent));
+  --explorer-link-opacity: 1;
+  --explorer-link-line-height: 1.25;
 
   padding-bottom: var(--explorer-modern-list-padding-bottom);
-  font-size: var(--explorer-modern-list-font-size);
+  /* font-size: var(--explorer-modern-list-font-size); */
   border-radius: 1em;
   border: var(--explorer-border-glass);
   background: var(--explorer-glass-background);
@@ -99,6 +106,7 @@
   --explorer-note-row-padding-top-first: var(--explorer-space-3);
   --explorer-note-row-padding-bottom-last: var(--explorer-space-1);
   background-color: var(--raised-background);
+  font-size: var(--explorer-modern-list-font-size);
 }
 
 .explorer-modern-list[data-layout="desktop"] {
@@ -177,6 +185,9 @@
   --explorer-link-hover-color: var(--explorer-note-row-title-color);
 
   font-size: var(--font-text-size);
+  font-size: var(--explorer-link-font-size);
+  font-weight: var(--explorer-link-font-weight);
+  line-height: var(--explorer-link-line-height);
   line-height: 1.35;
   opacity: var(--explorer-modern-list-opacity);
   word-break: break-word;
