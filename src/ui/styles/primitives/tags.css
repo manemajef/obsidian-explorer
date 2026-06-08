@@ -59,7 +59,7 @@
 }
 
 .explorer-tag[data-tag-size="xs"] {
-  --explorer-tag-font-size: 9px;
+  --explorer-tag-font-size: 10px;
 }
 
 .explorer-tag[data-tag-size="sm"] {
