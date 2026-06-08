@@ -69,7 +69,7 @@
 
 .explorer-modern-list {
   --explorer-modern-list-font-size: 0.95em;
-  --explorer-modern-list-opacity: 0.8;
+  --explorer-modern-list-opacity: 0.9;
   --explorer-modern-list-opacity-hover: 1;
   --explorer-modern-list-padding-bottom: var(--explorer-space-2);
   --explorer-modern-list-item-padding: var(--explorer-space-1)
@@ -87,7 +87,7 @@
     var(--font-weight) + var(--bold-modifier) * 0.8
   );
   --explorer-link-color: var(--link-color, var(--text-accent));
-  --explorer-link-opacity: 1;
+  --explorer-link-opacity: 0.9;
   --explorer-link-line-height: 1.25;
 
   padding-bottom: var(--explorer-modern-list-padding-bottom);
