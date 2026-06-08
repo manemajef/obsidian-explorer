@@ -93,7 +93,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                     tags={file.tags}
                     className="explorer-list-tags"
                     overflow="hidden"
-                    size="sm"
+                    size="xs"
                   />
                 </>
               )}
