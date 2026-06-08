@@ -198,6 +198,11 @@
   border: var(--explorer-border-glass);
   z-index: 10;
 }
+.theme-dark .explorer-container .paging-label.paging-label.active-page {
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-modifier-hover);
+}
 
 .explorer-container .paging-icon {
   margin: 0;
