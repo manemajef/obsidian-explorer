@@ -1,0 +1,63 @@
+.explorer-container {
+  --ex-space-0: 0;
+  --ex-space-1: 0.25em;
+  --ex-space-2: 0.5em;
+  --ex-space-3: 0.75em;
+  --ex-space-4: 1em;
+  --ex-space-5: 1.5em;
+  --ex-space-6: 2em;
+
+  --ex-radius-sm: 4px;
+  --ex-radius-md: 6px;
+  --ex-radius-lg: 0.8em;
+  --ex-radius-pill: 999px;
+
+  --ex-font-xs: 0.7em;
+  --ex-font-sm: 0.85em;
+  --ex-font-md: 1em;
+  --ex-font-lg: 1.1em;
+
+  --ex-weight-normal: var(--font-normal);
+  --ex-weight-strong: var(--font-semibold);
+
+  --ex-text-normal: var(--text-normal);
+  --ex-text-muted: color-mix(in srgb, var(--text-normal) 70%, transparent);
+  --ex-text-faint: var(--text-faint);
+  --ex-text-accent: var(--text-accent);
+
+  --ex-border-subtle: var(--background-modifier-border);
+  --ex-bg-subtle: var(--background-secondary);
+  --ex-bg-hover: var(--background-modifier-hover);
+
+  --ex-control-size: var(--explorer-control-size, 32px);
+  --ex-hover-scale: var(--explorer-hover-scale, 1.05);
+  --ex-hover-transition: var(--explorer-hover-transition, 0.15s ease);
+  --input-corner-shape: round;
+  --corner-shape: round;
+
+  --ex-glass-bg: var(--explorer-glass-background);
+  --ex-glass-border: var(--explorer-border-glass);
+  --ex-glass-shadow: var(--explorer-shadow-glass);
+  --ex-glass-shadow-sm: var(--explorer-shadow-glass-sm);
+  --ex-glass-shadow-hover: var(--explorer-shadow-glass-hover);
+  --ex-glass-image: var(--explorer-glass-image, none);
+
+  --ex-surface-card-bg: var(--bases-cards-background);
+  --ex-surface-card-radius: var(--bases-cards-radius);
+  --ex-surface-card-shadow: var(--bases-cards-shadow);
+  --ex-surface-card-shadow-hover: var(--bases-cards-shadow-hover);
+
+  --ex-surface-container-bg: var(--ex-glass-bg);
+  --ex-surface-container-shadow: var(--ex-glass-shadow-sm);
+
+  --ex-surface-floating-bg: var(--raised-background);
+  --ex-surface-floating-shadow: var(--ex-glass-shadow-sm);
+}
+
+.theme-light:not(.theme-dark) .explorer-container {
+  --ex-surface-container-bg: var(--background-primary);
+}
+
+.is-mobile .explorer-container {
+  --ex-control-size: var(--explorer-control-size, 44px);
+}

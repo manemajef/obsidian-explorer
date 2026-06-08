@@ -1,0 +1,25 @@
+.explorer-container a.internal-link.ex-link {
+  color: var(--ex-text-normal);
+  cursor: pointer;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.explorer-container a.internal-link.ex-link:hover,
+.explorer-container a.internal-link.ex-link:focus-visible {
+  color: var(--ex-text-normal);
+  text-decoration: underline;
+}
+
+.explorer-container a.internal-link.ex-link[data-variant="strong"] {
+  font-weight: var(--ex-weight-strong);
+}
+
+.explorer-container a.internal-link.ex-link[data-variant="muted"] {
+  color: var(--ex-text-muted);
+}
+
+.explorer-container a.internal-link.ex-link[data-variant="muted"]:hover,
+.explorer-container a.internal-link.ex-link[data-variant="muted"]:focus-visible {
+  color: var(--ex-text-normal);
+}

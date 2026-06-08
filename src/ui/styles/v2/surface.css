@@ -1,0 +1,100 @@
+.explorer-container .ex-surface {
+  border-radius: var(--ex-radius-md);
+  min-width: 0;
+  position: relative;
+}
+
+.explorer-container .ex-surface[data-interactive="true"] {
+  cursor: pointer;
+}
+
+.explorer-container .ex-surface[data-variant="plain"] {
+  border-radius: 0;
+}
+
+.explorer-container .ex-surface[data-variant="item"] {
+  padding: 0 var(--ex-space-4);
+}
+
+.explorer-container .ex-surface[data-variant="card"] {
+  background: var(--ex-surface-card-bg);
+  border-radius: var(--ex-surface-card-radius);
+  box-shadow: var(--ex-surface-card-shadow);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0 1px;
+  overflow-wrap: anywhere;
+  padding: var(--ex-space-2);
+  padding-bottom: var(--ex-space-1);
+  transition: box-shadow var(--anim-duration-fast) ease-in-out;
+}
+
+.explorer-container .ex-surface[data-variant="card"][data-interactive="true"]:hover {
+  box-shadow: var(--ex-surface-card-shadow-hover);
+}
+
+.explorer-container .ex-surface[data-variant="container"] {
+  background: var(--ex-surface-container-bg);
+  background-image: var(--ex-glass-image);
+  border: var(--ex-glass-border);
+  border-radius: 1em;
+  box-shadow: var(--ex-surface-container-shadow);
+  overflow: hidden;
+}
+
+.explorer-container .ex-surface[data-variant="floating"] {
+  background: var(--ex-surface-floating-bg);
+  box-shadow: var(--ex-surface-floating-shadow);
+}
+
+.explorer-container .ex-surface[data-variant="folder"] {
+  background: var(--ex-surface-floating-bg);
+  background-image: var(--ex-glass-image);
+  border: var(--ex-glass-border);
+  border-radius: var(--ex-radius-lg);
+  box-shadow: var(--ex-surface-floating-shadow);
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  font-size: 0.9em;
+  justify-content: center;
+  max-width: 220px;
+  padding: 0.8em var(--ex-space-6);
+  text-align: center;
+  transition: box-shadow var(--ex-hover-transition);
+}
+
+.theme-dark .explorer-container .ex-surface[data-variant="folder"] {
+  --ex-surface-floating-bg: var(--ex-glass-bg);
+  --ex-surface-floating-shadow: var(--ex-glass-shadow-sm);
+}
+
+.is-mobile .explorer-container .ex-surface[data-variant="folder"] {
+  --ex-surface-floating-bg: var(--raised-background);
+
+  border-radius: 16px;
+  max-width: none;
+  padding: 1.15em 0.5em;
+}
+
+@media (width >= 800px) {
+  .is-mobile .explorer-container .ex-surface[data-variant="folder"] {
+    padding: 1.15em 1.5em;
+  }
+}
+
+.explorer-container .ex-surface[data-variant="folder"][data-interactive="true"]:hover,
+.explorer-container .ex-surface[data-variant="folder"][data-interactive="true"]:focus-within {
+  box-shadow: var(--ex-glass-shadow);
+}
+
+.explorer-container .ex-surface.is-drop-target {
+  background: var(--ex-bg-hover);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.explorer-container .ex-surface.is-dragging {
+  opacity: 0.5;
+}

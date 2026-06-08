@@ -1,0 +1,372 @@
+.explorer-container .ex-file-card-content {
+  --ex-card-link-color: var(--link-color, var(--text-accent));
+  --ex-card-link-font-size: 0.9em;
+  --ex-card-link-font-weight: calc(
+    var(--font-weight) + var(--bold-modifier) * 0.8
+  );
+  --ex-card-link-line-height: 1.25;
+  --ex-card-link-opacity: 1;
+  --ex-card-small-color: var(--explorer-color-muted, var(--ex-text-muted));
+  --ex-card-small-font-size: var(--font-ui-small);
+  --ex-card-small-font-weight: var(--font-normal);
+  --ex-card-small-line-height: 1.35;
+
+  flex: 1 1 auto;
+  min-height: 100%;
+}
+
+.explorer-container .ex-file-card-content[data-link-tone="normal"] {
+  --ex-card-link-color: var(--text-normal);
+  --ex-card-link-opacity: 0.9;
+}
+
+.theme-dark .explorer-container .ex-file-card-content[data-link-tone="normal"] {
+  --ex-card-link-font-weight: calc(
+    var(--font-weight) + var(--bold-modifier) * 0.7
+  );
+}
+
+.explorer-container .ex-file-title-group {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.explorer-container .ex-file-title-group .ex-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.explorer-container .ex-file-card-content .ex-file-title-group .ex-link {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.explorer-container
+  .ex-file-card-content[data-link-tone="normal"]
+  .ex-file-title-group
+  a.internal-link.ex-link,
+.explorer-container
+  .ex-file-card-content[data-link-tone="normal"]
+  .ex-file-title-group
+  a.internal-link.ex-link:visited {
+  color: var(--text-normal) !important;
+}
+
+.explorer-container
+  .ex-file-card-content[data-link-tone="accent"]
+  .ex-file-title-group
+  a.internal-link.ex-link,
+.explorer-container
+  .ex-file-card-content[data-link-tone="accent"]
+  .ex-file-title-group
+  a.internal-link.ex-link:visited {
+  color: var(--link-color, var(--text-accent)) !important;
+}
+
+.explorer-container
+  .ex-file-card-content
+  .ex-file-title-group
+  a.internal-link.ex-link {
+  font-size: var(--ex-card-link-font-size);
+  font-weight: var(--ex-card-link-font-weight);
+  line-height: var(--ex-card-link-line-height);
+  opacity: var(--ex-card-link-opacity);
+  text-decoration: none;
+}
+
+.explorer-container
+  .ex-file-card-content
+  .ex-file-title-group
+  a.internal-link.ex-link:hover,
+.explorer-container
+  .ex-file-card-content
+  .ex-file-title-group
+  a.internal-link.ex-link:focus-visible {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.explorer-container .ex-file-actions {
+  flex: 0 0 auto;
+  opacity: 0.8;
+}
+
+.explorer-container .ex-file-preview {
+  display: -webkit-box;
+  color: var(--explorer-color-muted, var(--ex-text-muted));
+  font-size: var(--ex-font-sm);
+  line-height: 1.35;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.explorer-container .ex-file-card-content[data-compact="true"] .ex-file-preview {
+  font-size: var(--font-ui-smaller);
+  -webkit-line-clamp: 2;
+}
+
+.explorer-container .ex-file-card-content .ex-file-preview,
+.explorer-container .ex-file-card-content .ex-file-meta {
+  color: var(--ex-card-small-color);
+  font-size: var(--ex-font-sm);
+  font-weight: var(--ex-card-small-font-weight);
+  line-height: var(--ex-card-small-line-height);
+}
+
+.explorer-container .ex-file-card-content[data-compact="true"] {
+  --ex-card-small-font-size: var(--font-ui-smaller);
+}
+
+.explorer-container .ex-file-meta {
+  align-items: center;
+  color: var(--explorer-color-muted, var(--ex-text-muted));
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--ex-font-sm);
+  font-weight: calc(var(--font-normal) * 0.5 + var(--font-light) * 0.5);
+  gap: var(--ex-space-1);
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.explorer-container .ex-file-meta .ex-text {
+  color: inherit;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.explorer-container .ex-file-folder-link {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-weight: inherit;
+  gap: var(--ex-space-1);
+  line-height: inherit;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explorer-container .ex-file-folder-link .ex-icon {
+  opacity: 0.75;
+}
+
+.explorer-container .ex-file-folder-link:hover,
+.explorer-container .ex-file-folder-link:focus-visible {
+  color: var(--ex-text-accent);
+  text-decoration: underline;
+}
+
+.explorer-container .ex-tag-list {
+  background: transparent;
+  border-radius: var(--tag-radius, var(--ex-radius-pill));
+  display: flex;
+  gap: var(--ex-space-2);
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.explorer-container .ex-tag-list[data-max-rows="1"] {
+  max-height: 1.6em;
+}
+
+.explorer-container .ex-tag-list[data-max-rows="2"] {
+  max-height: 3.2em;
+}
+
+.explorer-container .ex-tag {
+  align-items: center;
+  border-radius: var(--tag-radius, var(--ex-radius-pill));
+  color: var(--explorer-color-muted, var(--ex-text-muted));
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--font-ui-smaller, 12px);
+  margin: 0 !important;
+  min-height: 0;
+  opacity: 0.9;
+  padding: 0 !important;
+}
+
+.explorer-container .ex-tag > .ex-tag-label.tag {
+  border-radius: inherit;
+  color: inherit;
+  flex: 0 0 auto;
+  font-size: inherit;
+  line-height: 1.4;
+  margin: 0 !important;
+  overflow-wrap: normal;
+  padding: 0.1em 0.5em;
+  text-decoration: none;
+  white-space: nowrap;
+  word-break: normal;
+}
+
+.explorer-container .ex-file-card-content .ex-tag > .ex-tag-label.tag {
+  color: inherit !important;
+}
+
+.explorer-container .ex-folder-button-content {
+  justify-content: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  width: 100%;
+}
+
+.explorer-container .ex-folder-button-content a.internal-link.ex-link {
+  color: var(--ex-text-normal) !important;
+  font-weight: calc(var(--font-weight) + var(--bold-modifier));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explorer-container .ex-folder-button-content a.internal-link.ex-link.is-unresolved {
+  color: var(--ex-text-normal) !important;
+  opacity: 0.6;
+}
+
+.explorer-container .ex-modern-list-item:not([data-last="true"]) {
+  border-bottom: 1px solid var(--ex-border-subtle);
+}
+
+.explorer-container .ex-modern-list-item {
+  color: var(--ex-text-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: var(--ex-space-1);
+  padding-top: var(--ex-space-1);
+  touch-action: manipulation;
+}
+
+.explorer-container .ex-modern-list-item[data-layout="desktop"] {
+  padding-bottom: var(--ex-space-1);
+  padding-top: var(--ex-space-2);
+}
+
+.explorer-container .ex-modern-list .ex-surface:first-child .ex-modern-list-item {
+  padding-top: var(--ex-space-3);
+}
+
+.explorer-container
+  .ex-modern-list
+  .ex-surface:last-child
+  .ex-modern-list-item {
+  padding-bottom: var(--ex-space-3);
+  border-bottom: none;
+}
+
+.explorer-container
+  .ex-modern-list-item[data-layout="desktop"]
+  .ex-file-title-group
+  a.internal-link.ex-link {
+  color: var(--ex-text-normal) !important;
+  font-size: 0.9em;
+  font-weight: calc(var(--font-weight) + var(--bold-modifier) * 0.8);
+  line-height: 1.25;
+  opacity: 0.9;
+}
+
+.explorer-container
+  .ex-modern-list-item[data-layout="desktop"]:hover
+  .ex-file-title-group
+  a.internal-link.ex-link,
+.explorer-container
+  .ex-modern-list-item[data-layout="desktop"]
+  .ex-file-title-group
+  a.internal-link.ex-link:focus-visible {
+  color: var(--ex-text-normal) !important;
+  opacity: 1;
+  text-decoration: underline;
+}
+
+
+
+.explorer-container .ex-file-list-secondary {
+  align-items: center;
+  flex: 1 1 auto;
+  gap: var(--ex-space-3);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.explorer-container .ex-modern-list .ex-file-list-content {
+  gap: 0;
+}
+
+.explorer-container .ex-modern-list .ex-file-meta {
+  flex: 1 1 0;
+  flex-wrap: nowrap;
+  gap: var(--ex-space-3);
+  overflow: hidden;
+  width: 100%;
+}
+
+.explorer-container .ex-modern-list .ex-tag-list {
+  flex: 0 1 auto;
+  max-width: 60%;
+  overflow: hidden;
+  padding-block: 0.15em;
+  width: max-content;
+}
+
+.explorer-container .ex-modern-list .ex-tag-list .ex-tag {
+  max-width: 100%;
+}
+
+.explorer-container .ex-file-meta .ex-file-preview {
+  color: inherit;
+  display: block;
+  flex: 1 1 auto;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: unset;
+}
+
+.explorer-container .ex-markdown-list {
+  margin-top: 0.5em;
+}
+
+.explorer-container .ex-markdown-list-row {
+  font-size: 0.9em;
+  padding: 0.4em var(--ex-space-1);
+}
+
+.explorer-container .ex-markdown-list .ex-surface[data-variant="plain"] {
+  display: list-item;
+  list-style: none;
+}
+
+.explorer-container
+  .ex-markdown-list
+  .ex-surface[data-variant="plain"]:not(:has([data-pinned="true"])) {
+  margin-inline-start: var(--ex-space-4);
+}
+
+.explorer-container
+  .ex-markdown-list
+  .ex-surface[data-variant="plain"][data-interactive="true"]:hover {
+  border-radius: var(--ex-radius-sm);
+}
+
+.explorer-container .ex-markdown-list .ex-file-title-group a.internal-link.ex-link,
+.explorer-container .ex-markdown-list-row a.internal-link.ex-link {
+  color: var(--ex-text-normal) !important;
+  font-weight: var(--font-normal);
+}

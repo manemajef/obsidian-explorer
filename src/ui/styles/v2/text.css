@@ -1,0 +1,40 @@
+.explorer-container .ex-text {
+  color: var(--ex-text-normal);
+  font-size: var(--ex-font-md);
+  font-weight: var(--ex-weight-normal);
+  letter-spacing: 0;
+}
+
+.explorer-container .ex-text[data-variant="small"] {
+  font-size: var(--ex-font-sm);
+}
+
+.explorer-container .ex-text[data-variant="muted"] {
+  color: var(--ex-text-muted);
+  font-size: var(--ex-font-sm);
+}
+
+.explorer-container .ex-text[data-variant="faint"] {
+  color: var(--ex-text-faint);
+  font-size: var(--ex-font-sm);
+}
+
+.explorer-container .ex-text[data-variant="strong"] {
+  font-weight: var(--ex-weight-strong);
+}
+
+.explorer-container .ex-text[data-variant="lead"] {
+  font-size: var(--ex-font-lg);
+  font-weight: var(--ex-weight-strong);
+}
+
+.explorer-container .ex-text[data-truncate="true"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explorer-container .ex-text .ex-text {
+  font-size: 1em;
+}

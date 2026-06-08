@@ -12,6 +12,12 @@ import { ListView } from "./components/list-view";
 import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
 import { Divider } from "./components/ui/layout";
+import {
+  ActionBarV2,
+  CardsViewV2,
+  FolderButtonsV2,
+  ListViewV2,
+} from "./components/v2";
 
 interface ExplorerUIProps {
   model: ExplorerModel;
@@ -120,9 +126,30 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   //   ? "sm"
   //   : "md";
   const folderDivider = compactActionBar ? "sm" : "md";
+  const USE_V2 = true;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
+      if (USE_V2) {
+        if (settings.view === "cards") {
+          return (
+            <CardsViewV2
+              model={model}
+              actions={actions}
+              contextMenu={contextMenu}
+              files={files}
+            />
+          );
+        }
+        return (
+          <ListViewV2
+            model={model}
+            files={files}
+            actions={actions}
+            contextMenu={contextMenu}
+          />
+        );
+      }
       if (settings.view === "cards") {
         return (
           <CardsView
@@ -157,37 +184,72 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     <>
       {/* {!Platform.isMobile && <Divider size="sm" />} */}
       <Divider size="sm" />
-      <ActionsBar
-        app={app}
-        parentDropFolder={model.folder.parent}
-        onMoveIntoFolder={onMoveIntoFolder}
-        showParentNavigation={
-          model.pluginSettings.showParentButton &&
-          actions.canGoToParent(model.location)
-        }
-        onOpenSettings={onOpenSettings}
-        onSaveFolderNote={
-          onSaveFolderNote ? () => void onSaveFolderNote() : undefined
-        }
-        onGoToParent={(newLeaf) =>
-          void actions.goToParent(model.location, newLeaf)
-        }
-        onNewFolder={() => void actions.createFolder()}
-        onNewNote={() => void actions.createNote()}
-        onSearchToggle={toggleSearch}
-        searchMode={searchMode}
-        searchQuery={searchQuery}
-        onSearchInput={setSearchQuery}
-        compactActionBar={compactActionBar}
-      />
+      {USE_V2 ? (
+        <ActionBarV2
+          app={app}
+          parentDropFolder={model.folder.parent}
+          onMoveIntoFolder={onMoveIntoFolder}
+          showParentNavigation={
+            model.pluginSettings.showParentButton &&
+            actions.canGoToParent(model.location)
+          }
+          onOpenSettings={onOpenSettings}
+          onSaveFolderNote={
+            onSaveFolderNote ? () => void onSaveFolderNote() : undefined
+          }
+          onGoToParent={(newLeaf) =>
+            void actions.goToParent(model.location, newLeaf)
+          }
+          onNewFolder={() => void actions.createFolder()}
+          onNewNote={() => void actions.createNote()}
+          onSearchToggle={toggleSearch}
+          searchMode={searchMode}
+          searchQuery={searchQuery}
+          onSearchInput={setSearchQuery}
+          compactActionBar={compactActionBar}
+        />
+      ) : (
+        <ActionsBar
+          app={app}
+          parentDropFolder={model.folder.parent}
+          onMoveIntoFolder={onMoveIntoFolder}
+          showParentNavigation={
+            model.pluginSettings.showParentButton &&
+            actions.canGoToParent(model.location)
+          }
+          onOpenSettings={onOpenSettings}
+          onSaveFolderNote={
+            onSaveFolderNote ? () => void onSaveFolderNote() : undefined
+          }
+          onGoToParent={(newLeaf) =>
+            void actions.goToParent(model.location, newLeaf)
+          }
+          onNewFolder={() => void actions.createFolder()}
+          onNewNote={() => void actions.createNote()}
+          onSearchToggle={toggleSearch}
+          searchMode={searchMode}
+          searchQuery={searchQuery}
+          onSearchInput={setSearchQuery}
+          compactActionBar={compactActionBar}
+        />
+      )}
+
       {showFolders && (
         <>
           <Divider size={folderDivider} />
-          <FolderButtons
-            folders={model.folders}
-            actions={actions}
-            contextMenu={contextMenu}
-          />
+          {USE_V2 ? (
+            <FolderButtonsV2
+              folders={model.folders}
+              actions={actions}
+              contextMenu={contextMenu}
+            />
+          ) : (
+            <FolderButtons
+              folders={model.folders}
+              actions={actions}
+              contextMenu={contextMenu}
+            />
+          )}
         </>
       )}
 

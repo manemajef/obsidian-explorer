@@ -1,0 +1,146 @@
+.explorer-container .ex-cards-grid {
+  display: grid;
+  gap: var(--ex-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-block: 0.25em;
+}
+
+.explorer-container .ex-cards-grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.explorer-container .ex-folders-grid {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ex-space-3);
+}
+
+.explorer-container .ex-folders-grid::after {
+  content: "";
+  flex: 999 1 0;
+}
+
+.explorer-container .ex-folders-grid--sparse {
+  justify-content: flex-start;
+}
+
+.explorer-container .ex-modern-list {
+  margin-top: var(--ex-space-4);
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.explorer-container .ex-markdown-list {
+  border-radius: var(--ex-radius-md);
+  margin-top: 0.5em;
+  padding-inline-start: 0;
+}
+
+.explorer-container .ex-actionbar {
+  align-items: center;
+  direction: ltr;
+  display: flex;
+  gap: var(--ex-space-3);
+  justify-content: space-between;
+  min-width: 0;
+  width: 100%;
+}
+
+.explorer-container .ex-actionbar-start,
+.explorer-container .ex-actionbar-end {
+  min-width: 0;
+}
+
+.explorer-container .ex-actionbar[data-mobile="true"] {
+  gap: var(--ex-space-2);
+}
+
+.explorer-container .ex-parent-action.is-drop-target {
+  background: var(--ex-bg-hover);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.explorer-container .ex-search {
+  align-items: center;
+  display: flex;
+  gap: var(--ex-space-2);
+  min-width: 0;
+  position: relative;
+}
+
+.explorer-container .ex-search-input {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: var(--ex-radius-pill);
+  color: var(--ex-text-muted);
+  font: inherit;
+  height: auto;
+  min-width: 250px;
+  padding: var(--ex-space-2) 3em var(--ex-space-2) var(--ex-space-4);
+}
+
+.explorer-container .ex-search > .ex-button {
+  color: var(--color-red);
+  min-height: var(--ex-control-size);
+  position: absolute;
+  inset-inline-end: var(--ex-space-1);
+}
+
+.explorer-container .ex-actionbar--compact .ex-search-input {
+  padding-block: var(--ex-space-3);
+}
+
+.is-mobile .explorer-container .ex-search,
+.is-mobile .explorer-container .ex-search-input {
+  flex: 1 1 auto;
+  height: 52px;
+  min-width: 0;
+  width: 100%;
+}
+
+@media (width < 430px) {
+  .is-mobile .explorer-container .ex-cards-grid--compact {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+@media (width <= 700px) {
+  .is-mobile .explorer-container .ex-cards-grid:not(.ex-cards-grid--compact) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    margin-top: unset;
+  }
+
+  .is-mobile .explorer-container .ex-folders-grid {
+    display: grid;
+    gap: var(--ex-space-3);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .is-mobile .explorer-container .ex-folders-grid::after {
+    content: none;
+  }
+
+  .is-mobile .explorer-container .ex-folders-grid > .ex-surface {
+    grid-column: span 2;
+  }
+}
+
+@container (width <= 500px) {
+  .explorer-container .ex-folders-grid > .ex-surface {
+    max-width: 100%;
+  }
+
+  .explorer-container .ex-folders-grid::after {
+    flex: 100 1 0;
+    max-width: 50%;
+  }
+}
+
+@container (width <= 300px) {
+  .explorer-container .ex-folders-grid::after {
+    content: none;
+    display: none;
+  }
+}

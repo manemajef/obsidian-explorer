@@ -1,0 +1,39 @@
+.explorer-container .ex-badge {
+  align-items: center;
+  border-radius: var(--ex-radius-md);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--ex-font-xs);
+  line-height: 1;
+  padding: 0.1em 0.5em;
+  white-space: nowrap;
+}
+
+.explorer-container .ex-badge[data-size="md"] {
+  font-size: var(--ex-font-sm);
+  min-height: 1.7em;
+  padding-inline: var(--ex-space-3);
+}
+
+.explorer-container .ex-badge[data-variant="neutral"] {
+  color: var(--ex-text-muted);
+  opacity: 0.6;
+}
+
+.explorer-container .ex-badge[data-variant="filled"] {
+  background: var(--background-primary-alt);
+  border: var(--ex-glass-border);
+  color: var(--ex-text-muted);
+  opacity: 0.7;
+}
+
+.explorer-container .ex-badge[data-variant="soft"] {
+  background: transparent;
+  border-radius: var(--tag-radius, var(--ex-radius-pill));
+  color: inherit;
+}
+
+.explorer-container .ex-badge[data-variant="danger"] {
+  background: var(--background-modifier-error);
+  color: var(--text-on-accent);
+}

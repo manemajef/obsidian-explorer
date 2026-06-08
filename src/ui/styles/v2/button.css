@@ -1,0 +1,207 @@
+.explorer-container .ex-button,
+.explorer-container .ex-pin-badge {
+  align-items: center;
+  border: 0;
+  border-radius: var(--ex-radius-md);
+  color: var(--ex-text-normal);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: var(--ex-space-2);
+  justify-content: center;
+  letter-spacing: 0;
+  min-width: 0;
+}
+
+.explorer-container .ex-button {
+  --corner-shape: round;
+
+  min-height: var(--ex-control-size);
+  padding: 0 var(--ex-space-3);
+}
+
+.theme-light:not(.theme-dark):not(.is-mobile) .explorer-container .ex-button[data-shape="circle"] {
+  padding: 4px;
+}
+
+.explorer-container .clickable-icon {
+  --corner-shape: round;
+}
+
+.explorer-container .ex-button[data-size="sm"] {
+  min-height: 1.7em;
+  padding-inline: var(--ex-space-2);
+}
+
+.explorer-container .ex-button[data-size="lg"] {
+  min-height: 2.4em;
+  padding-inline: var(--ex-space-4);
+}
+
+.explorer-container .ex-button[data-shape="circle"] {
+  border-radius: var(--ex-radius-pill);
+  inline-size: var(--ex-control-size);
+  min-width: var(--ex-control-size);
+  padding: 0;
+}
+
+.explorer-container .ex-button[data-variant="ghost"],
+.explorer-container .ex-pin-badge {
+  background: transparent;
+}
+
+.explorer-container .ex-button[data-variant="soft"] {
+  background: var(--ex-bg-subtle);
+}
+
+.explorer-container .ex-button[data-variant="raised"] {
+  background: var(--ex-glass-bg);
+  border: var(--ex-glass-border);
+  box-shadow: var(--ex-glass-shadow);
+  position: relative;
+  will-change: transform;
+  transition: transform var(--ex-hover-transition, 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94));
+}
+
+.explorer-container .ex-button[data-variant="raised"]:hover,
+.explorer-container .ex-button[data-variant="raised"]:focus-visible,
+.explorer-container .ex-button[data-variant="raised"]:focus-within {
+  transform: scale(var(--ex-hover-scale, 1.05));
+  z-index: 10;
+}
+
+.explorer-container .ex-button[data-variant="raised"]::after {
+  border-radius: inherit;
+  box-shadow:
+    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.06);
+  content: "";
+  inset: -1px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.explorer-container .ex-button[data-variant="danger"] {
+  color: var(--text-error);
+}
+
+.explorer-container .ex-button:hover,
+.explorer-container .ex-button:focus-visible,
+.explorer-container .ex-pin-badge:hover,
+.explorer-container .ex-pin-badge:focus-visible {
+  background: var(--ex-bg-hover);
+}
+
+.explorer-container .ex-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.explorer-container .ex-button-group {
+  align-items: center;
+  display: flex;
+}
+
+.explorer-container .ex-button-group[data-variant="raised"] {
+  background: var(--ex-glass-bg);
+  background-image: var(--ex-glass-image);
+  border: var(--ex-glass-border);
+  border-radius: var(--ex-radius-pill);
+  box-shadow: var(--ex-glass-shadow);
+  min-height: var(--ex-control-size);
+  padding-inline: 3px;
+  position: relative;
+  will-change: transform;
+  transition: transform var(--ex-hover-transition, 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94));
+}
+
+.explorer-container .ex-button-group[data-variant="raised"]:hover,
+.explorer-container .ex-button-group[data-variant="raised"]:focus-within {
+  transform: scale(var(--ex-hover-scale, 1.05));
+  z-index: 10;
+}
+
+.explorer-container .ex-button-group[data-variant="raised"]::after {
+  border-radius: inherit;
+  box-shadow:
+    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.06);
+  content: "";
+  inset: -1px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.theme-light:not(.theme-dark)
+  .explorer-container
+  .ex-button-group[data-variant="raised"],
+.theme-light:not(.theme-dark)
+  .explorer-container
+  .ex-button[data-variant="raised"] {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: var(--explorer-raised-shadow-sm, var(--raised-shadow));
+}
+
+.is-mobile:not(.theme-dark)
+  .explorer-container
+  .ex-button-group[data-variant="raised"],
+.is-mobile:not(.theme-dark)
+  .explorer-container
+  .ex-button[data-variant="raised"] {
+  background: var(--raised-background);
+  -webkit-backdrop-filter: var(--raised-blur);
+  box-shadow: var(--ex-glass-shadow-sm, var(--raised-shadow));
+  backdrop-filter: var(--raised-blur);
+  border: var(--raised-mask-border-width) solid transparent;
+  background-clip: padding-box;
+}
+
+.explorer-container .ex-button-group[data-gap="none"] {
+  gap: 0;
+}
+
+.explorer-container .ex-button-group[data-gap="sm"] {
+  gap: var(--ex-space-2);
+}
+
+.explorer-container .ex-button-group[data-variant="raised"][data-gap="sm"] {
+  gap: 2px;
+}
+
+.explorer-container .ex-button-group[data-gap="md"] {
+  gap: var(--ex-space-3);
+}
+
+.explorer-container .ex-button-group[data-gap="auto"] {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.explorer-container .ex-pin-badge {
+  block-size: 1.5em;
+  color: var(--color-red);
+  inline-size: 1.5em;
+  opacity: 0.7;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.explorer-container .ex-pin-badge:hover,
+.explorer-container .ex-pin-badge:focus-visible {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.explorer-container .ex-file-pin--card:not([data-active="true"]) {
+  visibility: hidden;
+}
+
+.explorer-container .ex-file-pin--row:not([data-active="true"]) {
+  display: none;
+}
+
+.explorer-container .ex-button-group .ex-button:hover,
+.explorer-container .ex-button-group .ex-button:focus-visible {
+  background: transparent;
+}
