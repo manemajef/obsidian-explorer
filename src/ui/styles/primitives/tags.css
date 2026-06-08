@@ -1,8 +1,8 @@
 .tags-container {
-  --explorer-tags-min-height: calc(
+  /* --explorer-tags-min-height: calc(
     var(--tag-size, 1em) + var(--tag-padding-y, 0.2em) +
       var(--tag-padding-y, 0.2em) + 3px
-  );
+  ); */
   --explorer-tags-gap: var(--explorer-space-2);
 
   background: transparent;
@@ -13,7 +13,7 @@
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-block: 2px;
+  /* padding-block: 2px; */
 }
 
 .tags-container[data-tags-size="xs"] {
