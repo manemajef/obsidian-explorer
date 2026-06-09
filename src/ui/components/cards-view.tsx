@@ -14,6 +14,7 @@ import {
 import { NoteFolderDate, NotePreview } from "./ui/note-metadata";
 import { cn } from "./ui/action";
 import { NoteExtensionBadge, NoteTags, NoteTitle } from "./note-parts";
+import { Platform } from "obsidian";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -22,14 +23,17 @@ export function CardsView(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { model, files, actions, contextMenu } = props;
-  const compact = model.settings.compactCards;
+
+  let compact = model.settings.compactCards;
+  if (Platform.isMobile && model.pluginSettings.alwaysUseModernListInMobile)
+    compact = false;
 
   return (
     <div className="explorer-cards-view">
       <div
         className={cn(
           "explorer-cards-grid",
-          model.settings.compactCards && "explorer-cards-grid--compact",
+          compact && "explorer-cards-grid--compact",
         )}
       >
         {files.map((file) => {

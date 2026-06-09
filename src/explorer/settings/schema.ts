@@ -154,7 +154,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
-      visibleWhen: { key: "view", value: "cards" },
+      visibleWhen: { key: "view", value: "cards", platform: "desktop" },
     },
   }),
   // compact: booleanField({
@@ -477,9 +477,9 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
   alwaysUseModernListInMobile: booleanField({
-    label: "Use modern list style on mobile",
+    label: "Fit view settings to screen on Mobile",
     description:
-      "Use the modern list style on mobile, even when a block is set to Markdown or Plain.",
+      "Always use modern list style and none compact cards on small screen, turn off to use desktop behavioru on mobile",
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
