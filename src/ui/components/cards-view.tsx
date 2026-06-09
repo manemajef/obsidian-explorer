@@ -121,7 +121,7 @@ export function CardsView(props: {
                   maxChar={compact ? 120 : 200}
                 />
               </div>
-              {showTags && (
+              {showTags && !Platform.isMobile && (
                 <>
                   <Spring minWidth={0} />
                   <NoteTags
@@ -135,10 +135,33 @@ export function CardsView(props: {
               )}
               <>
                 <Spring />
-
-                <div className="explorer-card-metadata-wrapper">
-                  <NoteFolderDate file={file} model={model} actions={actions} />
-                </div>
+                {Platform.isMobile && !compact ? (
+                  <Group>
+                    {" "}
+                    <NoteFolderDate
+                      file={file}
+                      model={model}
+                      actions={actions}
+                    />
+                    {/* <Spring /> */}
+                    <Gap />
+                    <NoteTags
+                      file={file}
+                      model={model}
+                      className="explorer-card-tags-wrapper mobile-tags-card-margin"
+                      overflow="scroll"
+                      size={compact ? "sm" : "md"}
+                    />
+                  </Group>
+                ) : (
+                  <div className="explorer-card-metadata-wrapper">
+                    <NoteFolderDate
+                      file={file}
+                      model={model}
+                      actions={actions}
+                    />
+                  </div>
+                )}
               </>
             </Stack>
           );
