@@ -171,7 +171,9 @@ export class VirtualFolderNoteView extends ItemView {
     //   text: "Save folder note",
     // });
     const explorerContainer = section.createDiv();
-
+    const safetyMarginBottom = section.createDiv({
+      cls: "virtual-folder-margin-bottom",
+    });
     this.cleanupExplorer = await mountExplorer({
       app: this.app,
       container: explorerContainer,
