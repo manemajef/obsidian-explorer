@@ -30,11 +30,16 @@
 
 .explorer-container .explorer-folders-grid {
   --explorer-folder-card-shadow: var(--explorer-shadow-glass-sm);
+
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass);
 }
 
+.theme-light.is-mobile .explorer-container .explorer-folders-grid {
+  --explorer-folder-card-shadow: var(--explorer-raised-shadow-sm);
+}
 .theme-dark .explorer-container .explorer-folders-grid {
   --explorer-folder-card-shadow-hover: var(--explorer-shadow-glass-hover);
+  --explorer-folder-card-shadow: var(--explorer-shadow-glass-sm);
 }
 
 .is-mobile .explorer-folders-grid {
