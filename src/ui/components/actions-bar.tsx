@@ -183,16 +183,15 @@ export function ActionsBar(props: {
         id="explorer-actions"
         className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
+        {showParentNavigation ? (
+          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
+        ) : (
+          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
+        )}
+        <ActionSpace minWidth=".8em" />
         <ActionGroup>
           <MobileEdgeSpace />
-          {showParentNavigation ? (
-            <ActionGroupItem
-              onClick={() => onGoToParent(false)}
-              icon="undo-2"
-            />
-          ) : (
-            <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-          )}
+
           {showParentNavigation && (
             <>
               <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
@@ -209,11 +208,13 @@ export function ActionsBar(props: {
               <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
             </>
           )}
+          <MobileSpace />
+          <ActionGroupItem onClick={onSearchToggle} icon="search" />
           <MobileEdgeSpace />
         </ActionGroup>
-        <ActionSpace minWidth=".8em" />
+        {/* <ActionSpace minWidth=".8em" />
 
-        <StandaloneAction onClick={onSearchToggle} icon="search" />
+        <StandaloneAction onClick={onSearchToggle} icon="search" /> */}
       </div>
     );
   if (isUseNewLayout)
