@@ -100,7 +100,8 @@ export function ListView(props: ListViewProps): React.JSX.Element {
 
               {file.extensionLabel && (
                 <>
-                  <Bar.Spring />
+                  {/* <Bar.Spring /> */}
+                  <Gap size={1} />
                   {file.isFolderNote ? (
                     <Badge
                       variant="ext-filled"
