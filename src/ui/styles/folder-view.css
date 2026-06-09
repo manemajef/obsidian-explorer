@@ -57,6 +57,26 @@
 .theme-dark.is-mobile .explorer-folders-grid {
   --explorer-folder-card-background: var(--raised-background);
 }
+.theme-dark:not(.is-mobile) .explorer-folder-gird {
+  --explorer-card-shadow: var(--raised-shadow);
+}
+
+.theme-dark:not(.is-mobile) .explorer-folders-grid {
+  --explorer-folder-card-background: color-mix(
+    in srgb,
+    var(--interactive-normal) 50%,
+    transparent
+  );
+}
+/* .theme-dark .explorer-folder-grid {
+  --explorer-card-shadow: var(--raised-shadow);
+  --explorer-folder-card-background: color-mix(
+    in srgb,
+    var(--interactive-normal),
+    70%,
+    transparent
+  );
+} */
 
 .explorer-folders-grid::after {
   content: "";
@@ -115,6 +135,9 @@
   min-width: 0;
   text-align: center;
 }
+/* .theme-dark:not(.is-mobile) .explorer-folder-card {
+  background: var(--raised-background) !important;
+} */
 
 .explorer-folder-card.is-dragging {
   opacity: 0.5;
