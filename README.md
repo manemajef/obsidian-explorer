@@ -8,7 +8,7 @@ configurable display options.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
-![](/assets/main.jpg)
+![alt text](.//assets/explorer-white.png)
 
 ## Features
 
@@ -63,7 +63,25 @@ folder note.
 
 ## Screenshots
 
-### Cards
+### Multiple View options
+
+![alt text](./assets/explorer-white-views.png)
+
+### Costumize and make it feel yours
+
+![alt text](./assets/japan-white.png)
+
+### Great Mobile Support
+
+![alt text](./assets/mobile-themes.png)
+
+### Adapts to every theme
+
+![alt text](./assets/features-mix.png)
+
+<!-- ### Cards
+### Folder notes can become dashboards
+
 
 ![](/assets/card-view.jpg)
 
@@ -77,7 +95,7 @@ folder note.
 
 ### Dark Mode
 
-![](/assets/dark-mode.jpg)
+![](/assets/dark-mode.jpg) -->
 
 ## Navigation
 

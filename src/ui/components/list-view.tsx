@@ -86,7 +86,7 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                   );
                 }}
               />
-              {settings.showTags && file.tags.length > 0 && (
+              {settings.showTags && file.tags.length > 0 && false && (
                 <>
                   <span className="list-tags-separator" />
                   <TagList

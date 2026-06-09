@@ -2,7 +2,7 @@
 
 .explorer-list-container {
   --explorer-list-font-size: 0.9em;
-  --explorer-list-item-padding: 0.4em var(--explorer-space-1);
+  --explorer-list-item-padding: var(--explorer-space-1);
 
   border-radius: var(--explorer-radius-md);
   margin-top: 0.5em;

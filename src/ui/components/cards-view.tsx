@@ -121,7 +121,7 @@ export function CardsView(props: {
                   maxChar={compact ? 120 : 200}
                 />
               </div>
-              {showTags && !Platform.isMobile && (
+              {showTags && (
                 <>
                   <Spring minWidth={0} />
                   <NoteTags
@@ -135,7 +135,7 @@ export function CardsView(props: {
               )}
               <>
                 <Spring />
-                {Platform.isMobile && !compact ? (
+                {Platform.isMobile && !compact && false ? (
                   <Group>
                     {" "}
                     <NoteFolderDate
