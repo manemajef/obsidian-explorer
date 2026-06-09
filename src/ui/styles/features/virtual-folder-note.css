@@ -5,6 +5,11 @@
   padding: var(--file-margins);
 }
 
+.virtual-folder-margin-bottom {
+  /* margin: var(--file-margins); */
+  margin-top: 8em;
+}
+
 .is-mobile .explorer-virtual-folder-note {
   padding-top: 0;
 }
