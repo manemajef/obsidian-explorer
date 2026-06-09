@@ -73,11 +73,13 @@ folder note.
 
 ### Great Mobile Support
 
-![alt text](./assets/mobile-themes.png)
 
-### Adapts to every theme
+
+### Adapts to Every Theme, and Every Device
 
 ![alt text](./assets/features-mix.png)
+
+![alt text](./assets/mobile-themes.png)
 
 <!-- ### Cards
 ### Folder notes can become dashboards
