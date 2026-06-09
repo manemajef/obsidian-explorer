@@ -56,8 +56,10 @@ async function removeFolderNoteFileWithOverrides(
   const confirmed = await confirmRemoval(app, file.basename);
   if (!confirmed) return;
 
+  await app.fileManager.promptForDeletion(file);
+  if (app.vault.getAbstractFileByPath(file.path)) return;
+
   store.set(folder.path, overrides);
-  await app.fileManager.trashFile(file);
   await openVirtualFolderNote(app, folder);
 }
 

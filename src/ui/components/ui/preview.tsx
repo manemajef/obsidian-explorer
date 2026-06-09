@@ -10,16 +10,21 @@ type NotePreviewState = {
 
 export function useNotePreview(
   file: ExplorerFileNode,
-  { maxChar }: { maxChar?: number } = {},
+  { maxChar, enabled = true }: { maxChar?: number; enabled?: boolean } = {},
 ): NotePreviewState {
   const effectiveMaxChar = maxChar ?? 100;
   const [state, setState] = useState<NotePreviewState>({
-    isLoading: true,
+    isLoading: enabled,
     preview: "",
     hasPreview: false,
   });
 
   useEffect(() => {
+    if (!enabled) {
+      setState({ isLoading: false, preview: "", hasPreview: false });
+      return;
+    }
+
     let cancelled = false;
     setState({ isLoading: true, preview: "", hasPreview: false });
 
@@ -37,7 +42,7 @@ export function useNotePreview(
     return () => {
       cancelled = true;
     };
-  }, [file, effectiveMaxChar]);
+  }, [file, effectiveMaxChar, enabled]);
 
   return state;
 }

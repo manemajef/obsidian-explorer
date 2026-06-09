@@ -7,14 +7,12 @@ import { InternalLink } from "./shared";
 import { Badge } from "./ui/badge";
 import { Gap, Group, Spacer, Stack } from "./ui/layout";
 import { Pin } from "./ui/pin";
-import Bar from "./ui/bar";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import {
   isInteractiveTouchTarget,
   showFileContextMenu,
   type ContextMenuConfig,
 } from "../context-menu";
-import { TagList } from "./ui/tags";
 import { NoteDatePreview, NoteFolder } from "./ui/note-metadata";
 import { NoteExtensionBadge, NoteTags, NoteTitle } from "./note-parts";
 type ListViewProps = {
@@ -86,18 +84,6 @@ export function ListView(props: ListViewProps): React.JSX.Element {
                   );
                 }}
               />
-              {settings.showTags && file.tags.length > 0 && false && (
-                <>
-                  <span className="list-tags-separator" />
-                  <TagList
-                    tags={file.tags}
-                    className="explorer-list-tags"
-                    overflow="hidden"
-                    size="xs"
-                  />
-                </>
-              )}
-
               {file.extensionLabel && (
                 <>
                   {/* <Bar.Spring /> */}
@@ -200,6 +186,7 @@ const ModernListView = (props: ListViewProps): React.JSX.Element => {
                       file={file}
                       model={props.model}
                       maxChar={layout === "mobile" ? 120 : 90}
+                      showPreview={props.model.settings.showPreviews}
                     />
                   </div>
                   {/* </div> */}

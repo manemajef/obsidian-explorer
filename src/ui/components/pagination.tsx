@@ -70,6 +70,7 @@ export function PaginationModern(
         elevation="sm"
         interactive={canLoadMore}
         radius="pill"
+        data-disabled={!canLoadMore || undefined}
       >
         <button
           type="button"

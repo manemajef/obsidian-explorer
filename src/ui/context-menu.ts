@@ -2,6 +2,7 @@ import type { MouseEvent as ReactMouseEvent } from "react";
 import { Menu, Platform, TAbstractFile } from "obsidian";
 import { ExplorerActions } from "../explorer/actions";
 import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/lib/nodes";
+import { isElement } from "../utils";
 
 const HAPTIC_DURATION_MS = 10;
 
@@ -124,7 +125,7 @@ function shouldDeferToNestedLink(event: ReactMouseEvent<HTMLElement>): boolean {
 
 export function isInteractiveTouchTarget(target: EventTarget): boolean {
   return (
-    target instanceof Element &&
+    isElement(target) &&
     Boolean(
       target.closest(
         "a, button, input, textarea, select, [role='button'], .pin, .explorer-badge, .value-list-item",
@@ -135,7 +136,7 @@ export function isInteractiveTouchTarget(target: EventTarget): boolean {
 
 function triggerHapticFeedback(): void {
   if (!Platform.isMobile) return;
-  globalThis.navigator.vibrate?.(HAPTIC_DURATION_MS);
+  window.navigator.vibrate?.(HAPTIC_DURATION_MS);
 }
 
 function beginMenu(

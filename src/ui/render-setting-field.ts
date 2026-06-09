@@ -6,6 +6,7 @@ import {
   TFile,
 } from "obsidian";
 import {
+  BLOCK_SETTING_GROUPS,
   BLOCK_SETTINGS_SCHEMA,
   BlockSettingKey,
   BlockSettings,
@@ -13,6 +14,7 @@ import {
   getEnumOptionLabel,
   isPaginationEnabled,
 } from "../explorer/settings";
+import { getAllVaultFolders } from "../utils";
 
 const PAGE_SIZE_PRESETS = [6, 12, 18, 24, 30, 36, 48, 60] as const;
 
@@ -39,6 +41,20 @@ type FolderPickerControlOptions = {
   normalizeInput?: (path: string) => string;
 };
 
+type RenderSettingFieldsOptions = {
+  container: HTMLElement;
+  keys: BlockSettingKey[];
+  settings: BlockSettings;
+  surface: SettingsSurface;
+  grouped?: boolean;
+  onChange: <K extends BlockSettingKey>(
+    key: K,
+    value: BlockSettings[K],
+  ) => void;
+  fieldRefs: Map<BlockSettingKey, Setting>;
+  context?: SettingFieldContext;
+};
+
 class FolderSuggest extends AbstractInputSuggest<string> {
   constructor(
     app: App,
@@ -57,6 +73,70 @@ class FolderSuggest extends AbstractInputSuggest<string> {
 
   renderSuggestion(folder: string, el: HTMLElement): void {
     el.setText(folder);
+  }
+}
+
+export function renderSettingFields({
+  container,
+  keys,
+  settings,
+  surface,
+  grouped = true,
+  onChange,
+  fieldRefs,
+  context,
+}: RenderSettingFieldsOptions): void {
+  if (!grouped) {
+    for (const key of keys) {
+      renderSettingField(
+        container,
+        key,
+        settings,
+        surface,
+        onChange,
+        fieldRefs,
+        context,
+      );
+    }
+    return;
+  }
+
+  const remaining = new Set(keys);
+
+  for (const group of BLOCK_SETTING_GROUPS) {
+    const groupKeys = keys.filter((key) => {
+      return (
+        remaining.has(key) && BLOCK_SETTINGS_SCHEMA[key].ui.group === group.id
+      );
+    });
+    if (groupKeys.length === 0) continue;
+
+    new Setting(container).setName(group.title).setHeading();
+    for (const key of groupKeys) {
+      remaining.delete(key);
+      renderSettingField(
+        container,
+        key,
+        settings,
+        surface,
+        onChange,
+        fieldRefs,
+        context,
+      );
+    }
+  }
+
+  for (const key of keys) {
+    if (!remaining.has(key)) continue;
+    renderSettingField(
+      container,
+      key,
+      settings,
+      surface,
+      onChange,
+      fieldRefs,
+      context,
+    );
   }
 }
 
@@ -286,8 +366,7 @@ function getDescendantFolderPaths(context: SettingFieldContext): string[] {
 
   const parentPath = file.parent.path;
   const prefix = file.parent.isRoot() ? "" : `${parentPath}/`;
-  return context.app.vault
-    .getAllFolders()
+  return getAllVaultFolders(context.app.vault.getRoot())
     .map((folder) => folder.path)
     .filter(
       (path) => path !== parentPath && path !== "/" && path.startsWith(prefix),

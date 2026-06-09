@@ -10,30 +10,15 @@ import {
   createDefaultPluginSettings,
   getPluginSettingKeysForSection,
   getSettingKeysForSurface,
-  getSettingSection,
   isBlockSettingVisible,
   isPluginSettingVisible,
 } from "../explorer/settings";
 import {
   renderFolderPickerControl,
-  renderSettingField,
+  renderSettingFields,
 } from "./render-setting-field";
 import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
-
-function compareBySection(a: BlockSettingKey, b: BlockSettingKey): number {
-  const aSection = getSettingSection(a);
-  const bSection = getSettingSection(b);
-  const sectionDiff =
-    SETTING_SECTIONS.findIndex((s) => s.id === aSection) -
-    SETTING_SECTIONS.findIndex((s) => s.id === bSection);
-
-  if (sectionDiff !== 0) {
-    return sectionDiff;
-  }
-
-  const orderedKeys = getSettingKeysForSurface("plugin");
-  return orderedKeys.indexOf(a) - orderedKeys.indexOf(b);
-}
+import { getAllVaultFolders } from "../utils";
 
 // Global plugin defaults UI (Obsidian settings tab).
 export class ExplorerSettingsTab extends PluginSettingTab {
@@ -45,13 +30,17 @@ export class ExplorerSettingsTab extends PluginSettingTab {
   }
 
   display(): void {
+    this.render();
+  }
+
+  private render(): void {
     const { containerEl } = this;
     containerEl.empty();
 
     const settings = this.plugin.settings.defaultBlockSettings;
-    const defaultBlockKeys = getSettingKeysForSurface("plugin")
-      .filter((key) => isBlockSettingVisible(key, settings))
-      .sort((a, b) => compareBySection(a, b));
+    const defaultBlockKeys = getSettingKeysForSurface("plugin").filter((key) =>
+      isBlockSettingVisible(key, settings),
+    );
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
     for (const section of SETTING_SECTIONS) {
@@ -85,18 +74,17 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         });
       }
 
-      for (const key of defaultBlockKeys) {
-        renderSettingField(
-          containerEl,
-          key,
-          settings,
-          "plugin",
-          (k, v) => {
-            void this.updateSetting(k, v);
-          },
-          fieldRefs,
-        );
-      }
+      renderSettingFields({
+        container: containerEl,
+        keys: defaultBlockKeys,
+        settings,
+        surface: "plugin",
+        grouped: false,
+        onChange: (k, v) => {
+          void this.updateSetting(k, v);
+        },
+        fieldRefs,
+      });
     }
 
     new Setting(containerEl).addButton((button) => {
@@ -104,7 +92,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         this.plugin.settings = createDefaultPluginSettings();
         await this.plugin.saveSettings();
         this.plugin.refreshExplorerBlocks();
-        this.display();
+        this.render();
       });
     });
   }
@@ -117,7 +105,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     await this.plugin.saveSettings();
     this.plugin.refreshExplorerBlocks();
     if (key === "view") {
-      this.display();
+      this.render();
     }
   }
 
@@ -191,8 +179,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     const field = PLUGIN_SETTINGS_SCHEMA[key];
     if (field.kind !== "folder-picker") return;
 
-    const availableFolders = this.app.vault
-      .getAllFolders()
+    const availableFolders = getAllVaultFolders(this.app.vault.getRoot())
       .map((folder) => folder.path)
       .filter((path) => path !== "/")
       .sort((a, b) => a.localeCompare(b));
@@ -225,7 +212,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     this.plugin.refreshExplorerBlocks();
 
     if (key === "useHomePage" || key === "hideFolderNotesInFileExplorer") {
-      this.display();
+      this.render();
     }
   }
 }

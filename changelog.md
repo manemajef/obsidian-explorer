@@ -1,50 +1,52 @@
 # Explorer changelog
 
-## newversion (upcoming) (1.4.0)
+## 1.4.0 (upcoming)
 
-### Preview
+### Note previews
 
-- [x] display preview in cards and modern list view
-- [ ] option to disable preview
+- Cards and modern list rows can now show short previews from the note body.
+- Added `showPreviews` as a default block setting and a per-block override, so previews can be turned off for individual Explorer blocks.
+- Preview extraction ignores frontmatter, code fences, callouts, comments, and other structural Markdown before selecting readable content.
 
-### Virtual (file-free) folder notes
+### Virtual folder notes
 
-- Folder notes can now exist as virtual notes without creating a physical `.md` file on disk. This keeps your vault clean while still allowing you to customize Explorer settings per folder.
-- Added a button in the folder note block settings to easily toggle between a file-free folder note ("Remove file") and a physical Markdown file ("Add file").
+- Folder notes can now be virtual, with no physical `.md` file on disk.
+- Virtual folder-note settings are stored in `folder-data.json`, keyed by folder path.
+- Folder note settings now include `Add file` and `Remove file` actions for converting between virtual folder notes and physical Markdown folder notes.
+- `Save folder note as Markdown` converts the active virtual folder note into a physical Markdown file.
 
-### Smart folder-note creation
+### Folder-note creation
 
-- Choose when/how folder notes are created via the "Create missing folder notes when" setting:
-  - `Clicking missing links and edits` (smart mode)
-  - `Always create`
-  - `Edits only` (manual mode)
-- Control whether creating folders from Explorer automatically creates a physical Markdown file or keeps them file-free by default via the `Create folder note on new folder` toggle.
+- New folders created from Explorer are file-free by default.
+- Added `Create Markdown folder notes for new folders` for users who want new folders to immediately get `Folder/Folder.md`.
+- `Create missing folder notes when` now supports `Always create`, `Missing links and edits`, and `Edits only`; new installs default to `Edits only`.
+- Existing users keep their previous missing-folder-note behavior during migration.
 
-### Seamless renaming & syncing
+### Navigation and sync
 
-- Keep folders and their matching folder notes synchronized automatically when either side is renamed.
-- Moving or deleting folders from Explorer or Obsidian's sidebar correctly tracks, moves, or cleans up the virtual folder note configurations.
+- Folder data follows folder renames and is removed when a folder is deleted.
+- Creating a physical folder note removes the matching virtual-folder data row to avoid duplicate configuration sources.
+- Sidebar folder clicks can open physical or virtual folder views while keeping collapse-arrow and whitespace behavior unchanged.
+- Folder and folder-note rename synchronization continues to keep matching physical notes aligned when enabled.
 
-### Sidebar improvements
+### Layout and settings
 
-- Optionally hide Markdown folder-note files from Obsidian's sidebar file explorer to reduce clutter.
-- Click folder names in the sidebar to open either physical or virtual folder views.
-
-### Layout & styling refinements
-
-- Refined CSS and layouts across card views, list views, and the action bar for a cleaner, more consistent visual style.
+- Refined card, modern list, pagination, folder, and action-bar styling.
+- Reworked UI primitives and metadata components so list and card layouts share more of the same rendering path.
+- Added compact card and compact action-bar controls to the block settings schema.
+- Cleaned setting labels and descriptions for clearer Obsidian settings UI text.
 
 ## 1.3.1(02-06-2026)
 
-### Hompage can can have an inbox for new notes
+### Homepage notes can use an inbox
 
-- newly created notes from Hompage would be created at whatever inbox location you decide. default is `./*` meaning root.
+- Newly created notes from the homepage are created in the configured inbox location. The default is `./*`, meaning the vault root.
 
 ### Bug fixes
 
-- shading issues in dark mode in mobile have been fixed
-- tags have been fixed and no longer act wierd when they feel like
-- action icon on mobile now match obsidian by size width and padding to look consistent.
+- Fixed dark-mode shading issues on mobile.
+- Fixed inconsistent tag rendering.
+- Mobile action icons now match Obsidian sizing and padding more closely.
 
 ## 1.3.0 (01-06-2026)
 

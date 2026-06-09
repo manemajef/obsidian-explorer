@@ -37,7 +37,7 @@ export function registerExplorerReadingMode(
       const hasExplorerBlock = content.includes("```explorer");
 
       if (!getSettings().forceReadingMode && hasExplorerBlock) {
-        setTimeout(() => {
+        window.setTimeout(() => {
           if (view.editor) {
             view.editor.blur();
           }

@@ -9,7 +9,6 @@ import {
   PluginGlobalSettings,
   PluginSettingKey,
   PluginSettings,
-  SETTING_SECTIONS,
   SettingsSection,
   SettingsSurface,
 } from "./schema";
@@ -95,19 +94,7 @@ export function getSettingKeysForSurface(
 ): BlockSettingKey[] {
   return BLOCK_SETTING_KEYS.filter((key) =>
     BLOCK_SETTINGS_SCHEMA[key].ui.surfaces.includes(surface),
-  ).sort((a, b) => {
-    const sectionDiff =
-      SETTING_SECTIONS.findIndex(
-        (s) => s.id === BLOCK_SETTINGS_SCHEMA[a].ui.section,
-      ) -
-      SETTING_SECTIONS.findIndex(
-        (s) => s.id === BLOCK_SETTINGS_SCHEMA[b].ui.section,
-      );
-    return (
-      sectionDiff ||
-      BLOCK_SETTING_KEYS.indexOf(a) - BLOCK_SETTING_KEYS.indexOf(b)
-    );
-  });
+  );
 }
 
 export function getSettingSection(key: BlockSettingKey): SettingsSection {

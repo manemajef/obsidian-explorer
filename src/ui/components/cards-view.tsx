@@ -111,16 +111,18 @@ export function CardsView(props: {
                 </Group>
               </Group>
               <Spring />
-              <div style={{ maxWidth: compact ? "none" : "90%" }}>
-                <NotePreview
-                  file={file}
-                  className={cn(
-                    "explorer-card-preview",
-                    compact && "explorer-card-preview--compact",
-                  )}
-                  maxChar={compact ? 120 : 200}
-                />
-              </div>
+              {model.settings.showPreviews && (
+                <div style={{ maxWidth: compact ? "none" : "90%" }}>
+                  <NotePreview
+                    file={file}
+                    className={cn(
+                      "explorer-card-preview",
+                      compact && "explorer-card-preview--compact",
+                    )}
+                    maxChar={compact ? 120 : 200}
+                  />
+                </div>
+              )}
               {showTags && (
                 <>
                   <Spring minWidth={0} />
@@ -135,33 +137,9 @@ export function CardsView(props: {
               )}
               <>
                 <Spring />
-                {Platform.isMobile && !compact && false ? (
-                  <Group>
-                    {" "}
-                    <NoteFolderDate
-                      file={file}
-                      model={model}
-                      actions={actions}
-                    />
-                    {/* <Spring /> */}
-                    <Gap />
-                    <NoteTags
-                      file={file}
-                      model={model}
-                      className="explorer-card-tags-wrapper mobile-tags-card-margin"
-                      overflow="scroll"
-                      size={compact ? "sm" : "md"}
-                    />
-                  </Group>
-                ) : (
-                  <div className="explorer-card-metadata-wrapper">
-                    <NoteFolderDate
-                      file={file}
-                      model={model}
-                      actions={actions}
-                    />
-                  </div>
-                )}
+                <div className="explorer-card-metadata-wrapper">
+                  <NoteFolderDate file={file} model={model} actions={actions} />
+                </div>
               </>
             </Stack>
           );

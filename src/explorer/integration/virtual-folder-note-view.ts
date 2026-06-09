@@ -21,6 +21,7 @@ import {
 import { mountExplorer } from "../runtime";
 import { formatExplorerBlock } from "../vault/block-update";
 import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
+import { isHTMLElement } from "../../utils";
 
 export { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
 
@@ -171,7 +172,7 @@ export class VirtualFolderNoteView extends ItemView {
     //   text: "Save folder note",
     // });
     const explorerContainer = section.createDiv();
-    const safetyMarginBottom = section.createDiv({
+    section.createDiv({
       cls: "virtual-folder-margin-bottom",
     });
     this.cleanupExplorer = await mountExplorer({
@@ -251,7 +252,7 @@ export class VirtualFolderNoteView extends ItemView {
       this.containerEl
         .closest(".workspace-leaf-content")
         ?.querySelector(".view-header-title-container");
-    if (!(titleContainer instanceof HTMLElement)) return;
+    if (!isHTMLElement(titleContainer)) return;
 
     titleContainer.empty();
     titleContainer.addClass("explorer-virtual-title-container");

@@ -184,10 +184,8 @@
   --explorer-link-color: var(--explorer-note-row-title-color);
   --explorer-link-hover-color: var(--explorer-note-row-title-color);
 
-  font-size: var(--font-text-size);
   font-size: var(--explorer-link-font-size);
   font-weight: var(--explorer-link-font-weight);
-  line-height: var(--explorer-link-line-height);
   line-height: 1.35;
   opacity: var(--explorer-modern-list-opacity);
   word-break: break-word;

@@ -48,8 +48,7 @@
     border-color var(--explorer-hover-transition),
     opacity var(--explorer-hover-transition),
     transform var(--explorer-hover-transition),
-    box-shadow var(--explorer-hover-transition),
-    text-decoration-color var(--explorer-hover-transition);
+    box-shadow var(--explorer-hover-transition);
 }
 
 @media (prefers-reduced-motion: reduce) {

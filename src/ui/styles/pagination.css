@@ -103,7 +103,7 @@
   border-radius: inherit;
   box-shadow: none;
   cursor: pointer;
-  font: 1em;
+  font-size: 1em;
 }
 
 .is-mobile .explorer-container .paging-load-more-button {
@@ -122,7 +122,7 @@
   box-shadow: none;
 }
 
-.explorer-container .paging-load-more:has(.paging-load-more-button:disabled) {
+.explorer-container .paging-load-more[data-disabled="true"] {
   background: var(--paging-load-more-bg);
 }
 

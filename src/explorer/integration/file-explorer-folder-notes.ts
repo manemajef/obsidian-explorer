@@ -2,6 +2,7 @@ import { App, Keymap, Plugin, TFolder } from "obsidian";
 import { getFolderNoteForFolder, isFolderNote } from "../lib/folder-note";
 import type { PluginSettings } from "../settings";
 import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
+import { isHTMLElement } from "../../utils";
 
 type FileExplorerFolderNoteBehaviorOptions = {
   app: App;
@@ -101,7 +102,7 @@ function markAllNativeFolderNoteItems(app: App, doc: Document): void {
   for (const item of Array.from(
     doc.querySelectorAll(`.${FOLDER_NOTE_ITEM_CLASS}`),
   )) {
-    if (item instanceof HTMLElement && !current.has(item)) {
+    if (isHTMLElement(item) && !current.has(item)) {
       item.classList.remove(FOLDER_NOTE_ITEM_CLASS);
     }
   }
@@ -127,7 +128,7 @@ function markNativeFolderNotePath(
   for (const title of Array.from(
     doc.querySelectorAll(`[data-path="${CSS.escape(path)}"]`),
   )) {
-    if (title instanceof HTMLElement) {
+    if (isHTMLElement(title)) {
       marked.add(getFileExplorerItemElement(title));
     }
   }
@@ -140,7 +141,7 @@ function markNativeFolderNotePath(
 
 function getFileExplorerItemElement(el: HTMLElement): HTMLElement {
   const item = el.closest(".nav-file");
-  return item instanceof HTMLElement ? item : el;
+  return isHTMLElement(item) ? item : el;
 }
 
 function getFileExplorerItem(app: App, path: string): FileExplorerItem | null {
@@ -186,13 +187,13 @@ async function handleFileExplorerFolderClick(
 
 function getClickedFolder(app: App, evt: MouseEvent): TFolder | null {
   const target = evt.target;
-  if (!(target instanceof HTMLElement)) return null;
+  if (!isHTMLElement(target)) return null;
 
   const titleContent = target.closest(".nav-folder-title-content");
-  if (!(titleContent instanceof HTMLElement)) return null;
+  if (!isHTMLElement(titleContent)) return null;
 
   const title = titleContent.closest(".nav-folder-title");
-  if (!(title instanceof HTMLElement)) return null;
+  if (!isHTMLElement(title)) return null;
 
   const path = title.getAttribute("data-path");
   const folder = path ? app.vault.getAbstractFileByPath(path) : null;

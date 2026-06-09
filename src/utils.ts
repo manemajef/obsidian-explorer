@@ -1,4 +1,4 @@
-import { TFile } from "obsidian";
+import { TFile, TFolder } from "obsidian";
 
 export function isRtl(text?: string): boolean {
   let checkText = text || "";
@@ -24,4 +24,26 @@ export function diffDays(timestamp: number): string {
   if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
   if (days < 365) return `${Math.floor(days / 30)} months ago`;
   return `${Math.floor(days / 365)} years ago`;
+}
+
+export function getAllVaultFolders(root: TFolder): TFolder[] {
+  const folders: TFolder[] = [];
+
+  const visit = (folder: TFolder): void => {
+    folders.push(folder);
+    for (const child of folder.children) {
+      if (child instanceof TFolder) visit(child);
+    }
+  };
+
+  visit(root);
+  return folders;
+}
+
+export function isElement(value: unknown): value is Element {
+  return Boolean(value && (value as Node).instanceOf?.(Element));
+}
+
+export function isHTMLElement(value: unknown): value is HTMLElement {
+  return Boolean(value && (value as Node).instanceOf?.(HTMLElement));
 }

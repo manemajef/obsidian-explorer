@@ -2,7 +2,6 @@
   color: var(--explorer-link-color);
   font-weight: var(--explorer-link-weight, inherit);
   text-decoration: var(--explorer-link-decoration, none);
-  text-decoration-color: currentcolor;
 }
 
 .explorer-container a.internal-link.explorer-link:hover,

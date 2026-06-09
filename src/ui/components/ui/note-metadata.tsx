@@ -157,14 +157,19 @@ export function NoteDatePreview({
   model,
   className,
   maxChar,
+  showPreview = true,
 }: {
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
   maxChar?: number;
+  showPreview?: boolean;
 }): React.JSX.Element | null {
   const showDate = getNoteDate(file, model) != null;
-  const { preview, hasPreview } = useNotePreview(file, { maxChar });
+  const { preview, hasPreview } = useNotePreview(file, {
+    maxChar,
+    enabled: showPreview,
+  });
 
   if (!showDate && !hasPreview) return null;
 

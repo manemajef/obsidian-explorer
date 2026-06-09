@@ -5,7 +5,7 @@ import {
   getSettingKeysForSurface,
   isBlockSettingVisible,
 } from "../../explorer/settings";
-import { renderSettingField } from "../render-setting-field";
+import { renderSettingFields } from "../render-setting-field";
 
 export type FolderNoteConversionAction = {
   isFile: boolean;
@@ -45,24 +45,20 @@ export class ExplorerSettingsModal extends Modal {
     contentEl.empty();
     contentEl.addClass("explorer-settings-modal");
 
-    new Setting(contentEl).setName("Explorer settings").setHeading();
-
     const keys = getSettingKeysForSurface("block").filter((key) =>
       isBlockSettingVisible(key, this.settings),
     );
     const fieldRefs = new Map<BlockSettingKey, Setting>();
 
-    for (const key of keys) {
-      renderSettingField(
-        contentEl,
-        key,
-        this.settings,
-        "block",
-        (k, v) => this.updateSetting(k, v),
-        fieldRefs,
-        { app: this.app, sourcePath: this.sourcePath },
-      );
-    }
+    renderSettingFields({
+      container: contentEl,
+      keys,
+      settings: this.settings,
+      surface: "block",
+      onChange: (k, v) => this.updateSetting(k, v),
+      fieldRefs,
+      context: { app: this.app, sourcePath: this.sourcePath },
+    });
 
     this.renderConversion(contentEl);
 
@@ -92,7 +88,6 @@ export class ExplorerSettingsModal extends Modal {
             await this.conversion?.run();
             this.close();
           });
-        if (isFile) button.setWarning();
       });
   }
 

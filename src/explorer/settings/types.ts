@@ -1,6 +1,6 @@
 export type SettingsSurface = "plugin" | "block";
 
-import type { SettingsSection } from "./schema";
+import type { BlockSettingsGroup, SettingsSection } from "./schema";
 
 type SettingVisibility = {
   key?: string;
@@ -11,6 +11,7 @@ type SettingVisibility = {
 export type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
   section: SettingsSection;
+  group?: BlockSettingsGroup;
   visibleWhen?: SettingVisibility;
 };
 

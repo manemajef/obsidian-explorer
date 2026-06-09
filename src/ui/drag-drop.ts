@@ -1,6 +1,7 @@
 import type { DragEvent, HTMLAttributes } from "react";
 import { App, Platform, TAbstractFile, TFolder } from "obsidian";
 import { canMoveIntoFolder } from "../explorer/vault/move";
+import { isElement, isHTMLElement } from "../utils";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
 const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";
@@ -118,7 +119,7 @@ function clearDropTargets(document: Document): void {
 
 function setTitleDragImage<T extends HTMLElement>(event: DragEvent<T>): void {
   const title = event.currentTarget.querySelector(DRAG_IMAGE_SELECTOR);
-  if (!(title instanceof HTMLElement)) return;
+  if (!isHTMLElement(title)) return;
 
   const rect = title.getBoundingClientRect();
   event.dataTransfer.setDragImage(title, 0, event.clientY - rect.top);
@@ -126,7 +127,7 @@ function setTitleDragImage<T extends HTMLElement>(event: DragEvent<T>): void {
 
 function isControl(target: EventTarget): boolean {
   return (
-    target instanceof Element &&
+    isElement(target) &&
     Boolean(target.closest(".pin, .explorer-card-pin-slot"))
   );
 }
