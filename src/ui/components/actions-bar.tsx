@@ -223,14 +223,24 @@ export function ActionsBar(props: {
           <Bar.Item>
             <Group gap={2} className="explorer-actions-start">
               {showParentNavigation ? (
-                <StandaloneAction
-                  icon="undo-2"
-                  className="explorer-parent-action"
-                  {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
-                  onClick={() => {
-                    onGoToParent(false);
-                  }}
-                />
+                <>
+                  <StandaloneAction
+                    icon="undo-2"
+                    className="explorer-parent-action"
+                    {...folderDropProps(
+                      app,
+                      parentDropFolder,
+                      onMoveIntoFolder,
+                    )}
+                    onClick={() => {
+                      onGoToParent(false);
+                    }}
+                  />
+                  <StandaloneAction
+                    icon={settingsIcon}
+                    onClick={onOpenSettings}
+                  />
+                </>
               ) : (
                 <StandaloneAction
                   icon={settingsIcon}
@@ -245,12 +255,12 @@ export function ActionsBar(props: {
           <Bar.Item className="explorer-actions-end">
             <Group className="explorer-actions-controls">
               <ActionGroup>
-                {showParentNavigation && (
+                {/* {showParentNavigation && (
                   <ActionGroupItem
                     icon={settingsIcon}
                     onClick={onOpenSettings}
                   />
-                )}
+                )} */}
 
                 <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
                 <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
