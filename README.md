@@ -71,14 +71,13 @@ folder note.
 
 ![alt text](./assets/japan-white.png)
 
-### Great Mobile Support
+
 
 
 
 ### Adapts to Every Theme, and Every Device
 
 ![alt text](./assets/features-mix.png)
-
 ![alt text](./assets/mobile-themes.png)
 
 <!-- ### Cards
