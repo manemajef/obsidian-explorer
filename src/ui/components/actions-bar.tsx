@@ -237,10 +237,6 @@ export function ActionsBar(props: {
                       onGoToParent(false);
                     }}
                   />
-                  <StandaloneAction
-                    icon={settingsIcon}
-                    onClick={onOpenSettings}
-                  />
                 </>
               ) : (
                 <StandaloneAction
@@ -256,12 +252,12 @@ export function ActionsBar(props: {
           <Bar.Item className="explorer-actions-end">
             <Group className="explorer-actions-controls">
               <ActionGroup>
-                {/* {showParentNavigation && (
+                {showParentNavigation && (
                   <ActionGroupItem
                     icon={settingsIcon}
                     onClick={onOpenSettings}
                   />
-                )} */}
+                )}
 
                 <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
                 <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
