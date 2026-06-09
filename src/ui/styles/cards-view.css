@@ -163,7 +163,7 @@
 }
 
 .is-mobile .explorer-card .explorer-card-preview {
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
 
 :not(.is-mobile)
@@ -177,4 +177,8 @@
 .explorer-card .explorer-card-preview--compact {
   -webkit-line-clamp: 2;
   font-size: var(--font-ui-smaller);
+}
+
+.explorer-card-tags-wrapper {
+  margin-inline-start: -0.1em;
 }
