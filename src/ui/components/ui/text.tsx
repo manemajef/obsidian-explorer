@@ -1,31 +1,44 @@
-import React, { type HTMLAttributes, type ReactNode } from "react";
+import React, { type HTMLAttributes } from "react";
+import { cn } from "./cn";
 
-type SmallTone = "muted" | "faint" | "normal" | "accent";
+export type TextRole = "title" | "body" | "description" | "metadata" | "label";
+export type TextEmphasis =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "faint"
+  | "accent";
+export type TextWeight = "medium" | "bold";
+export type TextSize = "md";
 
-function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
+export interface TextProps
+  extends Omit<HTMLAttributes<HTMLElement>, "role"> {
+  as?: "span" | "div" | "p";
+  role?: TextRole;
+  emphasis?: TextEmphasis;
+  /** 15% knob: overrides the role weight. */
+  weight?: TextWeight;
+  /** 15% knob: bumps description text one step (large cards). */
+  size?: TextSize;
 }
 
-export interface SmallProps extends HTMLAttributes<HTMLElement> {
-  as?: "span" | "div";
-  children: ReactNode;
-  tone?: SmallTone;
-}
-
-/** Small print: smaller, lighter, tighter, muted by default. */
-export function Small({
+export function Text({
   as: Element = "span",
-  children,
+  role = "body",
+  emphasis,
+  weight,
+  size,
   className,
-  tone = "muted",
-  ...props
-}: SmallProps): React.JSX.Element {
+  ...rest
+}: TextProps): React.JSX.Element {
   return (
     <Element
-      className={cn("explorer-small", `explorer-small--${tone}`, className)}
-      {...props}
-    >
-      {children}
-    </Element>
+      className={cn("explorer-text", className)}
+      data-role={role}
+      data-emphasis={emphasis}
+      data-weight={weight}
+      data-size={size}
+      {...rest}
+    />
   );
 }

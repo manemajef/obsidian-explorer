@@ -1,0 +1,67 @@
+/* Tag + TagList — pill chips that scroll, clip, or wrap. */
+
+.explorer-tags {
+  --explorer-tags-gap: var(--explorer-space-2);
+
+  background: transparent;
+  border-radius: var(--tag-radius, var(--explorer-radius-pill));
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.explorer-tags[data-size="xs"] {
+  --explorer-tags-gap: var(--explorer-space-1);
+}
+
+.explorer-tags__row {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--explorer-tags-gap);
+  width: max-content;
+}
+
+.explorer-tags[data-overflow="hidden"] {
+  overflow: hidden;
+  width: max-content;
+  max-width: 100%;
+}
+
+.explorer-tags[data-overflow="wrap"] {
+  overflow: visible;
+}
+
+.explorer-tags[data-overflow="wrap"] .explorer-tags__row {
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.explorer-tag {
+  align-items: center;
+  border-radius: var(--tag-radius, var(--explorer-radius-pill));
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: var(--font-ui-small, 13px);
+}
+
+.explorer-tag[data-size="xs"] {
+  font-size: 10px;
+}
+
+.explorer-tag[data-size="sm"] {
+  font-size: var(--font-ui-smaller, 12px);
+}
+
+.explorer-container .explorer-tag > .explorer-tag__label.tag {
+  border-radius: inherit;
+  flex: 0 0 auto;
+  font-size: inherit;
+  line-height: 1.4;
+  overflow-wrap: normal;
+  padding: 0.1em 0.5em;
+  white-space: nowrap;
+  word-break: normal;
+}

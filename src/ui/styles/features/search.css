@@ -1,4 +1,5 @@
 /* ===== Search ===== */
+
 .explorer-search {
   position: relative;
   display: flex;
@@ -28,24 +29,25 @@
   justify-content: center;
 }
 
-.cancel-search-btn {
+.explorer-search__cancel {
   color: var(--color-red);
 }
 
-.cancel-search-btn:hover,
-.cancel-search-btn:focus-visible {
+.explorer-search__cancel:hover,
+.explorer-search__cancel:focus-visible {
   background-color: var(--background-modifier-hover);
   opacity: 1;
 }
 
-.is-mobile .explorer-actions-mobile-search .bar-item {
+/* Full-width takeover layout (mobile search mode). */
+.explorer-actions--search .explorer-search {
   flex: 1 1 auto;
   width: 90%;
 }
 
-.is-mobile .explorer-search,
-.is-mobile .explorer-search__input,
-.is-mobile .explorer-search__input input {
+.explorer-actions--search .explorer-search,
+.explorer-actions--search .explorer-search__input,
+.explorer-actions--search .explorer-search__input input {
   width: 100%;
   height: 52px;
 }

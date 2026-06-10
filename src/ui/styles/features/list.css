@@ -1,0 +1,141 @@
+/* ===== Modern list ===== */
+
+.explorer-modern-list[data-variant="desktop"] {
+  margin-top: var(--explorer-space-4);
+}
+
+.explorer-modern-list[data-variant="mobile"] {
+  padding-bottom: var(--explorer-space-2);
+  font-size: 0.95em;
+}
+
+.explorer-modern-list[data-variant="desktop"] .explorer-modern-list__shell {
+  padding: 0 var(--explorer-space-4);
+}
+
+.explorer-modern-list[data-variant="mobile"] .explorer-modern-list__shell {
+  padding: var(--explorer-space-1) var(--explorer-space-4);
+}
+
+.explorer-modern-list[data-variant="desktop"] .explorer-modern-list__row {
+  padding-top: var(--explorer-space-2);
+  padding-bottom: var(--explorer-space-1);
+}
+
+.explorer-modern-list[data-variant="mobile"] .explorer-modern-list__row {
+  padding-top: var(--explorer-space-1);
+  padding-bottom: var(--explorer-space-1);
+}
+
+.explorer-modern-list[data-variant="desktop"]
+  .explorer-modern-list__shell:first-child
+  .explorer-modern-list__row {
+  padding-top: var(--explorer-space-4);
+}
+
+.explorer-modern-list[data-variant="mobile"]
+  .explorer-modern-list__shell:first-child
+  .explorer-modern-list__row {
+  padding-top: var(--explorer-space-3);
+}
+
+.explorer-modern-list[data-variant="desktop"]
+  .explorer-modern-list__row[data-last] {
+  padding-bottom: var(--explorer-space-4);
+}
+
+.explorer-modern-list__primary,
+.explorer-modern-list__secondary {
+  width: 100%;
+  min-width: 0;
+}
+
+.explorer-modern-list__title-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.explorer-modern-list__pin {
+  flex: 0 0 auto;
+}
+
+.explorer-modern-list__title {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.explorer-modern-list__row[data-pinned] .explorer-modern-list__title {
+  margin-inline-start: 1.15em;
+}
+
+.explorer-modern-list[data-variant="mobile"]
+  .explorer-modern-list__row[data-pinned]
+  .explorer-modern-list__title {
+  margin-inline-start: 1.35em;
+}
+
+.explorer-modern-list__metadata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  margin-top: var(--explorer-space-1);
+  min-width: 0;
+}
+
+.explorer-modern-list[data-variant="desktop"] .explorer-modern-list__metadata {
+  flex: 1 1 0;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--explorer-space-3);
+  overflow: hidden;
+}
+
+.explorer-modern-list__tags {
+  flex: 0 1 auto;
+  width: max-content;
+  min-width: 0;
+  max-width: 60%;
+  overflow: hidden;
+  padding-block: 0.15em;
+}
+
+.explorer-modern-list__extension {
+  flex: 0 0 auto;
+}
+
+/* ===== Classic list ===== */
+
+.explorer-classic-list {
+  margin-top: 0.5em;
+  border-radius: var(--explorer-radius-md);
+  font-size: 0.9em;
+}
+
+.explorer-classic-list__item {
+  padding: var(--explorer-space-1);
+  list-style: none;
+}
+
+.explorer-classic-list__item[data-list-style="markdown"]:not([data-pinned]) {
+  margin-inline-start: var(--explorer-space-4);
+}
+
+.explorer-classic-list__item[data-pinned] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-inline-start: 1.45em;
+}
+
+.explorer-classic-list__pin {
+  position: absolute;
+  inset-inline-start: -0.2em;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.explorer-classic-list__pin[data-bullets] {
+  inset-inline-start: -0.4em;
+}

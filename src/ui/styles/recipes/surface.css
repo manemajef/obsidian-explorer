@@ -1,0 +1,65 @@
+/*
+ * Surface recipe — the five-level surface system (base/subtle/raised/
+ * floating/overlay). Components opt in via data-surface; this file is the
+ * only place surface chrome (background/border/shadow) is painted.
+ *
+ * base    → no chrome, no rule needed.
+ * overlay → Obsidian's modal layer paints itself; no rule needed.
+ *
+ * Radius is component-owned (components pick from the radius scale).
+ * data-interactive adds hover feedback: shadow lift on every level,
+ * scale only on floating (controls), never on containers.
+ */
+
+.explorer-container [data-surface="subtle"] {
+  background-color: var(--explorer-surface-subtle-bg);
+  border: var(--explorer-surface-subtle-border);
+  box-shadow: var(--explorer-surface-subtle-shadow);
+}
+
+.explorer-container [data-surface="subtle"][data-interactive]:hover,
+.explorer-container [data-surface="subtle"][data-interactive]:focus-within {
+  box-shadow: var(--explorer-surface-subtle-shadow-hover);
+}
+
+.explorer-container [data-surface="raised"] {
+  background: var(--explorer-surface-raised-bg);
+  background-image: var(--explorer-surface-raised-bg-image);
+  border: var(--explorer-surface-raised-border);
+  box-shadow: var(--explorer-surface-raised-shadow);
+}
+
+.explorer-container [data-surface="raised"][data-interactive]:hover,
+.explorer-container [data-surface="raised"][data-interactive]:focus-within {
+  box-shadow: var(--explorer-surface-raised-shadow-hover);
+}
+
+.explorer-container [data-surface="floating"] {
+  position: relative;
+  background: var(--explorer-surface-floating-bg);
+  border: var(--explorer-surface-floating-border);
+  box-shadow: var(--explorer-surface-floating-shadow);
+}
+
+/* Shine: inner top-light edge highlight; resolves to none in light theme. */
+.explorer-container [data-surface="floating"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--explorer-surface-floating-shine);
+  pointer-events: none;
+}
+
+.explorer-container [data-surface="floating"][data-interactive] {
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.explorer-container [data-surface="floating"][data-interactive]:hover,
+.explorer-container [data-surface="floating"][data-interactive]:focus-visible,
+.explorer-container [data-surface="floating"][data-interactive]:focus-within {
+  box-shadow: var(--explorer-surface-floating-shadow-hover);
+  transform: scale(var(--explorer-hover-scale));
+  z-index: 10;
+}

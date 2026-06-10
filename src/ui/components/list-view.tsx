@@ -3,18 +3,15 @@ import { Platform } from "obsidian";
 import { ExplorerModel } from "../../explorer/model";
 import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { InternalLink } from "./shared";
-import { Badge } from "./ui/badge";
+import type { ContextMenuConfig } from "../context-menu";
+import { fileInteractionProps } from "./interactions";
+import { Card } from "./ui/card";
+import { Link } from "./ui/link";
+import { ListRow } from "./ui/list-row";
 import { Gap, Group, Spacer, Stack } from "./ui/layout";
-import { Pin } from "./ui/pin";
-import { draggableProps, folderDropProps } from "../drag-drop";
-import {
-  isInteractiveTouchTarget,
-  showFileContextMenu,
-  type ContextMenuConfig,
-} from "../context-menu";
-import { NoteDatePreview, NoteFolder } from "./ui/note-metadata";
-import { NoteExtensionBadge, NoteTags, NoteTitle } from "./note-parts";
+import { NoteDatePreview, NoteFolder } from "./note-metadata";
+import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note-parts";
+
 type ListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
@@ -24,192 +21,150 @@ type ListViewProps = {
 
 export function ListView(props: ListViewProps): React.JSX.Element {
   const { files } = props;
-  const n = files.length;
-  if (n == 0) return <div></div>;
+  if (files.length == 0) return <div></div>;
   const { settings, pluginSettings } = props.model;
   const shouldUseModernList =
     settings.listStyle === "modern" ||
     (Platform.isMobile && pluginSettings.alwaysUseModernListInMobile);
   if (shouldUseModernList) {
-    return <ModernListView {...props} />;
+    return <ModernList {...props} />;
   }
-  const useBullet = settings.listStyle === "markdown";
+  return <ClassicList {...props} />;
+}
+
+function ClassicList(props: ListViewProps): React.JSX.Element {
+  const { files, model, actions, contextMenu } = props;
+  const useBullet = model.settings.listStyle === "markdown";
 
   return (
-    <div className="explorer-list-container">
+    <div className="explorer-classic-list">
       {files.map((file) => (
-        <div key={file.path} className="list-item-container">
-          <li
-            className={`explorer-list${file.isPinned ? " pinned" : ""}`}
-            data-list-style={settings.listStyle}
-            data-pinned={file.isPinned || undefined}
-            {...draggableProps(file.dragSource, file.dragFromFolderNote)}
-            {...folderDropProps(
-              props.actions.app,
-              file.dropTargetFolder,
-              (sourcePath, folder, fromFolderNote) =>
-                props.actions.movePathIntoFolder(
-                  sourcePath,
-                  folder,
-                  fromFolderNote,
-                ),
-            )}
-            onContextMenuCapture={(event) =>
-              showFileContextMenu(event, props.contextMenu, file)
-            }
-          >
-            {file.isPinned ? (
-              <span
-                className={`explorer-list-pin${useBullet ? " with-bullets" : ""}`}
-              >
-                <Pin file={file} actions={props.actions} placement="inline" />
-              </span>
-            ) : (
-              useBullet && <span className="list-bullet" />
-            )}
+        <li
+          key={file.path}
+          className="explorer-classic-list__item"
+          data-list-style={model.settings.listStyle}
+          data-pinned={file.isPinned || undefined}
+          {...fileInteractionProps<HTMLLIElement>(file, actions, contextMenu, {
+            openOnClick: false,
+          })}
+        >
+          {file.isPinned ? (
+            <span
+              className="explorer-classic-list__pin"
+              data-bullets={useBullet || undefined}
+            >
+              <Pin file={file} actions={actions} placement="inline" />
+            </span>
+          ) : (
+            useBullet && <span className="list-bullet" />
+          )}
 
-            <Group justify="start">
-              <InternalLink
-                path={file.path}
-                className="explorer-list-note-title"
-                draggable={false}
-                text={file.displayName}
-                variant={useBullet ? "default" : "note-title"}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  void props.actions.openFile(
-                    file,
-                    event.ctrlKey || event.metaKey,
-                  );
-                }}
-              />
-              {file.extensionLabel && (
-                <>
-                  {/* <Bar.Spring /> */}
-                  <Gap size={1} />
-                  {file.isFolderNote ? (
-                    <Badge
-                      variant="ext-filled"
-                      className="explorer-folder-type-badge"
-                    >
-                      folder
-                    </Badge>
-                  ) : (
-                    <Badge variant="ext-filled">{file.extensionLabel}</Badge>
-                  )}
-                </>
-              )}
-            </Group>
-          </li>
-        </div>
+          <Group justify="start">
+            <Link
+              path={file.path}
+              className="explorer-classic-list__title"
+              draggable={false}
+              role="body"
+              underline="hover"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                void actions.openFile(file, event.ctrlKey || event.metaKey);
+              }}
+            >
+              {file.displayName}
+            </Link>
+            {file.extensionLabel && (
+              <>
+                <Gap size={1} />
+                <NoteExtensionBadge file={file} />
+              </>
+            )}
+          </Group>
+        </li>
       ))}
     </div>
   );
 }
 
-const ModernListView = (props: ListViewProps): React.JSX.Element => {
-  const { files } = props;
-  const layout = Platform.isMobile ? "mobile" : "desktop";
+function ModernList(props: ListViewProps): React.JSX.Element {
+  const { files, model, actions, contextMenu } = props;
+  const variant = Platform.isMobile ? "mobile" : "desktop";
+  const isMobile = variant === "mobile";
 
   return (
-    <div className="explorer-modern-list" data-layout={layout}>
+    <Card
+      surface="raised"
+      radius="lg"
+      className="explorer-modern-list"
+      data-variant={variant}
+    >
       {files.map((file, i) => (
-        <React.Fragment key={file.path}>
-          <div className="explorer-note-row-shell">
-            <div
-              className="explorer-note-row"
-              data-layout={layout}
-              data-pinned={file.isPinned || undefined}
-              data-last={i >= files.length - 1 || undefined}
-              {...draggableProps(file.dragSource, file.dragFromFolderNote)}
-              {...folderDropProps(
-                props.actions.app,
-                file.dropTargetFolder,
-                (sourcePath, folder, fromFolderNote) =>
-                  props.actions.movePathIntoFolder(
-                    sourcePath,
-                    folder,
-                    fromFolderNote,
-                  ),
+        <ListRow
+          key={file.path}
+          shellClassName="explorer-modern-list__shell"
+          className="explorer-modern-list__row"
+          interactive={isMobile}
+          last={i >= files.length - 1}
+          data-pinned={file.isPinned || undefined}
+          {...fileInteractionProps(file, actions, contextMenu)}
+        >
+          <Stack
+            className="explorer-modern-list__content"
+            gap={isMobile ? 1 : 0}
+          >
+            <Group className="explorer-modern-list__primary" gap={2}>
+              <div className="explorer-modern-list__title-slot">
+                <Pin
+                  file={file}
+                  actions={actions}
+                  className="explorer-modern-list__pin"
+                  placement="row-leading"
+                  reserveSpace={false}
+                />
+                <NoteTitle
+                  file={file}
+                  actions={actions}
+                  className="explorer-modern-list__title"
+                  weight={isMobile ? "bold" : "medium"}
+                />
+              </div>
+
+              <Spacer />
+
+              <NoteExtensionBadge
+                file={file}
+                className="explorer-modern-list__extension"
+              />
+            </Group>
+
+            <Group className="explorer-modern-list__secondary" gap={2}>
+              <div className="explorer-modern-list__metadata">
+                {!isMobile && (
+                  <NoteFolder file={file} model={model} actions={actions} />
+                )}
+                <NoteDatePreview
+                  file={file}
+                  model={model}
+                  maxChar={isMobile ? 120 : 90}
+                  showPreview={model.settings.showPreviews}
+                />
+              </div>
+
+              <Gap size={4} />
+              {!isMobile && (
+                <NoteTags
+                  file={file}
+                  model={model}
+                  className="explorer-modern-list__tags"
+                  overflow="hidden"
+                  size="sm"
+                />
               )}
-              onContextMenuCapture={(event) =>
-                showFileContextMenu(event, props.contextMenu, file)
-              }
-              onClick={(event) => {
-                if (isInteractiveTouchTarget(event.target)) return;
-                void props.actions.openFile(
-                  file,
-                  event.ctrlKey || event.metaKey,
-                );
-              }}
-            >
-              <Stack className="explorer-note-row__content" gap={0}>
-                <Group className="explorer-note-row__primary" gap={2}>
-                  <div className="explorer-note-row__title-slot">
-                    <Pin
-                      file={file}
-                      actions={props.actions}
-                      className="explorer-note-row__pin"
-                      placement="row-leading"
-                      reserveSpace={false}
-                    />
-                    <NoteTitle
-                      file={file}
-                      actions={props.actions}
-                      className="explorer-note-row__title"
-                      weight={Platform.isMobile ? "bold" : "medium"}
-                    />
-                  </div>
-
-                  <Spacer />
-
-                  <NoteExtensionBadge
-                    file={file}
-                    className="explorer-note-row__extension"
-                  />
-                </Group>
-
-                <Group className="explorer-note-row__secondary" gap={2}>
-                  <div className="explorer-note-row__metadata">
-                    {layout === "desktop" && (
-                      <NoteFolder
-                        file={file}
-                        model={props.model}
-                        actions={props.actions}
-                      />
-                    )}
-                    {/* <div
-                      style={{ maxWidth: layout === "mobile" ? "none" : "95%" }}
-                    > */}
-                    <NoteDatePreview
-                      file={file}
-                      model={props.model}
-                      maxChar={layout === "mobile" ? 120 : 90}
-                      showPreview={props.model.settings.showPreviews}
-                    />
-                  </div>
-                  {/* </div> */}
-
-                  <Gap size={4} />
-                  {layout === "desktop" && (
-                    <NoteTags
-                      file={file}
-                      model={props.model}
-                      className="explorer-note-row__tags"
-                      overflow="hidden"
-                      size="sm"
-                    />
-                  )}
-                </Group>
-              </Stack>
-            </div>
-          </div>
-          {i < files.length - 1 && (
-            <div className="explorer-note-row__divider" />
-          )}
-        </React.Fragment>
+            </Group>
+          </Stack>
+        </ListRow>
       ))}
-    </div>
+    </Card>
   );
-};
+}

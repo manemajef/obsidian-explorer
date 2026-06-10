@@ -1,20 +1,14 @@
 import React from "react";
+import { Platform } from "obsidian";
 import { ExplorerModel } from "../../explorer/model";
 import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
-import { Icon } from "./shared";
-import { Pin } from "./ui/pin";
-import { Gap, Group, Spacer, Spring, Stack } from "./ui/layout";
-import { draggableProps, folderDropProps } from "../drag-drop";
-import {
-  isInteractiveTouchTarget,
-  showFileContextMenu,
-  type ContextMenuConfig,
-} from "../context-menu";
-import { NoteFolderDate, NotePreview } from "./ui/note-metadata";
-import { cn } from "./ui/action";
-import { NoteExtensionBadge, NoteTags, NoteTitle } from "./note-parts";
-import { Platform } from "obsidian";
+import type { ContextMenuConfig } from "../context-menu";
+import { fileInteractionProps } from "./interactions";
+import { Card } from "./ui/card";
+import { Group, Spacer } from "./ui/layout";
+import { NoteFolderDate, NotePreview } from "./note-metadata";
+import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note-parts";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -29,116 +23,86 @@ export function CardsView(props: {
     compact = false;
 
   return (
-    <div className="explorer-cards-view">
-      <div
-        className={cn(
-          "explorer-cards-grid",
-          compact && "explorer-cards-grid--compact",
-        )}
-      >
+    <div
+      className="explorer-cards"
+      data-compact={compact || undefined}
+      data-variant={Platform.isMobile ? "mobile" : "desktop"}
+    >
+      <div className="explorer-cards__grid">
         {files.map((file) => {
           const showTags = model.settings.showTags && file.tags.length > 0;
 
           return (
-            <Stack
+            <Card
               key={file.path}
-              className="explorer-card"
-              {...draggableProps(file.dragSource, file.dragFromFolderNote)}
-              {...folderDropProps(
-                actions.app,
-                file.dropTargetFolder,
-                (sourcePath, folder, fromFolderNote) =>
-                  actions.movePathIntoFolder(
-                    sourcePath,
-                    folder,
-                    fromFolderNote,
-                  ),
-              )}
-              onContextMenuCapture={(event) =>
-                showFileContextMenu(event, contextMenu, file)
-              }
-              onClick={(e) => {
-                if (isInteractiveTouchTarget(e.target)) return;
-                void actions.openFile(file, e.ctrlKey || e.metaKey);
-              }}
+              className="explorer-file-card"
+              interactive
+              radius="card"
+              surface="subtle"
+              {...fileInteractionProps(file, actions, contextMenu)}
             >
-              <Group align="start" className="explorer-card-header">
-                <Group
-                  align="start"
-                  className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
-                  minWidth={0}
-                >
-                  {/* {file.isFolderNote && (
-                    <Group className="explorer-card-ext" shrink={false}>
-                      <Icon
-                        name="folder"
-                        className="explorer-card-folder-note-icon"
-                      />
-                      <Gap size={1} />
-                    </Group>
-                  )} */}
-
+              <Group align="start" className="explorer-file-card__header">
+                <Group align="start" minWidth={0}>
                   <NoteTitle
                     file={file}
                     actions={actions}
+                    className="explorer-file-card__title"
+                    emphasis={
+                      model.pluginSettings.useLinkColorInCard
+                        ? "accent"
+                        : "primary"
+                    }
                     text={file.basename}
-                    variant="card-title"
-                    // weight="medium"
+                    underline="none"
                   />
                 </Group>
 
                 <Spacer />
 
                 <Group
-                  className="explorer-card-exts"
+                  className="explorer-file-card__badges"
                   gap={1}
                   shrink={false}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <NoteExtensionBadge
                     file={file}
-                    className="explorer-card-ext-badge"
+                    className="explorer-file-card__ext"
                     filled={false}
                   />
-                  <div className="explorer-card-pin-slot">
-                    {file.isMarkdown && (
-                      <Pin file={file} actions={actions} placement="card" />
-                    )}
+                  <div className="explorer-file-card__pin-slot">
+                    <Pin file={file} actions={actions} placement="card" />
                   </div>
                 </Group>
               </Group>
-              <Spring />
+              <Spacer />
               {model.settings.showPreviews && (
-                <div style={{ maxWidth: compact ? "none" : "90%" }}>
+                <div className="explorer-file-card__preview-wrap">
                   <NotePreview
                     file={file}
-                    className={cn(
-                      "explorer-card-preview",
-                      compact && "explorer-card-preview--compact",
-                    )}
+                    className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
+                    size={!compact ? "md" : undefined}
                   />
                 </div>
               )}
               {showTags && (
                 <>
-                  <Spring minWidth={0} />
+                  <Spacer minWidth={0} />
                   <NoteTags
                     file={file}
                     model={model}
-                    className="explorer-card-tags-wrapper"
+                    className="explorer-file-card__tags"
                     overflow="scroll"
                     size={compact ? "sm" : "md"}
                   />
                 </>
               )}
-              <>
-                <Spring />
-                <div className="explorer-card-metadata-wrapper">
-                  <NoteFolderDate file={file} model={model} actions={actions} />
-                </div>
-              </>
-            </Stack>
+              <Spacer />
+              <div className="explorer-file-card__metadata">
+                <NoteFolderDate file={file} model={model} actions={actions} />
+              </div>
+            </Card>
           );
         })}
       </div>

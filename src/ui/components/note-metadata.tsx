@@ -3,14 +3,11 @@ import { ExplorerFileNode } from "src/explorer/lib/nodes";
 import { ExplorerModel } from "src/explorer/model";
 import { ExplorerActions } from "src/explorer/actions";
 import { diffDays } from "src/utils";
-import { Icon } from "../shared";
-import { Group } from "./layout";
-import { Small } from "./text";
-import { useNotePreview } from "./preview";
-
-function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { cn } from "./ui/cn";
+import { Icon } from "./ui/icon";
+import { Group } from "./ui/layout";
+import { Text } from "./ui/text";
+import { useNotePreview } from "./use-note-preview";
 
 function getParentFolder(file: ExplorerFileNode, model: ExplorerModel) {
   const parentFolder = file.parentExplorerFolder;
@@ -40,9 +37,13 @@ export function NoteDate({
   if (date == null) return null;
 
   return (
-    <Small className={cn("explorer-metadata-date", className)}>
+    <Text
+      role="metadata"
+      emphasis="secondary"
+      className={cn("explorer-metadata-date", className)}
+    >
       {diffDays(date)}
-    </Small>
+    </Text>
   );
 }
 
@@ -61,8 +62,9 @@ export function NoteFolder({
   if (!parentFolder) return null;
 
   return (
-    <Small
-      as="span"
+    <Text
+      role="metadata"
+      emphasis="secondary"
       className={cn("explorer-metadata-folder-link", className)}
       onClick={(e) => {
         e.preventDefault();
@@ -74,7 +76,7 @@ export function NoteFolder({
         <Icon name="folder-closed" className="explorer-metadata-folder-icon" />
       )}
       <span className="explorer-metadata-folder-name">{parentFolder.name}</span>
-    </Small>
+    </Text>
   );
 }
 
@@ -85,9 +87,13 @@ function NoteMetadataSeparator({
 }): React.JSX.Element {
   if (!separator || separator === "dot")
     return (
-      <Small as="span" className="explorer-metadata-separator--dot">
+      <Text
+        role="metadata"
+        emphasis="secondary"
+        className="explorer-metadata-separator--dot"
+      >
         •
-      </Small>
+      </Text>
     );
   return (
     <span className="explorer-metadata-separator" aria-hidden="true"></span>
@@ -127,11 +133,13 @@ export function NotePreview({
   file,
   className,
   maxChar,
+  size,
 }: {
   file: ExplorerFileNode;
   className?: string;
   maxChar?: number;
-}) {
+  size?: "md";
+}): React.JSX.Element | null {
   const effectiveMaxChar = maxChar ?? 100;
   const { isLoading, preview, hasPreview } = useNotePreview(file, {
     maxChar: effectiveMaxChar,
@@ -140,7 +148,12 @@ export function NotePreview({
   if (!isLoading && !hasPreview) return null;
 
   return (
-    <Small as="span" className={cn("explorer-metadata-preview", className)}>
+    <Text
+      role="description"
+      emphasis="secondary"
+      size={size}
+      className={cn("explorer-metadata-preview", className)}
+    >
       {isLoading ? (
         <span className="explorer-preview-placeholder">
           {"W".repeat(effectiveMaxChar)}
@@ -148,7 +161,7 @@ export function NotePreview({
       ) : (
         preview
       )}
-    </Small>
+    </Text>
   );
 }
 
@@ -181,9 +194,13 @@ export function NoteDatePreview({
       {showDate && <NoteDate file={file} model={model} />}
       {showDate && hasPreview && <NoteMetadataSeparator />}
       {hasPreview && (
-        <Small as="span" className="explorer-metadata-preview">
+        <Text
+          role="description"
+          emphasis="secondary"
+          className="explorer-metadata-preview"
+        >
           {preview}
-        </Small>
+        </Text>
       )}
     </Group>
   );

@@ -2,49 +2,38 @@ import React from "react";
 import { ExplorerActions } from "../../explorer/actions";
 import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerModel } from "../../explorer/model";
-import { InternalLink } from "./shared";
+import { cn } from "./ui/cn";
 import { Badge } from "./ui/badge";
-import { TagList } from "./ui/tags";
-
-function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { Icon } from "./ui/icon";
+import { Link, type LinkProps } from "./ui/link";
+import { TagList, type TagOverflow, type TagSize } from "./ui/tags";
 
 export function NoteTitle({
   file,
   actions,
   className,
-  decoration,
   text = file.displayName,
-  tone,
-  variant = "note-title",
-  weight,
+  ...linkProps
 }: {
   file: ExplorerFileNode;
   actions: ExplorerActions;
-  className?: string;
-  decoration?: React.ComponentProps<typeof InternalLink>["decoration"];
   text?: string;
-  tone?: React.ComponentProps<typeof InternalLink>["tone"];
-  variant?: React.ComponentProps<typeof InternalLink>["variant"];
-  weight?: React.ComponentProps<typeof InternalLink>["weight"];
-}): React.JSX.Element {
+} & Omit<LinkProps, "path" | "onClick">): React.JSX.Element {
   return (
-    <InternalLink
+    <Link
       path={file.path}
       className={className}
-      decoration={decoration}
       draggable={false}
-      text={text}
-      tone={tone}
-      variant={variant}
-      weight={weight}
+      role="title"
+      {...linkProps}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
         void actions.openFile(file, event.ctrlKey || event.metaKey);
       }}
-    />
+    >
+      {text}
+    </Link>
   );
 }
 
@@ -60,12 +49,8 @@ export function NoteExtensionBadge({
   if (!file.extensionLabel) return null;
 
   return (
-    <Badge
-      variant={filled ? "ext-filled" : "ext"}
-      className={className}
-      size="sm"
-    >
-      {file.extensionLabel}
+    <Badge variant={filled ? "filled" : "plain"} className={className}>
+      {file.isFolderNote ? "folder" : file.extensionLabel}
     </Badge>
   );
 }
@@ -80,8 +65,8 @@ export function NoteTags({
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
-  overflow?: React.ComponentProps<typeof TagList>["overflow"];
-  size?: React.ComponentProps<typeof TagList>["size"];
+  overflow?: TagOverflow;
+  size?: TagSize;
 }): React.JSX.Element | null {
   if (!model.settings.showTags || file.tags.length === 0) return null;
 
@@ -94,5 +79,42 @@ export function NoteTags({
         size={size}
       />
     </div>
+  );
+}
+
+export function Pin(props: {
+  file: ExplorerFileNode;
+  actions: ExplorerActions;
+  className?: string;
+  placement?: "inline" | "row-leading" | "card";
+  reserveSpace?: boolean;
+}): React.JSX.Element {
+  const {
+    file,
+    actions,
+    className,
+    placement = "inline",
+    reserveSpace = true,
+  } = props;
+  if (file.isPinned)
+    return (
+      <span
+        className={cn("explorer-pin", className)}
+        data-placement={placement}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          void actions.togglePin(file);
+        }}
+      >
+        <Icon name="pin" />
+      </span>
+    );
+  return (
+    <span
+      className={className}
+      data-placement={placement}
+      hidden={!reserveSpace}
+    />
   );
 }

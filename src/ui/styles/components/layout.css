@@ -1,0 +1,42 @@
+/* Layout primitives — Stack, Group, Spacer, Gap, Separator. */
+
+.spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.gap {
+  --explorer-gap-size: 0;
+  --explorer-gap-max-size: none;
+
+  flex: 0 0 auto;
+}
+
+.gap--x {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.gap--y {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
+.explorer-group > .gap--auto {
+  width: var(--explorer-gap-size);
+  max-width: var(--explorer-gap-max-size);
+}
+
+.explorer-stack > .gap--auto {
+  height: var(--explorer-gap-size);
+  max-height: var(--explorer-gap-max-size);
+}
+
+.explorer-separator {
+  min-width: 1px;
+  min-height: max-content;
+  margin: 0 var(--explorer-space-5);
+  border-inline-start: 1px solid var(--background-modifier-border);
+  align-self: stretch;
+  flex-shrink: 0;
+}

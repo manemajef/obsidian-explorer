@@ -1,58 +1,27 @@
-import React from "react";
-import { Icon } from "../shared";
+import React, { type HTMLAttributes } from "react";
+import { cn } from "./cn";
 
-type BadgeVariant = "ext" | "ext-filled" | "pin";
-type BadgeSize = "xs" | "sm" | "md";
+export type BadgeVariant = "plain" | "filled";
+export type BadgeSize = "sm" | "md";
 
-function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  variant?: BadgeVariant;
+  size?: BadgeSize;
 }
 
-export function Badge(props: {
-  variant: BadgeVariant;
-  className?: string;
-  "data-pin-placement"?: string;
-  size?: BadgeSize;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLSpanElement>;
-}): React.JSX.Element {
-  const {
-    variant,
-    className,
-    "data-pin-placement": pinPlacement,
-    size = "sm",
-    style,
-    children,
-    onClick,
-  } = props;
-  const classes = cn(
-    "explorer-badge",
-    `explorer-badge--${variant}`,
-    className,
-  );
-
-  if (variant === "pin") {
-    return (
-      <span
-        className={classes}
-        data-badge-size={size}
-        data-badge-variant={variant}
-        data-pin-placement={pinPlacement}
-        style={style}
-        onClick={onClick}
-      >
-        <Icon name="pin" />
-      </span>
-    );
-  }
+export function Badge({
+  variant = "plain",
+  size = "sm",
+  className,
+  children,
+  ...rest
+}: BadgeProps): React.JSX.Element {
   return (
     <span
-      className={classes}
-      data-badge-size={size}
-      data-badge-variant={variant}
-      style={style}
-      onClick={onClick}
+      className={cn("explorer-badge", className)}
+      data-variant={variant}
+      data-size={size}
+      {...rest}
     >
       {children}
     </span>

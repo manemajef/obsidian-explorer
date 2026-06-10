@@ -1,0 +1,122 @@
+/*
+ * Button + ButtonGroup — every clickable control in the plugin.
+ *
+ * Variants: glass (floating surface) · ghost (transparent, hover wash).
+ * Shape:    circle · pill · round.
+ * Fit:      fixed (control-size box) · content (auto box, padded icon —
+ *           used by the mobile action bar for touch sizing).
+ * Density:  compact (borderless dense bar mode).
+ * States:   data-active (toggled control) · data-selected (current choice,
+ *           e.g. active page) · disabled.
+ */
+
+.explorer-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: var(--explorer-button-size, var(--explorer-control-size));
+  height: var(--explorer-button-size, var(--explorer-control-size));
+  min-width: var(--explorer-button-size, var(--explorer-control-size));
+  min-height: var(--explorer-button-size, var(--explorer-control-size));
+  padding: var(--explorer-button-pad);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text-normal);
+  cursor: pointer;
+  gap: var(--explorer-space-1);
+}
+
+.explorer-button[data-shape="circle"] {
+  border-radius: 50%;
+}
+
+.explorer-button[data-shape="pill"] {
+  border-radius: var(--explorer-radius-pill);
+}
+
+.explorer-button[data-shape="round"] {
+  border-radius: var(--explorer-radius-md);
+}
+
+.explorer-button[data-fit="content"] {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.explorer-button[data-fit="content"] .explorer-icon {
+  padding: var(--explorer-icon-pad, 0);
+  box-sizing: content-box;
+}
+
+.explorer-button .explorer-icon svg {
+  width: var(--explorer-icon-size, var(--icon-size));
+  height: var(--explorer-icon-size, var(--icon-size));
+}
+
+.explorer-button[data-variant="ghost"]:hover,
+.explorer-button[data-variant="ghost"]:focus-visible {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+
+.explorer-button[data-variant="glass"]:hover,
+.explorer-button[data-variant="glass"]:focus-within {
+  z-index: 10;
+}
+
+.explorer-button[data-density="compact"] {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.25em 0.35em;
+  line-height: 0;
+  color: var(--text-muted);
+}
+
+.explorer-button[data-active] {
+  color: var(--text-normal);
+}
+
+.explorer-button[data-selected] {
+  background: var(--explorer-button-selected-bg);
+  border: var(--explorer-button-selected-border);
+  color: var(--explorer-button-selected-color);
+  z-index: 10;
+}
+
+.explorer-button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.explorer-button-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--explorer-button-group-gap, 2px);
+  height: var(--explorer-control-size);
+  padding-inline: var(--explorer-button-group-pad, 3px);
+  border-radius: var(--explorer-radius-pill);
+  min-width: 0;
+}
+
+.explorer-button-group[data-density="compact"] {
+  height: auto;
+  min-height: 0;
+  padding-inline: 0;
+}
+
+.explorer-button-group[data-fit="content"] {
+  height: auto;
+  min-height: 0;
+  padding-block: 0;
+  padding-inline: 6px;
+}

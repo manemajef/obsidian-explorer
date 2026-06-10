@@ -1,0 +1,79 @@
+/*
+ * Text recipe — typography is described by role × emphasis, never by
+ * component-specific font rules.
+ *
+ * Roles:    title · body · description · metadata · label
+ * Emphasis: primary · secondary · tertiary · faint · accent
+ *
+ * 15% knobs (use sparingly, justify in the markup):
+ *   data-weight="medium|bold"  — overrides the role weight
+ *   data-size="md"             — bumps description text one step (large cards)
+ */
+
+.explorer-text {
+  color: var(--explorer-text-primary);
+}
+
+.explorer-text[data-role="title"] {
+  font-size: var(--explorer-text-title-size);
+  font-weight: var(--explorer-text-title-weight);
+  line-height: var(--explorer-text-title-line);
+}
+
+.explorer-text[data-role="body"] {
+  font-size: var(--explorer-text-body-size);
+  font-weight: var(--explorer-text-body-weight);
+}
+
+.explorer-text[data-role="description"] {
+  font-size: var(--explorer-text-description-size);
+  font-weight: var(--explorer-text-description-weight);
+}
+
+.explorer-text[data-role="metadata"] {
+  font-size: var(--explorer-text-metadata-size);
+  font-weight: var(--explorer-text-metadata-weight);
+}
+
+.explorer-text[data-role="label"] {
+  font-size: var(--explorer-text-label-size);
+  font-weight: var(--explorer-text-label-weight);
+}
+
+.explorer-text[data-emphasis="primary"] {
+  color: var(--explorer-text-primary);
+}
+
+.explorer-text[data-emphasis="secondary"] {
+  color: var(--explorer-text-secondary);
+}
+
+.explorer-text[data-emphasis="tertiary"] {
+  color: var(--explorer-text-tertiary);
+}
+
+.explorer-text[data-emphasis="faint"] {
+  color: var(--explorer-text-faint);
+}
+
+.explorer-text[data-emphasis="accent"] {
+  color: var(--explorer-text-accent);
+}
+
+.explorer-text[data-weight="medium"] {
+  font-weight: var(--font-medium);
+}
+
+.explorer-text[data-weight="bold"] {
+  font-weight: calc(var(--font-weight) + var(--bold-modifier));
+}
+
+.explorer-text[data-role="description"][data-size="md"] {
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-normal);
+}
+
+/* Nested text never compounds em-based sizing. */
+.explorer-text .explorer-text {
+  font-size: 1em;
+}

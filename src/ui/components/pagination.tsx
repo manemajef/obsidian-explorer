@@ -1,27 +1,24 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { Icon } from "./shared";
-import { Divider, Group } from "./ui/layout";
-import { cn } from "./ui/action";
-import { Surface } from "./ui/surface";
-const PAGING_LABEL_BASE = "paging-label";
-const PAGING_ICON_CLASS = `${PAGING_LABEL_BASE} paging-icon`;
-const PAGING_NUM_CLASS = `${PAGING_LABEL_BASE} paging-num`;
+import { Button, ButtonGroup } from "./ui/button";
+import { Icon } from "./ui/icon";
+import { Text } from "./ui/text";
+import { Gap, Group } from "./ui/layout";
 
 function PageNav(props: {
   icon: "chevron-left" | "chevron-right";
   onClick: () => void;
   disabled?: boolean;
 }): React.JSX.Element {
-  const { icon, onClick } = props;
   return (
-    <span
-      className={cn(PAGING_ICON_CLASS)}
-      data-disabled={props.disabled || undefined}
-      onClick={onClick}
-    >
-      <Icon name={icon} />
-    </span>
+    <Button
+      className="explorer-paging__nav"
+      icon={props.icon}
+      shape="circle"
+      variant="ghost"
+      disabled={props.disabled}
+      onClick={props.onClick}
+    />
   );
 }
 
@@ -31,17 +28,22 @@ function PageNum(props: {
   onClick?: () => void;
 }): React.JSX.Element {
   const { value, active = false, onClick } = props;
-  const activeClass = active ? " active-page" : "";
   return (
-    <span className={`${PAGING_NUM_CLASS}${activeClass}`} onClick={onClick}>
+    <Button
+      className="explorer-paging__num"
+      shape="circle"
+      variant="ghost"
+      selected={active}
+      onClick={onClick}
+    >
       {value}
-    </span>
+    </Button>
   );
 }
 
 function PageDots(): React.JSX.Element {
   return (
-    <span className={`${PAGING_LABEL_BASE} paging-dots`}>
+    <span className="explorer-paging__dots">
       <Icon name="ellipsis" />
     </span>
   );
@@ -65,26 +67,22 @@ export function PaginationModern(
 
   return (
     <Group justify="center">
-      <Surface
-        className="paging-load-more"
-        elevation="sm"
+      <Button
+        className="explorer-load-more"
+        variant="glass"
+        shape="pill"
         interactive={canLoadMore}
-        radius="pill"
-        data-disabled={!canLoadMore || undefined}
+        disabled={!canLoadMore}
+        onClick={(event) => {
+          event.currentTarget.blur();
+          onLoadMore();
+        }}
       >
-        <button
-          type="button"
-          className="paging-load-more-button"
-          onClick={(event) => {
-            event.currentTarget.blur();
-            onLoadMore();
-          }}
-          disabled={!canLoadMore}
-        >
-          <span className="load-more-text">Load more</span>
-          <Icon name="chevrons-down" className="paging-load-more-icon" />
-        </button>
-      </Surface>
+        <Text role="body" weight="medium">
+          Load more
+        </Text>
+        <Icon name="chevrons-down" className="explorer-load-more__icon" />
+      </Button>
     </Group>
   );
 }
@@ -108,9 +106,9 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
 
   return (
     <>
-      <Divider />
+      <Gap size={4} />
       <Group justify="center">
-        <Surface className="paging-control" elevation="sm" radius="pill">
+        <ButtonGroup className="explorer-paging">
           <PageNav
             icon="chevron-left"
             disabled={!canGoPrev}
@@ -119,7 +117,7 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
             }}
           />
 
-          <div className="paging-control-nums">
+          <div className="explorer-paging__nums">
             {page !== 0 ? (
               <PageNum value={1} onClick={() => onPageChange(0)} />
             ) : null}
@@ -153,7 +151,7 @@ export function Pagination(props: PaginationProps): React.JSX.Element {
               if (currentPage < totalPages - 1) onPageChange(currentPage + 1);
             }}
           />
-        </Surface>
+        </ButtonGroup>
       </Group>
     </>
   );

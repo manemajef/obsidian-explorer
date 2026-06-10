@@ -1,0 +1,70 @@
+/*
+ * Mobile platform fixes. Every rule documents what is broken and why the
+ * fix exists (Bible: quarantine rule).
+ */
+
+/* Long-press opens our own context menu; without this iOS/Android also pop
+ * the OS text-selection callout on top of it. */
+.is-mobile
+  .explorer-container
+  :where(
+    .explorer-folder-card,
+    .explorer-file-card,
+    .explorer-classic-list__item,
+    .explorer-modern-list__row
+  ) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The mobile editor adds its own side padding; ours on top doubles the
+ * gutter and misaligns the embed with the note body. */
+.markdown-source-view.mod-cm6.is-mobile .explorer-container {
+  padding: 2px;
+}
+
+/* Mobile modals otherwise extend under the on-screen keyboard. */
+.is-mobile .modal {
+  padding-bottom: 2em;
+  max-height: 80vh;
+}
+
+/* Light mobile: the translucent-white floating surface washes out over
+ * vault backgrounds; use Obsidian's raised+blur treatment instead. The
+ * load-more pill is excluded — blur over scrolling list content shimmers. */
+.is-mobile:not(.theme-dark)
+  .explorer-container
+  [data-surface="floating"]:not(.explorer-load-more) {
+  background: var(--raised-background);
+  -webkit-backdrop-filter: var(--raised-blur);
+  backdrop-filter: var(--raised-blur);
+  box-shadow: var(--raised-shadow);
+  border: var(--raised-mask-border-width) solid transparent;
+  background-clip: padding-box;
+}
+
+/* Touch targets sit taller; the hairline separator needs breathing room. */
+.is-mobile .explorer-separator {
+  margin: 0.2em var(--explorer-space-5);
+}
+
+/* Larger touch target for the load-more pill. */
+.is-mobile .explorer-container .explorer-load-more {
+  padding: var(--explorer-space-4) var(--explorer-space-6);
+}
+
+/* Phone reading view stacks the view-header padding on top of the note's
+ * own; collapse it for virtual folder notes. */
+.is-phone
+  .mod-root
+  .workspace-leaf-content
+  .view-content.explorer-virtual-folder-note-container
+  .markdown-reading-view
+  > .explorer-virtual-folder-note {
+  padding-top: 0;
+}
+
+.is-mobile .explorer-virtual-folder-note {
+  padding-top: 0;
+}

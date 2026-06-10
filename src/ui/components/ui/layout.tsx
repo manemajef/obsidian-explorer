@@ -3,6 +3,7 @@ import React, {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
+import { cn } from "./cn";
 
 type Align = "start" | "center" | "end" | "stretch" | "baseline";
 type GapAxis = "auto" | "x" | "y";
@@ -25,10 +26,6 @@ type LayoutProps = FlexSelfProps & {
   justify?: Justify;
   children: ReactNode;
 };
-
-function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 function spaceValue(space: Space): CSSProperties["gap"] {
   if (typeof space === "number") {
@@ -171,27 +168,31 @@ export function Stack(props: StackProps): React.JSX.Element {
   );
 }
 
-export interface SpringProps
+export interface SpacerProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
   children?: ReactNode;
   minWidth?: CSSProperties["minWidth"];
+  maxWidth?: CSSProperties["maxWidth"];
   weight?: number;
 }
 
-export function Spring({
+/** Flexible space. Grows to push siblings apart; clamp with min/maxWidth. */
+export function Spacer({
   children,
   className,
+  maxWidth = "none",
   minWidth = 0,
   style,
   weight = 1,
   ...rest
-}: SpringProps): React.JSX.Element {
+}: SpacerProps): React.JSX.Element {
   return (
     <div
-      className={cn("spring", className)}
+      className={cn("spacer", className)}
       style={{
         flex: `${weight} 1 0`,
         minWidth,
+        maxWidth,
         ...style,
       }}
       {...rest}
@@ -201,42 +202,11 @@ export function Spring({
   );
 }
 
-export interface SpacerProps extends Omit<SpringProps, "weight"> {
-  maxWidth?: CSSProperties["maxWidth"];
-}
-
-export function Spacer({
-  className,
-  maxWidth = "none",
-  minWidth = 0,
-  style,
-  ...rest
-}: SpacerProps): React.JSX.Element {
-  return (
-    <Spring
-      className={cn("spacer", className)}
-      minWidth={minWidth}
-      style={{ maxWidth, ...style }}
-      {...rest}
-    />
-  );
-}
-
 export function Separator(props: { className?: string }): React.JSX.Element {
-  return <div className={`explorer-separator ${props.className ?? ""}`} />;
+  return <div className={cn("explorer-separator", props.className)} />;
 }
 
-export function Divider(props: {
-  className?: string;
-  size?: "sm" | "md" | "lg";
-}): React.JSX.Element {
-  const { className, size = "sm" } = props;
-
-  return (
-    <div className={`explorer-divider divider-${size} ${className ?? ""}`} />
-  );
-}
-
+/** Fixed-size space along one axis ("auto" follows the parent's axis). */
 export function Gap({
   axis,
   className,
@@ -276,19 +246,5 @@ export function Gap({
       className={cn("gap", `gap--${resolvedAxis}`, className)}
       style={{ ...sizeStyle, ...style }}
     />
-  );
-}
-
-export function Gapper({
-  className,
-  maxWidth,
-  size = 2,
-}: {
-  className?: string;
-  size?: Space;
-  maxWidth?: CSSProperties["maxWidth"];
-}): React.JSX.Element {
-  return (
-    <Gap className={cn("gapper", className)} maxSize={maxWidth} size={size} />
   );
 }

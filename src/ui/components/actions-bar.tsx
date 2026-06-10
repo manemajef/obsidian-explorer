@@ -1,16 +1,45 @@
 import React from "react";
-import { Search } from "./search";
-import {
-  ActionItem,
-  ActionGroup,
-  ActionGroupItem,
-  ActionSpace,
-  cn,
-} from "./ui/action";
-import { Gap, Group, Spring } from "./ui/layout";
 import { App, Platform, TFolder } from "obsidian";
-import { Bar } from "./ui/bar";
+import { Search, type BarMode } from "./search";
+import { cn } from "./ui/cn";
+import { Button, ButtonGroup, type ButtonProps } from "./ui/button";
+import { Gap, Group, Spacer } from "./ui/layout";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
+
+/** A standalone control outside any group: glass pill normally, bare in
+ * compact mode. */
+function BarButton({
+  mode,
+  ...props
+}: ButtonProps & { mode: BarMode }): React.JSX.Element {
+  return (
+    <Button
+      variant={mode.compact ? "ghost" : "glass"}
+      shape={mode.compact ? "round" : "circle"}
+      density={mode.compact ? "compact" : undefined}
+      fit={mode.mobile && !mode.compact ? "content" : undefined}
+      {...props}
+    />
+  );
+}
+
+/** A control inside a ButtonGroup. */
+function GroupButton({
+  mode,
+  ...props
+}: ButtonProps & { mode: BarMode }): React.JSX.Element {
+  return (
+    <Button
+      variant="ghost"
+      shape={mode.compact ? "round" : "circle"}
+      density={mode.compact ? "compact" : undefined}
+      fit={mode.mobile && !mode.compact ? "content" : undefined}
+      {...props}
+    />
+  );
+}
+
+const SETTINGS_ICON = "settings-2";
 
 export function ActionsBar(props: {
   app: App;
@@ -45,290 +74,140 @@ export function ActionsBar(props: {
     compactActionBar,
   } = props;
 
-  const isMobile = Platform.isMobile;
-  const actionClassName = cn(compactActionBar && "explorer-actions--compact");
-  const StandaloneAction = compactActionBar ? ActionGroupItem : ActionItem;
-  const MobileSpace = () => <Gap inline size=".5em" />;
-  const MobileEdgeSpace = () => <Gap inline size=".5em" />;
-  const settingsIcon = "settings-2";
-  // const settingsIcon = "ellipsis";
-  const isUseNewLayout = true;
-  const useLeftTabMobile = false;
-  const renderParentAction = () => {
-    const onClick = () => onGoToParent(false);
-    if (compactActionBar) {
-      return (
-        <ActionGroupItem
-          icon="undo-2"
-          className="explorer-parent-action"
-          {...folderDropProps<HTMLButtonElement>(
-            app,
-            parentDropFolder,
-            onMoveIntoFolder,
-          )}
-          onClick={onClick}
-        />
-      );
-    }
-
-    return (
-      <ActionItem
-        icon="undo-2"
-        className="explorer-parent-action"
-        surfaceProps={folderDropProps<HTMLDivElement>(
-          app,
-          parentDropFolder,
-          onMoveIntoFolder,
-        )}
-        onClick={onClick}
-      />
-    );
+  const mode: BarMode = {
+    compact: compactActionBar,
+    mobile: Platform.isMobile,
   };
+  const barClassName = cn(
+    "explorer-actions",
+    compactActionBar && "explorer-actions--compact",
+  );
 
-  if (isMobile && searchMode)
+  const parentAction = (
+    <BarButton
+      mode={mode}
+      icon="undo-2"
+      className="explorer-parent-action"
+      {...folderDropProps<HTMLButtonElement>(
+        app,
+        parentDropFolder,
+        onMoveIntoFolder,
+      )}
+      onClick={() => onGoToParent(false)}
+    />
+  );
+
+  const leadAction = showParentNavigation ? (
+    parentAction
+  ) : (
+    <BarButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+  );
+
+  if (mode.mobile && searchMode) {
     return (
-      <div
-        id="explorer-actions"
-        className={cn("explorer-actions-mobile-search", actionClassName)}
-      >
-        <Bar>
-          <Bar.Spring />
-          <Bar.Item>
-            <Search
-              searchMode={searchMode}
-              searchQuery={searchQuery}
-              onSearchToggle={onSearchToggle}
-              onSearchInput={onSearchInput}
-              compactActionBar={compactActionBar}
-            />
-          </Bar.Item>
-          <Bar.Spring />
-        </Bar>
+      <div id="explorer-actions" className={cn(barClassName, "explorer-actions--search")}>
+        <Spacer />
+        <Search
+          searchMode={searchMode}
+          searchQuery={searchQuery}
+          onSearchToggle={onSearchToggle}
+          onSearchInput={onSearchInput}
+          mode={mode}
+        />
+        <Spacer />
       </div>
     );
-  if (isMobile && !showParentNavigation)
+  }
+
+  if (mode.mobile && !showParentNavigation) {
     return (
-      <div
-        id="explorer-actions"
-        className={cn("explorer-actions-mobile-layout", actionClassName)}
-      >
-        {showParentNavigation ? (
-          renderParentAction()
-        ) : (
-          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
-        )}
-        {/* <ActionSpace minWidth=".8em" /> */}
-        <Spring />
-        <ActionGroup>
-          <MobileEdgeSpace />
-          {showParentNavigation && (
-            <>
-              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-              <MobileSpace />
-            </>
-          )}
+      <div id="explorer-actions" className={barClassName}>
+        {leadAction}
+        <Spacer />
+        <ButtonGroup
+          surface={!mode.compact}
+          fit={mode.mobile && !mode.compact ? "content" : undefined}
+          density={mode.compact ? "compact" : undefined}
+        >
+          <Gap inline size=".5em" />
           {onSaveFolderNote && (
             <>
-              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
-              <MobileSpace />
+              <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
+              <Gap inline size=".5em" />
             </>
           )}
-          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-          <MobileSpace />
-          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
-          <MobileEdgeSpace />
-        </ActionGroup>
-        <ActionSpace maxWidth="1em" minWidth=".5em" />
-
-        <StandaloneAction onClick={onSearchToggle} icon="search" />
+          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
+          <Gap inline size=".5em" />
+          <GroupButton mode={mode} icon="file-plus" onClick={onNewNote} />
+          <Gap inline size=".5em" />
+        </ButtonGroup>
+        <Spacer minWidth=".5em" maxWidth="1em" />
+        <BarButton mode={mode} icon="search" onClick={onSearchToggle} />
       </div>
     );
-  if (isMobile && !onSaveFolderNote && useLeftTabMobile)
-    return (
-      <div
-        id="explorer-actions"
-        className={cn("explorer-actions-mobile-layout", actionClassName)}
-      >
-        <ActionGroup>
-          <MobileEdgeSpace />
-          {renderParentAction()}
-          <MobileSpace />
-          <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-          <MobileSpace />
+  }
 
+  if (mode.mobile) {
+    return (
+      <div id="explorer-actions" className={barClassName}>
+        {leadAction}
+        <Spacer minWidth=".8em" maxWidth="64px" />
+        <ButtonGroup
+          surface={!mode.compact}
+          fit={mode.mobile && !mode.compact ? "content" : undefined}
+          density={mode.compact ? "compact" : undefined}
+        >
+          <Gap inline size=".5em" />
+          <GroupButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+          <Gap inline size=".5em" />
+          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
+          <Gap inline size=".5em" />
+          <GroupButton mode={mode} icon="file-plus" onClick={onNewNote} />
           {onSaveFolderNote && (
             <>
-              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
-              <MobileSpace />
+              <Gap inline size=".5em" />
+              <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
             </>
           )}
-          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-          <MobileSpace />
-          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
-
-          <MobileEdgeSpace />
-        </ActionGroup>
-        <ActionSpace />
-        <StandaloneAction onClick={onSearchToggle} icon="search" />
+          <Gap inline size=".5em" />
+          <GroupButton mode={mode} icon="search" onClick={onSearchToggle} />
+          <Gap inline size=".5em" />
+        </ButtonGroup>
       </div>
     );
-  if (isMobile && (!onSaveFolderNote || !showParentNavigation))
-    return (
-      <div
-        id="explorer-actions"
-        className={cn("explorer-actions-mobile-layout", actionClassName)}
-      >
-        {showParentNavigation ? (
-          renderParentAction()
-        ) : (
-          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
-        )}
-        <ActionSpace minWidth=".8em" />
-        <ActionGroup>
-          <MobileEdgeSpace />
-          {showParentNavigation && (
-            <>
-              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-              <MobileSpace />
-            </>
-          )}
-          {onSaveFolderNote && (
-            <>
-              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
-              <MobileSpace />
-            </>
-          )}
-          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-          <MobileSpace />
-          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
-          <MobileSpace />
-          <ActionGroupItem onClick={onSearchToggle} icon="search" />
-          <MobileEdgeSpace />
-        </ActionGroup>
-      </div>
-    );
-  if (isMobile)
-    return (
-      <div
-        id="explorer-actions"
-        className={cn("explorer-actions-mobile-layout", actionClassName)}
-      >
-        {showParentNavigation ? (
-          renderParentAction()
-        ) : (
-          <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
-        )}
-        <ActionSpace minWidth=".8em" />
-        <ActionGroup>
-          <MobileEdgeSpace />
+  }
 
-          {showParentNavigation && (
-            <>
-              <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
-              <MobileSpace />
-            </>
-          )}
-          <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-          <MobileSpace />
-          <ActionGroupItem icon="file-plus" onClick={onNewNote} />
-
-          {onSaveFolderNote && (
-            <>
-              <MobileSpace />
-              <ActionGroupItem onClick={onSaveFolderNote} icon="pen-line" />
-            </>
-          )}
-          <MobileSpace />
-          <ActionGroupItem onClick={onSearchToggle} icon="search" />
-          <MobileEdgeSpace />
-        </ActionGroup>
-        {/* <ActionSpace minWidth=".8em" />
-
-        <StandaloneAction onClick={onSearchToggle} icon="search" /> */}
-      </div>
-    );
-  if (isUseNewLayout)
-    return (
-      <div id="explorer-actions" className={actionClassName}>
-        <Bar>
-          <Bar.Item>
-            <Group gap={2} className="explorer-actions-start">
-              {showParentNavigation ? (
-                renderParentAction()
-              ) : (
-                <StandaloneAction
-                  icon={settingsIcon}
-                  onClick={onOpenSettings}
-                />
-              )}
-            </Group>
-          </Bar.Item>
-
-          <Bar.Spring />
-
-          <Bar.Item className="explorer-actions-end">
-            <Group className="explorer-actions-controls">
-              <ActionGroup>
-                {showParentNavigation && (
-                  <ActionGroupItem
-                    icon={settingsIcon}
-                    onClick={onOpenSettings}
-                  />
-                )}
-
-                <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-                <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
-                {onSaveFolderNote && (
-                  <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
-                )}
-              </ActionGroup>
-              <span className="explorer-action-gap" />
-              <Search
-                searchMode={searchMode}
-                searchQuery={searchQuery}
-                onSearchToggle={onSearchToggle}
-                onSearchInput={onSearchInput}
-                compactActionBar={compactActionBar}
-              />
-            </Group>
-          </Bar.Item>
-        </Bar>
-      </div>
-    );
   return (
-    <div id="explorer-actions" className={actionClassName}>
-      <Bar>
-        <Bar.Item>
-          <Group gap={2} className="explorer-actions-start">
-            {showParentNavigation ? (
-              renderParentAction()
-            ) : null}
-            <StandaloneAction icon={settingsIcon} onClick={onOpenSettings} />
-          </Group>
-        </Bar.Item>
+    <div id="explorer-actions" className={barClassName}>
+      <Group gap={2} className="explorer-actions__start">
+        {leadAction}
+      </Group>
 
-        <Bar.Spring />
+      <Spacer />
 
-        <Bar.Item className="explorer-actions-end">
-          <Group className="explorer-actions-controls">
-            <ActionGroup>
-              {onSaveFolderNote && (
-                <ActionGroupItem icon="pen-line" onClick={onSaveFolderNote} />
-              )}
-              <ActionGroupItem icon="folder-plus" onClick={onNewFolder} />
-              <ActionGroupItem icon="file-plus-2" onClick={onNewNote} />
-            </ActionGroup>
-            <span className="explorer-action-gap" />
-            <Search
-              searchMode={searchMode}
-              searchQuery={searchQuery}
-              onSearchToggle={onSearchToggle}
-              onSearchInput={onSearchInput}
-              compactActionBar={compactActionBar}
-            />
-          </Group>
-        </Bar.Item>
-      </Bar>
+      <Group className="explorer-actions__end">
+        <ButtonGroup
+          surface={!mode.compact}
+          density={mode.compact ? "compact" : undefined}
+        >
+          {showParentNavigation && (
+            <GroupButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+          )}
+          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
+          <GroupButton mode={mode} icon="file-plus-2" onClick={onNewNote} />
+          {onSaveFolderNote && (
+            <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
+          )}
+        </ButtonGroup>
+        <Gap inline size={mode.compact ? ".25em" : ".6em"} />
+        <Search
+          searchMode={searchMode}
+          searchQuery={searchQuery}
+          onSearchToggle={onSearchToggle}
+          onSearchInput={onSearchInput}
+          mode={mode}
+        />
+      </Group>
     </div>
   );
 }

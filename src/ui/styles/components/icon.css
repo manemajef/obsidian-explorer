@@ -1,0 +1,12 @@
+/* Icon — setIcon() host span. */
+
+.explorer-container svg {
+  display: block;
+}
+
+.explorer-container .explorer-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}

@@ -11,7 +11,7 @@ import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
-import { Divider } from "./components/ui/layout";
+import { Gap } from "./components/ui/layout";
 
 interface ExplorerUIProps {
   model: ExplorerModel;
@@ -110,16 +110,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const isCardsView = settings.view === "cards";
   const compactActionBar = settings.compactActionBar;
 
-  const filesDividerSize =
+  const filesGapSize =
     compactActionBar && !showFolders
-      ? "sm"
+      ? 4
       : isCardsView || Platform.isMobile
-        ? "lg"
-        : "sm";
-  // : !Platform.isMobile && model.folders.length <= 0
-  //   ? "sm"
-  //   : "md";
-  const folderDivider = compactActionBar ? "sm" : "md";
+        ? 6
+        : 4;
+  const folderGapSize = compactActionBar ? 4 : 6;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -151,12 +148,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     explorerState.paginationKind === "classic" && explorerState.totalPages > 1
       ? explorerState
       : null;
-  const paginationDividerSize = showLoadMore ? "md" : "sm";
+  const paginationGapSize = showLoadMore ? 6 : 4;
 
   return (
     <>
-      {/* {!Platform.isMobile && <Divider size="sm" />} */}
-      <Divider size="sm" />
+      <Gap size={4} />
       <ActionsBar
         app={app}
         parentDropFolder={model.folder.parent}
@@ -182,7 +178,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       />
       {showFolders && (
         <>
-          <Divider size={folderDivider} />
+          <Gap size={folderGapSize} />
           <FolderButtons
             folders={model.folders}
             actions={actions}
@@ -193,13 +189,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {showNotes && (
         <div className="explorer-files-container" ref={listContainerRef}>
-          <Divider size={filesDividerSize} />
+          <Gap size={filesGapSize} />
 
           <div>{renderFiles(visibleFiles)}</div>
 
           {(showLoadMore || classicPagination) && (
             <>
-              <Divider size={paginationDividerSize} />
+              <Gap size={paginationGapSize} />
               {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}

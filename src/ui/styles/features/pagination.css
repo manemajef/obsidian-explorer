@@ -1,0 +1,57 @@
+/* ===== Pagination ===== */
+
+.explorer-paging {
+  padding-block: 4px;
+  padding-inline: 6px;
+}
+
+.explorer-paging__nums {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.explorer-paging__num {
+  color: var(--text-muted);
+}
+
+.explorer-paging__num:hover:not(:disabled),
+.explorer-paging__nav:hover:not(:disabled) {
+  transform: scale(var(--explorer-hover-scale));
+  z-index: 10;
+}
+
+.explorer-paging__nav:disabled {
+  opacity: 0.2;
+}
+
+.explorer-paging__dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
+  color: var(--text-muted);
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ===== Load more ===== */
+
+.explorer-load-more {
+  width: auto;
+  height: auto;
+  min-width: min-content;
+  min-height: 0;
+  padding: calc(var(--explorer-space-2) + 3px)
+    calc(var(--explorer-space-3) + 5px);
+}
+
+.explorer-load-more:hover:not(:disabled) {
+  color: var(--text-normal);
+}
+
+.explorer-load-more__icon {
+  font-size: 0.95em;
+  color: var(--text-accent);
+}

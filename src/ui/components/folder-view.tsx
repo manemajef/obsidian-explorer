@@ -1,14 +1,13 @@
 import React from "react";
+import { Platform } from "obsidian";
 import { ExplorerFolderNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import { shouldCreateMissingFolderNote } from "../../explorer/navigation/folder-notes";
-import { draggableProps, folderDropProps } from "../drag-drop";
-import { InternalLink } from "./shared";
-import {
-  isInteractiveTouchTarget,
-  showFolderContextMenu,
-  type ContextMenuConfig,
-} from "../context-menu";
+import type { ContextMenuConfig } from "../context-menu";
+import { folderInteractionProps } from "./interactions";
+import { cn } from "./ui/cn";
+import { Card } from "./ui/card";
+import { Link } from "./ui/link";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
 
@@ -19,10 +18,13 @@ export function FolderButtons(props: {
 }): React.JSX.Element {
   const { folders, actions, contextMenu } = props;
   const isSparse = folders.length < 3;
+  const variant = Platform.isMobile ? "mobile" : "desktop";
 
   return (
     <div
-      className={`explorer-folders-grid explorer-folders-view${isSparse ? " explorer-folders-grid--sparse" : ""}`}
+      className="explorer-folder-grid"
+      data-sparse={isSparse || undefined}
+      data-variant={variant}
     >
       {folders.map((folder) => {
         const existingNote = folder.folderNote;
@@ -37,34 +39,25 @@ export function FolderButtons(props: {
           shouldCreateMissingFolderNote(actions.settings, "explicit");
 
         return (
-          <div
+          <Card
             key={folderNotePath}
-            className={`explorer-folder-card${isLongName ? " explorer-folder-card--long-name" : ""}${isMissing ? " explorer-folder-card--missing" : ""}`}
-            {...draggableProps(folder.folder)}
-            {...folderDropProps(
-              actions.app,
-              folder.folder,
-              (sourcePath, target, fromFolderNote) =>
-                actions.movePathIntoFolder(sourcePath, target, fromFolderNote),
+            className={cn(
+              "explorer-folder-card",
+              isLongName && "explorer-folder-card--long-name",
             )}
-            onContextMenuCapture={(event) =>
-              showFolderContextMenu(event, contextMenu, folder)
-            }
-            onClick={(e) => {
-              if (isInteractiveTouchTarget(e.target)) return;
-              void actions.openFolder(folder, e.ctrlKey || e.metaKey);
-            }}
+            interactive
+            radius="lg"
+            surface="raised"
+            {...folderInteractionProps(folder, actions, contextMenu)}
           >
-            <InternalLink
+            <Link
               path={folderNotePath}
-              className="explorer-folder-link"
-              variant="folder"
-              additionalClasses={
-                isMissing
-                  ? ["is-unresolved", "explorer-folder-link--missing"]
-                  : undefined
-              }
+              className="explorer-folder-card__link"
               draggable={false}
+              role="body"
+              underline="none"
+              unresolved={isMissing}
+              weight={isMissing ? undefined : "bold"}
               tooltip={
                 isMissing && linkCreatesFolderNote
                   ? `Create folder note ${folder.name}.md`
@@ -82,8 +75,8 @@ export function FolderButtons(props: {
               }
             >
               {linkText}
-            </InternalLink>
-          </div>
+            </Link>
+          </Card>
         );
       })}
     </div>

@@ -1,0 +1,88 @@
+/* ===== Folder grid ===== */
+
+.explorer-folder-grid {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--explorer-space-3);
+
+  /* Host knob: soften Obsidian's unresolved-link fade for missing
+   * folder notes. */
+  --link-unresolved-opacity: 0.9;
+}
+
+/* Filler keeps the last row of flexed cards from stretching full-width. */
+.explorer-folder-grid::after {
+  content: "";
+  flex: 999 1 0;
+}
+
+@container (width <= 500px) {
+  .explorer-folder-card {
+    max-width: 100%;
+  }
+
+  .explorer-folder-grid::after {
+    flex: 100 1 0;
+    max-width: 50%;
+  }
+}
+
+@container (width <= 300px) {
+  .explorer-folder-grid::after {
+    display: none;
+    content: none;
+  }
+}
+
+@media (width <= 700px) {
+  .explorer-folder-grid[data-variant="mobile"] {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--explorer-space-3);
+  }
+
+  .explorer-folder-grid[data-variant="mobile"]::after {
+    content: none;
+  }
+
+  .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
+    grid-column: span 2;
+  }
+
+  .explorer-folder-grid[data-variant="mobile"]
+    .explorer-folder-card--long-name {
+    grid-column: span 3;
+  }
+}
+
+.explorer-folder-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 220px;
+  padding: 0.8em var(--explorer-space-6);
+
+  /* Scales the em-based padding with the folder name text. */
+  font-size: 0.9em;
+  transition: 0.15s;
+}
+
+.explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
+  padding: 1.15em 0.5em;
+  max-width: none;
+}
+
+@media (width >= 800px) {
+  .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
+    padding: 1.15em 1.5em;
+  }
+}
+
+.explorer-folder-card > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
