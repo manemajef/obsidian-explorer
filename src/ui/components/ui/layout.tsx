@@ -206,6 +206,13 @@ export function Separator(props: { className?: string }): React.JSX.Element {
   return <div className={cn("explorer-separator", props.className)} />;
 }
 
+/** Block-flow break between top-level sections. Renders a <br> — in the
+ * markdown/CM6 host flow a div-based spacer (Gap) only works inside our
+ * own flex/div containers. */
+export function Divider(props: { className?: string }): React.JSX.Element {
+  return <br className={cn("explorer-divider", props.className)} />;
+}
+
 /** Fixed-size space along one axis ("auto" follows the parent's axis). */
 export function Gap({
   axis,

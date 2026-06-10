@@ -1,12 +1,6 @@
 /* ===== Actions bar ===== */
-
-.explorer-actions {
-  direction: ltr;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-}
+/* The bar element itself is a Toolbar (components/toolbar.css); only the
+ * feature-level arrangement lives here. */
 
 .explorer-actions__start,
 .explorer-actions__end {

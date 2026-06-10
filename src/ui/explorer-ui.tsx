@@ -11,7 +11,7 @@ import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
-import { Gap } from "./components/ui/layout";
+import { Divider, Gap } from "./components/ui/layout";
 
 interface ExplorerUIProps {
   model: ExplorerModel;
@@ -116,7 +116,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       : isCardsView || Platform.isMobile
         ? 6
         : 4;
-  const folderGapSize = compactActionBar ? 4 : 6;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -178,7 +177,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       />
       {showFolders && (
         <>
-          <Gap size={folderGapSize} />
+          <Divider />
           <FolderButtons
             folders={model.folders}
             actions={actions}
@@ -190,12 +189,14 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {showNotes && (
         <div className="explorer-files-container" ref={listContainerRef}>
           <Gap size={filesGapSize} />
+          <Divider />
 
           <div>{renderFiles(visibleFiles)}</div>
 
           {(showLoadMore || classicPagination) && (
             <>
               <Gap size={paginationGapSize} />
+              <Divider />
               {showLoadMore ? (
                 <PaginationModern
                   canLoadMore={canLoadMore}

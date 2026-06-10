@@ -1,43 +1,15 @@
 import React from "react";
 import { App, Platform, TFolder } from "obsidian";
-import { Search, type BarMode } from "./search";
+import { Search } from "./search";
 import { cn } from "./ui/cn";
-import { Button, ButtonGroup, type ButtonProps } from "./ui/button";
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarGroupItem,
+  ToolbarItem,
+} from "./ui/toolbar";
 import { Gap, Group, Spacer } from "./ui/layout";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
-
-/** A standalone control outside any group: glass pill normally, bare in
- * compact mode. */
-function BarButton({
-  mode,
-  ...props
-}: ButtonProps & { mode: BarMode }): React.JSX.Element {
-  return (
-    <Button
-      variant={mode.compact ? "ghost" : "glass"}
-      shape={mode.compact ? "round" : "circle"}
-      density={mode.compact ? "compact" : undefined}
-      fit={mode.mobile && !mode.compact ? "content" : undefined}
-      {...props}
-    />
-  );
-}
-
-/** A control inside a ButtonGroup. */
-function GroupButton({
-  mode,
-  ...props
-}: ButtonProps & { mode: BarMode }): React.JSX.Element {
-  return (
-    <Button
-      variant="ghost"
-      shape={mode.compact ? "round" : "circle"}
-      density={mode.compact ? "compact" : undefined}
-      fit={mode.mobile && !mode.compact ? "content" : undefined}
-      {...props}
-    />
-  );
-}
 
 const SETTINGS_ICON = "settings-2";
 
@@ -74,18 +46,19 @@ export function ActionsBar(props: {
     compactActionBar,
   } = props;
 
-  const mode: BarMode = {
-    compact: compactActionBar,
-    mobile: Platform.isMobile,
+  const isMobile = Platform.isMobile;
+  const toolbarProps = {
+    id: "explorer-actions",
+    className: cn(
+      "explorer-actions",
+      compactActionBar && "explorer-actions--compact",
+    ),
+    density: compactActionBar ? ("compact" as const) : undefined,
+    fit: isMobile && !compactActionBar ? ("content" as const) : undefined,
   };
-  const barClassName = cn(
-    "explorer-actions",
-    compactActionBar && "explorer-actions--compact",
-  );
 
-  const parentAction = (
-    <BarButton
-      mode={mode}
+  const leadAction = showParentNavigation ? (
+    <ToolbarItem
       icon="undo-2"
       className="explorer-parent-action"
       {...folderDropProps<HTMLButtonElement>(
@@ -95,90 +68,80 @@ export function ActionsBar(props: {
       )}
       onClick={() => onGoToParent(false)}
     />
-  );
-
-  const leadAction = showParentNavigation ? (
-    parentAction
   ) : (
-    <BarButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+    <ToolbarItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
   );
 
-  if (mode.mobile && searchMode) {
+  if (isMobile && searchMode) {
     return (
-      <div id="explorer-actions" className={cn(barClassName, "explorer-actions--search")}>
+      <Toolbar
+        {...toolbarProps}
+        className={cn(toolbarProps.className, "explorer-actions--search")}
+      >
         <Spacer />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}
           onSearchToggle={onSearchToggle}
           onSearchInput={onSearchInput}
-          mode={mode}
         />
         <Spacer />
-      </div>
+      </Toolbar>
     );
   }
 
-  if (mode.mobile && !showParentNavigation) {
+  if (isMobile && !showParentNavigation) {
     return (
-      <div id="explorer-actions" className={barClassName}>
+      <Toolbar {...toolbarProps}>
         {leadAction}
         <Spacer />
-        <ButtonGroup
-          surface={!mode.compact}
-          fit={mode.mobile && !mode.compact ? "content" : undefined}
-          density={mode.compact ? "compact" : undefined}
-        >
+        <ToolbarGroup>
           <Gap inline size=".5em" />
           {onSaveFolderNote && (
             <>
-              <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
+              <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
               <Gap inline size=".5em" />
             </>
           )}
-          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
+          <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
-          <GroupButton mode={mode} icon="file-plus" onClick={onNewNote} />
+          <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
-        </ButtonGroup>
+        </ToolbarGroup>
         <Spacer minWidth=".5em" maxWidth="1em" />
-        <BarButton mode={mode} icon="search" onClick={onSearchToggle} />
-      </div>
+        <ToolbarItem icon="search" onClick={onSearchToggle} />
+      </Toolbar>
     );
   }
 
-  if (mode.mobile) {
+  if (isMobile) {
     return (
-      <div id="explorer-actions" className={barClassName}>
+      <Toolbar {...toolbarProps}>
         {leadAction}
         <Spacer minWidth=".8em" maxWidth="64px" />
-        <ButtonGroup
-          surface={!mode.compact}
-          fit={mode.mobile && !mode.compact ? "content" : undefined}
-          density={mode.compact ? "compact" : undefined}
-        >
+        <ToolbarGroup>
           <Gap inline size=".5em" />
-          <GroupButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+          <ToolbarGroupItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
           <Gap inline size=".5em" />
-          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
+          <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
-          <GroupButton mode={mode} icon="file-plus" onClick={onNewNote} />
+          <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           {onSaveFolderNote && (
             <>
               <Gap inline size=".5em" />
-              <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
+              <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
             </>
           )}
           <Gap inline size=".5em" />
-          <GroupButton mode={mode} icon="search" onClick={onSearchToggle} />
+          <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
           <Gap inline size=".5em" />
-        </ButtonGroup>
-      </div>
+        </ToolbarGroup>
+      </Toolbar>
     );
   }
 
   return (
-    <div id="explorer-actions" className={barClassName}>
+    <Toolbar {...toolbarProps}>
       <Group gap={2} className="explorer-actions__start">
         {leadAction}
       </Group>
@@ -186,28 +149,24 @@ export function ActionsBar(props: {
       <Spacer />
 
       <Group className="explorer-actions__end">
-        <ButtonGroup
-          surface={!mode.compact}
-          density={mode.compact ? "compact" : undefined}
-        >
+        <ToolbarGroup>
           {showParentNavigation && (
-            <GroupButton mode={mode} icon={SETTINGS_ICON} onClick={onOpenSettings} />
+            <ToolbarGroupItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
           )}
-          <GroupButton mode={mode} icon="folder-plus" onClick={onNewFolder} />
-          <GroupButton mode={mode} icon="file-plus-2" onClick={onNewNote} />
+          <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
+          <ToolbarGroupItem icon="file-plus-2" onClick={onNewNote} />
           {onSaveFolderNote && (
-            <GroupButton mode={mode} icon="pen-line" onClick={onSaveFolderNote} />
+            <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
           )}
-        </ButtonGroup>
-        <Gap inline size={mode.compact ? ".25em" : ".6em"} />
+        </ToolbarGroup>
+        <Gap inline size={compactActionBar ? ".25em" : ".6em"} />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}
           onSearchToggle={onSearchToggle}
           onSearchInput={onSearchInput}
-          mode={mode}
         />
       </Group>
-    </div>
+    </Toolbar>
   );
 }

@@ -1,21 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { Button } from "./ui/button";
-
-export type BarMode = {
-  compact: boolean;
-  mobile: boolean;
-};
+import { ToolbarItem } from "./ui/toolbar";
 
 export function Search(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchToggle: () => void;
   onSearchInput: (query: string) => void;
-  mode: BarMode;
 }): React.JSX.Element {
-  const { searchMode, searchQuery, onSearchToggle, onSearchInput, mode } =
-    props;
+  const { searchMode, searchQuery, onSearchToggle, onSearchInput } = props;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -25,16 +18,7 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return (
-      <Button
-        icon="search"
-        variant={mode.compact ? "ghost" : "glass"}
-        shape={mode.compact ? "round" : "circle"}
-        density={mode.compact ? "compact" : undefined}
-        fit={mode.mobile && !mode.compact ? "content" : undefined}
-        onClick={onSearchToggle}
-      />
-    );
+    return <ToolbarItem icon="search" onClick={onSearchToggle} />;
   }
 
   return (
@@ -60,13 +44,9 @@ export function Search(props: {
         />
       </div>
       <div className="explorer-search__clear">
-        <Button
+        <ToolbarItem
           icon="x"
           className="explorer-search__cancel"
-          variant={mode.compact ? "ghost" : "glass"}
-          shape={mode.compact ? "round" : "circle"}
-          density={mode.compact ? "compact" : undefined}
-          fit={mode.mobile && !mode.compact ? "content" : undefined}
           onClick={onSearchToggle}
         />
       </div>

@@ -1,29 +1,32 @@
 /*
- * Import order is the ownership contract (see dev/The UI Bible.md):
- *   tokens → recipes → semantic components → features → fixes.
+ * Import order is the ownership contract (see STYLING.md):
+ *   tokens → host → components (recipes first) → views → fixes.
  * Tokens are defined only in tokens.css. Hacks live only in fixes/.
+ * View stylesheets are named after the TSX file they style.
  */
 @import "./tokens.css";
 @import "./host.css";
-@import "./recipes/surface.css";
-@import "./recipes/text.css";
+@import "./components/surface.css";
+@import "./components/text.css";
 @import "./components/layout.css";
 @import "./components/icon.css";
 @import "./components/link.css";
 @import "./components/badge.css";
 @import "./components/tag.css";
 @import "./components/button.css";
+@import "./components/toolbar.css";
 @import "./components/card.css";
 @import "./components/list-row.css";
-@import "./features/note-metadata.css";
-@import "./features/pin.css";
-@import "./features/list.css";
-@import "./features/cards.css";
-@import "./features/folders.css";
-@import "./features/action-bar.css";
-@import "./features/search.css";
-@import "./features/pagination.css";
-@import "./features/drag-drop.css";
-@import "./features/modal.css";
-@import "./features/virtual-folder-note.css";
+@import "./components/pin.css";
+@import "./views/note-metadata.css";
+@import "./views/list-view.css";
+@import "./views/cards-view.css";
+@import "./views/folder-view.css";
+@import "./views/actions-bar.css";
+@import "./views/search.css";
+@import "./views/pagination.css";
+@import "./views/drag-drop.css";
+@import "./views/modal.css";
+@import "./views/virtual-folder-note.css";
+@import "./fixes/fixes.obsidian.css";
 @import "./fixes/fixes.mobile.css";

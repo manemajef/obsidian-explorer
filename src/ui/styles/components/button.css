@@ -1,13 +1,10 @@
 /*
- * Button + ButtonGroup — every clickable control in the plugin.
+ * Button + ButtonGroup — generic clickable controls (pagination, load-more).
+ * Toolbar controls are a separate component family (toolbar.css).
  *
  * Variants: glass (floating surface) · ghost (transparent, hover wash).
  * Shape:    circle · pill · round.
- * Fit:      fixed (control-size box) · content (auto box, padded icon —
- *           used by the mobile action bar for touch sizing).
- * Density:  compact (borderless dense bar mode).
- * States:   data-active (toggled control) · data-selected (current choice,
- *           e.g. active page) · disabled.
+ * States:   data-active (toggled) · data-selected (current choice) · disabled.
  */
 
 .explorer-button {
@@ -16,10 +13,10 @@
   justify-content: center;
   box-sizing: border-box;
   flex: 0 0 auto;
-  width: var(--explorer-button-size, var(--explorer-control-size));
-  height: var(--explorer-button-size, var(--explorer-control-size));
-  min-width: var(--explorer-button-size, var(--explorer-control-size));
-  min-height: var(--explorer-button-size, var(--explorer-control-size));
+  width: var(--explorer-control-size);
+  height: var(--explorer-control-size);
+  min-width: var(--explorer-control-size);
+  min-height: var(--explorer-control-size);
   padding: var(--explorer-button-pad);
   appearance: none;
   -webkit-appearance: none;
@@ -42,25 +39,6 @@
   border-radius: var(--explorer-radius-md);
 }
 
-.explorer-button[data-fit="content"] {
-  width: auto;
-  height: auto;
-  min-width: 0;
-  min-height: 0;
-  padding: 0;
-  line-height: 0;
-}
-
-.explorer-button[data-fit="content"] .explorer-icon {
-  padding: var(--explorer-icon-pad, 0);
-  box-sizing: content-box;
-}
-
-.explorer-button .explorer-icon svg {
-  width: var(--explorer-icon-size, var(--icon-size));
-  height: var(--explorer-icon-size, var(--icon-size));
-}
-
 .explorer-button[data-variant="ghost"]:hover,
 .explorer-button[data-variant="ghost"]:focus-visible {
   color: var(--text-normal);
@@ -70,16 +48,6 @@
 .explorer-button[data-variant="glass"]:hover,
 .explorer-button[data-variant="glass"]:focus-within {
   z-index: 10;
-}
-
-.explorer-button[data-density="compact"] {
-  width: auto;
-  height: auto;
-  min-width: 0;
-  min-height: 0;
-  padding: 0.25em 0.35em;
-  line-height: 0;
-  color: var(--text-muted);
 }
 
 .explorer-button[data-active] {
@@ -106,17 +74,4 @@
   padding-inline: var(--explorer-button-group-pad, 3px);
   border-radius: var(--explorer-radius-pill);
   min-width: 0;
-}
-
-.explorer-button-group[data-density="compact"] {
-  height: auto;
-  min-height: 0;
-  padding-inline: 0;
-}
-
-.explorer-button-group[data-fit="content"] {
-  height: auto;
-  min-height: 0;
-  padding-block: 0;
-  padding-inline: 6px;
 }

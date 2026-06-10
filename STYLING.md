@@ -22,19 +22,23 @@ makes future changes easier to reason about.
 src/ui/styles/
   tokens.css        Global design decisions. The only definition site for
                     --explorer-* tokens; theme/mobile value resolution here.
-  recipes/          Token combinations: surface.css (data-surface) and
-                    text.css (data-role × data-emphasis).
-  components/       One file per semantic component (button, card, badge,
-                    tag, link, list-row, layout, icon). Own class +
-                    data-attrs only.
-  features/         Product features: layout, grids, placement. No
-                    typography, no surface chrome, no theme forks.
+  components/       Recipes (surface.css: data-surface; text.css:
+                    data-role × data-emphasis) plus one file per semantic
+                    component (button, toolbar, card, badge, tag, link,
+                    list-row, pin, layout, icon). Own class + data-attrs
+                    only.
+  views/            View stylesheets, named after the TSX they style
+                    (list-view.css ↔ list-view.tsx). Layout, grids,
+                    placement. No typography, no surface chrome, no theme
+                    forks.
   fixes/            Quarantined platform/host hacks. Every rule documented.
 
 src/ui/components/
   ui/               Semantic components — app-ignorant (ESLint-enforced:
                     no explorer/ imports). The only place the style prop
-                    is allowed (layout primitives).
+                    is allowed (layout primitives). Toolbar/ToolbarItem/
+                    ToolbarGroup are deliberately separate from Button:
+                    shared glass comes from tokens, not a shared component.
   *.tsx             Feature components. Compose semantic components;
                     interactions.ts bundles drag/drop/menu/open wiring.
 ```

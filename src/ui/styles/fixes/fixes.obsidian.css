@@ -1,0 +1,21 @@
+/*
+ * Obsidian host fixes. Every rule documents what is broken and why the
+ * fix exists (Bible: quarantine rule).
+ */
+
+/* Obsidian's squircle corner-shape (set on .clickable-icon and inputs by
+ * core/themes) distorts our circular controls' hover backgrounds into
+ * superellipses; force plain round corners inside the explorer. */
+.explorer-container {
+  --input-corner-shape: round;
+}
+
+.explorer-container
+  :is(
+    .clickable-icon,
+    .explorer-toolbar-item,
+    .explorer-toolbar-group-item,
+    .explorer-button
+  ) {
+  --corner-shape: round;
+}

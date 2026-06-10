@@ -15,9 +15,6 @@ export interface ButtonProps
   icon?: string;
   variant?: ButtonVariant;
   shape?: ButtonShape;
-  /** content: auto-sized box with padded icon (mobile touch targets). */
-  fit?: "content";
-  density?: "compact";
   active?: boolean;
   selected?: boolean;
   /** glass only: disables the hover lift/scale (e.g. exhausted load-more). */
@@ -31,8 +28,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       icon,
       variant = "ghost",
       shape = "circle",
-      fit,
-      density,
       active,
       selected,
       interactive,
@@ -48,8 +43,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className={cn("explorer-button", className)}
       data-variant={variant}
       data-shape={shape}
-      data-fit={fit}
-      data-density={density}
       data-active={active || undefined}
       data-selected={selected || undefined}
       data-surface={variant === "glass" ? "floating" : undefined}
@@ -66,17 +59,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export interface ButtonGroupProps extends HTMLAttributes<HTMLDivElement> {
-  /** false renders a bare group (compact bar mode). */
+  /** false renders a bare group. */
   surface?: boolean;
-  fit?: "content";
-  density?: "compact";
   children: ReactNode;
 }
 
 export function ButtonGroup({
   surface = true,
-  fit,
-  density,
   className,
   children,
   ...rest
@@ -85,8 +74,6 @@ export function ButtonGroup({
     <div
       className={cn("explorer-button-group", className)}
       data-surface={surface ? "floating" : undefined}
-      data-fit={fit}
-      data-density={density}
       {...rest}
     >
       {children}
