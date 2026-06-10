@@ -68,7 +68,7 @@ export function CardsView(props: {
                   className={`explorer-card-link ${model.pluginSettings.useLinkColorInCard ? "explorer-card-link--accent" : "explorer-card-link--normal"}`}
                   minWidth={0}
                 >
-                  {file.isFolderNote && (
+                  {/* {file.isFolderNote && (
                     <Group className="explorer-card-ext" shrink={false}>
                       <Icon
                         name="folder"
@@ -76,7 +76,7 @@ export function CardsView(props: {
                       />
                       <Gap size={1} />
                     </Group>
-                  )}
+                  )} */}
 
                   <NoteTitle
                     file={file}
@@ -95,19 +95,16 @@ export function CardsView(props: {
                   shrink={false}
                   onClick={(e) => e.stopPropagation()}
                 >
+                  <NoteExtensionBadge
+                    file={file}
+                    className="explorer-card-ext-badge"
+                    filled={false}
+                  />
                   <div className="explorer-card-pin-slot">
                     {file.isMarkdown && (
                       <Pin file={file} actions={actions} placement="card" />
                     )}
                   </div>
-
-                  {!file.isFolderNote && (
-                    <NoteExtensionBadge
-                      file={file}
-                      className="explorer-card-ext-badge"
-                      filled={false}
-                    />
-                  )}
                 </Group>
               </Group>
               <Spring />
