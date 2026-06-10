@@ -1,9 +1,11 @@
 import { TFile } from "obsidian";
 import { BlockSettings, DisplayedNotes } from "../settings";
 import { isFolderNote } from "./folder-note";
-import { ExplorerFileNode } from "./nodes";
+import { ExplorerFileNode, ExplorerFolderNode } from "./nodes";
 
-const EXCLUDED_EXTENSIONS = ["png", "jpeg", "jpg"];
+// const EXCLUDED_EXTENSIONS = [
+//   "png", "jpeg", "jpg"
+// ];
 const DEFAULT_DISPLAY_EXTENSIONS = ["md", "pdf", "base"];
 
 export type ExplorerListing = ExplorerFileNode[];
@@ -36,7 +38,8 @@ export function shouldIndexFile(file: TFile): boolean {
 }
 
 function isExcludedExplorerFile(file: { extension: string }): boolean {
-  return EXCLUDED_EXTENSIONS.includes(file.extension.toLowerCase());
+  // return EXCLUDED_EXTENSIONS.includes(file.extension.toLowerCase());
+  return false;
 }
 
 export function filterDisplayedFiles(

@@ -63,7 +63,7 @@ export async function buildExplorerModel(input: {
     settings,
     pluginSettings,
     children: index.children,
-    folders: index.folders,
+    folders: index.folders.sort((a, b) => a.name.localeCompare(b.name)),
     files: index.getFilesToDisplay(settings),
     folderNotes: index.folderNotes,
     loadAllFiles: async (onChunk) => {
