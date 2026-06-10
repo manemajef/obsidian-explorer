@@ -1,0 +1,72 @@
+# Explorer UI Constitution
+
+The goal is not maximum reuse. The goal is to make future design changes
+safe, predictable, and fast. When goals conflict, prefer the solution that
+makes future changes easier to reason about.
+
+## The golden rules
+
+1. Components declare meaning (`<Card>`, `<Text role="metadata">`), CSS implements it.
+2. Tokens are global and immutable — defined **only** in `tokens.css`.
+3. Components may consume tokens but never redefine them.
+4. Styling experiments happen in tokens or recipes first, component CSS second, overrides last.
+5. Hacks live only in `fixes/*.css`, each with a comment saying what is broken and why the fix exists.
+6. Components do not style other components — no `.feature-x .some-component {}`. Prefer a semantic prop over a more specific selector.
+7. Shared appearance is achieved through shared tokens/recipes, not shared components.
+8. Theme (`.theme-*`) and platform (`.is-mobile`) differences resolve to token **values** in `tokens.css`, or live in `fixes/` — nowhere else. (Enforced by stylelint.)
+9. Do not redesign while systematizing: current visuals are the spec.
+
+## Layers
+
+```
+src/ui/styles/
+  tokens.css        Global design decisions. The only definition site for
+                    --explorer-* tokens; theme/mobile value resolution here.
+  recipes/          Token combinations: surface.css (data-surface) and
+                    text.css (data-role × data-emphasis).
+  components/       One file per semantic component (button, card, badge,
+                    tag, link, list-row, layout, icon). Own class +
+                    data-attrs only.
+  features/         Product features: layout, grids, placement. No
+                    typography, no surface chrome, no theme forks.
+  fixes/            Quarantined platform/host hacks. Every rule documented.
+
+src/ui/components/
+  ui/               Semantic components — app-ignorant (ESLint-enforced:
+                    no explorer/ imports). The only place the style prop
+                    is allowed (layout primitives).
+  *.tsx             Feature components. Compose semantic components;
+                    interactions.ts bundles drag/drop/menu/open wiring.
+```
+
+## Vocabulary (keep it small enough to hold in your head)
+
+- **Surfaces** (`data-surface`): `base` · `subtle` (note cards) · `raised`
+  (list container, folder cards) · `floating` (buttons, button groups,
+  pagination) · `overlay` (modals). Never exceed 5.
+- **Text roles** (`data-role`): `title` · `body` · `description` ·
+  `metadata` · `label`.
+- **Emphasis** (`data-emphasis`): `primary` · `secondary` · `tertiary` ·
+  `faint` · `accent`.
+- **15% knobs**, used sparingly and visibly in markup: `weight="medium|bold"`,
+  `size="md"` on description text, Button `density="compact"` /
+  `fit="content"`.
+
+Before adding a variant, ask: can an existing variant + prop solve it? Is it
+a new concept or just a configuration? Will at least 3 places use it? Can the
+difference be explained in one sentence?
+
+## Workflows
+
+**Adjusting visuals:** tokens → recipes → component CSS → override. Always
+fix at the highest level that solves the problem.
+
+**New component:** visual variation → extend an existing component;
+conceptual difference → new component.
+
+**Enforcement (run on every change):** `npm run lint` (style-prop ban,
+ui/ app-ignorance), `npm run lint:css` (theme/platform quarantine,
+specificity caps), `npm run build`.
+
+The full rationale lives in `dev/The UI Bible.md`; the old-system →
+new-system value mapping in `dev/UI System/token-audit.md`.

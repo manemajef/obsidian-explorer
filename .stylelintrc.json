@@ -1,5 +1,7 @@
 {
-  "extends": ["stylelint-config-standard"],
+  "extends": [
+    "stylelint-config-standard"
+  ],
   "rules": {
     "no-descending-specificity": null,
     "selector-class-pattern": null,
@@ -20,8 +22,50 @@
     "no-duplicate-selectors": true,
     "declaration-block-no-duplicate-properties": [
       true,
-      { "ignore": ["consecutive-duplicates-with-different-values"] }
-    ]
+      {
+        "ignore": [
+          "consecutive-duplicates-with-different-values"
+        ]
+      }
+    ],
+    "selector-disallowed-list": [
+      [
+        "/\\.theme-(dark|light)/",
+        "/\\.is-(mobile|phone|tablet)/"
+      ],
+      {
+        "message": "Theme/platform selectors live only in tokens.css (value resolution) and fixes/ (documented hacks). See STYLING.md."
+      }
+    ],
+    "selector-max-class": 4,
+    "selector-max-compound-selectors": 4,
+    "selector-max-specificity": "0,5,1"
   },
-  "ignoreFiles": ["styles.css", "node_modules/**", "main.js"]
+  "ignoreFiles": [
+    "styles.css",
+    "node_modules/**",
+    "main.js"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/tokens.css",
+        "**/fixes/*.css"
+      ],
+      "rules": {
+        "selector-disallowed-list": null,
+        "selector-max-class": null,
+        "selector-max-compound-selectors": null,
+        "selector-max-specificity": null
+      }
+    },
+    {
+      "files": [
+        "**/host.css"
+      ],
+      "rules": {
+        "selector-max-class": null
+      }
+    }
+  ]
 }

@@ -62,6 +62,43 @@ export default defineConfig([
       ],
     },
   },
+  // --- UI system boundaries (see STYLING.md) -----------------------------
+  // Semantic components (ui/) are app-ignorant: they may not import the
+  // explorer backend. App wiring belongs in feature components and
+  // interactions.ts.
+  {
+    files: ["src/ui/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/explorer/**"],
+              message:
+                "Semantic components are app-ignorant. Pass data in via props; wire behavior in feature components.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // Feature components declare meaning; presentation lives in CSS. Inline
+  // styles are allowed only inside ui/ layout primitives.
+  {
+    files: ["src/ui/**/*.tsx"],
+    ignores: ["src/ui/components/ui/**"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXAttribute[name.name='style']",
+          message:
+            "No style prop outside ui/ primitives — use a class + CSS, a semantic prop, or a token (STYLING.md).",
+        },
+      ],
+    },
+  },
   {
     // lib/ is the dependency-light bottom layer: it may only reach down to
     // settings, vault, and the host SDK — never sideways/up into stateful or
