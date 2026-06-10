@@ -54,6 +54,36 @@ export function ActionsBar(props: {
   // const settingsIcon = "ellipsis";
   const isUseNewLayout = true;
   const useLeftTabMobile = false;
+  const renderParentAction = () => {
+    const onClick = () => onGoToParent(false);
+    if (compactActionBar) {
+      return (
+        <ActionGroupItem
+          icon="undo-2"
+          className="explorer-parent-action"
+          {...folderDropProps<HTMLButtonElement>(
+            app,
+            parentDropFolder,
+            onMoveIntoFolder,
+          )}
+          onClick={onClick}
+        />
+      );
+    }
+
+    return (
+      <ActionItem
+        icon="undo-2"
+        className="explorer-parent-action"
+        surfaceProps={folderDropProps<HTMLDivElement>(
+          app,
+          parentDropFolder,
+          onMoveIntoFolder,
+        )}
+        onClick={onClick}
+      />
+    );
+  };
 
   if (isMobile && searchMode)
     return (
@@ -83,7 +113,7 @@ export function ActionsBar(props: {
         className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
         {showParentNavigation ? (
-          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
+          renderParentAction()
         ) : (
           <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
         )}
@@ -121,7 +151,7 @@ export function ActionsBar(props: {
       >
         <ActionGroup>
           <MobileEdgeSpace />
-          <ActionGroupItem onClick={() => onGoToParent(false)} icon="undo-2" />
+          {renderParentAction()}
           <MobileSpace />
           <ActionGroupItem onClick={onOpenSettings} icon={settingsIcon} />
           <MobileSpace />
@@ -149,7 +179,7 @@ export function ActionsBar(props: {
         className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
         {showParentNavigation ? (
-          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
+          renderParentAction()
         ) : (
           <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
         )}
@@ -184,7 +214,7 @@ export function ActionsBar(props: {
         className={cn("explorer-actions-mobile-layout", actionClassName)}
       >
         {showParentNavigation ? (
-          <StandaloneAction onClick={() => onGoToParent(false)} icon="undo-2" />
+          renderParentAction()
         ) : (
           <StandaloneAction onClick={onOpenSettings} icon={settingsIcon} />
         )}
@@ -224,20 +254,7 @@ export function ActionsBar(props: {
           <Bar.Item>
             <Group gap={2} className="explorer-actions-start">
               {showParentNavigation ? (
-                <>
-                  <StandaloneAction
-                    icon="undo-2"
-                    className="explorer-parent-action"
-                    {...folderDropProps(
-                      app,
-                      parentDropFolder,
-                      onMoveIntoFolder,
-                    )}
-                    onClick={() => {
-                      onGoToParent(false);
-                    }}
-                  />
-                </>
+                renderParentAction()
               ) : (
                 <StandaloneAction
                   icon={settingsIcon}
@@ -284,14 +301,7 @@ export function ActionsBar(props: {
         <Bar.Item>
           <Group gap={2} className="explorer-actions-start">
             {showParentNavigation ? (
-              <StandaloneAction
-                icon="undo-2"
-                className="explorer-parent-action"
-                {...folderDropProps(app, parentDropFolder, onMoveIntoFolder)}
-                onClick={() => {
-                  onGoToParent(false);
-                }}
-              />
+              renderParentAction()
             ) : null}
             <StandaloneAction icon={settingsIcon} onClick={onOpenSettings} />
           </Group>

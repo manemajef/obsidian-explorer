@@ -35,17 +35,24 @@ type ActionItemVariantProps = {
 export interface ActionItemProps
   extends
     Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">,
-    ActionItemVariantProps {}
+    ActionItemVariantProps {
+  surfaceProps?: Omit<
+    HTMLAttributes<HTMLDivElement>,
+    "children" | "className"
+  >;
+}
 
 export function ActionItem({
   icon,
   active,
   shine = true,
   className,
+  surfaceProps,
   ...props
 }: ActionItemProps): JSX.Element {
   return (
     <Surface
+      {...surfaceProps}
       active={active}
       shine={shine}
       interactive
