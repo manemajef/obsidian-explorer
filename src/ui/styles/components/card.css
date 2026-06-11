@@ -20,3 +20,9 @@
 .explorer-ui-card[data-radius="md"] {
   border-radius: var(--explorer-radius-md);
 }
+
+.explorer-ui-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+}
