@@ -6,8 +6,12 @@
 /* Obsidian's squircle corner-shape (set on .clickable-icon and inputs by
  * core/themes) distorts our circular controls' hover backgrounds into
  * superellipses; force plain round corners inside the explorer. */
-.explorer-container {
-  --input-corner-shape: round;
+
+/* Obsidian gives buttons a background */
+.explorer-container button,
+.explorer-container input[type="text"] {
+  corner-shape: round;
+  background-color: unset;
 }
 
 .explorer-container
