@@ -57,7 +57,7 @@ export function FolderButtons(props: {
               role="body"
               underline="none"
               unresolved={isMissing}
-              weight={isMissing ? undefined : "bold"}
+              weight={isMissing ? "bold" : "bold"}
               tooltip={
                 isMissing && linkCreatesFolderNote
                   ? `Create folder note ${folder.name}.md`
