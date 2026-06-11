@@ -208,9 +208,18 @@ export function Separator(props: { className?: string }): React.JSX.Element {
 
 /** Block-flow break between top-level sections. Renders a <br> — in the
  * markdown/CM6 host flow a div-based spacer (Gap) only works inside our
- * own flex/div containers. */
-export function Divider(props: { className?: string }): React.JSX.Element {
-  return <br className={cn("explorer-divider", props.className)} />;
+ * own flex/div containers. Without size it's a native line break; with
+ * size it becomes a fixed-height block spacer. */
+export function Divider(props: {
+  className?: string;
+  size?: "sm" | "md" | "lg";
+}): React.JSX.Element {
+  return (
+    <br
+      className={cn("explorer-divider", props.className)}
+      data-size={props.size}
+    />
+  );
 }
 
 /** Fixed-size space along one axis ("auto" follows the parent's axis). */
