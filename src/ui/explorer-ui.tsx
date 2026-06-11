@@ -151,7 +151,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
   return (
     <>
-      <Gap size={4} />
+      <div className="tmp-conditional-margin-top" />
       <ActionsBar
         app={app}
         parentDropFolder={model.folder.parent}
@@ -215,6 +215,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           )}
         </div>
       )}
+      <Divider />
     </>
   );
 }

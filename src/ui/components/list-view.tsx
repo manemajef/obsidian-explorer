@@ -65,6 +65,7 @@ function ClassicList(props: ListViewProps): React.JSX.Element {
               className="explorer-classic-list__title"
               draggable={false}
               role="body"
+              emphasis="accent"
               underline="hover"
               onClick={(event) => {
                 event.preventDefault();
