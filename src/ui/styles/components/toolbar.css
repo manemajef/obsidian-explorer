@@ -30,7 +30,7 @@
   border: none;
   border-radius: 50%;
   color: var(--text-normal);
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .explorer-toolbar-item .explorer-icon svg,
