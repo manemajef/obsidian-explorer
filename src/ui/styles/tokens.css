@@ -89,7 +89,13 @@
   --explorer-surface-floating-shadow-hover:
     0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
     var(--shadow-edges);
-  --explorer-surface-floating-shine: none;
+
+  /* Inner top-light edge highlight ("OS shine") — applies in BOTH themes;
+   * on light mobile it pairs with the raised+blur trick (fixes.mobile.css)
+   * for the liquid-glass look. */
+  --explorer-surface-floating-shine:
+    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .theme-dark .explorer-container {
@@ -125,9 +131,6 @@
   --explorer-surface-floating-shadow-hover:
     0 4px 10px rgba(0, 0, 0, 0.08), inset 1px 1px 0 0 rgba(255, 255, 255, 0.08),
     inset -1px -1px 0 0 rgba(255, 255, 255, 0.03);
-  --explorer-surface-floating-shine:
-    inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
-    inset -1px -1px 0 rgba(255, 255, 255, 0.06);
   --explorer-button-pad: 0px;
   --explorer-button-selected-bg: var(--background-modifier-hover);
   --explorer-button-selected-border: 1px solid var(--background-modifier-border);
