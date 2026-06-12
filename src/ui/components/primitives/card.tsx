@@ -1,7 +1,7 @@
 import React, { type HTMLAttributes } from "react";
 import { cn } from "./cn";
 
-export type CardSurface = "base" | "subtle" | "raised";
+export type CardSurface = "base" | "subtle" | "raised" | "control";
 export type CardRadius = "card" | "lg" | "md";
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {

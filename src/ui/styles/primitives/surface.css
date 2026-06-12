@@ -1,10 +1,9 @@
 /*
- * Surface recipe — the five-level surface system (base/subtle/raised/
- * floating/overlay). Components opt in via data-surface; this file is the
- * only place surface chrome (background/border/shadow) is painted.
+ * Surface recipe — the reusable surface system (base/subtle/raised/control/
+ * floating). Components opt in via data-surface; this file is the only place
+ * surface chrome (background/border/shadow) is painted.
  *
  * base    → no chrome, no rule needed.
- * overlay → Obsidian's modal layer paints itself; no rule needed.
  *
  * Radius is component-owned (components pick from the radius scale).
  * data-interactive adds hover feedback: shadow lift on every level,
@@ -32,6 +31,17 @@
 .explorer-container [data-surface="raised"][data-interactive]:hover,
 .explorer-container [data-surface="raised"][data-interactive]:focus-within {
   box-shadow: var(--explorer-surface-raised-shadow-hover);
+}
+
+.explorer-container [data-surface="control"] {
+  background: var(--explorer-surface-control-bg);
+  border: var(--explorer-surface-control-border);
+  box-shadow: var(--explorer-surface-control-shadow);
+}
+
+.explorer-container [data-surface="control"][data-interactive]:hover,
+.explorer-container [data-surface="control"][data-interactive]:focus-within {
+  box-shadow: var(--explorer-surface-control-shadow-hover);
 }
 
 .explorer-container [data-surface="floating"] {

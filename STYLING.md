@@ -54,8 +54,9 @@ src/ui/components/
 ## Vocabulary (keep it small enough to hold in your head)
 
 - **Surfaces** (`data-surface`): `base` · `subtle` (note cards) · `raised`
-  (list container, folder cards) · `floating` (buttons, button groups,
-  pagination) · `overlay` (modals). Never exceed 5.
+  (grouped containers) · `control` (interactive card-like controls) ·
+  `floating` (toolbar buttons, button groups, pagination). Never exceed 5.
+  Modals/overlays are host-owned, not part of this reusable surface scale.
 - **Text roles** (`data-role`): `title` · `body` · `description` ·
   `metadata` · `label`.
 - **Emphasis** (`data-emphasis`): `primary` · `secondary` · `tertiary` ·

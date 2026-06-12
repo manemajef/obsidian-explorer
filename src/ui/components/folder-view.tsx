@@ -47,7 +47,7 @@ export function FolderButtons(props: {
             )}
             interactive
             radius="lg"
-            surface="raised"
+            surface="control"
             {...folderInteractionProps(folder, actions, contextMenu)}
           >
             <Link
