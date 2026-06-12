@@ -1,0 +1,19 @@
+/* ===== Load more pagination ===== */
+
+.explorer-load-more {
+  width: auto;
+  height: auto;
+  min-width: min-content;
+  min-height: 0;
+  padding: calc(var(--explorer-space-2) + 3px)
+    calc(var(--explorer-space-3) + 5px);
+}
+
+.explorer-load-more:hover:not(:disabled) {
+  color: var(--text-normal);
+}
+
+.explorer-load-more__icon {
+  font-size: 0.95em;
+  color: var(--text-accent);
+}

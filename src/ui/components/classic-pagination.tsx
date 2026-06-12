@@ -2,7 +2,6 @@ import React from "react";
 import { Platform } from "obsidian";
 import { Button, ButtonGroup } from "./primitives/button";
 import { Icon } from "./primitives/icon";
-import { Text } from "./primitives/text";
 import { Gap, Group } from "./primitives/layout";
 
 function PageNav(props: {
@@ -49,45 +48,15 @@ function PageDots(): React.JSX.Element {
   );
 }
 
-type PaginationProps = {
+type ClassicPaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 };
 
-type PaginationModernProps = {
-  canLoadMore: boolean;
-  onLoadMore: () => void;
-};
-
-export function PaginationModern(
-  props: PaginationModernProps,
+export function ClassicPagination(
+  props: ClassicPaginationProps,
 ): React.JSX.Element {
-  const { canLoadMore, onLoadMore } = props;
-
-  return (
-    <Group justify="center">
-      <Button
-        className="explorer-load-more"
-        variant="glass"
-        shape="pill"
-        interactive={canLoadMore}
-        disabled={!canLoadMore}
-        onClick={(event) => {
-          event.currentTarget.blur();
-          onLoadMore();
-        }}
-      >
-        <Text role="body" weight="medium">
-          Load more
-        </Text>
-        <Icon name="chevrons-down" className="explorer-load-more__icon" />
-      </Button>
-    </Group>
-  );
-}
-
-export function Pagination(props: PaginationProps): React.JSX.Element {
   const { currentPage, totalPages, onPageChange } = props;
   const isMobile = Platform.isMobile;
   const page = currentPage;

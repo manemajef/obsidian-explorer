@@ -7,9 +7,10 @@ import { ExplorerActions } from "../explorer/actions";
 import { useExplorerState } from "./explorer-state";
 import type { ContextMenuConfig } from "./context-menu";
 import { CardsView } from "./components/cards-view";
+import { ClassicPagination } from "./components/classic-pagination";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
-import { Pagination, PaginationModern } from "./components/pagination";
+import { LoadMorePagination } from "./components/load-more-pagination";
 import { ActionsBar } from "./components/actions-bar";
 import { Divider, Gap } from "./components/primitives/layout";
 
@@ -198,12 +199,12 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
               <Gap size={paginationGapSize} />
               <Divider />
               {showLoadMore ? (
-                <PaginationModern
+                <LoadMorePagination
                   canLoadMore={canLoadMore}
                   onLoadMore={loadMore}
                 />
               ) : (
-                <Pagination
+                <ClassicPagination
                   currentPage={classicPagination?.currentPage ?? 0}
                   totalPages={classicPagination?.totalPages ?? 1}
                   onPageChange={(page) => {

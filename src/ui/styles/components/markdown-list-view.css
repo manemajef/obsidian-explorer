@@ -1,0 +1,34 @@
+/* ===== Markdown list ===== */
+
+.explorer-markdown-list {
+  margin-top: 0.5em;
+  border-radius: var(--explorer-radius-md);
+  font-size: 0.9em;
+}
+
+.explorer-markdown-list__item {
+  padding: var(--explorer-space-1);
+  list-style: none;
+}
+
+.explorer-markdown-list__item[data-list-style="markdown"]:not([data-pinned]) {
+  margin-inline-start: var(--explorer-space-4);
+}
+
+.explorer-markdown-list__item[data-pinned] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-inline-start: 1.45em;
+}
+
+.explorer-markdown-list__pin {
+  position: absolute;
+  inset-inline-start: -0.2em;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.explorer-markdown-list__pin[data-bullets] {
+  inset-inline-start: -0.4em;
+}

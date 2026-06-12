@@ -53,7 +53,7 @@
   :where(
     .explorer-folder-card,
     .explorer-file-card,
-    .explorer-classic-list__item,
+    .explorer-markdown-list__item,
     .explorer-parent-action
   )
   > * {
