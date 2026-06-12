@@ -3,6 +3,7 @@
 .explorer-paging {
   padding-block: 4px;
   padding-inline: 6px;
+  height: unset;
 }
 
 .explorer-paging__nums {
