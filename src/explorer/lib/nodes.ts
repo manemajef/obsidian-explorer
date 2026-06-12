@@ -64,7 +64,10 @@ export class ExplorerFileNode {
   }
 
   get isMarkdown(): boolean {
-    return this.extension.toLowerCase() === "md";
+    return (
+      this.extension.toLowerCase() === "md" &&
+      !this.basename.toLocaleLowerCase().endsWith(".excalidraw")
+    );
   }
 
   get isFolderNote(): boolean {
