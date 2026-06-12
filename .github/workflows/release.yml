@@ -38,6 +38,11 @@ jobs:
             exit 1
           fi
 
+          if [[ ! "$TAG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
+            echo "Tag version ($TAG_VERSION) is not a supported SemVer release tag."
+            exit 1
+          fi
+
       - name: Build plugin
         run: npm run build
 
@@ -54,8 +59,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
+          RELEASE_FLAGS=()
+          RELEASE_TITLE="$GITHUB_REF_NAME"
+
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            RELEASE_FLAGS+=(--prerelease)
+            RELEASE_TITLE="$GITHUB_REF_NAME (beta)"
+          fi
+
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" manifest.json main.js styles.css --clobber
+            if [[ ${#RELEASE_FLAGS[@]} -gt 0 ]]; then
+              gh release edit "$GITHUB_REF_NAME" "${RELEASE_FLAGS[@]}" --title "$RELEASE_TITLE"
+            fi
           else
-            gh release create "$GITHUB_REF_NAME" manifest.json main.js styles.css --generate-notes --title "$GITHUB_REF_NAME"
+            gh release create "$GITHUB_REF_NAME" manifest.json main.js styles.css --generate-notes --title "$RELEASE_TITLE" "${RELEASE_FLAGS[@]}"
           fi
