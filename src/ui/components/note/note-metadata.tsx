@@ -9,6 +9,8 @@ import { Group } from "../primitives/layout";
 import { Text } from "../primitives/text";
 import { useNotePreview } from "./use-note-preview";
 
+const MEETA_TEXT_EMPH = "tertiary";
+
 type NoteMetadataProps = {
   file: ExplorerFileNode;
   model: ExplorerModel;
@@ -45,7 +47,7 @@ export function NoteDate({
   return (
     <Text
       role="metadata"
-      emphasis="secondary"
+      emphasis={MEETA_TEXT_EMPH}
       className={cn("explorer-metadata-date", className)}
     >
       {diffDays(date)}
@@ -65,7 +67,7 @@ export function NoteFolder({
   return (
     <Text
       role="metadata"
-      emphasis="secondary"
+      emphasis={MEETA_TEXT_EMPH}
       className={cn("explorer-metadata-folder-link", className)}
       onClick={(e) => {
         e.preventDefault();
@@ -90,7 +92,7 @@ function NoteMetadataSeparator({
     return (
       <Text
         role="metadata"
-        emphasis="secondary"
+        emphasis={MEETA_TEXT_EMPH}
         className="explorer-metadata-separator--dot"
       >
         •
@@ -141,7 +143,7 @@ export function NotePreview({
   return (
     <Text
       role="description"
-      emphasis="secondary"
+      emphasis={MEETA_TEXT_EMPH}
       size={size}
       className={cn("explorer-metadata-preview", className)}
     >
@@ -219,9 +221,7 @@ export function NoteFolderDatePreview({
       {showFolder && actions && (
         <NoteFolder file={file} model={model} actions={actions} />
       )}
-      {showFolder && (showDate || showNotePreview) && (
-        <NoteMetadataSeparator />
-      )}
+      {showFolder && (showDate || showNotePreview) && <NoteMetadataSeparator />}
       {showDate && <NoteDate file={file} model={model} />}
       {showDate && showNotePreview && <NoteMetadataSeparator />}
       {showNotePreview && (
