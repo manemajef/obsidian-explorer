@@ -199,7 +199,7 @@ export function renderSettingField(
       for (let depth = field.min; depth <= field.max; depth += field.step ?? 1) {
         dropdown.addOption(String(depth), formatDepthOption(depth));
       }
-      dropdown.setValue(String(settings[key] as number)).onChange((value) => {
+      dropdown.setValue(String(settings[key])).onChange((value) => {
         onChange(key, Number.parseInt(value, 10));
       });
     });
