@@ -157,10 +157,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         app={app}
         parentDropFolder={model.folder.parent}
         onMoveIntoFolder={onMoveIntoFolder}
-        showParentNavigation={
-          model.pluginSettings.showParentButton &&
-          actions.canGoToParent(model.location)
-        }
+        canGoToParent={actions.canGoToParent(model.location)}
         onOpenSettings={onOpenSettings}
         onSaveFolderNote={
           onSaveFolderNote ? () => void onSaveFolderNote() : undefined

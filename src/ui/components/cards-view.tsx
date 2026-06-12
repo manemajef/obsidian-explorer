@@ -19,8 +19,7 @@ export function CardsView(props: {
   const { model, files, actions, contextMenu } = props;
 
   let compact = model.settings.compactCards;
-  if (Platform.isMobile && model.pluginSettings.alwaysUseModernListInMobile)
-    compact = false;
+  if (Platform.isMobile && model.settings.adaptToMobile) compact = false;
 
   return (
     <div

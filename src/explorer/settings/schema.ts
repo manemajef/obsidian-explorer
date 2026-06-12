@@ -189,6 +189,24 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       visibleWhen: { key: "view", value: "cards", platform: "desktop" },
     },
   }),
+  adaptToMobile: booleanField({
+    label: "Adapt to mobile",
+    description:
+      "Use mobile-friendly list and card layouts on small screens. Turn this off to keep desktop view behavior on mobile.",
+    defaultValue: true,
+    blockKey: "adaptToMobile",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      group: "view",
+      visibleWhen: { platform: "mobile" },
+    },
+    legacy: {
+      blockKeys: ["alwaysUseModernListInMobile"],
+      resolve: (source) =>
+        coerceLegacyBoolean(source.alwaysUseModernListInMobile),
+    },
+  }),
   sortBy: enumField({
     label: "Sort by",
     description: "How to sort files.",
@@ -524,17 +542,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
-  alwaysUseModernListInMobile: booleanField({
-    label: "Adapt views on mobile",
-    description:
-      "Use modern lists and regular card spacing on small screens. Turn this off to keep desktop view behavior on mobile.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      visibleWhen: { platform: "mobile" },
-    },
-  }),
   useLinkColorInCard: booleanField({
     label: "Use link color in card header",
     description: "Use the theme link color for card titles.",
@@ -542,24 +549,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "appearance",
-    },
-  }),
-  ShowIconsInCards: booleanField({
-    label: "Show card icons",
-    description: "Show icons in card metadata.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-    },
-  }),
-  showParentButton: booleanField({
-    label: "Show parent folder button",
-    description: "Show a button that navigates to the parent folder.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "visibility",
     },
   }),
 });

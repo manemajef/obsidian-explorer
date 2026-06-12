@@ -75,9 +75,7 @@ export function NoteFolder({
         void actions.openFolder(parentFolder, e.ctrlKey || e.metaKey);
       }}
     >
-      {model.pluginSettings.ShowIconsInCards && (
-        <Icon name="folder-closed" className="explorer-metadata-folder-icon" />
-      )}
+      <Icon name="folder-closed" className="explorer-metadata-folder-icon" />
       <span className="explorer-metadata-folder-name">{parentFolder.name}</span>
     </Text>
   );

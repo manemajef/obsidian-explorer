@@ -405,6 +405,13 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
   const rawBlockDefaults = isRecord(raw.defaultBlockSettings)
     ? raw.defaultBlockSettings
     : {};
+  const blockDefaultsSource = { ...rawBlockDefaults };
+  if (
+    !("adaptToMobile" in blockDefaultsSource) &&
+    "alwaysUseModernListInMobile" in raw
+  ) {
+    blockDefaultsSource.adaptToMobile = raw.alwaysUseModernListInMobile;
+  }
 
   for (const key of PLUGIN_SETTING_KEYS) {
     const field = PLUGIN_SETTINGS_SCHEMA[key] as AnySettingField;
@@ -454,12 +461,10 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
   }
 
   return {
-    defaultBlockSettings: isRecord(raw.defaultBlockSettings)
-      ? coerceBlockSettings(
-          raw.defaultBlockSettings,
-          pluginDefaults.defaultBlockSettings,
-        )
-      : pluginDefaults.defaultBlockSettings,
+    defaultBlockSettings: coerceBlockSettings(
+      blockDefaultsSource,
+      pluginDefaults.defaultBlockSettings,
+    ),
     ...globalSettings,
   };
 }

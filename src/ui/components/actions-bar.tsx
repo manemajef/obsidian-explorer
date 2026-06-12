@@ -26,7 +26,7 @@ export function ActionsBar(props: {
   searchMode: boolean;
   searchQuery: string;
   onSearchInput: (query: string) => void;
-  showParentNavigation: boolean;
+  canGoToParent: boolean;
   compactActionBar: boolean;
 }): React.JSX.Element {
   const {
@@ -42,7 +42,7 @@ export function ActionsBar(props: {
     searchQuery,
     onSearchToggle,
     onSearchInput,
-    showParentNavigation,
+    canGoToParent,
     compactActionBar,
   } = props;
 
@@ -57,7 +57,7 @@ export function ActionsBar(props: {
     fit: isMobile && !compactActionBar ? ("content" as const) : undefined,
   };
 
-  const leadAction = showParentNavigation ? (
+  const leadAction = canGoToParent ? (
     <ToolbarItem
       icon="undo-2"
       className="explorer-parent-action"
@@ -90,7 +90,7 @@ export function ActionsBar(props: {
     );
   }
 
-  if (isMobile && !showParentNavigation) {
+  if (isMobile && !canGoToParent) {
     return (
       <Toolbar {...toolbarProps}>
         {leadAction}
@@ -150,7 +150,7 @@ export function ActionsBar(props: {
 
       <Group className="explorer-actions__end">
         <ToolbarGroup>
-          {showParentNavigation && (
+          {canGoToParent && (
             <ToolbarGroupItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
           )}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />

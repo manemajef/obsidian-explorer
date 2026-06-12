@@ -226,14 +226,14 @@ Supported block settings:
 | `showTags`         | `true`, `false`                                       |
 | `displayedNotes`   | `supported`, `markdown`, `all`, `none`                |
 | `excludedFolders`  | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
+| `adaptToMobile`    | `true`, `false`                                       |
 | `textDirection`    | `auto`, `ltr`, `rtl`                                  |
 
 `excludedFolders` hides selected folders and their contents from that Explorer
 block only. Plugin-only settings include missing Markdown folder-note creation
 rules, homepage behavior, reading-mode handling, renaming synchronization,
 hiding folder notes in Obsidian's sidebar, opening views from the sidebar
-click, nested folder-note display, parent navigation button, mobile view
-adaptation, card icons, and default list/card styles.
+click, nested folder-note display, and default list/card styles.
 
 ## Search
 

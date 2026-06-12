@@ -18,10 +18,10 @@ export function ListView(props: ListViewProps): React.JSX.Element {
   const { files } = props;
   if (files.length == 0) return <div></div>;
 
-  const { settings, pluginSettings } = props.model;
+  const { settings } = props.model;
   const shouldUseModernList =
     settings.listStyle === "modern" ||
-    (Platform.isMobile && pluginSettings.alwaysUseModernListInMobile);
+    (Platform.isMobile && settings.adaptToMobile);
 
   if (shouldUseModernList) {
     return <ModernListView {...props} />;

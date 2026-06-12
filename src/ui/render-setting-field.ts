@@ -18,6 +18,12 @@ import { getAllVaultFolders } from "../utils";
 
 const PAGE_SIZE_PRESETS = [6, 12, 18, 24, 30, 36, 48, 60] as const;
 
+function formatDepthOption(depth: number): string {
+  if (depth === 0) return "Current folder only";
+  if (depth === 1) return "1 subfolder level";
+  return `${depth} subfolder levels`;
+}
+
 type SettingFieldContext = {
   app: App;
   sourcePath: string;
@@ -185,6 +191,15 @@ export function renderSettingField(
         dropdown.addOption(String(preset), String(preset));
       }
       dropdown.setValue(String(currentValue)).onChange((value) => {
+        onChange(key, Number.parseInt(value, 10));
+      });
+    });
+  } else if (field.kind === "number" && key === "depth") {
+    setting.addDropdown((dropdown) => {
+      for (let depth = field.min; depth <= field.max; depth += field.step ?? 1) {
+        dropdown.addOption(String(depth), formatDepthOption(depth));
+      }
+      dropdown.setValue(String(settings[key] as number)).onChange((value) => {
         onChange(key, Number.parseInt(value, 10));
       });
     });
