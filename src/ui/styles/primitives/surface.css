@@ -48,6 +48,10 @@
   position: relative;
   background: var(--explorer-surface-floating-bg);
   border: var(--explorer-surface-floating-border);
+
+  /* Toggle to get funky */
+  /* --explorer-surface-floating-shadow: var(--raised-shadow); */
+
   box-shadow: var(--explorer-surface-floating-shadow);
 }
 
