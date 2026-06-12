@@ -24,7 +24,7 @@
 
 .explorer-container [data-surface="raised"] {
   background: var(--explorer-surface-raised-bg);
-  background-image: var(--explorer-surface-raised-bg-image);
+  /* background-image: var(--explorer-surface-raised-bg-image); */
   border: var(--explorer-surface-raised-border);
   box-shadow: var(--explorer-surface-raised-shadow);
 }

@@ -1,14 +1,14 @@
 import React from "react";
 import { App, Platform, TFolder } from "obsidian";
 import { Search } from "./search";
-import { cn } from "./ui/cn";
+import { cn } from "./primitives/cn";
 import {
   Toolbar,
   ToolbarGroup,
   ToolbarGroupItem,
   ToolbarItem,
-} from "./ui/toolbar";
-import { Gap, Group, Spacer } from "./ui/layout";
+} from "./primitives/toolbar";
+import { Gap, Group, Spacer } from "./primitives/layout";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
 
 const SETTINGS_ICON = "settings-2";

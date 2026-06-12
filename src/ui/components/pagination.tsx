@@ -1,9 +1,9 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { Button, ButtonGroup } from "./ui/button";
-import { Icon } from "./ui/icon";
-import { Text } from "./ui/text";
-import { Gap, Group } from "./ui/layout";
+import { Button, ButtonGroup } from "./primitives/button";
+import { Icon } from "./primitives/icon";
+import { Text } from "./primitives/text";
+import { Gap, Group } from "./primitives/layout";
 
 function PageNav(props: {
   icon: "chevron-left" | "chevron-right";

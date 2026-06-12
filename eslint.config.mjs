@@ -63,11 +63,11 @@ export default defineConfig([
     },
   },
   // --- UI system boundaries (see STYLING.md) -----------------------------
-  // Semantic components (ui/) are app-ignorant: they may not import the
+  // Semantic primitives are app-ignorant: they may not import the
   // explorer backend. App wiring belongs in feature components and
   // interactions.ts.
   {
-    files: ["src/ui/components/ui/**/*.{ts,tsx}"],
+    files: ["src/ui/components/primitives/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -84,17 +84,17 @@ export default defineConfig([
     },
   },
   // Feature components declare meaning; presentation lives in CSS. Inline
-  // styles are allowed only inside ui/ layout primitives.
+  // styles are allowed only inside primitive layout components.
   {
     files: ["src/ui/**/*.tsx"],
-    ignores: ["src/ui/components/ui/**"],
+    ignores: ["src/ui/components/primitives/**"],
     rules: {
       "no-restricted-syntax": [
         "error",
         {
           selector: "JSXAttribute[name.name='style']",
           message:
-            "No style prop outside ui/ primitives — use a class + CSS, a semantic prop, or a token (STYLING.md).",
+            "No style prop outside primitives — use a class + CSS, a semantic prop, or a token (STYLING.md).",
         },
       ],
     },

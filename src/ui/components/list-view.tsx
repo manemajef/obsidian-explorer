@@ -5,12 +5,12 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
-import { Card } from "./ui/card";
-import { Link } from "./ui/link";
-import { ListRow } from "./ui/list-row";
-import { Gap, Group, Spacer, Stack } from "./ui/layout";
-import { NoteDatePreview, NoteFolder } from "./note-metadata";
-import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note-parts";
+import { Card } from "./primitives/card";
+import { Link } from "./primitives/link";
+import { ListRow } from "./primitives/list-row";
+import { Gap, Group, Spacer, Stack } from "./primitives/layout";
+import { NoteFolderDatePreview } from "./note/note-metadata";
+import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note/note-parts";
 
 type ListViewProps = {
   model: ExplorerModel;
@@ -141,14 +141,14 @@ function ModernList(props: ListViewProps): React.JSX.Element {
 
             <Group className="explorer-modern-list__secondary" gap={2}>
               <div className="explorer-modern-list__metadata">
-                {!isMobile && (
-                  <NoteFolder file={file} model={model} actions={actions} />
-                )}
-                <NoteDatePreview
+                <NoteFolderDatePreview
                   file={file}
                   model={model}
+                  actions={actions}
                   maxChar={isMobile ? 120 : 90}
-                  showPreview={model.settings.showPreviews}
+                  folder={!isMobile}
+                  date
+                  preview={model.settings.showPreviews}
                 />
               </div>
 

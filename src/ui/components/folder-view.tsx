@@ -5,9 +5,9 @@ import { ExplorerActions } from "../../explorer/actions";
 import { shouldCreateMissingFolderNote } from "../../explorer/navigation/folder-notes";
 import type { ContextMenuConfig } from "../context-menu";
 import { folderInteractionProps } from "./interactions";
-import { cn } from "./ui/cn";
-import { Card } from "./ui/card";
-import { Link } from "./ui/link";
+import { cn } from "./primitives/cn";
+import { Card } from "./primitives/card";
+import { Link } from "./primitives/link";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
 

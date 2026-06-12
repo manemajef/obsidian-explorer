@@ -11,7 +11,7 @@ import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { Pagination, PaginationModern } from "./components/pagination";
 import { ActionsBar } from "./components/actions-bar";
-import { Divider, Gap } from "./components/ui/layout";
+import { Divider, Gap } from "./components/primitives/layout";
 
 interface ExplorerUIProps {
   model: ExplorerModel;

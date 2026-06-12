@@ -1,8 +1,12 @@
 /* ===== Note metadata rows (date · folder · preview) ===== */
 
 .explorer-metadata-folder-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  flex: 0 1 auto;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
   cursor: pointer;
   text-decoration: none;
   transition: color var(--anim-duration-fast) ease;
@@ -15,6 +19,7 @@
 }
 
 .explorer-metadata-folder-icon {
+  flex: 0 0 auto;
   margin-inline-end: var(--explorer-space-2);
   opacity: 0.75;
 }
@@ -24,8 +29,16 @@
   height: 1em;
 }
 
+.explorer-metadata-folder-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .explorer-metadata-separator {
   display: inline-block;
+  flex: 0 0 auto;
   width: 1px;
   height: 0.9em;
   background-color: var(--background-modifier-border);
@@ -34,6 +47,7 @@
 }
 
 .explorer-metadata-separator--dot {
+  flex: 0 0 auto;
   opacity: 0.75;
   padding-inline: 3px;
   transform: scale(1.2);
@@ -42,16 +56,25 @@
 }
 
 .explorer-metadata-date {
+  flex: 0 0 auto;
   white-space: nowrap;
 }
 
-.explorer-metadata-date-preview-row {
-  flex: 1 1 auto;
+.explorer-metadata-folder-time-row {
   min-width: 0;
   max-width: 100%;
 }
 
+.explorer-metadata-date-preview-row,
+.explorer-metadata-folder-date-preview-row {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .explorer-metadata-preview {
+  flex: 1 999 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

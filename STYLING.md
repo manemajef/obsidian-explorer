@@ -22,25 +22,33 @@ makes future changes easier to reason about.
 src/ui/styles/
   tokens.css        Global design decisions. The only definition site for
                     --explorer-* tokens; theme/mobile value resolution here.
-  components/       Recipes (surface.css: data-surface; text.css:
+  primitives/       Recipes (surface.css: data-surface; text.css:
                     data-role × data-emphasis) plus one file per semantic
                     component (button, toolbar, card, badge, tag, link,
                     list-row, pin, layout, icon). Own class + data-attrs
                     only.
-  views/            View stylesheets, named after the TSX they style
-                    (list-view.css ↔ list-view.tsx). Layout, grids,
-                    placement. No typography, no surface chrome, no theme
-                    forks.
+  components/       Stylesheets for root-level rendered UI regions in
+                    src/ui/components/*.tsx, plus small domain fragments they
+                    share. Layout, grids, placement. No typography, no surface
+                    chrome, no theme forks.
+  behaviors/        Cross-cutting DOM behavior state that is not owned by a
+                    rendered component, such as drag/drop.
+  modals/           Styles for src/ui/modals.
+  virtual-folder-note.css
+                    Host-owned rendered view that does not have a
+                    src/ui/components owner.
   fixes/            Quarantined platform/host hacks. Every rule documented.
 
 src/ui/components/
-  ui/               Semantic components — app-ignorant (ESLint-enforced:
+  primitives/       Semantic components — app-ignorant (ESLint-enforced:
                     no explorer/ imports). The only place the style prop
                     is allowed (layout primitives). Toolbar/ToolbarItem/
                     ToolbarGroup are deliberately separate from Button:
                     shared glass comes from tokens, not a shared component.
+  note/             Note-domain fragments and hooks shared by list/cards.
   *.tsx             Feature components. Compose semantic components;
-                    interactions.ts bundles drag/drop/menu/open wiring.
+                    interactions.ts bundles drag/drop/menu/open wiring and
+                    intentionally stays in this root.
 ```
 
 ## Vocabulary (keep it small enough to hold in your head)
@@ -69,7 +77,7 @@ fix at the highest level that solves the problem.
 conceptual difference → new component.
 
 **Enforcement (run on every change):** `npm run lint` (style-prop ban,
-ui/ app-ignorance), `npm run lint:css` (theme/platform quarantine,
+primitives/ app-ignorance), `npm run lint:css` (theme/platform quarantine,
 specificity caps), `npm run build`.
 
 The full rationale lives in `dev/The UI Bible.md`; the old-system →

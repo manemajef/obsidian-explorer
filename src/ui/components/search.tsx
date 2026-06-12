@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { ToolbarItem } from "./ui/toolbar";
+import { ToolbarItem } from "./primitives/toolbar";
 
 export function Search(props: {
   searchMode: boolean;

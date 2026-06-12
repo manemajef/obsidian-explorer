@@ -5,10 +5,10 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
-import { Card } from "./ui/card";
-import { Group, Spacer } from "./ui/layout";
-import { NoteFolderDate, NotePreview } from "./note-metadata";
-import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note-parts";
+import { Card } from "./primitives/card";
+import { Group, Spacer } from "./primitives/layout";
+import { NoteFolderDate, NotePreview } from "./note/note-metadata";
+import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note/note-parts";
 
 export function CardsView(props: {
   model: ExplorerModel;

@@ -1,12 +1,12 @@
 import React from "react";
-import { ExplorerActions } from "../../explorer/actions";
-import { ExplorerFileNode } from "../../explorer/lib/nodes";
-import { ExplorerModel } from "../../explorer/model";
-import { cn } from "./ui/cn";
-import { Badge } from "./ui/badge";
-import { Icon } from "./ui/icon";
-import { Link, type LinkProps } from "./ui/link";
-import { TagList, type TagOverflow, type TagSize } from "./ui/tags";
+import { ExplorerActions } from "../../../explorer/actions";
+import { ExplorerFileNode } from "../../../explorer/lib/nodes";
+import { ExplorerModel } from "../../../explorer/model";
+import { cn } from "../primitives/cn";
+import { Badge } from "../primitives/badge";
+import { Icon } from "../primitives/icon";
+import { Link, type LinkProps } from "../primitives/link";
+import { TagList, type TagOverflow, type TagSize } from "../primitives/tags";
 
 export function NoteTitle({
   file,
