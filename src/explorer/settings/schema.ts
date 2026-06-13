@@ -72,6 +72,10 @@ export const BLOCK_SETTING_GROUPS = [
     title: "View",
   },
   {
+    id: "navigation",
+    title: "Navigation",
+  },
+  {
     id: "listing",
     title: "Listing",
   },
@@ -205,6 +209,18 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       blockKeys: ["alwaysUseModernListInMobile"],
       resolve: (source) =>
         coerceLegacyBoolean(source.alwaysUseModernListInMobile),
+    },
+  }),
+  showTitlebarActions: booleanField({
+    label: "Show titlebar actions",
+    description:
+      "Show Explorer navigation buttons in the active note titlebar.",
+    defaultValue: true,
+    blockKey: "showTitlebarActions",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      group: "navigation",
     },
   }),
   sortBy: enumField({
