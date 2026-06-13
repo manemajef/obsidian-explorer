@@ -84,5 +84,14 @@
 
 .explorer-folder-card > * {
   min-width: 0;
+}
+
+.explorer-folder-card__link {
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
   overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
