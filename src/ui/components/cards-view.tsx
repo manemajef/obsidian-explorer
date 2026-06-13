@@ -14,7 +14,7 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-import { TextScope, type TextDensity, type TextRole } from "./primitives/text";
+import { TextRole } from "./primitives/text";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -28,20 +28,14 @@ export function CardsView(props: {
   let compact = model.settings.compactCards;
   if (isMobile && model.settings.adaptToMobile) compact = false;
   const compactMobile = isMobile && compact;
-  const linkRole: TextRole = compactMobile ? "description" : "title";
-  const compactTextDensity: TextDensity | undefined = compactMobile
-    ? "compact"
-    : undefined;
-  const previewTextDensity: TextDensity | undefined = compactMobile
-    ? "compact"
-    : !compact
-      ? "comfortable"
-      : undefined;
 
   return (
     <div
       className="explorer-cards"
       data-compact={compact || undefined}
+      data-density={
+        compactMobile ? "compact" : !compact ? "comfortable" : undefined
+      }
       data-variant={isMobile ? "mobile" : "desktop"}
     >
       <div className="explorer-cards__grid">
@@ -63,8 +57,8 @@ export function CardsView(props: {
                     file={file}
                     actions={actions}
                     className="explorer-file-card__title"
-                    role={linkRole}
-                    weight="bold"
+                    role="title"
+                    size={!compact && !isMobile ? "lg" : "sm"}
                     emphasis={
                       model.pluginSettings.useLinkColorInCard
                         ? "accent"
@@ -95,17 +89,14 @@ export function CardsView(props: {
               </Group>
               <Spacer />
               {model.settings.showPreviews && (
-                <TextScope
-                  className="explorer-file-card__preview-wrap"
-                  density={previewTextDensity}
-                >
+                <div className="explorer-file-card__preview-wrap">
                   <NotePreview
                     file={file}
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
                     lines={compact ? 2 : 3}
                   />
-                </TextScope>
+                </div>
               )}
               {showTags && (
                 <>
@@ -120,16 +111,9 @@ export function CardsView(props: {
                 </>
               )}
               <Spacer />
-              <TextScope
-                className="explorer-file-card__metadata"
-                density={compactTextDensity}
-              >
-                <NoteFolderDate
-                  file={file}
-                  model={model}
-                  actions={actions}
-                />
-              </TextScope>
+              <div className="explorer-file-card__metadata">
+                <NoteFolderDate file={file} model={model} actions={actions} />
+              </div>
             </Card>
           );
         })}

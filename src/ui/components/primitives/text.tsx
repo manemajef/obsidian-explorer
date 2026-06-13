@@ -1,7 +1,7 @@
-import React, { type HTMLAttributes, type ReactNode } from "react";
+import React, { type HTMLAttributes } from "react";
 import { cn } from "./cn";
 
-export type TextRole = "title" | "body" | "description" | "metadata" | "label";
+export type TextRole = "title" | "body" | "metadata" | "label";
 export type TextEmphasis =
   | "primary"
   | "secondary"
@@ -10,13 +10,6 @@ export type TextEmphasis =
   | "accent";
 export type TextWeight = "medium" | "bold";
 export type TextSize = "xs" | "sm" | "md" | "lg";
-export type TextDensity = "compact" | "comfortable";
-
-export interface TextScopeProps extends HTMLAttributes<HTMLElement> {
-  as?: "span" | "div";
-  density?: TextDensity;
-  children: ReactNode;
-}
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   as?: "span" | "div" | "p";
@@ -24,26 +17,13 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   emphasis?: TextEmphasis;
   /** 15% knob: overrides the role weight. */
   weight?: TextWeight;
-  /** 15% knob: overrides the role size for narrow responsive cases. */
+  /**
+   * 15% knob: overrides only the role's font-size, on the shared content ramp
+   * (xs→smallest … lg→body). The rest of the role (weight, leading, tracking)
+   * is kept. Reach for `data-density` on a region first; use `size` for a
+   * single-element exception.
+   */
   size?: TextSize;
-}
-
-export function TextScope({
-  as: Element = "div",
-  density,
-  className,
-  children,
-  ...rest
-}: TextScopeProps): React.JSX.Element {
-  return (
-    <Element
-      className={cn("explorer-text-scope", className)}
-      data-density={density}
-      {...rest}
-    >
-      {children}
-    </Element>
-  );
 }
 
 export function Text({

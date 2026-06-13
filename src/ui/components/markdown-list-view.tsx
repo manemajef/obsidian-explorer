@@ -49,7 +49,7 @@ export function MarkdownListView(
               path={file.path}
               className="explorer-markdown-list__title"
               draggable={false}
-              role="title"
+              role="body"
               emphasis="accent"
               underline="hover"
               onClick={(event) => {

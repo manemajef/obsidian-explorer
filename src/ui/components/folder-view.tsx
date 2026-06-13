@@ -54,10 +54,11 @@ export function FolderButtons(props: {
               path={folderNotePath}
               className="explorer-folder-card__link"
               draggable={false}
-              role={Platform.isMobile ? "description" : "title"}
+              role="title"
+              size={Platform.isMobile ? "xs" : undefined}
               underline="none"
-              unresolved={isMissing}
               weight="bold"
+              unresolved={isMissing}
               tooltip={
                 isMissing && linkCreatesFolderNote
                   ? `Create folder note ${folder.name}.md`

@@ -39,7 +39,15 @@
     ],
     "selector-max-class": 4,
     "selector-max-compound-selectors": 4,
-    "selector-max-specificity": "0,5,1"
+    "selector-max-specificity": "0,5,1",
+    "declaration-property-value-disallowed-list": [
+      {
+        "/^--explorer-text-/": ["/.+/"]
+      },
+      {
+        "message": "Type tokens (--explorer-text-*) may only be assigned in tokens.css (defaults) and primitives/text.css (density tiers). Components select a role/density; they never redefine type tokens. See STYLING.md."
+      }
+    ]
   },
   "ignoreFiles": [
     "styles.css",
@@ -56,7 +64,16 @@
         "selector-disallowed-list": null,
         "selector-max-class": null,
         "selector-max-compound-selectors": null,
-        "selector-max-specificity": null
+        "selector-max-specificity": null,
+        "declaration-property-value-disallowed-list": null
+      }
+    },
+    {
+      "files": [
+        "**/primitives/text.css"
+      ],
+      "rules": {
+        "declaration-property-value-disallowed-list": null
       }
     },
     {

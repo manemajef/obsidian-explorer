@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, type AnchorHTMLAttributes } from "react";
 import { setTooltip } from "obsidian";
 import { cn } from "./cn";
-import type { TextEmphasis, TextRole, TextWeight } from "./text";
+import type { TextEmphasis, TextRole, TextSize, TextWeight } from "./text";
 
 export interface LinkProps
   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "role" | "href"> {
@@ -9,6 +9,7 @@ export interface LinkProps
   role?: TextRole;
   emphasis?: TextEmphasis;
   weight?: TextWeight;
+  size?: TextSize;
   underline?: "none" | "hover" | "always";
   hoverEmphasis?: "primary" | "accent";
   tooltip?: string;
@@ -21,6 +22,7 @@ export function Link({
   role = "body",
   emphasis,
   weight,
+  size,
   underline = "hover",
   hoverEmphasis,
   tooltip,
@@ -50,6 +52,7 @@ export function Link({
       data-role={role}
       data-emphasis={emphasis}
       data-weight={weight}
+      data-size={size}
       data-underline={underline}
       data-hover-emphasis={hoverEmphasis}
       data-href={path}

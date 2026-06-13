@@ -2,65 +2,55 @@
  * Text recipe — typography is described by role × emphasis, never by
  * component-specific font rules.
  *
- * Roles:    title · body · description · metadata · label
+ * Roles:    title · body · metadata · label
  * Emphasis: primary · secondary · tertiary · faint · accent
  *
  * 15% knobs (use sparingly, justify in the markup):
  *   data-weight="medium|bold"  — overrides the role weight
- *   data-size="xs|sm|md|lg"    — overrides the role size
+ *   data-size="xs|sm|md|lg"    — overrides ONLY the role font-size, on the
+ *                                shared content ramp; role weight/leading/
+ *                                tracking are kept. Density first for regions.
  *
- * TextScope sets local role-token values for a region. Text still reads
- * role tokens; scope does not style children directly.
+ * Density — a region opts into a denser/roomier typographic tier via
+ * data-density. The tier values are owned HERE (the type recipe); components
+ * only select a tier on a container, they never redefine type tokens
+ * themselves. Add new tiers in this file, never in components/.
+ * (Fence: --explorer-text-* may only be assigned in tokens.css and this file —
+ * enforced by stylelint.)
  */
 
 .explorer-text {
   color: var(--explorer-text-primary);
 }
 
-.explorer-text-scope[data-density="compact"] {
-  --explorer-text-description-size: var(--font-smaller);
+[data-density="compact"] {
+  --explorer-text-title-size: var(--font-smallest);
+  --explorer-text-metadata-size: calc(var(--font-ui-smaller) - 1px);
+}
+
+[data-density="comfortable"] {
   --explorer-text-metadata-size: var(--font-smaller);
 }
 
-.explorer-text-scope[data-density="comfortable"] {
-  --explorer-text-description-size: var(--font-small);
-}
-
 .explorer-text[data-role="title"] {
-  font-size: var(
-    --explorer-text-size-override,
-    var(--explorer-text-title-size)
-  );
+  font-size: var(--explorer-text-title-size);
   font-weight: var(--explorer-text-title-weight);
   line-height: var(--explorer-text-title-line);
 }
 
 .explorer-text[data-role="body"] {
-  font-size: var(--explorer-text-size-override, var(--explorer-text-body-size));
+  font-size: var(--explorer-text-body-size);
   font-weight: var(--explorer-text-body-weight);
 }
 
-.explorer-text[data-role="description"] {
-  font-size: var(
-    --explorer-text-size-override,
-    var(--explorer-text-description-size)
-  );
-  font-weight: var(--explorer-text-description-weight);
-}
-
 .explorer-text[data-role="metadata"] {
-  font-size: var(
-    --explorer-text-size-override,
-    var(--explorer-text-metadata-size)
-  );
+  font-size: var(--explorer-text-metadata-size);
   font-weight: var(--explorer-text-metadata-weight);
+  line-height: var(--explorer-text-metadata-line);
 }
 
 .explorer-text[data-role="label"] {
-  font-size: var(
-    --explorer-text-size-override,
-    var(--explorer-text-label-size)
-  );
+  font-size: var(--explorer-text-label-size);
   font-weight: var(--explorer-text-label-weight);
 }
 
@@ -92,23 +82,23 @@
   font-weight: calc(var(--font-weight) + var(--bold-modifier));
 }
 
-/* Nested text never compounds em-based sizing. */
-.explorer-text .explorer-text:not([data-size]) {
-  font-size: 1em;
-}
-
+/*
+ * Size knob — overrides only font-size, on the shared content ramp. Placed
+ * after the role blocks so it wins at equal specificity (no override var, no
+ * specificity escalation). A per-element size beats a regional data-density.
+ */
 .explorer-text[data-size="xs"] {
-  --explorer-text-size-override: var(--font-smallest);
+  font-size: var(--font-smallest);
 }
 
 .explorer-text[data-size="sm"] {
-  --explorer-text-size-override: var(--font-smaller);
+  font-size: var(--font-smaller);
 }
 
 .explorer-text[data-size="md"] {
-  --explorer-text-size-override: var(--font-small);
+  font-size: var(--font-small);
 }
 
 .explorer-text[data-size="lg"] {
-  --explorer-text-size-override: var(--font-text-size);
+  font-size: var(--font-text-size);
 }

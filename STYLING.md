@@ -57,16 +57,22 @@ src/ui/components/
   (grouped containers) · `control` (interactive card-like controls) ·
   `floating` (toolbar buttons, button groups, pagination). Never exceed 5.
   Modals/overlays are host-owned, not part of this reusable surface scale.
-- **Text roles** (`data-role`): `title` · `body` · `description` ·
-  `metadata` · `label`.
-- **Text scopes** (`data-density`): local typography contexts that set role
-  token values for a region. They do not style child text directly.
+- **Text roles** (`data-role`): `title` · `body` · `metadata` · `label`.
+  `metadata` is all small supporting text (previews, dates, folders). A role is
+  the default *bundle* of size + weight + leading + tracking — pick the role
+  for intent, then override one axis with a knob if needed (`weight`, `size`).
+- **Density** (`data-density` on a region): selects a typographic density tier
+  (`compact` · `comfortable`) so the same roles resolve smaller/larger inside
+  it. Tiers are defined once in `primitives/text.css`; a component marks a
+  region but never picks the values. `--explorer-text-*` may be assigned
+  **only** in `tokens.css` (defaults) and `primitives/text.css` (tiers) —
+  enforced by stylelint. **Reach for density first** when a whole region is
+  denser; use the per-element `size` knob only for a single-element exception.
 - **Emphasis** (`data-emphasis`): `primary` · `secondary` · `tertiary` ·
   `faint` · `accent`.
 - **15% knobs**, used sparingly and visibly in markup: `weight="medium|bold"`,
-  `size="xs|sm|md|lg"` as a direct text-size override, `TextScope`
-  `density="compact|comfortable"`, Button `density="compact"` /
-  `fit="content"`.
+  `size="xs|sm|md|lg"` (overrides only the role font-size, on the shared
+  content ramp), Button `density="compact"` / `fit="content"`.
 
 Before adding a variant, ask: can an existing variant + prop solve it? Is it
 a new concept or just a configuration? Will at least 3 places use it? Can the

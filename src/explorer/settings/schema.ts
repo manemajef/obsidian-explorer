@@ -190,7 +190,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       group: "view",
-      visibleWhen: { key: "view", value: "cards", platform: "desktop" },
+      visibleWhen: { key: "view", value: "cards" },
     },
   }),
   adaptToMobile: booleanField({

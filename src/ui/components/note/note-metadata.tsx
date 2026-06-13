@@ -142,7 +142,7 @@ export function NotePreview({
 
   return (
     <Text
-      role="description"
+      role="metadata"
       emphasis={MEETA_TEXT_EMPH}
       className={cn("explorer-metadata-preview", className)}
       data-lines={lines}
@@ -233,7 +233,7 @@ export function NoteFolderDatePreview({
       {showDate && showNotePreview && <NoteMetadataSeparator />}
       {showNotePreview && (
         <Text
-          role="description"
+          role="metadata"
           emphasis="secondary"
           className="explorer-metadata-preview"
           data-lines={previewLines}
