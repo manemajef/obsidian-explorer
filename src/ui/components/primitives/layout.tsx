@@ -84,8 +84,7 @@ const justifyMap: Record<Justify, CSSProperties["justifyContent"]> = {
 };
 
 export interface GroupProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "children">,
-    LayoutProps {
+  extends Omit<HTMLAttributes<HTMLDivElement>, "children">, LayoutProps {
   wrap?: boolean | "reverse";
 }
 
@@ -128,8 +127,7 @@ export function Group(props: GroupProps): React.JSX.Element {
 }
 
 export interface StackProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "children">,
-    LayoutProps {}
+  extends Omit<HTMLAttributes<HTMLDivElement>, "children">, LayoutProps {}
 
 export function Stack(props: StackProps): React.JSX.Element {
   const {
@@ -168,8 +166,10 @@ export function Stack(props: StackProps): React.JSX.Element {
   );
 }
 
-export interface SpacerProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
+export interface SpacerProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children"
+> {
   children?: ReactNode;
   minWidth?: CSSProperties["minWidth"];
   maxWidth?: CSSProperties["maxWidth"];
@@ -212,7 +212,7 @@ export function Separator(props: { className?: string }): React.JSX.Element {
  * size it becomes a fixed-height block spacer. */
 export function Divider(props: {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 }): React.JSX.Element {
   return (
     <br

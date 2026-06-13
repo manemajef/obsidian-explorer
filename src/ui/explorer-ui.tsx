@@ -153,6 +153,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   return (
     <>
       <div className="tmp-conditional-margin-top" />
+      {/* <Divider size="xs" /> */}
       <ActionsBar
         app={app}
         parentDropFolder={model.folder.parent}

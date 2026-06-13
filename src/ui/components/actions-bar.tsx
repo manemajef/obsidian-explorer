@@ -157,7 +157,7 @@ export function ActionsBar(props: {
           )}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <ToolbarGroupItem icon="file-plus-2" onClick={onNewNote} />
-          {onSaveFolderNote && false && (
+          {onSaveFolderNote && !isMobile && (
             <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
           )}
         </ToolbarGroup>

@@ -7,6 +7,7 @@
 
 .explorer-markdown-list__item {
   padding: var(--explorer-space-1);
+  margin-bottom: var(--explorer-space-2);
   list-style: none;
 }
 

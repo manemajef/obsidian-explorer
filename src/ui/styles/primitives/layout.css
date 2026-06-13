@@ -42,7 +42,9 @@
 .explorer-divider[data-size="sm"] {
   height: var(--explorer-space-4);
 }
-
+.explorer-divider[data-size="xs"] {
+  height: var(--explorer-space-1);
+}
 .explorer-divider[data-size="md"],
 .explorer-divider[data-size="lg"] {
   height: var(--explorer-space-6);

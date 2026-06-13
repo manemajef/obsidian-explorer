@@ -29,6 +29,9 @@
 
 /* When in edition mode, this is done to avoid the 'edit codeblock button' to fuck up with the search button */
 /* Future fix: pass from backend isEditMode() function and conditionaly render a Divider */
+.tmp-conditional-margin-top {
+  height: var(--explorer-space-2);
+}
 .markdown-source-view.mod-cm6 .tmp-conditional-margin-top {
   margin-top: var(--explorer-space-4);
 }
