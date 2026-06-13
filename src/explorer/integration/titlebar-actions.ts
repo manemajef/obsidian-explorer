@@ -1,4 +1,4 @@
-import { App, Plugin, setIcon, type WorkspaceLeaf } from "obsidian";
+import { App, Platform, Plugin, setIcon, type WorkspaceLeaf } from "obsidian";
 import { type PluginSettings } from "../settings";
 import {
   canGoToParentFolderNote,
@@ -8,6 +8,7 @@ import { openHomePage, resolveHomePagePath } from "../navigation/homepage";
 import { isHTMLElement } from "../../utils";
 import { getActiveExplorerLocation } from "./commands";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
+import { hasExplorerView } from "./active-view";
 
 type TitlebarActionDeps = {
   getSettings: () => PluginSettings;
@@ -47,6 +48,10 @@ export function registerExplorerTitlebarActions(
       label: "Go to parent folder",
       isVisible: () =>
         areTitlebarActionsEnabled() &&
+        !hasExplorerView(
+          app,
+          activeLeaf ?? app.workspace.getMostRecentLeaf(),
+        ) &&
         canGoToParentFolderNote(
           app,
           deps.getSettings(),
@@ -78,9 +83,7 @@ export function registerExplorerTitlebarActions(
       id: "save-virtual-folder-note",
       icon: "pen-line",
       label: "Save folder note as Markdown",
-      isVisible: () =>
-        areTitlebarActionsEnabled() &&
-        Boolean(getActiveVirtualFolderNote(app)?.folder),
+      isVisible: () => Boolean(getActiveVirtualFolderNote(app)?.folder),
       run: async () => {
         await getActiveVirtualFolderNote(app)?.materialize();
       },
@@ -114,7 +117,7 @@ export function registerExplorerTitlebarActions(
   };
 
   const areTitlebarActionsEnabled = (): boolean =>
-    deps.getSettings().showTitlebarActions === true;
+    deps.getSettings().showTitlebarActions === true && !Platform.isMobile;
 
   app.workspace.onLayoutReady(() => {
     activeLeaf = app.workspace.getMostRecentLeaf();
