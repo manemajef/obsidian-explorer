@@ -21,6 +21,8 @@ type NoteMetadataWithActionsProps = NoteMetadataProps & {
   actions: ExplorerActions;
 };
 
+type NotePreviewLines = 1 | 2 | 3;
+
 function getParentFolder(file: ExplorerFileNode, model: ExplorerModel) {
   const parentFolder = file.parentExplorerFolder;
   return parentFolder && parentFolder !== model.folder ? parentFolder : null;
@@ -125,11 +127,13 @@ export function NotePreview({
   className,
   maxChar,
   size,
+  lines = 1,
 }: {
   file: ExplorerFileNode;
   className?: string;
   maxChar?: number;
   size?: "md";
+  lines?: NotePreviewLines;
 }): React.JSX.Element | null {
   const effectiveMaxChar = maxChar ?? 100;
   const { isLoading, preview, hasPreview } = useNotePreview(file, {
@@ -144,6 +148,7 @@ export function NotePreview({
       emphasis={MEETA_TEXT_EMPH}
       size={size}
       className={cn("explorer-metadata-preview", className)}
+      data-lines={lines}
     >
       {isLoading ? (
         <span className="explorer-preview-placeholder">
@@ -162,9 +167,11 @@ export function NoteDatePreview({
   className,
   maxChar,
   showPreview = true,
+  previewLines,
 }: NoteMetadataProps & {
   maxChar?: number;
   showPreview?: boolean;
+  previewLines?: NotePreviewLines;
 }): React.JSX.Element | null {
   return (
     <NoteFolderDatePreview
@@ -175,6 +182,7 @@ export function NoteDatePreview({
       folder={false}
       date
       preview={showPreview}
+      previewLines={previewLines}
     />
   );
 }
@@ -188,12 +196,14 @@ export function NoteFolderDatePreview({
   folder = true,
   date = true,
   preview = true,
+  previewLines = 1,
 }: NoteMetadataProps & {
   actions?: ExplorerActions;
   maxChar?: number;
   folder?: boolean;
   date?: boolean;
   preview?: boolean;
+  previewLines?: NotePreviewLines;
 }): React.JSX.Element | null {
   const effectiveMaxChar = maxChar ?? 100;
   const showFolder =
@@ -227,6 +237,7 @@ export function NoteFolderDatePreview({
           role="description"
           emphasis="secondary"
           className="explorer-metadata-preview"
+          data-lines={previewLines}
         >
           {isLoading ? (
             <span className="explorer-preview-placeholder">

@@ -81,6 +81,7 @@ export function CardsView(props: {
                     file={file}
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
+                    lines={compact ? 2 : 3}
                     size={!compact ? "md" : undefined}
                   />
                 </div>
