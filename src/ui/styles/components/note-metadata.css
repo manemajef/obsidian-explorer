@@ -99,6 +99,21 @@
   -webkit-line-clamp: 3;
 }
 
+.explorer-metadata-preview[data-loading="true"] {
+  text-overflow: clip;
+  display: block;
+  -webkit-line-clamp: unset;
+  max-height: 1.4em;
+}
+
+.explorer-metadata-preview[data-loading="true"][data-lines="2"] {
+  max-height: 2.8em;
+}
+
+.explorer-metadata-preview[data-loading="true"][data-lines="3"] {
+  max-height: 4.2em;
+}
+
 .explorer-preview-placeholder {
   color: transparent;
 }

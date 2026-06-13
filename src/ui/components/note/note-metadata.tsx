@@ -160,6 +160,7 @@ export function NotePreview({
       size={size}
       className={cn("explorer-metadata-preview", className)}
       data-lines={lines}
+      data-loading={isLoading || undefined}
     >
       {isLoading ? (
         <span className="explorer-preview-placeholder">
@@ -260,6 +261,7 @@ export function NoteFolderDatePreview({
           size={size}
           className="explorer-metadata-preview"
           data-lines={previewLines}
+          data-loading={isLoading || undefined}
         >
           {isLoading ? (
             <span className="explorer-preview-placeholder">

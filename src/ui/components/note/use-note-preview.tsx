@@ -1,6 +1,6 @@
 import { ExplorerFileNode } from "src/explorer/lib/nodes";
 import React from "react";
-const { useEffect, useState } = React;
+const { useEffect, useState, useRef } = React;
 
 type NotePreviewState = {
   isLoading: boolean;
@@ -19,15 +19,23 @@ export function useNotePreview(
     hasPreview: false,
   });
 
+  const prevPathRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!enabled) {
       setState({ isLoading: false, preview: "", hasPreview: false });
+      prevPathRef.current = null;
       return;
     }
 
-    let cancelled = false;
-    setState({ isLoading: true, preview: "", hasPreview: false });
+    const pathChanged = prevPathRef.current !== file.path;
+    prevPathRef.current = file.path;
 
+    if (pathChanged) {
+      setState({ isLoading: true, preview: "", hasPreview: false });
+    }
+
+    let cancelled = false;
     void file.loadPreview(effectiveMaxChar).then((preview) => {
       if (cancelled) return;
 
