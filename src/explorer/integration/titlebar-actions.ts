@@ -69,7 +69,9 @@ export function registerExplorerTitlebarActions(
       icon: "home",
       label: "Go to homepage",
       isVisible: () =>
-        areTitlebarActionsEnabled() && canGoToHomePage(app, deps.getSettings()),
+        areTitlebarActionsEnabled() &&
+        deps.getSettings().showHomePageInTitlebar === true &&
+        canGoToHomePage(app, deps.getSettings()),
       run: async () => {
         await openHomePage(
           app,

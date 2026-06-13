@@ -2,11 +2,13 @@ export type SettingsSurface = "plugin" | "block";
 
 import type { BlockSettingsGroup, SettingsSection } from "./schema";
 
-type SettingVisibility = {
-  key?: string;
-  value?: unknown;
-  platform?: "mobile" | "desktop";
-};
+export type SettingVisibility =
+  | {
+      key?: string;
+      value?: unknown;
+      platform?: "mobile" | "desktop";
+    }
+  | ((values: Record<string, any>) => boolean);
 
 export type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];

@@ -12,6 +12,7 @@ import {
   type NumberSettingField,
   type TextSettingField,
 } from "./types";
+import { Platform } from "obsidian";
 
 export type SortBy = "newest" | "oldest" | "edited" | "name" | "nameDesc";
 export type ViewMode = "cards" | "list";
@@ -190,7 +191,11 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "core",
       group: "view",
-      visibleWhen: { key: "view", value: "cards" },
+      visibleWhen: (values) => {
+        if (values.view !== "cards") return false;
+        if (Platform.isMobile && values.adaptToMobile !== false) return false;
+        return true;
+      },
     },
   }),
   adaptToMobile: booleanField({
@@ -535,8 +540,9 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
   showHomePageInTitlebar: booleanField({
-    label: "Add homepage button to titlebar",
-    description: "turn off to cancel",
+    label: "Show homepage button in titlebar",
+    description:
+      "Show a home button in the note titlebar to quickly navigate to the homepage.",
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],

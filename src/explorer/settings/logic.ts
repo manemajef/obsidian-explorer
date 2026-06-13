@@ -116,6 +116,10 @@ function isSettingVisible(
   const visibleWhen = field.ui.visibleWhen;
   if (!visibleWhen) return true;
 
+  if (typeof visibleWhen === "function") {
+    return visibleWhen(values);
+  }
+
   if (
     visibleWhen.platform &&
     (visibleWhen.platform === "mobile") !== Platform.isMobile
