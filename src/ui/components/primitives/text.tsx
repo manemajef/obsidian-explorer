@@ -9,10 +9,9 @@ export type TextEmphasis =
   | "faint"
   | "accent";
 export type TextWeight = "medium" | "bold";
-export type TextSize = "md";
+export type TextSize = "xs" | "sm" | "md" | "lg";
 
-export interface TextProps
-  extends Omit<HTMLAttributes<HTMLElement>, "role"> {
+export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   as?: "span" | "div" | "p";
   role?: TextRole;
   emphasis?: TextEmphasis;

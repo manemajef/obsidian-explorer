@@ -6,7 +6,7 @@ import { diffDays } from "src/utils";
 import { cn } from "../primitives/cn";
 import { Icon } from "../primitives/icon";
 import { Group } from "../primitives/layout";
-import { Text } from "../primitives/text";
+import { Text, TextSize } from "../primitives/text";
 import { useNotePreview } from "./use-note-preview";
 
 const MEETA_TEXT_EMPH = "tertiary";
@@ -15,6 +15,7 @@ type NoteMetadataProps = {
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
+  size?: TextSize;
 };
 
 type NoteMetadataWithActionsProps = NoteMetadataProps & {
