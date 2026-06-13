@@ -1,22 +1,16 @@
-import { App, Plugin, setIcon, TFile } from "obsidian";
-import {
-  parseSettings,
-  resolveBlockSettings,
-  type BlockSettings,
-  type PluginSettings,
-} from "../settings";
+import { App, Plugin, setIcon, type WorkspaceLeaf } from "obsidian";
+import { type PluginSettings } from "../settings";
 import {
   canGoToParentFolderNote,
   goToParentFolderNote,
 } from "../navigation/folder-notes";
-import { resolveHomePagePath } from "../navigation/homepage";
+import { openHomePage, resolveHomePagePath } from "../navigation/homepage";
 import { isHTMLElement } from "../../utils";
 import { getActiveExplorerLocation } from "./commands";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
 
 type TitlebarActionDeps = {
   getSettings: () => PluginSettings;
-  getFolderData: (folderPath: string) => Partial<BlockSettings>;
   saveSettings: () => void | Promise<void>;
 };
 
@@ -43,22 +37,10 @@ export function registerExplorerTitlebarActions(
   const { app } = plugin;
   let mountedContainer: HTMLElement | null = null;
   let mountedButtonClass = "";
-  let activeBlockSettings: BlockSettings | null = null;
-  let refreshVersion = 0;
+  let activeLeaf: WorkspaceLeaf | null = null;
   const buttons = new Map<string, HTMLElement>();
 
   const actions: TitlebarAction[] = [
-    {
-      id: "save-virtual-folder-note",
-      icon: "pen-line",
-      label: "Save folder note as Markdown",
-      isVisible: () =>
-        areTitlebarActionsEnabled() &&
-        Boolean(getActiveVirtualFolderNote(app)?.folder),
-      run: async () => {
-        await getActiveVirtualFolderNote(app)?.materialize();
-      },
-    },
     {
       id: "go-to-parent-folder",
       icon: "undo-2",
@@ -84,35 +66,36 @@ export function registerExplorerTitlebarActions(
       isVisible: () =>
         areTitlebarActionsEnabled() && canGoToHomePage(app, deps.getSettings()),
       run: async () => {
-        const file = getExistingHomePage(app, deps.getSettings());
-        if (!file) return;
-
-        await app.workspace.openLinkText(
-          file.path,
+        await openHomePage(
+          app,
+          deps.getSettings(),
           getActiveExplorerLocation(app)?.path ?? "",
           false,
         );
       },
     },
+    {
+      id: "save-virtual-folder-note",
+      icon: "pen-line",
+      label: "Save folder note as Markdown",
+      isVisible: () =>
+        areTitlebarActionsEnabled() &&
+        Boolean(getActiveVirtualFolderNote(app)?.folder),
+      run: async () => {
+        await getActiveVirtualFolderNote(app)?.materialize();
+      },
+    },
   ];
 
   const refresh = (): void => {
-    const version = ++refreshVersion;
-    void resolveActiveBlockSettings(app, deps)
-      .then((settings) => {
-        if (version !== refreshVersion) return;
-        activeBlockSettings = settings;
-        renderTitlebar();
-      })
-      .catch(() => {
-        if (version !== refreshVersion) return;
-        activeBlockSettings = null;
-        renderTitlebar();
-      });
+    renderTitlebar();
   };
 
   const renderTitlebar = (): void => {
-    const container = getActionContainer(app);
+    const container = getActionContainer(
+      app,
+      activeLeaf ?? app.workspace.getMostRecentLeaf(),
+    );
     if (!container) {
       removeButtons();
       return;
@@ -131,18 +114,23 @@ export function registerExplorerTitlebarActions(
   };
 
   const areTitlebarActionsEnabled = (): boolean =>
-    activeBlockSettings?.showTitlebarActions === true;
+    deps.getSettings().showTitlebarActions === true;
 
-  app.workspace.onLayoutReady(refresh);
+  app.workspace.onLayoutReady(() => {
+    activeLeaf = app.workspace.getMostRecentLeaf();
+    refresh();
+  });
 
   plugin.registerEvent(
-    app.workspace.on("active-leaf-change", () => refresh()),
+    app.workspace.on("active-leaf-change", (leaf) => {
+      activeLeaf = leaf;
+      refresh();
+    }),
   );
   plugin.registerEvent(app.workspace.on("file-open", () => refresh()));
   plugin.registerEvent(app.workspace.on("layout-change", () => refresh()));
   plugin.registerEvent(app.vault.on("create", () => refresh()));
   plugin.registerEvent(app.vault.on("delete", () => refresh()));
-  plugin.registerEvent(app.vault.on("modify", () => refresh()));
   plugin.registerEvent(app.vault.on("rename", () => refresh()));
   plugin.register(removeButtons);
   return refresh;
@@ -213,31 +201,6 @@ export function registerExplorerTitlebarActions(
   }
 }
 
-async function resolveActiveBlockSettings(
-  app: App,
-  deps: TitlebarActionDeps,
-): Promise<BlockSettings | null> {
-  const defaults = deps.getSettings().defaultBlockSettings;
-  const virtualView = getActiveVirtualFolderNote(app);
-  const virtualFolder = virtualView?.folder;
-  if (virtualFolder) {
-    return resolveBlockSettings(defaults, deps.getFolderData(virtualFolder.path));
-  }
-
-  const activeFile = app.workspace.getActiveFile();
-  if (!activeFile) return null;
-
-  const content = await app.vault.cachedRead(activeFile);
-  const source = extractFirstExplorerBlockSource(content);
-  if (source === null) return null;
-
-  return resolveBlockSettings(defaults, parseSettings(source));
-}
-
-function extractFirstExplorerBlockSource(content: string): string | null {
-  return content.match(/```explorer\s*\n([\s\S]*?)```/)?.[1] ?? null;
-}
-
 async function runAction(
   action: TitlebarAction,
   refresh: () => void,
@@ -247,10 +210,11 @@ async function runAction(
   refresh();
 }
 
-function getActionContainer(app: App): ActionContainer | null {
-  const activeViewActions = app.workspace
-    .getMostRecentLeaf()
-    ?.view.containerEl.querySelector(".view-actions");
+function getActionContainer(
+  app: App,
+  activeLeaf: WorkspaceLeaf | null,
+): ActionContainer | null {
+  const activeViewActions = getLeafViewActions(activeLeaf);
   if (isHTMLElement(activeViewActions)) {
     return {
       el: activeViewActions,
@@ -259,6 +223,16 @@ function getActionContainer(app: App): ActionContainer | null {
   }
 
   const doc = app.workspace.containerEl.ownerDocument;
+  const activeHeaderActions = doc.querySelector(
+    ".workspace-leaf.mod-active .view-actions",
+  );
+  if (isHTMLElement(activeHeaderActions)) {
+    return {
+      el: activeHeaderActions,
+      buttonClass: VIEW_ACTION_BUTTON_CLASS,
+    };
+  }
+
   const titlebar = doc.querySelector(
     ".titlebar div.titlebar-button-container.mod-right",
   );
@@ -280,6 +254,19 @@ function getActionContainer(app: App): ActionContainer | null {
   return null;
 }
 
+function getLeafViewActions(leaf: WorkspaceLeaf | null): HTMLElement | null {
+  const container = leaf?.view.containerEl;
+  if (!container) return null;
+
+  const viewActions =
+    container.querySelector(".view-actions") ??
+    container
+      .closest(".workspace-leaf-content")
+      ?.querySelector(".view-actions");
+
+  return isHTMLElement(viewActions) ? viewActions : null;
+}
+
 function areActionsAlreadyFirst(
   container: HTMLElement,
   buttons: HTMLElement[],
@@ -287,20 +274,10 @@ function areActionsAlreadyFirst(
   return buttons.every((button, index) => container.children[index] === button);
 }
 
-function getExistingHomePage(
-  app: App,
-  settings: PluginSettings,
-): TFile | null {
-  const homePath = resolveHomePagePath(app, settings);
-  if (!homePath) return null;
-
-  const homePage = app.vault.getAbstractFileByPath(homePath);
-  return homePage instanceof TFile ? homePage : null;
-}
-
 function canGoToHomePage(app: App, settings: PluginSettings): boolean {
-  const homePage = getExistingHomePage(app, settings);
-  if (!homePage) return false;
+  const homePath = resolveHomePagePath(app, settings);
+  if (!homePath) return false;
 
-  return getActiveExplorerLocation(app)?.path !== homePage.path;
+  const location = getActiveExplorerLocation(app);
+  return Boolean(location && location.path !== homePath);
 }

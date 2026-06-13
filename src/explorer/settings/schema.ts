@@ -211,18 +211,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
         coerceLegacyBoolean(source.alwaysUseModernListInMobile),
     },
   }),
-  showTitlebarActions: booleanField({
-    label: "Show titlebar actions",
-    description:
-      "Show Explorer navigation buttons in the active note titlebar.",
-    defaultValue: true,
-    blockKey: "showTitlebarActions",
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      group: "navigation",
-    },
-  }),
+
   sortBy: enumField({
     label: "Sort by",
     description: "How to sort files.",
@@ -428,6 +417,16 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
     legacy: {
       oldDefault: false,
+    },
+  }),
+  showTitlebarActions: booleanField({
+    label: "Show titlebar actions",
+    description:
+      "Show Explorer navigation buttons in the active note titlebar.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
     },
   }),
 
