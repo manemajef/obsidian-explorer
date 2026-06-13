@@ -14,7 +14,6 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-import { TextRole } from "./primitives/text";
 
 export function CardsView(props: {
   model: ExplorerModel;

@@ -1,7 +1,7 @@
 import { TFile } from "obsidian";
 import { BlockSettings, DisplayedNotes } from "../settings";
 import { isFolderNote } from "./folder-note";
-import { ExplorerFileNode, ExplorerFolderNode } from "./nodes";
+import { ExplorerFileNode } from "./nodes";
 
 // const EXCLUDED_EXTENSIONS = [
 //   "png", "jpeg", "jpg"

@@ -97,12 +97,6 @@ export function ActionsBar(props: {
         <Spacer minWidth=".5em" />
         <ToolbarGroup>
           <Gap inline size=".5em" />
-          {onSaveFolderNote && false && (
-            <>
-              <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
-              <Gap inline size=".5em" />
-            </>
-          )}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
@@ -128,12 +122,6 @@ export function ActionsBar(props: {
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
-          {onSaveFolderNote && false && (
-            <>
-              <Gap inline size=".5em" />
-              <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
-            </>
-          )}
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
           <Gap inline size=".5em" />
