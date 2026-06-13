@@ -211,18 +211,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
         coerceLegacyBoolean(source.alwaysUseModernListInMobile),
     },
   }),
-  showTitlebarActions: booleanField({
-    label: "Show titlebar actions",
-    description:
-      "Show Explorer navigation buttons in the active note titlebar.",
-    defaultValue: true,
-    blockKey: "showTitlebarActions",
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      group: "navigation",
-    },
-  }),
+
   sortBy: enumField({
     label: "Sort by",
     description: "How to sort files.",
@@ -430,6 +419,16 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       oldDefault: false,
     },
   }),
+  showTitlebarActions: booleanField({
+    label: "Show titlebar actions",
+    description:
+      "Show Explorer navigation buttons in the active note titlebar.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+    },
+  }),
 
   createFolderNoteOnNewFolder: booleanField({
     label: "Create Markdown folder notes for new folders",
@@ -535,6 +534,17 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
+  showHomePageInTitlebar: booleanField({
+    label: "Add homepage button to titlebar",
+    description: "turn off to cancel",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "homepage",
+      visibleWhen: { key: "useHomePage", value: true },
+    },
+  }),
+
   homePageName: textField({
     label: "Homepage name",
     description: "Root note name. Leave empty to use the vault name.",

@@ -76,7 +76,6 @@ export default class ExplorerPlugin extends Plugin {
     });
     this.refreshTitlebarActions = registerExplorerTitlebarActions(this, {
       getSettings: () => this.settings,
-      getFolderData: (path) => this.folderDataStore.get(path),
       saveSettings: () => this.saveSettings(),
     });
 

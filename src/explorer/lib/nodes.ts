@@ -129,6 +129,9 @@ export class ExplorerFileNode {
       : [];
     return this.cachedTags;
   }
+  get hasTags(): boolean {
+    return this.tags.length > 0;
+  }
 
   get frontmatter(): Record<string, unknown> | undefined {
     if (this.cachedFrontmatter) return this.cachedFrontmatter;

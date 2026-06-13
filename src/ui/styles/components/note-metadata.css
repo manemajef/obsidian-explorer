@@ -81,6 +81,22 @@
   white-space: nowrap;
 }
 
+.explorer-metadata-preview[data-lines="2"],
+.explorer-metadata-preview[data-lines="3"] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.explorer-metadata-preview[data-lines="2"] {
+  -webkit-line-clamp: 2;
+}
+
+.explorer-metadata-preview[data-lines="3"] {
+  -webkit-line-clamp: 3;
+}
+
 .explorer-preview-placeholder {
   color: transparent;
 }

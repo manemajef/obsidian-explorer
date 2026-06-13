@@ -70,19 +70,6 @@
   max-width: none;
 }
 
-.explorer-file-card__preview {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-  white-space: normal;
-}
-
-.explorer-cards[data-compact] .explorer-file-card__preview,
-.explorer-cards[data-variant="mobile"] .explorer-file-card__preview {
-  -webkit-line-clamp: 2;
-}
-
 .explorer-file-card__tags {
   margin-inline-start: -0.1em;
 }

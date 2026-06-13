@@ -6,7 +6,12 @@ import { ExplorerModel } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
 import { NoteFolderDatePreview } from "./note/note-metadata";
-import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note/note-parts";
+import {
+  NoteExtensionBadge,
+  NoteTags,
+  NoteTitle,
+  Pin,
+} from "./note/note-parts";
 import { Card } from "./primitives/card";
 import { Gap, Group, Spacer, Stack } from "./primitives/layout";
 import { ListRow } from "./primitives/list-row";
@@ -75,22 +80,25 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                   file={file}
                   model={model}
                   actions={actions}
-                  maxChar={isMobile ? 120 : 90}
+                  maxChar={isMobile ? 120 : 120}
                   folder={!isMobile}
                   date
                   preview={model.settings.showPreviews}
                 />
               </div>
 
-              <Gap size={4} />
+              {/* <Gap size={4} /> */}
+              {!file.hasTags && <Gap size={4} />}
               {!isMobile && (
-                <NoteTags
-                  file={file}
-                  model={model}
-                  className="explorer-modern-list__tags"
-                  overflow="hidden"
-                  size="sm"
-                />
+                <>
+                  <NoteTags
+                    file={file}
+                    model={model}
+                    className="explorer-modern-list__tags"
+                    overflow="hidden"
+                    size="sm"
+                  />
+                </>
               )}
             </Group>
           </Stack>

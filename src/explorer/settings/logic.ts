@@ -412,9 +412,6 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
   ) {
     blockDefaultsSource.adaptToMobile = raw.alwaysUseModernListInMobile;
   }
-  if (!("showTitlebarActions" in blockDefaultsSource)) {
-    blockDefaultsSource.showTitlebarActions = false;
-  }
 
   for (const key of PLUGIN_SETTING_KEYS) {
     const field = PLUGIN_SETTINGS_SCHEMA[key] as AnySettingField;
