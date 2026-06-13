@@ -534,6 +534,17 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       visibleWhen: { key: "useHomePage", value: true },
     },
   }),
+  showHomePageInTitlebar: booleanField({
+    label: "Add homepage button to titlebar",
+    description: "turn off to cancel",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "homepage",
+      visibleWhen: { key: "useHomePage", value: true },
+    },
+  }),
+
   homePageName: textField({
     label: "Homepage name",
     description: "Root note name. Leave empty to use the vault name.",
