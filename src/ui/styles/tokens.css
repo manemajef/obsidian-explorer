@@ -144,9 +144,7 @@
     rgba(255, 255, 255, 0.01);
   --explorer-surface-floating-border: 1px solid rgba(255, 255, 255, 0.02);
   --explorer-surface-floating-shadow: var(--raised-shadow);
-  --explorer-surface-floating-shadow-hover:
-    0 4px 10px rgba(0, 0, 0, 0.08), inset 1px 1px 0 0 rgba(255, 255, 255, 0.08),
-    inset -1px -1px 0 0 rgba(255, 255, 255, 0.03);
+  --explorer-surface-floating-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.08);
   --explorer-button-pad: 0px;
   --explorer-button-selected-bg: var(--background-modifier-hover);
   --explorer-button-selected-border: 1px solid var(--background-modifier-border);

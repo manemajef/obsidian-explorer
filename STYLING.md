@@ -59,10 +59,13 @@ src/ui/components/
   Modals/overlays are host-owned, not part of this reusable surface scale.
 - **Text roles** (`data-role`): `title` · `body` · `description` ·
   `metadata` · `label`.
+- **Text scopes** (`data-density`): local typography contexts that set role
+  token values for a region. They do not style child text directly.
 - **Emphasis** (`data-emphasis`): `primary` · `secondary` · `tertiary` ·
   `faint` · `accent`.
 - **15% knobs**, used sparingly and visibly in markup: `weight="medium|bold"`,
-  `size="md"` on description text, Button `density="compact"` /
+  `size="xs|sm|md|lg"` as a direct text-size override, `TextScope`
+  `density="compact|comfortable"`, Button `density="compact"` /
   `fit="content"`.
 
 Before adding a variant, ask: can an existing variant + prop solve it? Is it

@@ -6,7 +6,7 @@ import { diffDays } from "src/utils";
 import { cn } from "../primitives/cn";
 import { Icon } from "../primitives/icon";
 import { Group } from "../primitives/layout";
-import { Text, TextSize } from "../primitives/text";
+import { Text } from "../primitives/text";
 import { useNotePreview } from "./use-note-preview";
 
 const MEETA_TEXT_EMPH = "tertiary";
@@ -15,7 +15,6 @@ type NoteMetadataProps = {
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
-  size?: TextSize;
 };
 
 type NoteMetadataWithActionsProps = NoteMetadataProps & {
@@ -42,7 +41,6 @@ export function NoteDate({
   file,
   model,
   className,
-  size,
 }: NoteMetadataProps): React.JSX.Element | null {
   const date = getNoteDate(file, model);
 
@@ -52,7 +50,6 @@ export function NoteDate({
     <Text
       role="metadata"
       emphasis={MEETA_TEXT_EMPH}
-      size={size}
       className={cn("explorer-metadata-date", className)}
     >
       {diffDays(date)}
@@ -65,7 +62,6 @@ export function NoteFolder({
   model,
   actions,
   className,
-  size,
 }: NoteMetadataWithActionsProps): React.JSX.Element | null {
   const parentFolder = getParentFolder(file, model);
   if (!parentFolder) return null;
@@ -74,7 +70,6 @@ export function NoteFolder({
     <Text
       role="metadata"
       emphasis={MEETA_TEXT_EMPH}
-      size={size}
       className={cn("explorer-metadata-folder-link", className)}
       onClick={(e) => {
         e.preventDefault();
@@ -90,10 +85,8 @@ export function NoteFolder({
 
 function NoteMetadataSeparator({
   separator,
-  size,
 }: {
   separator?: "dot" | "line";
-  size?: TextSize;
 }): React.JSX.Element {
   if (!separator || separator === "dot")
     return (
@@ -101,7 +94,6 @@ function NoteMetadataSeparator({
         as="span"
         role="metadata"
         emphasis={MEETA_TEXT_EMPH}
-        size={size}
         aria-hidden="true"
         className="explorer-metadata-separator--dot"
       />
@@ -116,7 +108,6 @@ export function NoteFolderDate({
   model,
   actions,
   className,
-  size,
 }: NoteMetadataWithActionsProps): React.JSX.Element | null {
   return (
     <NoteFolderDatePreview
@@ -124,7 +115,6 @@ export function NoteFolderDate({
       model={model}
       actions={actions}
       className={cn("explorer-metadata-folder-time-row", className)}
-      size={size}
       folder
       date
       preview={false}
@@ -136,13 +126,11 @@ export function NotePreview({
   file,
   className,
   maxChar,
-  size,
   lines = 1,
 }: {
   file: ExplorerFileNode;
   className?: string;
   maxChar?: number;
-  size?: TextSize;
   lines?: NotePreviewLines;
 }): React.JSX.Element | null {
   const effectiveMaxChar = maxChar ?? 100;
@@ -156,7 +144,6 @@ export function NotePreview({
     <Text
       role="description"
       emphasis={MEETA_TEXT_EMPH}
-      size={size}
       className={cn("explorer-metadata-preview", className)}
       data-lines={lines}
     >
@@ -178,7 +165,6 @@ export function NoteDatePreview({
   maxChar,
   showPreview = true,
   previewLines,
-  size,
 }: NoteMetadataProps & {
   maxChar?: number;
   showPreview?: boolean;
@@ -190,7 +176,6 @@ export function NoteDatePreview({
       model={model}
       className={cn("explorer-metadata-date-preview-row", className)}
       maxChar={maxChar}
-      size={size}
       folder={false}
       date
       preview={showPreview}
@@ -209,7 +194,6 @@ export function NoteFolderDatePreview({
   date = true,
   preview = true,
   previewLines = 1,
-  size,
 }: NoteMetadataProps & {
   actions?: ExplorerActions;
   maxChar?: number;
@@ -240,18 +224,17 @@ export function NoteFolderDatePreview({
       gap={0}
     >
       {showFolder && actions && (
-        <NoteFolder file={file} model={model} actions={actions} size={size} />
+        <NoteFolder file={file} model={model} actions={actions} />
       )}
       {showFolder && (showDate || showNotePreview) && (
-        <NoteMetadataSeparator size={size} />
+        <NoteMetadataSeparator />
       )}
-      {showDate && <NoteDate file={file} model={model} size={size} />}
-      {showDate && showNotePreview && <NoteMetadataSeparator size={size} />}
+      {showDate && <NoteDate file={file} model={model} />}
+      {showDate && showNotePreview && <NoteMetadataSeparator />}
       {showNotePreview && (
         <Text
           role="description"
           emphasis="secondary"
-          size={size}
           className="explorer-metadata-preview"
           data-lines={previewLines}
         >

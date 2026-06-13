@@ -14,7 +14,7 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-import type { TextRole, TextSize } from "./primitives/text";
+import { TextScope, type TextDensity, type TextRole } from "./primitives/text";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -29,13 +29,13 @@ export function CardsView(props: {
   if (isMobile && model.settings.adaptToMobile) compact = false;
   const compactMobile = isMobile && compact;
   const linkRole: TextRole = compactMobile ? "description" : "title";
-  const compactMobileSize: TextSize | undefined = compactMobile
-    ? "xs"
+  const compactTextDensity: TextDensity | undefined = compactMobile
+    ? "compact"
     : undefined;
-  const previewSize: TextSize | undefined = compactMobile
-    ? "xs"
+  const previewTextDensity: TextDensity | undefined = compactMobile
+    ? "compact"
     : !compact
-      ? "md"
+      ? "comfortable"
       : undefined;
 
   return (
@@ -95,15 +95,17 @@ export function CardsView(props: {
               </Group>
               <Spacer />
               {model.settings.showPreviews && (
-                <div className="explorer-file-card__preview-wrap">
+                <TextScope
+                  className="explorer-file-card__preview-wrap"
+                  density={previewTextDensity}
+                >
                   <NotePreview
                     file={file}
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
                     lines={compact ? 2 : 3}
-                    size={previewSize}
                   />
-                </div>
+                </TextScope>
               )}
               {showTags && (
                 <>
@@ -118,14 +120,16 @@ export function CardsView(props: {
                 </>
               )}
               <Spacer />
-              <div className="explorer-file-card__metadata">
+              <TextScope
+                className="explorer-file-card__metadata"
+                density={compactTextDensity}
+              >
                 <NoteFolderDate
                   file={file}
                   model={model}
                   actions={actions}
-                  size={compactMobileSize}
                 />
-              </div>
+              </TextScope>
             </Card>
           );
         })}

@@ -1,4 +1,4 @@
-import React, { type HTMLAttributes } from "react";
+import React, { type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "./cn";
 
 export type TextRole = "title" | "body" | "description" | "metadata" | "label";
@@ -10,6 +10,13 @@ export type TextEmphasis =
   | "accent";
 export type TextWeight = "medium" | "bold";
 export type TextSize = "xs" | "sm" | "md" | "lg";
+export type TextDensity = "compact" | "comfortable";
+
+export interface TextScopeProps extends HTMLAttributes<HTMLElement> {
+  as?: "span" | "div";
+  density?: TextDensity;
+  children: ReactNode;
+}
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   as?: "span" | "div" | "p";
@@ -19,6 +26,24 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   weight?: TextWeight;
   /** 15% knob: overrides the role size for narrow responsive cases. */
   size?: TextSize;
+}
+
+export function TextScope({
+  as: Element = "div",
+  density,
+  className,
+  children,
+  ...rest
+}: TextScopeProps): React.JSX.Element {
+  return (
+    <Element
+      className={cn("explorer-text-scope", className)}
+      data-density={density}
+      {...rest}
+    >
+      {children}
+    </Element>
+  );
 }
 
 export function Text({
