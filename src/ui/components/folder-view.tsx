@@ -54,7 +54,7 @@ export function FolderButtons(props: {
               path={folderNotePath}
               className="explorer-folder-card__link"
               draggable={false}
-              role="body"
+              role={Platform.isMobile ? "description" : "body"}
               underline="none"
               unresolved={isMissing}
               weight={isMissing ? "bold" : "bold"}

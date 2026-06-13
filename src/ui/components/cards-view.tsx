@@ -8,7 +8,13 @@ import { fileInteractionProps } from "./interactions";
 import { Card } from "./primitives/card";
 import { Group, Spacer } from "./primitives/layout";
 import { NoteFolderDate, NotePreview } from "./note/note-metadata";
-import { NoteExtensionBadge, NoteTags, NoteTitle, Pin } from "./note/note-parts";
+import {
+  NoteExtensionBadge,
+  NoteTags,
+  NoteTitle,
+  Pin,
+} from "./note/note-parts";
+import { TextRole } from "./primitives/text";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -20,6 +26,8 @@ export function CardsView(props: {
 
   let compact = model.settings.compactCards;
   if (Platform.isMobile && model.settings.adaptToMobile) compact = false;
+  let linkRole: TextRole =
+    Platform.isMobile && compact ? "description" : "body";
 
   return (
     <div
@@ -46,6 +54,8 @@ export function CardsView(props: {
                     file={file}
                     actions={actions}
                     className="explorer-file-card__title"
+                    role={linkRole}
+                    weight="bold"
                     emphasis={
                       model.pluginSettings.useLinkColorInCard
                         ? "accent"
@@ -94,7 +104,7 @@ export function CardsView(props: {
                     model={model}
                     className="explorer-file-card__tags"
                     overflow="scroll"
-                    size={compact ? "sm" : "md"}
+                    size={compact ? (Platform.isMobile ? "xs" : "sm") : "md"}
                   />
                 </>
               )}
