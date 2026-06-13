@@ -30,6 +30,7 @@ export type VirtualFolderNoteHost = {
   getPluginSettings: () => PluginSettings;
   savePluginSettings: () => void | Promise<void>;
   registerRefresh?: (refresh: () => void) => () => void;
+  refreshTitlebarActions?: () => void;
   getFolderData: (folderPath: string) => Partial<BlockSettings>;
   setFolderData: (
     folderPath: string,
@@ -196,6 +197,7 @@ export class VirtualFolderNoteView extends ItemView {
           folder.path,
           getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
         );
+        this.host.refreshTitlebarActions?.();
       },
     });
   }

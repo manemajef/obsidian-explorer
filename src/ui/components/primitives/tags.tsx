@@ -40,8 +40,8 @@ export function TagList(props: {
       data-size={size}
     >
       <div className="explorer-tags__row">
-        {tags.map((tag) => (
-          <Tag key={tag} size={size}>
+        {tags.map((tag, index) => (
+          <Tag key={`${tag}-${index}`} size={size}>
             {tag}
           </Tag>
         ))}

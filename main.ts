@@ -25,6 +25,7 @@ import { registerFolderNoteRenameSync } from "./src/explorer/integration/folder-
 import { registerExplorerReadingMode } from "./src/explorer/integration/reading-mode";
 import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
+import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
 
 type ExplorerRefresh = () => void;
 
@@ -33,6 +34,7 @@ export default class ExplorerPlugin extends Plugin {
   private folderDataStore: FolderDataStore;
   private explorerRefreshers = new Set<ExplorerRefresh>();
   private refreshFileExplorerFolderNotes: (() => void) | null = null;
+  private refreshTitlebarActions: () => void = () => {};
 
   async onload() {
     await this.loadSettings();
@@ -51,6 +53,7 @@ export default class ExplorerPlugin extends Plugin {
           getPluginSettings: () => this.settings,
           savePluginSettings: () => this.saveSettings(),
           registerRefresh: (refresh) => this.registerExplorerRefresh(refresh),
+          refreshTitlebarActions: () => this.refreshTitlebarActions(),
           getFolderData: (path) => this.folderDataStore.get(path),
           setFolderData: (path, overrides) =>
             this.folderDataStore.set(path, overrides),
@@ -69,6 +72,11 @@ export default class ExplorerPlugin extends Plugin {
 
     registerExplorerCommands(this, {
       getSettings: () => this.settings,
+      saveSettings: () => this.saveSettings(),
+    });
+    this.refreshTitlebarActions = registerExplorerTitlebarActions(this, {
+      getSettings: () => this.settings,
+      getFolderData: (path) => this.folderDataStore.get(path),
       saveSettings: () => this.saveSettings(),
     });
 
@@ -118,6 +126,7 @@ export default class ExplorerPlugin extends Plugin {
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
     this.refreshFileExplorerFolderNotes?.();
+    this.refreshTitlebarActions();
   }
 
   private buildFolderNoteConversion(
