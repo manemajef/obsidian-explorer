@@ -1,9 +1,32 @@
 /* ===== Host integration & container baseline ===== */
 
+@keyframes explorer-fade-in {
+  from {
+    opacity: 0;
+    /* transform: translateY(4px);
+    transform: scale(0.99); */
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes explorer-scale-in {
+  from {
+    transform: translateY(5px) scale(0.98);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
 .explorer-container {
   scroll-margin-top: 10em;
   cursor: default;
   margin-bottom: 2em;
+  animation:
+    explorer-fade-in 0.5s ease-out both,
+    explorer-scale-in 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .explorer-container :where(input, textarea, [contenteditable="true"]) {

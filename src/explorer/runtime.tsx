@@ -113,9 +113,8 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     getBlockDefaults(),
     blockOverrides,
   );
-  let refreshQueued = false;
+  let refreshTimer: number | null = null;
   let isUnmounted = false;
-  let renderVersion = 0;
   let sourcePath = input.sourcePath;
 
   const trackSourceRename = (file: TAbstractFile, oldPath: string): void => {
@@ -131,13 +130,16 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
 
   const queueRefresh = (): void => {
     session.invalidate();
-    if (refreshQueued || isUnmounted) return;
-    refreshQueued = true;
-    window.requestAnimationFrame(() => {
+    if (refreshTimer !== null) {
+      window.clearTimeout(refreshTimer);
+    }
+    if (isUnmounted) return;
+
+    refreshTimer = window.setTimeout(() => {
+      refreshTimer = null;
       if (isUnmounted) return;
-      refreshQueued = false;
       void render();
-    });
+    }, 200);
   };
 
   const cleanupCallbacks: Array<() => void> = [];
@@ -157,6 +159,9 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   );
   registerCleanup(() => {
     isUnmounted = true;
+    if (refreshTimer !== null) {
+      window.clearTimeout(refreshTimer);
+    }
     reactRoot.unmount();
   });
   if (registerRefresh) {
@@ -195,7 +200,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   };
 
   const render = async (): Promise<void> => {
-    renderVersion += 1;
     const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
       getBlockDefaults(),
@@ -222,7 +226,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
 
     reactRoot.render(
       <ExplorerUI
-        key={renderVersion}
+        key={model.sourcePath}
         model={model}
         onOpenSettings={openSettings}
         onSavePluginSettings={savePluginSettings}

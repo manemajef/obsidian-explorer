@@ -8,7 +8,7 @@ export type SettingVisibility =
       value?: unknown;
       platform?: "mobile" | "desktop";
     }
-  | ((values: Record<string, any>) => boolean);
+  | ((values: Record<string, unknown>) => boolean);
 
 export type SettingUiMeta = {
   surfaces: readonly SettingsSurface[];
