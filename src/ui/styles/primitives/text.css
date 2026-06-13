@@ -7,7 +7,7 @@
  *
  * 15% knobs (use sparingly, justify in the markup):
  *   data-weight="medium|bold"  — overrides the role weight
- *   data-size="md"             — bumps description text one step (large cards)
+ *   data-size="xs|sm|md|lg"    — overrides the role size
  */
 
 .explorer-text {
@@ -68,12 +68,27 @@
   font-weight: calc(var(--font-weight) + var(--bold-modifier));
 }
 
-.explorer-text[data-role="description"][data-size="md"] {
-  font-size: var(--font-ui-small);
-  font-weight: var(--font-normal);
+/* Nested text never compounds em-based sizing. */
+.explorer-text .explorer-text:not([data-size]) {
+  font-size: 1em;
 }
 
-/* Nested text never compounds em-based sizing. */
-.explorer-text .explorer-text {
-  font-size: 1em;
+.explorer-text[data-size="xs"] {
+  font-size: calc(var(--font-ui-smaller) - 1px);
+}
+
+.explorer-text[data-size="sm"] {
+  font-size: var(--font-ui-smaller);
+}
+
+.explorer-text[data-size="md"] {
+  font-size: var(--font-ui-small);
+}
+
+.explorer-text[data-size="lg"] {
+  font-size: var(--font-ui-medium);
+}
+
+.explorer-text[data-role="description"][data-size="md"] {
+  font-weight: var(--font-normal);
 }

@@ -17,7 +17,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   emphasis?: TextEmphasis;
   /** 15% knob: overrides the role weight. */
   weight?: TextWeight;
-  /** 15% knob: bumps description text one step (large cards). */
+  /** 15% knob: overrides the role size for narrow responsive cases. */
   size?: TextSize;
 }
 

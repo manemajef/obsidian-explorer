@@ -14,7 +14,7 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-import { TextRole } from "./primitives/text";
+import type { TextRole, TextSize } from "./primitives/text";
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -23,17 +23,26 @@ export function CardsView(props: {
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
   const { model, files, actions, contextMenu } = props;
+  const isMobile = Platform.isMobile;
 
   let compact = model.settings.compactCards;
-  if (Platform.isMobile && model.settings.adaptToMobile) compact = false;
-  let linkRole: TextRole =
-    Platform.isMobile && compact ? "description" : "body";
+  if (isMobile && model.settings.adaptToMobile) compact = false;
+  const compactMobile = isMobile && compact;
+  const linkRole: TextRole = compactMobile ? "description" : "body";
+  const compactMobileSize: TextSize | undefined = compactMobile
+    ? "xs"
+    : undefined;
+  const previewSize: TextSize | undefined = compactMobile
+    ? "xs"
+    : !compact
+      ? "md"
+      : undefined;
 
   return (
     <div
       className="explorer-cards"
       data-compact={compact || undefined}
-      data-variant={Platform.isMobile ? "mobile" : "desktop"}
+      data-variant={isMobile ? "mobile" : "desktop"}
     >
       <div className="explorer-cards__grid">
         {files.map((file) => {
@@ -92,7 +101,7 @@ export function CardsView(props: {
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
                     lines={compact ? 2 : 3}
-                    size={!compact ? "md" : undefined}
+                    size={previewSize}
                   />
                 </div>
               )}
@@ -104,13 +113,18 @@ export function CardsView(props: {
                     model={model}
                     className="explorer-file-card__tags"
                     overflow="scroll"
-                    size={compact ? (Platform.isMobile ? "xs" : "sm") : "md"}
+                    size={compact ? (isMobile ? "xs" : "sm") : "md"}
                   />
                 </>
               )}
               <Spacer />
               <div className="explorer-file-card__metadata">
-                <NoteFolderDate file={file} model={model} actions={actions} />
+                <NoteFolderDate
+                  file={file}
+                  model={model}
+                  actions={actions}
+                  size={compactMobileSize}
+                />
               </div>
             </Card>
           );
