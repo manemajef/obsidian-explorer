@@ -64,10 +64,7 @@
   flex: 1 1 auto;
   min-width: 0;
   max-width: 220px;
-  padding: 0.8em var(--explorer-space-6);
-
-  /* Scales the em-based padding with the folder name text. */
-  font-size: 0.9em;
+  padding: 0.8em calc(var(--explorer-space-6) * 0.9);
   transition: 0.15s;
 }
 

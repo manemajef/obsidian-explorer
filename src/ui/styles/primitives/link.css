@@ -8,6 +8,7 @@
   color: var(--explorer-text-primary);
   text-decoration: none;
   cursor: pointer;
+  line-height: var(--explorer-link-line);
 }
 
 .explorer-container a.internal-link.explorer-link[data-emphasis="secondary"] {

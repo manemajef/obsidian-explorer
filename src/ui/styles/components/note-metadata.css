@@ -48,11 +48,13 @@
 
 .explorer-metadata-separator--dot {
   flex: 0 0 auto;
+  align-self: center;
+  width: 0.28em;
+  height: 0.28em;
+  margin-inline: 3px;
+  border-radius: var(--explorer-radius-pill);
+  background-color: currentcolor;
   opacity: 0.75;
-  padding-inline: 3px;
-  transform: scale(1.2);
-  font-size: 0.8em;
-  line-height: 1;
 }
 
 .explorer-metadata-date {

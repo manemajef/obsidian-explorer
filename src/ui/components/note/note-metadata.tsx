@@ -98,13 +98,13 @@ function NoteMetadataSeparator({
   if (!separator || separator === "dot")
     return (
       <Text
+        as="span"
         role="metadata"
         emphasis={MEETA_TEXT_EMPH}
         size={size}
+        aria-hidden="true"
         className="explorer-metadata-separator--dot"
-      >
-        •
-      </Text>
+      />
     );
   return (
     <span className="explorer-metadata-separator" aria-hidden="true"></span>

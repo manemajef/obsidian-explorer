@@ -28,7 +28,7 @@ export function CardsView(props: {
   let compact = model.settings.compactCards;
   if (isMobile && model.settings.adaptToMobile) compact = false;
   const compactMobile = isMobile && compact;
-  const linkRole: TextRole = compactMobile ? "description" : "body";
+  const linkRole: TextRole = compactMobile ? "description" : "title";
   const compactMobileSize: TextSize | undefined = compactMobile
     ? "xs"
     : undefined;

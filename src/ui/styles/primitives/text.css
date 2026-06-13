@@ -23,25 +23,21 @@
 .explorer-text[data-role="body"] {
   font-size: var(--explorer-text-body-size);
   font-weight: var(--explorer-text-body-weight);
-  /* line-height: var(--explorer-text-body-line); */
 }
 
 .explorer-text[data-role="description"] {
   font-size: var(--explorer-text-description-size);
   font-weight: var(--explorer-text-description-weight);
-  /* line-height: var(--explorer-text-description-line); */
 }
 
 .explorer-text[data-role="metadata"] {
   font-size: var(--explorer-text-metadata-size);
   font-weight: var(--explorer-text-metadata-weight);
-  /* line-height: var(--explorer-text-metadata-line); */
 }
 
 .explorer-text[data-role="label"] {
   font-size: var(--explorer-text-label-size);
   font-weight: var(--explorer-text-label-weight);
-  /* line-height: var(--explorer-text-label-line); */
 }
 
 .explorer-text[data-emphasis="primary"] {

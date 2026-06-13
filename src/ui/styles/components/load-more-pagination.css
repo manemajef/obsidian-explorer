@@ -14,6 +14,10 @@
 }
 
 .explorer-load-more__icon {
-  font-size: 0.95em;
   color: var(--text-accent);
+}
+
+.explorer-load-more__icon svg {
+  width: 0.95em;
+  height: 0.95em;
 }

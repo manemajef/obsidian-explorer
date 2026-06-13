@@ -6,7 +6,6 @@
 
 .explorer-modern-list[data-variant="mobile"] {
   padding-bottom: var(--explorer-space-2);
-  font-size: 0.95em;
 }
 
 .explorer-modern-list[data-variant="desktop"] .explorer-modern-list__shell {
