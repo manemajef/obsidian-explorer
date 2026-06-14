@@ -15,6 +15,8 @@ import {
 import { cn } from "./primitives/cn";
 import { Gap, Group, Spacer, Stack } from "./primitives/layout";
 
+const TAGS_LOW = false;
+
 interface ListRowProps extends React.HTMLAttributes<HTMLDivElement> {
   shellClassName?: string;
   interactive?: boolean;
@@ -56,10 +58,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
   const isMobile = variant === "mobile";
 
   return (
-    <Stack
-      className="explorer-modern-list"
-      data-variant={variant}
-    >
+    <Stack className="explorer-modern-list" data-variant={variant}>
       {files.map((file, i) => (
         <ListRow
           key={file.path}
@@ -92,7 +91,15 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
               </div>
 
               <Spacer />
-
+              {!TAGS_LOW && (
+                <NoteTags
+                  file={file}
+                  model={model}
+                  className="explorer-modern-list__tags"
+                  overflow="hidden"
+                  size="sm"
+                />
+              )}
               <NoteExtensionBadge
                 file={file}
                 className="explorer-modern-list__extension"
@@ -114,7 +121,8 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
 
               {/* <Gap size={4} /> */}
               {!file.hasTags && <Gap size={4} />}
-              {!isMobile && (
+              {file.hasTags && !TAGS_LOW && <Gap size={2} />}
+              {!isMobile && TAGS_LOW && (
                 <>
                   <NoteTags
                     file={file}
