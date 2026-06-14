@@ -46,7 +46,7 @@ export function FolderButtons(props: {
               isLongName && "explorer-folder-card--long-name",
             )}
             interactive
-            radius="lg"
+            radius="btn"
             surface="control"
             {...folderInteractionProps(folder, actions, contextMenu)}
           >

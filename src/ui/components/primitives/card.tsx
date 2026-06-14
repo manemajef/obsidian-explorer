@@ -2,7 +2,7 @@ import React, { type HTMLAttributes } from "react";
 import { cn } from "./cn";
 
 export type CardSurface = "base" | "subtle" | "raised" | "control";
-export type CardRadius = "card" | "lg" | "md";
+export type CardRadius = "card" | "lg" | "md" | "btn";
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   surface?: CardSurface;

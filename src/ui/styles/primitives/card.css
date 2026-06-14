@@ -23,3 +23,6 @@
 .explorer-ui-card[data-radius="md"] {
   border-radius: var(--explorer-radius-md);
 }
+.explorer-ui-card[data-radius="btn"] {
+  border-radius: 0.8em;
+}

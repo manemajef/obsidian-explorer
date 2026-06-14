@@ -64,7 +64,7 @@
   flex: 1 1 auto;
   min-width: 0;
   max-width: 220px;
-  padding: 0.8em calc(var(--explorer-space-6) * 0.9);
+  padding: 0.85em calc(var(--explorer-space-6) * 0.9);
   transition: 0.15s;
 }
 
