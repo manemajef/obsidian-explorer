@@ -8,7 +8,9 @@ from the same place you read and write.
 
 Available in the [Obsidian community plugin store](https://community.obsidian.md/plugins/explorer).
 
-![alt text](.//assets/explorer-white.png)
+<!-- ![alt text](.//assets/explorer-white.png) -->
+
+![alt text](./assets/explorer-main.png)
 
 Explorer works best when folders act like notebooks, projects, classes, or
 topic groups. It integrates with existing Markdown folder notes (Markdown files
