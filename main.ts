@@ -26,6 +26,7 @@ import { registerExplorerReadingMode } from "./src/explorer/integration/reading-
 import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
+import { registerExplorerDevCodeBlock } from "./src/explorer/dev-registration";
 
 type ExplorerRefresh = () => void;
 
@@ -108,6 +109,8 @@ export default class ExplorerPlugin extends Plugin {
         );
       },
     );
+
+    registerExplorerDevCodeBlock(this);
 
     registerHomePageNewTabs(this, () => this.settings);
     registerFolderNoteRenameSync(this, () => this.settings);

@@ -87,7 +87,7 @@ export default defineConfig([
   // styles are allowed only inside primitive layout components.
   {
     files: ["src/ui/**/*.tsx"],
-    ignores: ["src/ui/components/primitives/**"],
+    ignores: ["src/ui/components/primitives/**", "src/ui/dev-fixtures/**"],
     rules: {
       "no-restricted-syntax": [
         "error",
