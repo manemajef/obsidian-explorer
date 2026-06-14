@@ -168,6 +168,13 @@
       rgba(255, 255, 255, 0.04) 100%
     ),
     rgba(255, 255, 255, 0.001);
+  --explorer-surface-raised-bg: var(--interactive-normal);
+  --explorer-surface-raised-bg: color-mix(
+    in srgb,
+    var(--interactive-normal) 40%,
+    transparent 60%
+  );
+  --explorer-surface-raised-background: var(--settings-item-background);
   --explorer-surface-raised-border: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-surface-raised-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
   --explorer-surface-control-bg: var(--explorer-surface-raised-bg);

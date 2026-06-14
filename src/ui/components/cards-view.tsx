@@ -27,6 +27,13 @@ export function CardsView(props: {
   let compact = model.settings.compactCards;
   if (isMobile && model.settings.adaptToMobile) compact = false;
   const compactMobile = isMobile && compact;
+  const titleSize = isMobile
+    ? compactMobile
+      ? "sm"
+      : "lg"
+    : compact
+      ? "sm"
+      : "md";
 
   return (
     <div
@@ -57,12 +64,9 @@ export function CardsView(props: {
                     actions={actions}
                     className="explorer-file-card__title"
                     role="title"
-                    size={!compact && !isMobile ? "lg" : "sm"}
-                    emphasis={
-                      model.pluginSettings.useLinkColorInCard
-                        ? "accent"
-                        : "primary"
-                    }
+                    // size={!compact && !isMobile ? "lg" : "sm"}
+                    size={titleSize}
+                    emphasis="primary"
                     text={file.basename}
                     underline="none"
                   />
