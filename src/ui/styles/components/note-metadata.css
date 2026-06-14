@@ -49,9 +49,9 @@
 .explorer-metadata-separator--dot {
   flex: 0 0 auto;
   align-self: center;
-  width: 0.28em;
-  height: 0.28em;
-  margin-inline: 3px;
+  width: 0.22em;
+  height: 0.22em;
+  margin-inline: var(--explorer-space-2);
   border-radius: var(--explorer-radius-pill);
   background-color: currentcolor;
   opacity: 0.75;
