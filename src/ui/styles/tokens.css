@@ -32,116 +32,86 @@
   --explorer-button-selected-border: 1px solid rgba(0, 0, 0, 0.08);
   --explorer-button-selected-color: var(--text-accent);
 
-  /* Typography — roles */
-  --explorer-text-title-size: 0.9em;
-  --explorer-text-title-weight: calc(
-    var(--font-weight) + var(--bold-modifier) * 0.8
-  );
-  --explorer-text-title-line: 1.3;
-  --explorer-text-body-size: 1em;
+  /* Typography variants */
+  --explorer-text-title-size: var(--font-small);
+  --explorer-text-title-weight: var(--font-semibold);
+  --explorer-text-body-size: var(--font-text-size);
   --explorer-text-body-weight: var(--font-weight);
   --explorer-text-metadata-size: var(--font-ui-smaller);
-  --explorer-text-metadata-line: 1.4;
-  --explorer-text-metadata-weight: calc(
-    (var(--font-normal) + var(--font-light)) / 2
-  );
-  --explorer-text-label-size: var(--font-ui-small);
-  --explorer-text-label-weight: var(--font-medium);
+  --explorer-text-metadata-weight: var(--font-normal);
 
   /* Typography — links */
   --explorer-link-line: 1.15;
 
-  /* Typography — emphasis */
-  --explorer-text-primary: var(--text-normal);
-  --explorer-text-secondary: color-mix(
-    in srgb,
-    var(--text-normal) 70%,
-    transparent
-  );
-  --explorer-text-tertiary: var(--text-muted);
-  --explorer-text-faint: var(--text-faint);
-  --explorer-text-accent: var(--link-color, var(--text-accent));
+  /* Note cards — intentionally aligned with Obsidian Bases cards. */
+  --explorer-note-card-bg: var(--bases-cards-background);
+  --explorer-note-card-border: none;
+  --explorer-note-card-shadow: var(--bases-cards-shadow);
+  --explorer-note-card-shadow-hover: var(--bases-cards-shadow-hover);
 
-  /* Surface — subtle (border/hover driven, low emphasis; note cards) */
-  --explorer-surface-subtle-bg: var(--bases-cards-background);
-  --explorer-surface-subtle-border: none;
-  --explorer-surface-subtle-shadow: var(--bases-cards-shadow);
-  --explorer-surface-subtle-shadow-hover: var(--bases-cards-shadow-hover);
-
-  /* Surface — raised (grouped sections, structured containers) */
-  --explorer-surface-raised-bg: var(--raised-background);
-  --explorer-surface-raised-bg-image: none;
-  --explorer-surface-raised-border: 1px solid rgba(0, 0, 0, 0.08);
-  --explorer-surface-raised-shadow:
+  /* Panels — passive structured containers, not clickable controls. */
+  --explorer-panel-bg: var(--raised-background);
+  --explorer-panel-border: 1px solid rgba(0, 0, 0, 0.08);
+  --explorer-panel-shadow:
     0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
-  --explorer-surface-raised-shadow-hover:
-    0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.05);
 
-  /* Surface — control (interactive card-like controls; folder buttons) */
-  --explorer-surface-control-bg: var(--explorer-surface-raised-bg);
-  --explorer-surface-control-border: var(--explorer-surface-raised-border);
-  --explorer-surface-control-shadow: var(--explorer-surface-raised-shadow);
-  --explorer-surface-control-shadow-hover: var(
-    --explorer-surface-raised-shadow-hover
-  );
+  /* Folder buttons — interactive controls with panel-like dominance. */
+  --explorer-folder-button-bg: var(--explorer-panel-bg);
+  --explorer-folder-button-border: var(--explorer-panel-border);
+  --explorer-folder-button-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.04);
+  --explorer-folder-button-shadow-hover:
+    0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.06);
 
-  /* Surface — floating (floating controls: action buttons, button groups) */
-  --explorer-surface-floating-bg: rgba(255, 255, 255, 0.2);
-  --explorer-surface-floating-bg-image: none;
-  --explorer-surface-floating-border: 1px solid rgba(0, 0, 0, 0.07);
-  --explorer-surface-floating-shadow:
+  /* Glass controls — custom Explorer toolbar/pagination treatment. */
+  --explorer-glass-bg: rgba(255, 255, 255, 0.2);
+  --explorer-glass-border: 1px solid rgba(0, 0, 0, 0.07);
+  --explorer-glass-shadow:
     0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
     var(--shadow-edges);
-  --explorer-surface-floating-shadow-hover:
+  --explorer-glass-shadow-hover:
     0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
     var(--shadow-edges);
-
-  /* Inner top-light edge highlight ("OS shine") — applies in BOTH themes;
-   * on light mobile it pairs with the raised+blur trick (fixes.mobile.css)
-   * for the liquid-glass look. */
-  --explorer-surface-floating-shine:
+  --explorer-glass-shine:
     inset 0.5px 1px 0 rgba(255, 255, 255, 0.14),
     inset -1px -1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .theme-dark .explorer-container {
-  --explorer-surface-raised-bg:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.01) 0%,
-      rgba(255, 255, 255, 0.01) 100%
-    ),
-    rgba(255, 255, 255, 0.01);
-  --explorer-surface-raised-bg-image: linear-gradient(
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.01),
-    rgba(255, 255, 255, 0.03)
+  /* PANEL */
+  --explorer-panel-bg: color-mix(
+    in srgb,
+    var(--background-primary-alt) 70%,
+    transparent
   );
-  --explorer-surface-raised-border: 1px solid rgba(255, 255, 255, 0.02);
-  --explorer-surface-raised-shadow:
+  --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.02);
+  --explorer-panel-shadow: var(--background-modifier-box-shadow);
+
+  /* FOLDER BUTTON */
+  --explorer-folder-button-bg: var(--explorer-panel-bg);
+  --explorer-folder-button-border: 1px solid rgba(255, 255, 255, 0.02);
+  --explorer-folder-button-shadow:
     0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  --explorer-surface-raised-shadow-hover:
+  --explorer-folder-button-shadow-hover:
     0 4px 10px rgba(0, 0, 0, 0.08), inset 1px 1px 0 0 rgba(255, 255, 255, 0.08),
     inset -1px -1px 0 0 rgba(255, 255, 255, 0.03);
-  --explorer-surface-control-bg: var(--explorer-surface-raised-bg);
-  --explorer-surface-control-border: var(--explorer-surface-raised-border);
-  --explorer-surface-control-shadow: var(--explorer-surface-raised-shadow);
-  --explorer-surface-control-shadow-hover: var(
-    --explorer-surface-raised-shadow-hover
-  );
-  --explorer-surface-floating-bg:
+
+  /* GLASS */
+  --explorer-glass-bg:
     linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.01) 0%,
       rgba(255, 255, 255, 0.01) 100%
     ),
     rgba(255, 255, 255, 0.01);
-  --explorer-surface-floating-border: 1px solid rgba(255, 255, 255, 0.02);
-  --explorer-surface-floating-shadow: var(--raised-shadow);
-  --explorer-surface-floating-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --explorer-glass-border: 1px solid rgba(255, 255, 255, 0.02);
+  --explorer-glass-shadow: var(--raised-shadow);
+  --explorer-glass-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+  /* BUTTON */
   --explorer-button-pad: 0px;
   --explorer-button-selected-bg: var(--background-modifier-hover);
   --explorer-button-selected-border: 1px solid var(--background-modifier-border);
@@ -161,26 +131,15 @@
 }
 
 .theme-dark.is-mobile .explorer-container {
-  --explorer-surface-raised-bg:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.04) 100%
-    ),
-    rgba(255, 255, 255, 0.001);
-  --explorer-surface-raised-bg: var(--interactive-normal);
-  --explorer-surface-raised-bg: color-mix(
+  --explorer-panel-bg: color-mix(
     in srgb,
     var(--interactive-normal) 40%,
     transparent 60%
   );
-  --explorer-surface-raised-background: var(--settings-item-background);
-  --explorer-surface-raised-border: 1px solid rgba(255, 255, 255, 0.055);
-  --explorer-surface-raised-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-  --explorer-surface-control-bg: var(--explorer-surface-raised-bg);
-  --explorer-surface-control-border: var(--explorer-surface-raised-border);
-  --explorer-surface-control-shadow: var(--explorer-surface-raised-shadow);
-  --explorer-surface-control-shadow-hover: var(
-    --explorer-surface-raised-shadow-hover
-  );
+  --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.055);
+  --explorer-panel-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  --explorer-folder-button-bg: var(--explorer-panel-bg);
+  --explorer-folder-button-border: var(--explorer-panel-border);
+  --explorer-folder-button-shadow: var(--explorer-panel-shadow);
+  --explorer-folder-button-shadow-hover: var(--explorer-folder-button-shadow);
 }

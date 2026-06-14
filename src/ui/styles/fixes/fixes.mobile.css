@@ -30,12 +30,12 @@
   max-height: 80vh;
 }
 
-/* Light mobile: the translucent-white floating surface washes out over
- * vault backgrounds; use Obsidian's raised+blur treatment instead. The
+/* Light mobile: translucent-white glass washes out over vault backgrounds;
+ * use Obsidian's raised+blur treatment instead. The
  * load-more pill is excluded — blur over scrolling list content shimmers. */
 .is-mobile:not(.theme-dark)
   .explorer-container
-  [data-surface="floating"]:not(.explorer-load-more) {
+  [data-glass]:not(.explorer-load-more) {
   background: var(--raised-background);
   -webkit-backdrop-filter: var(--raised-blur);
   backdrop-filter: var(--raised-blur);

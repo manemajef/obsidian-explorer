@@ -1,35 +1,34 @@
 import React, { type HTMLAttributes } from "react";
 import { cn } from "./cn";
 
-export type TextRole = "title" | "body" | "metadata" | "label";
-export type TextEmphasis =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "faint"
-  | "accent";
-export type TextWeight = "medium" | "bold";
-export type TextSize = "xs" | "sm" | "md" | "lg";
+export type TextVariant = "title" | "metadata" | "body";
+export type TextColor = "normal" | "muted" | "faint" | "accent";
+export type TextWeight = "light" | "normal" | "medium" | "semibold" | "bold";
+export type TextSize =
+  | "smallest"
+  | "smaller"
+  | "small"
+  | "text"
+  | "ui-smaller"
+  | "ui-small"
+  | "ui-medium"
+  | "ui-large";
+export type TextDensity = "tight" | "normal";
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "role"> {
   as?: "span" | "div" | "p";
-  role?: TextRole;
-  emphasis?: TextEmphasis;
-  /** 15% knob: overrides the role weight. */
+  variant?: TextVariant;
+  color?: TextColor;
+  density?: TextDensity;
   weight?: TextWeight;
-  /**
-   * 15% knob: overrides only the role's font-size, on the shared content ramp
-   * (xs→smallest … lg→body). The rest of the role (weight, leading, tracking)
-   * is kept. Reach for `data-density` on a region first; use `size` for a
-   * single-element exception.
-   */
   size?: TextSize;
 }
 
 export function Text({
   as: Element = "span",
-  role = "body",
-  emphasis,
+  variant = "body",
+  color,
+  density,
   weight,
   size,
   className,
@@ -38,8 +37,9 @@ export function Text({
   return (
     <Element
       className={cn("explorer-text", className)}
-      data-role={role}
-      data-emphasis={emphasis}
+      data-variant={variant}
+      data-color={color}
+      data-density={density}
       data-weight={weight}
       data-size={size}
       {...rest}

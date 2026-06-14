@@ -1,15 +1,100 @@
-import React from "react";
+import React, {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { App, Platform, TFolder } from "obsidian";
 import { Search } from "./search";
 import { cn } from "./primitives/cn";
-import {
-  Toolbar,
-  ToolbarGroup,
-  ToolbarGroupItem,
-  ToolbarItem,
-} from "./primitives/toolbar";
 import { Gap, Group, Spacer } from "./primitives/layout";
+import { Icon } from "./primitives/icon";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
+
+/* Local Toolbar Components */
+export interface ToolbarProps extends HTMLAttributes<HTMLDivElement> {
+  density?: "compact";
+  fit?: "content";
+  children: ReactNode;
+}
+
+export function Toolbar({
+  density,
+  fit,
+  className,
+  children,
+  ...rest
+}: ToolbarProps): React.JSX.Element {
+  return (
+    <div
+      className={cn("explorer-toolbar", className)}
+      data-density={density}
+      data-fit={fit}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+}
+
+export interface ToolbarItemProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  icon: string;
+  active?: boolean;
+}
+
+export const ToolbarItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
+  ({ icon, active, className, ...rest }, ref) => (
+    <button
+      ref={ref}
+      type="button"
+      className={cn("explorer-toolbar-item", className)}
+      data-active={active || undefined}
+      data-glass=""
+      data-interactive=""
+      {...rest}
+    >
+      <Icon name={icon} />
+    </button>
+  ),
+);
+ToolbarItem.displayName = "ToolbarItem";
+
+export interface ToolbarGroupProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+}
+
+export function ToolbarGroup({
+  className,
+  children,
+  ...rest
+}: ToolbarGroupProps): React.JSX.Element {
+  return (
+    <div
+      className={cn("explorer-toolbar-group", className)}
+      data-glass=""
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+}
+
+export const ToolbarGroupItem = forwardRef<
+  HTMLButtonElement,
+  ToolbarItemProps
+>(({ icon, active, className, ...rest }, ref) => (
+  <button
+    ref={ref}
+    type="button"
+    className={cn("explorer-toolbar-group-item", className)}
+    data-active={active || undefined}
+    {...rest}
+  >
+    <Icon name={icon} />
+  </button>
+));
+ToolbarGroupItem.displayName = "ToolbarGroupItem";
 
 const SETTINGS_ICON = "settings-2";
 

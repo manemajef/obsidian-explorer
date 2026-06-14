@@ -1,0 +1,34 @@
+/*
+ * Glass recipe — floating control chrome shared by toolbar items, button
+ * groups, and pagination controls. Cards use card.css instead.
+ */
+
+.explorer-container [data-glass] {
+  position: relative;
+  background: var(--explorer-glass-bg);
+  border: var(--explorer-glass-border);
+  box-shadow: var(--explorer-glass-shadow);
+}
+
+/* Shine: inner top-light edge highlight; resolves to none in light theme. */
+.explorer-container [data-glass]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--explorer-glass-shine);
+  pointer-events: none;
+}
+
+.explorer-container [data-glass][data-interactive] {
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.explorer-container [data-glass][data-interactive]:hover,
+.explorer-container [data-glass][data-interactive]:focus-visible,
+.explorer-container [data-glass][data-interactive]:focus-within {
+  box-shadow: var(--explorer-glass-shadow-hover);
+  transform: scale(var(--explorer-hover-scale));
+  z-index: 10;
+}

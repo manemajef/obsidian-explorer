@@ -24,7 +24,7 @@ export function NoteTitle({
       path={file.path}
       className={className}
       draggable={false}
-      role="title"
+      variant="title"
       {...linkProps}
       onClick={(event) => {
         event.preventDefault();

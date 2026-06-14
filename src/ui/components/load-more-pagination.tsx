@@ -27,7 +27,7 @@ export function LoadMorePagination(
           onLoadMore();
         }}
       >
-        <Text role="body" weight="medium">
+        <Text variant="body" weight="medium" size="small">
           Load more
         </Text>
         <Icon name="chevrons-down" className="explorer-load-more__icon" />

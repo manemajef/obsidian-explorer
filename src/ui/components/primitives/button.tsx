@@ -45,7 +45,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       data-shape={shape}
       data-active={active || undefined}
       data-selected={selected || undefined}
-      data-surface={variant === "glass" ? "floating" : undefined}
+      data-glass={variant === "glass" ? "" : undefined}
       data-interactive={
         (variant === "glass" && interactive !== false) || undefined
       }
@@ -60,12 +60,12 @@ Button.displayName = "Button";
 
 export interface ButtonGroupProps extends HTMLAttributes<HTMLDivElement> {
   /** false renders a bare group. */
-  surface?: boolean;
+  glass?: boolean;
   children: ReactNode;
 }
 
 export function ButtonGroup({
-  surface = true,
+  glass = true,
   className,
   children,
   ...rest
@@ -73,7 +73,7 @@ export function ButtonGroup({
   return (
     <div
       className={cn("explorer-button-group", className)}
-      data-surface={surface ? "floating" : undefined}
+      data-glass={glass ? "" : undefined}
       {...rest}
     >
       {children}

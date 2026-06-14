@@ -8,8 +8,8 @@
  * superellipses; force plain round corners inside the explorer. */
 
 /* Obsidian gives buttons a background and an --input-shadow box-shadow
- * (visible on bare toolbar-group items, esp. mobile light). Surfaceful
- * controls win this back via the higher-specificity floating recipe. */
+ * (visible on bare toolbar-group items, esp. mobile light). Glass controls
+ * win this back through the higher-specificity glass recipe. */
 .explorer-container button,
 .explorer-container input[type="text"] {
   corner-shape: round;

@@ -2,7 +2,7 @@
  * Button + ButtonGroup — generic clickable controls (pagination, load-more).
  * Toolbar controls are a separate component family (toolbar.css).
  *
- * Variants: glass (floating surface) · ghost (transparent, hover wash).
+ * Variants: glass (floating control chrome) · ghost (transparent, hover wash).
  * Shape:    circle · pill · round.
  * States:   data-active (toggled) · data-selected (current choice) · disabled.
  */

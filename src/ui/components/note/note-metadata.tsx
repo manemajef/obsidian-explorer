@@ -9,13 +9,13 @@ import { Group } from "../primitives/layout";
 import { Text, type TextSize } from "../primitives/text";
 import { useNotePreview } from "./use-note-preview";
 
-const MEETA_TEXT_EMPH = "tertiary";
+const METADATA_COLOR = "muted";
 
 type NoteMetadataProps = {
   file: ExplorerFileNode;
   model: ExplorerModel;
   className?: string;
-  /** Optional per-element override; prefer `data-density` on a region. */
+  /** Optional per-element size override; prefer the metadata default first. */
   size?: TextSize;
 };
 
@@ -51,8 +51,8 @@ export function NoteDate({
 
   return (
     <Text
-      role="metadata"
-      emphasis={MEETA_TEXT_EMPH}
+      variant="metadata"
+      color={METADATA_COLOR}
       size={size}
       className={cn("explorer-metadata-date", className)}
     >
@@ -73,8 +73,8 @@ export function NoteFolder({
 
   return (
     <Text
-      role="metadata"
-      emphasis={MEETA_TEXT_EMPH}
+      variant="metadata"
+      color={METADATA_COLOR}
       size={size}
       className={cn("explorer-metadata-folder-link", className)}
       onClick={(e) => {
@@ -100,8 +100,8 @@ function NoteMetadataSeparator({
     return (
       <Text
         as="span"
-        role="metadata"
-        emphasis={MEETA_TEXT_EMPH}
+        variant="metadata"
+        color={METADATA_COLOR}
         size={size}
         aria-hidden="true"
         className="explorer-metadata-separator--dot"
@@ -155,8 +155,8 @@ export function NotePreview({
 
   return (
     <Text
-      role="metadata"
-      emphasis={MEETA_TEXT_EMPH}
+      variant="metadata"
+      color={METADATA_COLOR}
       size={size}
       className={cn("explorer-metadata-preview", className)}
       data-lines={lines}
@@ -256,8 +256,8 @@ export function NoteFolderDatePreview({
       {showDate && showNotePreview && <NoteMetadataSeparator size={size} />}
       {showNotePreview && (
         <Text
-          role="metadata"
-          emphasis="secondary"
+          variant="metadata"
+          color="muted"
           size={size}
           className="explorer-metadata-preview"
           data-lines={previewLines}

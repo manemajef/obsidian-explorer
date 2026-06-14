@@ -6,7 +6,7 @@ makes future changes easier to reason about.
 
 ## The golden rules
 
-1. Components declare meaning (`<Card>`, `<Text role="metadata">`), CSS implements it.
+1. Components declare meaning (`<Card kind="note-card">`, `<Text variant="metadata">`), CSS implements it.
 2. Tokens are global and immutable — defined **only** in `tokens.css`.
 3. Components may consume tokens but never redefine them.
 4. Styling experiments happen in tokens or recipes first, component CSS second, overrides last.
@@ -22,11 +22,12 @@ makes future changes easier to reason about.
 src/ui/styles/
   tokens.css        Global design decisions. The only definition site for
                     --explorer-* tokens; theme/mobile value resolution here.
-  primitives/       Recipes (surface.css: data-surface; text.css:
-                    data-role × data-emphasis) plus one file per semantic
-                    component (button, toolbar, card, badge, tag, link,
-                    list-row, pin, layout, icon). Own class + data-attrs
-                    only.
+  primitives/       Recipes (glass.css: data-glass; text.css:
+                    variant × color × size × weight × density) plus one file per semantic
+                    component (button, badge, tag, link, pin, layout,
+                    icon). Own class + data-attrs only. Dedicated domain
+                    surfaces (NoteCard, FolderButton) and layouts (Toolbar,
+                    ListRow) live inside their respective view/component files.
   components/       Stylesheets for root-level rendered UI regions in
                     src/ui/components/*.tsx, plus small domain fragments they
                     share. Layout, grids, placement. No typography, no surface
@@ -53,26 +54,24 @@ src/ui/components/
 
 ## Vocabulary (keep it small enough to hold in your head)
 
-- **Surfaces** (`data-surface`): `base` · `subtle` (note cards) · `raised`
-  (grouped containers) · `control` (interactive card-like controls) ·
-  `floating` (toolbar buttons, button groups, pagination). Never exceed 5.
-  Modals/overlays are host-owned, not part of this reusable surface scale.
-- **Text roles** (`data-role`): `title` · `body` · `metadata` · `label`.
-  `metadata` is all small supporting text (previews, dates, folders). A role is
-  the default *bundle* of size + weight + leading + tracking — pick the role
-  for intent, then override one axis with a knob if needed (`weight`, `size`).
-- **Density** (`data-density` on a region): selects a typographic density tier
-  (`compact` · `comfortable`) so the same roles resolve smaller/larger inside
-  it. Tiers are defined once in `primitives/text.css`; a component marks a
-  region but never picks the values. `--explorer-text-*` may be assigned
-  **only** in `tokens.css` (defaults) and `primitives/text.css` (tiers) —
-  enforced by stylelint. **Reach for density first** when a whole region is
-  denser; use the per-element `size` knob only for a single-element exception.
-- **Emphasis** (`data-emphasis`): `primary` · `secondary` · `tertiary` ·
-  `faint` · `accent`.
-- **15% knobs**, used sparingly and visibly in markup: `weight="medium|bold"`,
-  `size="xs|sm|md|lg"` (overrides only the role font-size, on the shared
-  content ramp), Button `density="compact"` / `fit="content"`.
+- **Surfaces & Panels**: dedicated visual blocks including `NoteCard` (Obsidian Bases-style note cards), `FolderButton` (interactive card-like folder entry), and modern list container/panel styling. These are implemented directly within their respective feature files (`cards-view`, `folder-view`, `modern-list-view`) to prevent primitive file bloat.
+- **Glass** (`data-glass`): floating control chrome for toolbar buttons,
+  button groups, and pagination. Glass is not a container/card concept.
+  It lives in `glass.css`.
+- **Text variants** (`variant`): `title` · `body` · `metadata`. `metadata`
+  covers small supporting text (previews, dates, folders, counts). A variant is
+  the default bundle of color + size + weight + leading. Override one axis only
+  when the markup needs to make a local exception visible: `color`, `weight`,
+  `size`, or `density`.
+- **Text color** (`color`): `normal` · `muted` · `faint` · `accent`.
+  Use this instead of inventing one-off emphasis levels.
+- **Density** (`density`): `tight` · `normal`, on the Text/Link element that
+  needs the line-height change. Region-level density is avoided unless a whole
+  component has a real semantic density mode.
+- **15% knobs**, used sparingly and visibly in markup:
+  `weight="light|normal|medium|semibold|bold"`,
+  `size="smallest|smaller|small|text|ui-smaller|ui-small|ui-medium|ui-large"`,
+  Button `density="compact"` / `fit="content"`.
 
 Before adding a variant, ask: can an existing variant + prop solve it? Is it
 a new concept or just a configuration? Will at least 3 places use it? Can the

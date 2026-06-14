@@ -92,3 +92,22 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+
+/* Folder button surface style */
+.explorer-folder-button {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  background: var(--explorer-folder-button-bg);
+  border: var(--explorer-folder-button-border);
+  box-shadow: var(--explorer-folder-button-shadow);
+  border-radius: var(--radius-l);
+}
+
+.explorer-folder-button[data-interactive]:hover,
+.explorer-folder-button[data-interactive]:focus-within {
+  box-shadow: var(--explorer-folder-button-shadow-hover);
+}

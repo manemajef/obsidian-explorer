@@ -12,9 +12,36 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-import { Card } from "./primitives/card";
+import { cn } from "./primitives/cn";
 import { Gap, Group, Spacer, Stack } from "./primitives/layout";
-import { ListRow } from "./primitives/list-row";
+
+interface ListRowProps extends React.HTMLAttributes<HTMLDivElement> {
+  shellClassName?: string;
+  interactive?: boolean;
+  last?: boolean;
+}
+
+function ListRow({
+  shellClassName,
+  interactive,
+  last,
+  className,
+  children,
+  ...rest
+}: ListRowProps): React.JSX.Element {
+  return (
+    <div className={cn("explorer-list-row-shell", shellClassName)}>
+      <div
+        className={cn("explorer-list-row", className)}
+        data-interactive={interactive || undefined}
+        data-last={last || undefined}
+        {...rest}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export type ModernListViewProps = {
   model: ExplorerModel;
@@ -29,9 +56,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
   const isMobile = variant === "mobile";
 
   return (
-    <Card
-      surface="raised"
-      radius="lg"
+    <Stack
       className="explorer-modern-list"
       data-variant={variant}
     >
@@ -104,6 +129,6 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
           </Stack>
         </ListRow>
       ))}
-    </Card>
+    </Stack>
   );
 }

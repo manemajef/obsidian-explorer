@@ -1,104 +1,109 @@
 /*
- * Text recipe — typography is described by role × emphasis, never by
- * component-specific font rules.
+ * Text recipe — a variant gives the default typography bundle; explicit
+ * color/size/weight/density props override one axis using Obsidian tokens.
  *
- * Roles:    title · body · metadata · label
- * Emphasis: primary · secondary · tertiary · faint · accent
- *
- * 15% knobs (use sparingly, justify in the markup):
- *   data-weight="medium|bold"  — overrides the role weight
- *   data-size="xs|sm|md|lg"    — overrides ONLY the role font-size, on the
- *                                shared content ramp; role weight/leading/
- *                                tracking are kept. Density first for regions.
- *
- * Density — a region opts into a denser/roomier typographic tier via
- * data-density. The tier values are owned HERE (the type recipe); components
- * only select a tier on a container, they never redefine type tokens
- * themselves. Add new tiers in this file, never in components/.
- * (Fence: --explorer-text-* may only be assigned in tokens.css and this file —
- * enforced by stylelint.)
+ * Variants: title · metadata · body
+ * Colors:   normal · muted · faint · accent
+ * Density:  tight · normal
  */
 
 .explorer-text {
-  color: var(--explorer-text-primary);
+  color: var(--text-normal);
 }
 
-[data-density="compact"] {
-  --explorer-text-title-size: var(--font-smallest);
-  --explorer-text-metadata-size: calc(var(--font-ui-smaller) - 1px);
-}
-
-[data-density="comfortable"] {
-  --explorer-text-metadata-size: var(--font-smaller);
-}
-
-.explorer-text[data-role="title"] {
+.explorer-text[data-variant="title"] {
+  color: var(--text-normal);
   font-size: var(--explorer-text-title-size);
   font-weight: var(--explorer-text-title-weight);
-  line-height: var(--explorer-text-title-line);
+  line-height: var(--line-height-tight);
 }
 
-.explorer-text[data-role="body"] {
-  font-size: var(--explorer-text-body-size);
-  font-weight: var(--explorer-text-body-weight);
-}
-
-.explorer-text[data-role="metadata"] {
+.explorer-text[data-variant="metadata"] {
+  color: var(--text-muted);
   font-size: var(--explorer-text-metadata-size);
   font-weight: var(--explorer-text-metadata-weight);
-  line-height: var(--explorer-text-metadata-line);
+  line-height: var(--line-height-tight);
 }
 
-.explorer-text[data-role="label"] {
-  font-size: var(--explorer-text-label-size);
-  font-weight: var(--explorer-text-label-weight);
+.explorer-text[data-variant="body"] {
+  color: var(--text-normal);
+  font-size: var(--explorer-text-body-size);
+  font-weight: var(--explorer-text-body-weight);
+  line-height: var(--line-height-normal);
 }
 
-.explorer-text[data-emphasis="primary"] {
-  color: var(--explorer-text-primary);
+.explorer-text[data-color="normal"] {
+  color: var(--text-normal);
 }
 
-.explorer-text[data-emphasis="secondary"] {
-  color: var(--explorer-text-secondary);
+.explorer-text[data-color="muted"] {
+  color: var(--text-muted);
 }
 
-.explorer-text[data-emphasis="tertiary"] {
-  color: var(--explorer-text-tertiary);
+.explorer-text[data-color="faint"] {
+  color: var(--text-faint);
 }
 
-.explorer-text[data-emphasis="faint"] {
-  color: var(--explorer-text-faint);
+.explorer-text[data-color="accent"] {
+  color: var(--link-color, var(--text-accent));
 }
 
-.explorer-text[data-emphasis="accent"] {
-  color: var(--explorer-text-accent);
+.explorer-text[data-weight="light"] {
+  font-weight: var(--font-light);
+}
+
+.explorer-text[data-weight="normal"] {
+  font-weight: var(--font-normal);
 }
 
 .explorer-text[data-weight="medium"] {
   font-weight: var(--font-medium);
 }
 
-.explorer-text[data-weight="bold"] {
-  font-weight: calc(var(--font-weight) + var(--bold-modifier));
+.explorer-text[data-weight="semibold"] {
+  font-weight: var(--font-semibold);
 }
 
-/*
- * Size knob — overrides only font-size, on the shared content ramp. Placed
- * after the role blocks so it wins at equal specificity (no override var, no
- * specificity escalation). A per-element size beats a regional data-density.
- */
-.explorer-text[data-size="xs"] {
+.explorer-text[data-weight="bold"] {
+  font-weight: var(--font-bold);
+}
+
+.explorer-text[data-size="smallest"] {
   font-size: var(--font-smallest);
 }
 
-.explorer-text[data-size="sm"] {
+.explorer-text[data-size="smaller"] {
   font-size: var(--font-smaller);
 }
 
-.explorer-text[data-size="md"] {
+.explorer-text[data-size="small"] {
   font-size: var(--font-small);
 }
 
-.explorer-text[data-size="lg"] {
+.explorer-text[data-size="text"] {
   font-size: var(--font-text-size);
+}
+
+.explorer-text[data-size="ui-smaller"] {
+  font-size: var(--font-ui-smaller);
+}
+
+.explorer-text[data-size="ui-small"] {
+  font-size: var(--font-ui-small);
+}
+
+.explorer-text[data-size="ui-medium"] {
+  font-size: var(--font-ui-medium);
+}
+
+.explorer-text[data-size="ui-large"] {
+  font-size: var(--font-ui-large);
+}
+
+.explorer-text[data-density="tight"] {
+  line-height: var(--line-height-tight);
+}
+
+.explorer-text[data-density="normal"] {
+  line-height: var(--line-height-normal);
 }

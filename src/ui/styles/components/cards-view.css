@@ -73,3 +73,23 @@
 .explorer-file-card__tags {
   margin-inline-start: -0.1em;
 }
+
+/* Note card surface style */
+.explorer-note-card {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  background-color: var(--explorer-note-card-bg);
+  border: var(--explorer-note-card-border);
+  box-shadow: var(--explorer-note-card-shadow);
+  border-radius: var(--bases-cards-radius);
+}
+
+.explorer-note-card[data-interactive]:hover,
+.explorer-note-card[data-interactive]:focus-within {
+  box-shadow: var(--explorer-note-card-shadow-hover);
+}
+

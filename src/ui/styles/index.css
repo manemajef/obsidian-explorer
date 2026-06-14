@@ -7,7 +7,7 @@
  */
 @import "./tokens.css";
 @import "./host.css";
-@import "./primitives/surface.css";
+@import "./primitives/glass.css";
 @import "./primitives/text.css";
 @import "./primitives/layout.css";
 @import "./primitives/icon.css";
@@ -15,9 +15,6 @@
 @import "./primitives/badge.css";
 @import "./primitives/tag.css";
 @import "./primitives/button.css";
-@import "./primitives/toolbar.css";
-@import "./primitives/card.css";
-@import "./primitives/list-row.css";
 @import "./primitives/pin.css";
 @import "./components/modern-list-view.css";
 @import "./components/markdown-list-view.css";

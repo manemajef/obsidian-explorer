@@ -6,10 +6,30 @@ import { shouldCreateMissingFolderNote } from "../../explorer/navigation/folder-
 import type { ContextMenuConfig } from "../context-menu";
 import { folderInteractionProps } from "./interactions";
 import { cn } from "./primitives/cn";
-import { Card } from "./primitives/card";
 import { Link } from "./primitives/link";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
+
+interface FolderButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  interactive?: boolean;
+}
+
+function FolderButton({
+  interactive,
+  className,
+  children,
+  ...rest
+}: FolderButtonProps): React.JSX.Element {
+  return (
+    <div
+      className={cn("explorer-folder-button", className)}
+      data-interactive={interactive || undefined}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function FolderButtons(props: {
   folders: ExplorerFolderNode[];
@@ -39,23 +59,21 @@ export function FolderButtons(props: {
           shouldCreateMissingFolderNote(actions.settings, "explicit");
 
         return (
-          <Card
+          <FolderButton
             key={folderNotePath}
             className={cn(
               "explorer-folder-card",
               isLongName && "explorer-folder-card--long-name",
             )}
             interactive
-            radius="btn"
-            surface="control"
             {...folderInteractionProps(folder, actions, contextMenu)}
           >
             <Link
               path={folderNotePath}
               className="explorer-folder-card__link"
               draggable={false}
-              role="title"
-              size={Platform.isMobile ? "xs" : undefined}
+              variant="title"
+              size={Platform.isMobile ? "smaller" : "smaller"}
               underline="none"
               weight="bold"
               unresolved={isMissing}
@@ -77,7 +95,7 @@ export function FolderButtons(props: {
             >
               {linkText}
             </Link>
-          </Card>
+          </FolderButton>
         );
       })}
     </div>

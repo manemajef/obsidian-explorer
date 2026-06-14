@@ -103,3 +103,33 @@
 .explorer-modern-list__extension {
   flex: 0 0 auto;
 }
+
+/* Panel container styling */
+.explorer-modern-list {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  gap: var(--explorer-space-1);
+  background: var(--explorer-panel-bg);
+  border: var(--explorer-panel-border);
+  box-shadow: var(--explorer-panel-shadow);
+  border-radius: var(--radius-l);
+}
+
+/* List row styling */
+.explorer-list-row {
+  border-bottom: 1px solid var(--background-modifier-border);
+  color: var(--text-normal);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.explorer-list-row[data-interactive] {
+  cursor: pointer;
+}
+
+.explorer-list-row[data-last] {
+  border-bottom: none;
+}

@@ -1,5 +1,5 @@
-/* Badge — small inline label chip. Text sizing comes from the text recipe
- * (role="label"); the values here are chip chrome only. */
+/* Badge — small inline label chip. Badge owns its compact label scale; the
+ * values here are chip chrome plus chip-local text size. */
 
 .explorer-badge {
   display: inline-flex;
@@ -18,8 +18,10 @@
 }
 
 .explorer-badge[data-variant="filled"] {
-  background: var(--background-primary-alt);
-  border: var(--explorer-surface-raised-border);
+  background: var(--interactive-normal);
+  /* border: var(--explorer-panel-border); */
+  border: 1px solid var(--background-modifier-border);
+  /* border-radius: var(--explorer-radius-pill); */
   opacity: 0.7;
 }
 

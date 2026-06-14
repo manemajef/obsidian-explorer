@@ -1,17 +1,23 @@
 import React, { useEffect, useRef, type AnchorHTMLAttributes } from "react";
 import { setTooltip } from "obsidian";
 import { cn } from "./cn";
-import type { TextEmphasis, TextRole, TextSize, TextWeight } from "./text";
+import type {
+  TextColor,
+  TextDensity,
+  TextSize,
+  TextVariant,
+  TextWeight,
+} from "./text";
 
 export interface LinkProps
   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "role" | "href"> {
   path: string;
-  role?: TextRole;
-  emphasis?: TextEmphasis;
+  variant?: TextVariant;
+  color?: TextColor;
+  density?: TextDensity;
   weight?: TextWeight;
   size?: TextSize;
   underline?: "none" | "hover" | "always";
-  hoverEmphasis?: "primary" | "accent";
   tooltip?: string;
   unresolved?: boolean;
 }
@@ -19,12 +25,12 @@ export interface LinkProps
 /** An internal-link anchor that participates in the text recipe. */
 export function Link({
   path,
-  role = "body",
-  emphasis,
+  variant,
+  color,
+  density,
   weight,
   size,
   underline = "hover",
-  hoverEmphasis,
   tooltip,
   unresolved,
   className,
@@ -49,12 +55,12 @@ export function Link({
         unresolved && "is-unresolved",
         className,
       )}
-      data-role={role}
-      data-emphasis={emphasis}
+      data-variant={variant ?? "body"}
+      data-color={color}
+      data-density={density}
       data-weight={weight}
       data-size={size}
       data-underline={underline}
-      data-hover-emphasis={hoverEmphasis}
       data-href={path}
       href={path}
       data-tooltip-position="top"

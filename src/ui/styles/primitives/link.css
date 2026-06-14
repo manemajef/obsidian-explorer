@@ -1,30 +1,30 @@
 /*
  * Link — an anchor that participates in the text recipe.
  * The .internal-link compound keeps specificity above Obsidian/theme link
- * rules, so emphasis colors are restated here at that strength.
+ * rules, so color choices are restated here at that strength.
  */
 
 .explorer-container a.internal-link.explorer-link {
-  color: var(--explorer-text-primary);
+  color: var(--text-normal);
   text-decoration: none;
   cursor: pointer;
   line-height: var(--explorer-link-line);
 }
 
-.explorer-container a.internal-link.explorer-link[data-emphasis="secondary"] {
-  color: var(--explorer-text-secondary);
+.explorer-container a.internal-link.explorer-link[data-color="normal"] {
+  color: var(--text-normal);
 }
 
-.explorer-container a.internal-link.explorer-link[data-emphasis="tertiary"] {
-  color: var(--explorer-text-tertiary);
+.explorer-container a.internal-link.explorer-link[data-color="muted"] {
+  color: var(--text-muted);
 }
 
-.explorer-container a.internal-link.explorer-link[data-emphasis="faint"] {
-  color: var(--explorer-text-faint);
+.explorer-container a.internal-link.explorer-link[data-color="faint"] {
+  color: var(--text-faint);
 }
 
-.explorer-container a.internal-link.explorer-link[data-emphasis="accent"] {
-  color: var(--explorer-text-accent);
+.explorer-container a.internal-link.explorer-link[data-color="accent"] {
+  color: var(--link-color, var(--text-accent));
 }
 
 .explorer-container a.internal-link.explorer-link[data-underline="always"],
@@ -32,20 +32,6 @@
 .explorer-container
   a.internal-link.explorer-link[data-underline="hover"]:focus-visible {
   text-decoration: underline;
-}
-
-.explorer-container
-  a.internal-link.explorer-link[data-hover-emphasis="primary"]:hover,
-.explorer-container
-  a.internal-link.explorer-link[data-hover-emphasis="primary"]:focus-visible {
-  color: var(--explorer-text-primary);
-}
-
-.explorer-container
-  a.internal-link.explorer-link[data-hover-emphasis="accent"]:hover,
-.explorer-container
-  a.internal-link.explorer-link[data-hover-emphasis="accent"]:focus-visible {
-  color: var(--explorer-text-accent);
 }
 
 .explorer-container a.internal-link.explorer-link:focus-visible {

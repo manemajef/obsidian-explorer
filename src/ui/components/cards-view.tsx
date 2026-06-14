@@ -5,7 +5,7 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerActions } from "../../explorer/actions";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
-import { Card } from "./primitives/card";
+import { cn } from "./primitives/cn";
 import { Group, Spacer } from "./primitives/layout";
 import { NoteFolderDate, NotePreview } from "./note/note-metadata";
 import {
@@ -14,6 +14,27 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
+
+interface NoteCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  interactive?: boolean;
+}
+
+function NoteCard({
+  interactive,
+  className,
+  children,
+  ...rest
+}: NoteCardProps): React.JSX.Element {
+  return (
+    <div
+      className={cn("explorer-note-card", className)}
+      data-interactive={interactive || undefined}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function CardsView(props: {
   model: ExplorerModel;
@@ -29,19 +50,17 @@ export function CardsView(props: {
   const compactMobile = isMobile && compact;
   const titleSize = isMobile
     ? compactMobile
-      ? "sm"
-      : "lg"
+      ? "smaller"
+      : "text"
     : compact
-      ? "sm"
-      : "md";
+      ? "smaller"
+      : "small";
+  const titleDensity = compact ? "tight" : undefined;
 
   return (
     <div
       className="explorer-cards"
       data-compact={compact || undefined}
-      data-density={
-        compactMobile ? "compact" : !compact ? "comfortable" : undefined
-      }
       data-variant={isMobile ? "mobile" : "desktop"}
     >
       <div className="explorer-cards__grid">
@@ -49,12 +68,10 @@ export function CardsView(props: {
           const showTags = model.settings.showTags && file.tags.length > 0;
 
           return (
-            <Card
+            <NoteCard
               key={file.path}
               className="explorer-file-card"
               interactive
-              radius="card"
-              surface="subtle"
               {...fileInteractionProps(file, actions, contextMenu)}
             >
               <Group align="start" className="explorer-file-card__header">
@@ -63,10 +80,10 @@ export function CardsView(props: {
                     file={file}
                     actions={actions}
                     className="explorer-file-card__title"
-                    role="title"
-                    // size={!compact && !isMobile ? "lg" : "sm"}
+                    variant="title"
+                    density={titleDensity}
                     size={titleSize}
-                    emphasis="primary"
+                    color="normal"
                     text={file.basename}
                     underline="none"
                   />
@@ -117,7 +134,7 @@ export function CardsView(props: {
               <div className="explorer-file-card__metadata">
                 <NoteFolderDate file={file} model={model} actions={actions} />
               </div>
-            </Card>
+            </NoteCard>
           );
         })}
       </div>
