@@ -158,7 +158,11 @@
   );
   --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-panel-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-  --explorer-folder-button-bg: var(--explorer-panel-bg);
+  --explorer-folder-button-bg: color-mix(
+    in srgb,
+    var(--interactive-normal) 70%,
+    transparent 30%
+  );
   --explorer-folder-button-border: var(--explorer-panel-border);
   --explorer-folder-button-shadow: var(--explorer-panel-shadow);
   --explorer-folder-button-shadow-hover: var(--explorer-folder-button-shadow);
