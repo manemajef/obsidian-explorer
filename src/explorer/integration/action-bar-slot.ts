@@ -2,6 +2,8 @@ import { App, MarkdownView } from "obsidian";
 import { isHTMLElement } from "../../utils";
 
 const ACTION_BAR_SLOT_ATTR = "data-explorer-action-bar-slot";
+const ACTION_BAR_SLOT_LEAVING_CLASS = "explorer-action-bar-host--leaving";
+const ACTION_BAR_SLOT_EXIT_MS = 160;
 
 type ActionBarPlacement = {
   parent: HTMLElement;
@@ -24,8 +26,20 @@ export function registerActionBarSlot(
 ): ActionBarSlot {
   let el: HTMLElement | null = null;
   let isSettled = false;
+  let removalTimer: number | null = null;
+
+  const cancelHostRemoval = (): void => {
+    if (removalTimer !== null) {
+      const win = el?.ownerDocument.defaultView ?? window;
+      win.clearTimeout(removalTimer);
+      removalTimer = null;
+    }
+    el?.removeClass(ACTION_BAR_SLOT_LEAVING_CLASS);
+  };
 
   const ensureHost = (parent: HTMLElement): HTMLElement => {
+    cancelHostRemoval();
+
     if (el && el.ownerDocument !== parent.ownerDocument) {
       el.remove();
       el = null;
@@ -43,6 +57,31 @@ export function registerActionBarSlot(
     return el;
   };
 
+  const removeHost = (animate: boolean): void => {
+    if (!el) return;
+
+    const host = el;
+    isSettled = false;
+
+    if (!animate) {
+      cancelHostRemoval();
+      host.remove();
+      el = null;
+      return;
+    }
+
+    if (removalTimer !== null) return;
+
+    host.addClass(ACTION_BAR_SLOT_LEAVING_CLASS);
+    const win = host.ownerDocument.defaultView ?? window;
+    removalTimer = win.setTimeout(() => {
+      removalTimer = null;
+      if (el !== host) return;
+      host.remove();
+      el = null;
+    }, ACTION_BAR_SLOT_EXIT_MS);
+  };
+
   return {
     get el() {
       return el;
@@ -55,9 +94,7 @@ export function registerActionBarSlot(
     sync() {
       const placement = findActionBarPlacement(app, container);
       if (!placement) {
-        el?.remove();
-        el = null;
-        isSettled = false;
+        removeHost(true);
         return el;
       }
 
@@ -68,9 +105,7 @@ export function registerActionBarSlot(
     },
 
     dispose() {
-      el?.remove();
-      el = null;
-      isSettled = false;
+      removeHost(false);
     },
   };
 }

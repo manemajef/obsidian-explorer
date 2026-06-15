@@ -177,8 +177,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
   return (
     <>
-      <div className="tmp-conditional-margin-top" />
-      {/* <Divider size="xs" /> */}
+      {/* <div className="tmp-conditional-margin-top" /> */}
+
       {actionBarSlot ? createPortal(actionsBar, actionBarSlot) : null}
       {showFolders && (
         <>
