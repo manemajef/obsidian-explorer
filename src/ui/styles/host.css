@@ -20,24 +20,6 @@
   }
 }
 
-@keyframes explorer-fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes explorer-scale-out {
-  from {
-    transform: translateY(0) scale(1);
-  }
-  to {
-    transform: translateY(-3px) scale(0.98);
-  }
-}
-
 .explorer-container {
   scroll-margin-top: 10em;
   cursor: default;
@@ -50,27 +32,12 @@
 .explorer-action-bar-host.explorer-container {
   box-sizing: border-box;
   margin-block: var(--size-2-2) var(--size-4-2);
-  margin-inline: auto;
+  margin-inline: 0;
   width: 100%;
   min-block-size: var(--explorer-control-size);
-  max-width: var(--file-line-width, var(--line-width, 100%));
+  max-width: 100%;
   transform-origin: top center;
 }
-
-.explorer-action-bar-host.explorer-action-bar-host--leaving {
-  pointer-events: none;
-  animation:
-    explorer-fade-out 0.16s ease-out both,
-    explorer-scale-out 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-/* :where(.markdown-source-view.mod-cm6.is-readable-line-width)
-  .cm-sizer
-  > .explorer-action-bar-host {
-  width: var(--line-width);
-  max-width: var(--max-width);
-  margin-inline: var(--content-margin);
-} */
 
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
   cursor: text;

@@ -2,8 +2,6 @@ import { App, MarkdownView } from "obsidian";
 import { isHTMLElement } from "../../utils";
 
 const ACTION_BAR_SLOT_ATTR = "data-explorer-action-bar-slot";
-const ACTION_BAR_SLOT_LEAVING_CLASS = "explorer-action-bar-host--leaving";
-const ACTION_BAR_SLOT_EXIT_MS = 160;
 
 type ActionBarPlacement = {
   parent: HTMLElement;
@@ -26,20 +24,8 @@ export function registerActionBarSlot(
 ): ActionBarSlot {
   let el: HTMLElement | null = null;
   let isSettled = false;
-  let removalTimer: number | null = null;
-
-  const cancelHostRemoval = (): void => {
-    if (removalTimer !== null) {
-      const win = el?.ownerDocument.defaultView ?? window;
-      win.clearTimeout(removalTimer);
-      removalTimer = null;
-    }
-    el?.removeClass(ACTION_BAR_SLOT_LEAVING_CLASS);
-  };
 
   const ensureHost = (parent: HTMLElement): HTMLElement => {
-    cancelHostRemoval();
-
     if (el && el.ownerDocument !== parent.ownerDocument) {
       el.remove();
       el = null;
@@ -57,31 +43,6 @@ export function registerActionBarSlot(
     return el;
   };
 
-  const removeHost = (animate: boolean): void => {
-    if (!el) return;
-
-    const host = el;
-    isSettled = false;
-
-    if (!animate) {
-      cancelHostRemoval();
-      host.remove();
-      el = null;
-      return;
-    }
-
-    if (removalTimer !== null) return;
-
-    host.addClass(ACTION_BAR_SLOT_LEAVING_CLASS);
-    const win = host.ownerDocument.defaultView ?? window;
-    removalTimer = win.setTimeout(() => {
-      removalTimer = null;
-      if (el !== host) return;
-      host.remove();
-      el = null;
-    }, ACTION_BAR_SLOT_EXIT_MS);
-  };
-
   return {
     get el() {
       return el;
@@ -94,7 +55,9 @@ export function registerActionBarSlot(
     sync() {
       const placement = findActionBarPlacement(app, container);
       if (!placement) {
-        removeHost(true);
+        el?.remove();
+        el = null;
+        isSettled = false;
         return el;
       }
 
@@ -105,7 +68,9 @@ export function registerActionBarSlot(
     },
 
     dispose() {
-      removeHost(false);
+      el?.remove();
+      el = null;
+      isSettled = false;
     },
   };
 }
@@ -117,22 +82,49 @@ function placeActionBarSlot(
   const { parent: titleContainer, fallbackBefore } = placement;
   const inlineTitle = getDirectChild(titleContainer, ".inline-title");
   if (inlineTitle) {
-    inlineTitle.after(host);
+    placeAfter(inlineTitle, host);
     return;
   }
 
   const metadata = getDirectChild(titleContainer, ".metadata-container");
   if (metadata) {
-    metadata.before(host);
+    placeBefore(metadata, host);
     return;
   }
 
   if (fallbackBefore?.parentElement === titleContainer) {
-    fallbackBefore.before(host);
+    placeBefore(fallbackBefore, host);
     return;
   }
 
-  titleContainer.prepend(host);
+  placeAtStart(titleContainer, host);
+}
+
+function placeAfter(reference: HTMLElement, host: HTMLElement): void {
+  if (
+    host.parentElement === reference.parentElement &&
+    host.previousElementSibling === reference
+  ) {
+    return;
+  }
+  reference.after(host);
+}
+
+function placeBefore(reference: HTMLElement, host: HTMLElement): void {
+  if (
+    host.parentElement === reference.parentElement &&
+    host.nextElementSibling === reference
+  ) {
+    return;
+  }
+  reference.before(host);
+}
+
+function placeAtStart(parent: HTMLElement, host: HTMLElement): void {
+  if (host.parentElement === parent && parent.firstElementChild === host) {
+    return;
+  }
+  parent.prepend(host);
 }
 
 function findActionBarPlacement(

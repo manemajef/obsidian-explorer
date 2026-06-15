@@ -40,3 +40,15 @@
 .explorer-action-bar-host.explorer-container {
   padding-top: 0.25em;
 }
+
+/* Obsidian constrains edit-mode inline title and metadata as direct .cm-sizer
+ * children. Our injected action bar host is also a direct .cm-sizer child in
+ * edit mode, so it must mirror that readable-line sizing there; preview mode
+ * already places the host inside the constrained header container. */
+:where(.markdown-source-view.mod-cm6.is-readable-line-width)
+  .cm-sizer
+  > .explorer-action-bar-host {
+  width: var(--line-width);
+  max-width: var(--max-width);
+  margin-inline: var(--content-margin);
+}
