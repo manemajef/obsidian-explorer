@@ -7,6 +7,7 @@ import { fileInteractionProps } from "./interactions";
 import { NoteExtensionBadge, Pin } from "./note/note-parts";
 import { Gap, Group } from "./primitives/layout";
 import { Link } from "./primitives/link";
+const showTags = false;
 
 export type MarkdownListViewProps = {
   model: ExplorerModel;
@@ -60,7 +61,7 @@ export function MarkdownListView(
             >
               {file.displayName}
             </Link>
-            {file.extensionLabel && (
+            {file.extensionLabel && showTags && (
               <>
                 <Gap size={1} />
                 <NoteExtensionBadge file={file} />
