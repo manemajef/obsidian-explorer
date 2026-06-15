@@ -110,7 +110,7 @@ export default class ExplorerPlugin extends Plugin {
       },
     );
 
-    this.settings.isDev && registerExplorerDevCodeBlock(this);
+    if (this.settings.isDev) registerExplorerDevCodeBlock(this);
 
     registerHomePageNewTabs(this, () => this.settings);
     registerFolderNoteRenameSync(this, () => this.settings);

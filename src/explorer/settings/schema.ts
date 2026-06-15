@@ -351,6 +351,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   isDev: booleanField({
     label: "is dev",
     defaultValue: false,
+    description: "",
     ui: {
       surfaces: ["plugin"],
       section: "visibility",
