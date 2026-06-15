@@ -187,7 +187,7 @@ export function ActionsBar(props: {
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
-          <ToolbarGroupItem icon="search" />
+          <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
         </ToolbarGroup>
         {/* <Gap inline size="1em" /> */}
         {/* <Spacer minWidth=".5em" maxWidth="1em" />
