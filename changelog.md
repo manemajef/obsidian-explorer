@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.4.3 (Upcoming)
+
+#TODO fill changes 
+
 ## 1.4.2 (14-06-2026)
 
 Minor UI fixes
@@ -79,32 +83,32 @@ This release introduces **title bar integration**, some UI enhancements, and smo
 
 ## 1.3.0 (01-06-2026)
 
-This release changes how Explorer handles folders that do not yet have folder
-notes, adds temporary folder views, and makes the new behavior safer for
+This release changes how Explorer handles folders that do not yet have folder  
+notes, adds temporary folder views, and makes the new behavior safer for  
 existing users.
 
 ### Temporary folder views
 
-- Explorer can now open a folder even when its matching `Folder/Folder.md`
+- Explorer can now open a folder even when its matching `Folder/Folder.md`  
   note does not exist yet.
-- New installs use the new default: clicking a folder card opens a temporary
-  folder view, while clicking the unresolved folder-note link or editing/saving
+- New installs use the new default: clicking a folder card opens a temporary  
+  folder view, while clicking the unresolved folder-note link or editing/saving  
   that view creates the Markdown folder note.
-- Existing users keep the old missing-folder-note behavior by default: missing
+- Existing users keep the old missing-folder-note behavior by default: missing  
   folder notes are still created when navigating to a folder.
 - Added a `Missing folder notes` setting with three modes:
   - `Links and edits`
   - `Always create`
   - `Edits only`
-- `Ask before creating folder notes` now also applies when saving or editing a
+- `Ask before creating folder notes` now also applies when saving or editing a  
   temporary folder view.
 
 ### Safer folder-note sync
 
-- Added optional folder-name sync: when a folder or its matching folder note is
+- Added optional folder-name sync: when a folder or its matching folder note is  
   renamed, Explorer can keep the other side named with it.
-- Folder/folder-note rename sync is now safer for existing users. New installs
-  can use rename sync by default, but existing users are migrated with sync
+- Folder/folder-note rename sync is now safer for existing users. New installs  
+  can use rename sync by default, but existing users are migrated with sync  
   disabled unless they already configured it.
 - Open temporary folder views now keep following their folder when it is renamed.
 
@@ -116,20 +120,20 @@ Now the mobile UI for action bar looks more "Glassy" and Native (when `use-glass
 
 #### Obsidian sidebar folder notes
 
-- Added settings for hiding folder-note files from Obsidian's sidebar file
+- Added settings for hiding folder-note files from Obsidian's sidebar file  
   tree.
-- When folder-note files are hidden, clicking folder names in the sidebar can
+- When folder-note files are hidden, clicking folder names in the sidebar can  
   now open existing folder notes or temporary folder notes.
-- Sidebar folder-name clicks are strict: collapse arrows and row whitespace keep
+- Sidebar folder-name clicks are strict: collapse arrows and row whitespace keep  
   Obsidian's normal sidebar behavior.
 
 #### Additional Changes
 
-- The parent button and `Go to parent folder` command now open temporary folder
+- The parent button and `Go to parent folder` command now open temporary folder  
   views for missing parent folder notes unless the user chooses `Always create`.
-- Missing folder-note links no longer imply note creation when the selected
+- Missing folder-note links no longer imply note creation when the selected  
   behavior is `Edits only`.
-- Mobile folder grids now keep a three-column rhythm for sparse folder lists, so
+- Mobile folder grids now keep a three-column rhythm for sparse folder lists, so  
   one or two folders do not stretch awkwardly on wider mobile screens.
 - The action bar layout was tightened for desktop and mobile.
 
@@ -164,10 +168,10 @@ Previously known as `Mobile list`, the modern list is now available on desktop a
 
 ## 1.2.2 (28-05-26)
 
-- Added an optional setting to force folder notes into reading mode, preventing
+- Added an optional setting to force folder notes into reading mode, preventing  
   the editor cursor from interfering with Explorer blocks.
-- Removed mobile drag-and-drop. Long-press works better for context menus on
-  mobile, and folder context menus now target the folder itself so Obsidian's
+- Removed mobile drag-and-drop. Long-press works better for context menus on  
+  mobile, and folder context menus now target the folder itself so Obsidian's  
   move action moves the folder instead of only moving its folder note.
 - Fixed pin toggles so the UI updates immediately after frontmatter changes.
 
@@ -179,48 +183,48 @@ Add drag and drop for mobile as well.
 
 Explorer started as a way to browse folders. Now you can manage them too.
 
-Drag notes, rename folders, hide archives from specific views, open your
+Drag notes, rename folders, hide archives from specific views, open your  
 homepage in new tabs — all without leaving your note.
 
 ### Organize directly from Explorer
 
-- On desktop, drag notes and folders into another displayed folder to move them
+- On desktop, drag notes and folders into another displayed folder to move them  
   without leaving the note.
 - Drag a note or folder onto the parent button to move it up one level.
 - Dragging a folder note moves its folder and asks for confirmation first.
-- Rename notes and folders from their right-click menu. Renaming a folder
+- Rename notes and folders from their right-click menu. Renaming a folder  
   keeps its matching folder note named with it.
-- Right-click notes and folders for pinning and deletion, plus quick
+- Right-click notes and folders for pinning and deletion, plus quick  
   navigation to nested folder notes.
-- Folder deletion now clearly warns that everything inside the folder will be
+- Folder deletion now clearly warns that everything inside the folder will be  
   deleted before continuing.
 
 ### Make Explorer your home base
 
-- Optionally open your Explorer homepage whenever you create a new empty tab,
+- Optionally open your Explorer homepage whenever you create a new empty tab,  
   so a fresh workspace can start at your vault's home.
-- Exclude selected nested folders and everything inside them from an individual
-  Explorer view, useful for archives, templates, or areas that should stay out
+- Exclude selected nested folders and everything inside them from an individual  
+  Explorer view, useful for archives, templates, or areas that should stay out  
   of a dashboard.
-- Choose whether nested folder notes appear alongside notes in deeper Explorer
+- Choose whether nested folder notes appear alongside notes in deeper Explorer  
   views.
 
 ### A clearer, more polished view
 
 - Folder notes are now visibly marked as folders in card and list views.
 - Folder cards handle long names more cleanly and have a refreshed layout.
-- Tags in list view stay alongside their note title, and pinned notes have a
+- Tags in list view stay alongside their note title, and pinned notes have a  
   cleaner position in the list.
-- Cards using the default footer now show last-edited time in the current
+- Cards using the default footer now show last-edited time in the current  
   folder, better reflecting recent work.
-- Folder notes shown with folder information now display their containing
+- Folder notes shown with folder information now display their containing  
   folder correctly.
-- Opening a folder now consistently uses its matching nested folder note,
+- Opening a folder now consistently uses its matching nested folder note,  
   rather than a same-named note in the parent folder.
 
 ### Changed behavior
 
-- The `Only Markdown` displayed-notes option now leaves folder notes out of the
+- The `Only Markdown` displayed-notes option now leaves folder notes out of the  
   notes list; folder navigation remains available through folder buttons.
 
 היי שלום

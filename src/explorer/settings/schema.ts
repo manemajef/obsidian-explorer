@@ -409,7 +409,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
-      visibleWhen: () => false,
     },
   }),
   syncFolderNotes: booleanField({
