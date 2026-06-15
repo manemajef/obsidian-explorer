@@ -1,6 +1,6 @@
 {
   "name": "obsidian-explorer",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A file explorer view for Obsidian",
   "main": "main.js",
   "scripts": {

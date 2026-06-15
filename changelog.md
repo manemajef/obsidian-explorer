@@ -2,7 +2,32 @@
 
 ## 1.4.3 (Upcoming)
 
-#TODO fill changes 
+This release focuses on polishing Explorer's controls and visual surfaces.
+
+### Action bar and titlebar
+
+- The Explorer action bar now appears with the note header, under the inline
+  title/metadata area, instead of inside the Explorer block itself.
+- The action bar now follows Obsidian's readable line width in editing mode and
+  stays aligned with the note header in reading mode.
+- Action bar placement updates more smoothly when switching notes, resizing the
+  workspace, or changing the note layout.
+- The search button in compact and homepage action bars works again.
+- Titlebar homepage actions are less noisy and are now focused around Explorer
+  views instead of appearing broadly across ordinary notes.
+
+### Visual polish
+
+- Folder buttons have clearer contrast, stronger hover feedback, and better
+  dark-mode visibility.
+- Note cards, modern lists, panels, and toolbar controls now share a more
+  consistent surface style, spacing, shadow, and corner treatment.
+- Modern list tags are shown in the main row, beside the note title area, so
+  rows stay more compact and easier to scan.
+- Markdown list view is cleaner and no longer shows extension badges in that
+  compact list style.
+- Metadata, previews, separators, and links have more consistent sizing and
+  muted text color across card and list views.
 
 ## 1.4.2 (14-06-2026)
 
