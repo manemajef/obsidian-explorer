@@ -36,7 +36,7 @@ export function registerExplorerReadingMode(
       const content = await app.vault.cachedRead(file);
       const hasExplorerBlock = content.includes("```explorer");
 
-      if (!getSettings().forceReadingMode && hasExplorerBlock) {
+      if ((!getSettings().forceReadingMode || true) && hasExplorerBlock) {
         window.setTimeout(() => {
           if (view.editor) {
             view.editor.blur();

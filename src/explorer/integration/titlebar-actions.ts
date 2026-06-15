@@ -10,6 +10,8 @@ import { getActiveExplorerLocation } from "./commands";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
 import { hasExplorerView } from "./active-view";
 
+const IS_HIDE_HOME = true;
+
 type TitlebarActionDeps = {
   getSettings: () => PluginSettings;
   saveSettings: () => void | Promise<void>;
@@ -70,8 +72,13 @@ export function registerExplorerTitlebarActions(
       label: "Go to homepage",
       isVisible: () =>
         areTitlebarActionsEnabled() &&
-        deps.getSettings().showHomePageInTitlebar === true &&
-        canGoToHomePage(app, deps.getSettings()),
+        // deps.getSettings().showHomePageInTitlebar === true &&
+        canGoToHomePage(app, deps.getSettings()) &&
+        (hasExplorerView(
+          app,
+          activeLeaf ?? app.workspace.getMostRecentLeaf(),
+        ) ||
+          (!Platform.isMobile && !IS_HIDE_HOME)),
       run: async () => {
         await openHomePage(
           app,
@@ -119,7 +126,8 @@ export function registerExplorerTitlebarActions(
   };
 
   const areTitlebarActionsEnabled = (): boolean =>
-    deps.getSettings().showTitlebarActions === true && !Platform.isMobile;
+    deps.getSettings().showTitlebarActions === true &&
+    !(Platform.isMobile && !deps.getSettings().showTitlearActionsOnMobile);
 
   app.workspace.onLayoutReady(() => {
     activeLeaf = app.workspace.getMostRecentLeaf();

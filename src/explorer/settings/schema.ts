@@ -409,6 +409,7 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
+      visibleWhen: () => false,
     },
   }),
   syncFolderNotes: booleanField({
@@ -501,6 +502,19 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       section: "visibility",
     },
   }),
+  showTitlearActionsOnMobile: booleanField({
+    label: "Show title bar actions in mobile",
+    description:
+      "By default this is off, since mobile has limited space. toggle on for easy navigation",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "visibility",
+      // visibleWhen: { key: "showTitlebarActions", value: true },
+      visibleWhen: () => false,
+    },
+  }),
+
   openFolderViewFromSidebar: booleanField({
     label: "Open folder views from sidebar",
     description:
