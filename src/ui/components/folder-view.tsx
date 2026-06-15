@@ -75,7 +75,7 @@ export function FolderButtons(props: {
               variant="title"
               size={Platform.isMobile ? "smaller" : "smaller"}
               underline="none"
-              weight="bold"
+              weight="semibold"
               unresolved={isMissing}
               tooltip={
                 isMissing && linkCreatesFolderNote
