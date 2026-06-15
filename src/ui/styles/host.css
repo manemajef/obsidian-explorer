@@ -29,6 +29,23 @@
     explorer-scale-in 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+.explorer-action-bar-host.explorer-container {
+  animation: none;
+  box-sizing: border-box;
+  margin-block: var(--size-2-2) var(--size-4-2);
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--file-line-width, var(--line-width, 100%));
+}
+
+:where(.markdown-source-view.mod-cm6.is-readable-line-width)
+  .cm-sizer
+  > .explorer-action-bar-host {
+  width: var(--line-width);
+  max-width: var(--max-width);
+  margin-inline: var(--content-margin) !important;
+}
+
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
   cursor: text;
 }

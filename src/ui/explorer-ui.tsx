@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Platform, TFile, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
@@ -21,6 +22,7 @@ interface ExplorerUIProps {
   onRefresh: () => void;
   onSaveFolderNote?: () => void | Promise<void>;
   onRemoveFolderNoteFile?: (file: TFile) => void | Promise<void>;
+  actionBarSlot?: HTMLElement | null;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
@@ -31,6 +33,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     onRefresh,
     onSaveFolderNote,
     onRemoveFolderNoteFile,
+    actionBarSlot,
   } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
@@ -149,31 +152,34 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       ? explorerState
       : null;
   const paginationGapSize = showLoadMore ? 6 : 4;
+  const actionsBar = (
+    <ActionsBar
+      app={app}
+      parentDropFolder={model.folder.parent}
+      onMoveIntoFolder={onMoveIntoFolder}
+      canGoToParent={actions.canGoToParent(model.location)}
+      onOpenSettings={onOpenSettings}
+      onSaveFolderNote={
+        onSaveFolderNote ? () => void onSaveFolderNote() : undefined
+      }
+      onGoToParent={(newLeaf) =>
+        void actions.goToParent(model.location, newLeaf)
+      }
+      onNewFolder={() => void actions.createFolder()}
+      onNewNote={() => void actions.createNote()}
+      onSearchToggle={toggleSearch}
+      searchMode={searchMode}
+      searchQuery={searchQuery}
+      onSearchInput={setSearchQuery}
+      compactActionBar={compactActionBar}
+    />
+  );
 
   return (
     <>
       <div className="tmp-conditional-margin-top" />
       {/* <Divider size="xs" /> */}
-      <ActionsBar
-        app={app}
-        parentDropFolder={model.folder.parent}
-        onMoveIntoFolder={onMoveIntoFolder}
-        canGoToParent={actions.canGoToParent(model.location)}
-        onOpenSettings={onOpenSettings}
-        onSaveFolderNote={
-          onSaveFolderNote ? () => void onSaveFolderNote() : undefined
-        }
-        onGoToParent={(newLeaf) =>
-          void actions.goToParent(model.location, newLeaf)
-        }
-        onNewFolder={() => void actions.createFolder()}
-        onNewNote={() => void actions.createNote()}
-        onSearchToggle={toggleSearch}
-        searchMode={searchMode}
-        searchQuery={searchQuery}
-        onSearchInput={setSearchQuery}
-        compactActionBar={compactActionBar}
-      />
+      {actionBarSlot ? createPortal(actionsBar, actionBarSlot) : null}
       {showFolders && (
         <>
           <Divider />
