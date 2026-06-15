@@ -35,3 +35,8 @@
 .markdown-source-view.mod-cm6 .tmp-conditional-margin-top {
   margin-top: var(--explorer-space-4);
 }
+
+/* need some margin beneath inline title */
+.explorer-action-bar-host.explorer-container {
+  padding-top: 0.25em;
+}

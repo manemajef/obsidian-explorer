@@ -64,13 +64,13 @@
     explorer-scale-out 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-:where(.markdown-source-view.mod-cm6.is-readable-line-width)
+/* :where(.markdown-source-view.mod-cm6.is-readable-line-width)
   .cm-sizer
   > .explorer-action-bar-host {
   width: var(--line-width);
   max-width: var(--max-width);
   margin-inline: var(--content-margin);
-}
+} */
 
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
   cursor: text;

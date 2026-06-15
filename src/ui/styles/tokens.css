@@ -91,8 +91,8 @@
   /* PANEL */
   --explorer-panel-bg: color-mix(
     in srgb,
-    var(--interactive-normal) 50%,
-    transparent 50%
+    var(--interactive-normal) 30%,
+    transparent 70%
   );
 
   --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.02);
