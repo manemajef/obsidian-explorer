@@ -240,6 +240,7 @@ export function NoteFolderDatePreview({
     <Group
       className={cn("explorer-metadata-folder-date-preview-row", className)}
       gap={0}
+      data-has-preview={showNotePreview || undefined}
     >
       {showFolder && actions && (
         <NoteFolder

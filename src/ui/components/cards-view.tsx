@@ -84,6 +84,7 @@ export function CardsView(props: {
                     density={titleDensity}
                     size={titleSize}
                     color="normal"
+                    weight={compact ? "medium" : "semibold"}
                     text={file.basename}
                     underline="none"
                   />

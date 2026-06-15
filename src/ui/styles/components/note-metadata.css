@@ -75,8 +75,13 @@
   overflow: hidden;
 }
 
+.explorer-metadata-folder-date-preview-row[data-has-preview]
+  .explorer-metadata-folder-link {
+  flex-shrink: 0;
+}
+
 .explorer-metadata-preview {
-  flex: 1 999 auto;
+  flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

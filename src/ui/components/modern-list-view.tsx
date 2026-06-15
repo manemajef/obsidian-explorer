@@ -86,7 +86,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                   file={file}
                   actions={actions}
                   className="explorer-modern-list__title"
-                  weight={isMobile ? "bold" : "medium"}
+                  weight={isMobile ? "semibold" : "medium"}
                 />
               </div>
 
@@ -96,7 +96,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                   file={file}
                   model={model}
                   className="explorer-modern-list__tags"
-                  overflow="hidden"
+                  overflow="scroll"
                   size="sm"
                 />
               )}
@@ -128,7 +128,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                     file={file}
                     model={model}
                     className="explorer-modern-list__tags"
-                    overflow="hidden"
+                    overflow="scroll"
                     size="sm"
                   />
                 </>
