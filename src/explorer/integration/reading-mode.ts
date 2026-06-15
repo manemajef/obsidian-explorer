@@ -11,6 +11,8 @@ type VaultWithViewModeConfig = Vault & {
   };
 };
 
+const CANCEL_READ_MODE = true;
+
 function getDefaultViewMode(vault: Vault): string {
   const mode = (vault as VaultWithViewModeConfig).config?.defaultViewMode;
   return typeof mode === "string" ? mode : "source";
@@ -36,7 +38,11 @@ export function registerExplorerReadingMode(
       const content = await app.vault.cachedRead(file);
       const hasExplorerBlock = content.includes("```explorer");
 
-      if ((!getSettings().forceReadingMode || true) && hasExplorerBlock) {
+      if (
+        !getSettings().forceReadingMode &&
+        !CANCEL_READ_MODE &&
+        hasExplorerBlock
+      ) {
         window.setTimeout(() => {
           if (view.editor) {
             view.editor.blur();
