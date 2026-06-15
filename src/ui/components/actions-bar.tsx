@@ -37,8 +37,10 @@ export function Toolbar({
   );
 }
 
-export interface ToolbarItemProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+export interface ToolbarItemProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "children"
+> {
   icon: string;
   active?: boolean;
 }
@@ -80,20 +82,19 @@ export function ToolbarGroup({
   );
 }
 
-export const ToolbarGroupItem = forwardRef<
-  HTMLButtonElement,
-  ToolbarItemProps
->(({ icon, active, className, ...rest }, ref) => (
-  <button
-    ref={ref}
-    type="button"
-    className={cn("explorer-toolbar-group-item", className)}
-    data-active={active || undefined}
-    {...rest}
-  >
-    <Icon name={icon} />
-  </button>
-));
+export const ToolbarGroupItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
+  ({ icon, active, className, ...rest }, ref) => (
+    <button
+      ref={ref}
+      type="button"
+      className={cn("explorer-toolbar-group-item", className)}
+      data-active={active || undefined}
+      {...rest}
+    >
+      <Icon name={icon} />
+    </button>
+  ),
+);
 ToolbarGroupItem.displayName = "ToolbarGroupItem";
 
 const SETTINGS_ICON = "settings-2";
@@ -181,16 +182,17 @@ export function ActionsBar(props: {
         {leadAction}
         <Spacer minWidth=".5em" />
         <ToolbarGroup>
-          <Gap inline size=".5em" />
+          {/* <Gap inline size=".5em" /> */}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
+          <ToolbarGroupItem icon="search" />
         </ToolbarGroup>
         {/* <Gap inline size="1em" /> */}
-        <Spacer minWidth=".5em" maxWidth="1em" />
+        {/* <Spacer minWidth=".5em" maxWidth="1em" />
 
-        <ToolbarItem icon="search" onClick={onSearchToggle} />
+        <ToolbarItem icon="search" onClick={onSearchToggle} /> */}
       </Toolbar>
     );
   }
@@ -201,7 +203,7 @@ export function ActionsBar(props: {
         {leadAction}
         <Spacer minWidth=".8em" />
         <ToolbarGroup>
-          <Gap inline size=".5em" />
+          {/* <Gap inline size=".5em" /> */}
           <ToolbarGroupItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
@@ -209,7 +211,7 @@ export function ActionsBar(props: {
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
-          <Gap inline size=".5em" />
+          {/* <Gap inline size=".5em" /> */}
         </ToolbarGroup>
       </Toolbar>
     );
