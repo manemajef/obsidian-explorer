@@ -104,7 +104,8 @@
   background: var(--explorer-folder-button-bg);
   border: var(--explorer-folder-button-border);
   box-shadow: var(--explorer-folder-button-shadow);
-  border-radius: var(--radius-l);
+  /* border-radius: calc(0.75 * var(--radius-l) + 0.25 * var(--radius-xl)); */
+  border-radius: var(--explorer-folder-button-radius);
 }
 
 .explorer-folder-button[data-interactive]:hover,
