@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.4.5 (16-06-2026)
+
+Improve UI for folder buttons
+
 ## 1.4.4 (15-06-2026)
 
 Bug fixes
