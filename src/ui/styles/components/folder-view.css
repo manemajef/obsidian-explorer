@@ -35,7 +35,7 @@
   }
 }
 
-@media (width <= 700px) {
+@media (width <= 600px) {
   .explorer-folder-grid[data-variant="mobile"] {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -64,21 +64,29 @@
   flex: 1 1 auto;
   min-width: 0;
   max-width: 220px;
-  padding: 0.85em calc(var(--explorer-space-6) * 0.9);
+  /* padding: 0.85em calc(var(--explorer-space-6) * 0.9); */
   padding: var(--explorer-space-3) var(--explorer-space-4);
   transition: 0.15s;
 }
 
-.explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
-  padding: 1.15em 0.5em;
-  max-width: none;
-}
-
-@media (width >= 800px) {
+@media (width < 650px) {
   .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
-    padding: 1.15em 1.5em;
+    box-sizing: border-box;
+    height: max(
+      var(--explorer-control-size),
+      calc(2.3em + var(--explorer-space-4))
+    );
+    padding: var(--explorer-space-2) 0.5em;
+    max-width: none;
   }
 }
+
+/* @media (width >= 800px) {
+  .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
+    height: max(var(--explorer-control-size), 4.6em);
+    padding: 1.15em 1.5em;
+  }
+} */
 
 .explorer-folder-card > * {
   min-width: 0;
@@ -94,10 +102,14 @@
   -webkit-line-clamp: 2;
 }
 
+.explorer-folder-grid[data-variant="mobile"] .explorer-folder-card__link {
+  align-self: center;
+}
+
 /* Folder button surface style */
 .explorer-folder-button {
   box-sizing: border-box;
-  min-width: 0;
+  min-width: 70px;
   overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
