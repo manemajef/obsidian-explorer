@@ -66,6 +66,7 @@
   max-width: 220px;
   max-height: 70px;
   /* padding: 0.85em calc(var(--explorer-space-6) * 0.9); */
+  /* padding: 0.85em var(--explorer-space-6); */
   padding: 0.85em var(--explorer-space-4);
   transition: 0.15s;
 }
@@ -113,7 +114,7 @@
 /* Folder button surface style */
 .explorer-folder-button {
   box-sizing: border-box;
-  min-width: 75px;
+  min-width: 85px;
   overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
