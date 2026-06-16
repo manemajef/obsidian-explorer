@@ -3,7 +3,6 @@
  * Theme (.theme-dark) and platform (.is-mobile) blocks below resolve token
  * VALUES; no other stylesheet may mention themes or platforms (except fixes/).
  */
-
 .explorer-container {
   /* Spacing scale */
   --explorer-space-1: 0.25em;
@@ -60,17 +59,27 @@
   /* optional panels are glassy */
   /* --explorer-panel-shadow: var(var(--explorer-glass-shadow)); */
   /* --explorer-panel-border: var(var(--explorer-glass-border)); */
-
   /* Folder buttons — interactive controls with panel-like dominance. */
   --explorer-folder-button-bg: var(--explorer-panel-bg);
   --explorer-folder-button-border: var(--explorer-panel-border);
-  --explorer-folder-button-radius: var(--radius-l);
-  --explorer-folder-button-shadow:
+  /* --explorer-folder-button-radius: var(--radius-xl); */
+  --explorer-folder-button-radius: var(--pill-radius);
+
+  /* --explorer-folder-button-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.04);
-  --explorer-folder-button-shadow-hover:
+    inset 0 -1px 1px rgba(0, 0, 0, 0.04); */
+
+  --explorer-folder-button-shadow:
+    0 1px 0px rgba(0, 0, 0, 0.01), 0 3px 3px rgba(0, 0, 0, 0.025),
+    var(--shadow-edges);
+
+  /* --explorer-folder-button-shadow-hover:
     0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.06);
+    inset 0 -1px 2px rgba(0, 0, 0, 0.06); */
+
+  --explorer-folder-button-shadow-hover:
+    0 1px 0px rgba(0, 0, 0, 0.03), 0 3px 3px rgba(0, 0, 0, 0.045),
+    var(--shadow-edges);
 
   /* Glass controls — custom Explorer toolbar/pagination treatment. */
   --explorer-glass-bg: rgba(255, 255, 255, 0.2);
@@ -78,7 +87,7 @@
   --explorer-glass-shadow:
     0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
     var(--shadow-edges);
-  /* --explorer-glass-shadow: var(--raised-shadow); */
+
   --explorer-glass-shadow-hover:
     0 1px 4px rgba(0, 0, 0, 0.01), 0 3px 14px rgba(0, 0, 0, 0.035),
     var(--shadow-edges);
@@ -161,7 +170,7 @@
   --explorer-button-pad: 0px;
   --explorer-icon-pad: calc((var(--view-header-height) - var(--icon-l)) / 2);
   --explorer-mobile-space: var(var(--explorer-space-1));
-  --explorer-folder-button-radius: var(--radius-xl);
+  /* --explorer-folder-button-radius: var(--radius-xl); */
 }
 
 .theme-dark.is-mobile .explorer-container {

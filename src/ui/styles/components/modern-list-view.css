@@ -115,7 +115,7 @@
   background: var(--explorer-panel-bg);
   border: var(--explorer-panel-border);
   box-shadow: var(--explorer-panel-shadow);
-  border-radius: var(--radius-l);
+  border-radius: var(--explorer-radius-lg);
 }
 
 /* List row styling */
