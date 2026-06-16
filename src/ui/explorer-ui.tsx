@@ -182,7 +182,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {actionBarSlot ? createPortal(actionsBar, actionBarSlot) : null}
       {showFolders && (
         <>
-          <Divider size="xs" />
+          {/* {!Platform.isMobile && <Divider size="xs" />} */}
           <FolderButtons
             folders={model.folders}
             actions={actions}

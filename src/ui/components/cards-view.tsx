@@ -51,7 +51,7 @@ export function CardsView(props: {
   const titleSize = isMobile
     ? compactMobile
       ? "smaller"
-      : "text"
+      : "small"
     : compact
       ? "smaller"
       : "small";

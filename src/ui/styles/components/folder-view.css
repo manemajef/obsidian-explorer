@@ -64,8 +64,9 @@
   flex: 1 1 auto;
   min-width: 0;
   max-width: 220px;
+  max-height: 70px;
   /* padding: 0.85em calc(var(--explorer-space-6) * 0.9); */
-  padding: var(--explorer-space-3) var(--explorer-space-4);
+  padding: 0.85em var(--explorer-space-4);
   transition: 0.15s;
 }
 
@@ -99,17 +100,20 @@
   overflow-wrap: anywhere;
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
 }
 
 .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card__link {
   align-self: center;
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 2;
 }
 
 /* Folder button surface style */
 .explorer-folder-button {
   box-sizing: border-box;
-  min-width: 70px;
+  min-width: 75px;
   overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;

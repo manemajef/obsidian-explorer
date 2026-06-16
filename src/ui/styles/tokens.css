@@ -55,7 +55,7 @@
   --explorer-panel-shadow:
     0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
-
+  --explorer-panel-radius: var(--explorer-radius-lg);
   /* optional panels are glassy */
   /* --explorer-panel-shadow: var(var(--explorer-glass-shadow)); */
   /* --explorer-panel-border: var(var(--explorer-glass-border)); */
@@ -170,7 +170,8 @@
   --explorer-button-pad: 0px;
   --explorer-icon-pad: calc((var(--view-header-height) - var(--icon-l)) / 2);
   --explorer-mobile-space: var(var(--explorer-space-1));
-  /* --explorer-folder-button-radius: var(--radius-xl); */
+  --explorer-panel-radius: var(--setting-items-radius);
+  /* --explorer-panel-shadow: var(--raised-shadow); */
 }
 
 .theme-dark.is-mobile .explorer-container {

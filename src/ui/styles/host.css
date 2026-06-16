@@ -37,6 +37,7 @@
   min-block-size: var(--explorer-control-size);
   max-width: 100%;
   transform-origin: top center;
+  padding-bottom: calc(var(--explorer-space-4) + 0.2em);
 }
 
 .explorer-container :where(input, textarea, [contenteditable="true"]) {
