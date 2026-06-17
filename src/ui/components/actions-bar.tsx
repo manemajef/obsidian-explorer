@@ -131,7 +131,7 @@ export function ActionsBar(props: {
     canGoToParent,
     compactActionBar,
   } = props;
-
+  const USE_PEN = false;
   const isMobile = Platform.isMobile;
   const toolbarProps = {
     id: "explorer-actions",
@@ -232,7 +232,7 @@ export function ActionsBar(props: {
           )}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <ToolbarGroupItem icon="file-plus-2" onClick={onNewNote} />
-          {onSaveFolderNote && !isMobile && (
+          {onSaveFolderNote && !isMobile && USE_PEN && (
             <ToolbarGroupItem icon="pen-line" onClick={onSaveFolderNote} />
           )}
         </ToolbarGroup>
