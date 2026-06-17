@@ -118,6 +118,7 @@
     var(--interactive-normal) 80%,
     transparent 20%
   );
+  --explorer-folder-button-bg: var(--explorer-panel-bg);
 
   --explorer-folder-button-border: 1px solid transparent;
   /* --explorer-folder-button-border: 1px solid rgba(255, 255, 255, 0.05); */
