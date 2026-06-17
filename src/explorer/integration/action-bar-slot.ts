@@ -160,8 +160,8 @@ function findPreviewPlacement(container: HTMLElement): ActionBarPlacement | null
   if (!previewSizer) return null;
 
   const header = getDirectChild(previewSizer, ".mod-header.mod-ui");
-  if (header && hasTitleSurface(header)) {
-    return { parent: header, isSettled: true };
+  if (header) {
+    return { parent: header, isSettled: hasTitleSurface(header) };
   }
 
   const previous = container.previousElementSibling;

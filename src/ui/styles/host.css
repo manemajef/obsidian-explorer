@@ -30,6 +30,7 @@
 }
 
 .explorer-action-bar-host.explorer-container {
+  animation: none;
   box-sizing: border-box;
   margin-block: var(--size-2-2) var(--size-4-2);
   margin-inline: 0;

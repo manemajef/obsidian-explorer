@@ -2,6 +2,8 @@ import { ExplorerFileNode } from "src/explorer/lib/nodes";
 import React from "react";
 const { useEffect, useState, useRef } = React;
 
+const EMPTY_LABEL = "No additional content";
+
 type NotePreviewState = {
   isLoading: boolean;
   preview: string;
@@ -39,7 +41,8 @@ export function useNotePreview(
     void file.loadPreview(effectiveMaxChar).then((preview) => {
       if (cancelled) return;
 
-      const text = preview?.trim() ?? "";
+      let text = preview?.trim() ?? "";
+      if (text === "") text = EMPTY_LABEL;
       setState({
         isLoading: false,
         preview: text,
