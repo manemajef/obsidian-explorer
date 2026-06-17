@@ -38,7 +38,8 @@
   min-block-size: var(--explorer-control-size);
   max-width: 100%;
   transform-origin: top center;
-  padding-bottom: calc(var(--explorer-space-4) + 0.2em);
+  /* padding-bottom: calc(var(--explorer-space-4) + 0.2em); */
+  padding-bottom: var(--explorer-space-4);
 
   /* Prevent layout shift by reserving min height */
   min-height: var(--explorer-control-size);
