@@ -78,16 +78,6 @@ export function showFolderContextMenu(
       }),
   );
   menu.addSeparator();
-  menu.addItem((item) =>
-    item
-      .setTitle("Delete folder")
-      .setIcon("trash")
-      .setWarning(true)
-      .onClick(() => {
-        config.actions.deleteFolder(folder);
-      }),
-  );
-
   if (folderNote) {
     menu.addItem((item) =>
       item
@@ -99,6 +89,15 @@ export function showFolderContextMenu(
         }),
     );
   }
+  menu.addItem((item) =>
+    item
+      .setTitle("Delete folder")
+      .setIcon("trash")
+      .setWarning(true)
+      .onClick(() => {
+        config.actions.deleteFolder(folder);
+      }),
+  );
 
   menu.showAtMouseEvent(event.nativeEvent);
 }

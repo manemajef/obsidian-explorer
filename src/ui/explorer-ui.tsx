@@ -194,7 +194,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       {showNotes && (
         <div className="explorer-files-container" ref={listContainerRef}>
           {/* <Gap size={filesGapSize} /> */}
-          {model.folders.length > 0 && <Divider />}
+          {model.folders.length > 0 && model.settings.showFolders && (
+            <Divider />
+          )}
 
           <div>{renderFiles(visibleFiles)}</div>
 
