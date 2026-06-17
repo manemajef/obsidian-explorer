@@ -49,6 +49,6 @@
   .cm-sizer
   > .explorer-action-bar-host {
   width: var(--line-width);
-  max-width: var(--max-width);
+  /* max-width: var(--max-width); */
   margin-inline: var(--content-margin);
 }

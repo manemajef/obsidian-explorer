@@ -40,14 +40,16 @@
 }
 
 .explorer-divider[data-size="sm"] {
-  height: var(--explorer-space-4);
+height(--explorer-space-4);
 }
 .explorer-divider[data-size="xs"] {
-  height: var(--explorer-space-1);
+height: var(--explorer-space-1);
 }
-.explorer-divider[data-size="md"],
+.explorer-divider[data-size="md"] {
+height: var(--explorer-break-height);
+}
 .explorer-divider[data-size="lg"] {
-  height: var(--explorer-space-6);
+height: var(--explorer-space-6);
 }
 
 .explorer-separator {

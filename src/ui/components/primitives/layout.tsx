@@ -210,16 +210,14 @@ export function Separator(props: { className?: string }): React.JSX.Element {
  * markdown/CM6 host flow a div-based spacer (Gap) only works inside our
  * own flex/div containers. Without size it's a native line break; with
  * size it becomes a fixed-height block spacer. */
-export function Divider(props: {
+export function Divider({
+  className,
+  size = "md",
+}: {
   className?: string;
   size?: "xs" | "sm" | "md" | "lg";
 }): React.JSX.Element {
-  return (
-    <br
-      className={cn("explorer-divider", props.className)}
-      data-size={props.size}
-    />
-  );
+  return <br className={cn("explorer-divider", className)} data-size={size} />;
 }
 
 /** Fixed-size space along one axis ("auto" follows the parent's axis). */
