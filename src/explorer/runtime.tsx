@@ -40,6 +40,7 @@ export type ExplorerMount = {
   onSaveFolderNote?: () => void | Promise<void>;
   folderNote?: FolderNoteConversion;
   removeFolderNoteFile?: (file: TFile) => void | Promise<void>;
+  actionBarContainer?: HTMLElement; // If provided, render action bar here instead of using slot system
 };
 
 export type FolderNoteConversion = {
@@ -54,7 +55,28 @@ function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   return isRtl() ? "rtl" : "ltr";
 }
 
-const ACTION_BAR_SLOT_RETRY_LIMIT = 40;
+async function waitForElement(
+  container: HTMLElement,
+  selector: string,
+  maxAttempts: number,
+  delayMs: number,
+): Promise<void> {
+  const findTarget = (): HTMLElement | null => {
+    // Check in parent containers (cm-sizer, markdown-preview-sizer, etc.)
+    const cmSizer = container.closest(".cm-sizer");
+    if (cmSizer?.querySelector(selector)) return cmSizer as HTMLElement;
+
+    const previewSizer = container.closest(".markdown-preview-sizer");
+    if (previewSizer?.querySelector(selector)) return previewSizer as HTMLElement;
+
+    return null;
+  };
+
+  for (let i = 0; i < maxAttempts; i++) {
+    if (findTarget()) return;
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+  }
+}
 
 export async function renderExplorerBlock(
   app: App,
@@ -106,11 +128,15 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     initialOverrides,
     registerRefresh,
     replaceExplorerBlock,
+    actionBarContainer,
   } = input;
   container.addClass("explorer-container");
 
   const reactRoot = createRoot(container);
-  const actionBarSlot = registerActionBarSlot(app, container);
+  // Only use slot system if no explicit action bar container is provided
+  const actionBarSlot = actionBarContainer
+    ? null
+    : registerActionBarSlot(app, container);
   let blockOverrides = { ...initialOverrides };
   const session = new ExplorerSession(app);
   let effectiveSettings = resolveBlockSettings(
@@ -118,51 +144,31 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     blockOverrides,
   );
   let refreshTimer: number | null = null;
-  let actionBarSlotRetryTimer: number | null = null;
-  let actionBarSlotRetryCount = 0;
   let slotSyncTimer: number | null = null;
   let isUnmounted = false;
   let sourcePath = input.sourcePath;
+  let hasRenderedOnce = false;
 
   const syncActionBarSlot = (): HTMLElement | null => {
-    return actionBarSlot.sync();
-  };
-
-  const queueActionBarSlotRetry = (): void => {
-    if (
-      actionBarSlotRetryTimer !== null ||
-      actionBarSlotRetryCount >= ACTION_BAR_SLOT_RETRY_LIMIT
-    ) {
-      return;
+    if (actionBarContainer) {
+      return actionBarContainer;
     }
-
-    actionBarSlotRetryCount += 1;
-    const win = container.ownerDocument.defaultView ?? window;
-    actionBarSlotRetryTimer = win.setTimeout(() => {
-      actionBarSlotRetryTimer = null;
-      if (isUnmounted) return;
-
-      if (syncActionBarSlot() && actionBarSlot.isSettled) {
-        actionBarSlotRetryCount = 0;
-        void render();
-        return;
-      }
-
-      queueActionBarSlotRetry();
-    }, 50);
+    return actionBarSlot?.sync() ?? null;
   };
 
   const queueSlotSync = (): void => {
+    if (actionBarContainer) {
+      // No need to sync if using explicit container
+      return;
+    }
     if (slotSyncTimer !== null) {
       window.clearTimeout(slotSyncTimer);
+      slotSyncTimer = null;
     }
     if (isUnmounted) return;
 
-    slotSyncTimer = window.setTimeout(() => {
-      slotSyncTimer = null;
-      if (isUnmounted) return;
-      void render();
-    }, 50);
+    // Sync immediately to reduce flicker during mode changes
+    void render();
   };
 
   const trackSourceRename = (file: TAbstractFile, oldPath: string): void => {
@@ -220,11 +226,8 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     if (slotSyncTimer !== null) {
       window.clearTimeout(slotSyncTimer);
     }
-    if (actionBarSlotRetryTimer !== null) {
-      window.clearTimeout(actionBarSlotRetryTimer);
-    }
     reactRoot.unmount();
-    actionBarSlot.dispose();
+    actionBarSlot?.dispose();
   });
   if (registerRefresh) {
     registerCleanup(registerRefresh(queueRefresh));
@@ -262,13 +265,19 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   };
 
   const render = async (): Promise<void> => {
+    // On first render with slot system, wait for inline-title to exist
+    if (!hasRenderedOnce && !actionBarContainer && actionBarSlot) {
+      hasRenderedOnce = true;
+      await waitForElement(container, ".inline-title", 100, 10);
+    }
+
     const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
       getBlockDefaults(),
       blockOverrides,
     );
     const direction = resolveDirection(effectiveSettings);
-    const currentActionBarSlot = syncActionBarSlot();
+    const currentActionBarSlot = actionBarContainer || syncActionBarSlot();
     container.setAttribute("dir", direction);
     currentActionBarSlot?.setAttribute("dir", direction);
     container.toggleClass(
@@ -279,11 +288,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       "explorer-compact-action-bar",
       effectiveSettings.compactActionBar,
     );
-    if (currentActionBarSlot && actionBarSlot.isSettled) {
-      actionBarSlotRetryCount = 0;
-    } else {
-      queueActionBarSlotRetry();
-    }
 
     const model = await buildExplorerModel({
       app,

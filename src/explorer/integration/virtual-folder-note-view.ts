@@ -172,6 +172,12 @@ export class VirtualFolderNoteView extends ItemView {
     //   cls: "virtual-folder-warning",
     //   text: "Save folder note",
     // });
+
+    // Create explicit action bar container (no slot injection needed)
+    const actionBarContainer = section.createDiv({
+      cls: "explorer-container explorer-action-bar-host",
+    });
+
     const explorerContainer = section.createDiv();
     section.createDiv({
       cls: "virtual-folder-margin-bottom",
@@ -189,6 +195,7 @@ export class VirtualFolderNoteView extends ItemView {
       onSaveFolderNote: () => this.materialize(),
       folderNote: { isFile: false, convert: () => this.materialize() },
       removeFolderNoteFile: this.host.removeFolderNoteFile,
+      actionBarContainer, // Provide explicit container instead of using slot system
       replaceExplorerBlock: async (settings) => {
         // Changing a per-view setting on a file-free note always persists to
         // the data store — it never silently creates a file. Use the "Add file"

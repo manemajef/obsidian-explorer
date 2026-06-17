@@ -5,7 +5,6 @@ const ACTION_BAR_SLOT_ATTR = "data-explorer-action-bar-slot";
 
 type ActionBarPlacement = {
   parent: HTMLElement;
-  fallbackBefore?: HTMLElement;
   isSettled: boolean;
 };
 
@@ -79,52 +78,35 @@ function placeActionBarSlot(
   placement: ActionBarPlacement,
   host: HTMLElement,
 ): void {
-  const { parent: titleContainer, fallbackBefore } = placement;
-  const inlineTitle = getDirectChild(titleContainer, ".inline-title");
+  const { parent: container } = placement;
+
+  // Place after inline-title, before metadata-container
+  const inlineTitle = getDirectChild(container, ".inline-title");
+  const metadata = getDirectChild(container, ".metadata-container");
+
+  // If we have inline-title, place after it
   if (inlineTitle) {
-    placeAfter(inlineTitle, host);
+    if (host.parentElement === container && host.previousElementSibling === inlineTitle) {
+      return; // Already in correct position
+    }
+    inlineTitle.after(host);
     return;
   }
 
-  const metadata = getDirectChild(titleContainer, ".metadata-container");
+  // Otherwise, place before metadata if it exists
   if (metadata) {
-    placeBefore(metadata, host);
+    if (host.parentElement === container && host.nextElementSibling === metadata) {
+      return; // Already in correct position
+    }
+    metadata.before(host);
     return;
   }
 
-  if (fallbackBefore?.parentElement === titleContainer) {
-    placeBefore(fallbackBefore, host);
+  // Fallback: place at start
+  if (host.parentElement === container && container.firstElementChild === host) {
     return;
   }
-
-  placeAtStart(titleContainer, host);
-}
-
-function placeAfter(reference: HTMLElement, host: HTMLElement): void {
-  if (
-    host.parentElement === reference.parentElement &&
-    host.previousElementSibling === reference
-  ) {
-    return;
-  }
-  reference.after(host);
-}
-
-function placeBefore(reference: HTMLElement, host: HTMLElement): void {
-  if (
-    host.parentElement === reference.parentElement &&
-    host.nextElementSibling === reference
-  ) {
-    return;
-  }
-  reference.before(host);
-}
-
-function placeAtStart(parent: HTMLElement, host: HTMLElement): void {
-  if (host.parentElement === parent && parent.firstElementChild === host) {
-    return;
-  }
-  parent.prepend(host);
+  container.prepend(host);
 }
 
 function findActionBarPlacement(
@@ -149,9 +131,7 @@ function findEditPlacement(container: HTMLElement): ActionBarPlacement | null {
 
   return {
     parent: editorSizer,
-    fallbackBefore:
-      getDirectChild(editorSizer, ".cm-contentContainer") ?? undefined,
-    isSettled: hasTitleSurface(editorSizer),
+    isSettled: true, // Always settled since container always exists
   };
 }
 
@@ -159,25 +139,16 @@ function findPreviewPlacement(container: HTMLElement): ActionBarPlacement | null
   const previewSizer = closestHTMLElement(container, ".markdown-preview-sizer");
   if (!previewSizer) return null;
 
+  // Try to find .mod-header.mod-ui which contains inline-title and metadata
   const header = getDirectChild(previewSizer, ".mod-header.mod-ui");
   if (header) {
-    return { parent: header, isSettled: hasTitleSurface(header) };
+    return { parent: header, isSettled: true };
   }
 
-  const previous = container.previousElementSibling;
-  if (hasTitleSurface(previous)) return { parent: previous, isSettled: true };
-
-  const titleSurface = Array.from(previewSizer.children).find((child) =>
-    hasTitleSurface(child),
-  );
-  if (titleSurface) return { parent: titleSurface, isSettled: true };
-
-  const blockWrapper = closestHTMLElement(container, ".el-pre");
+  // Fallback to preview sizer itself
   return {
     parent: previewSizer,
-    fallbackBefore:
-      blockWrapper?.parentElement === previewSizer ? blockWrapper : undefined,
-    isSettled: false,
+    isSettled: true,
   };
 }
 
@@ -212,14 +183,6 @@ function getOwningMarkdownView(
   });
 
   return owner;
-}
-
-function hasTitleSurface(value: unknown): value is HTMLElement {
-  return (
-    isHTMLElement(value) &&
-    (getDirectChild(value, ".inline-title") !== null ||
-      getDirectChild(value, ".metadata-container") !== null)
-  );
 }
 
 function closestHTMLElement(
