@@ -67,7 +67,7 @@
   max-height: 70px;
   /* padding: 0.85em calc(var(--explorer-space-6) * 0.9); */
   /* padding: 0.85em var(--explorer-space-6); */
-  padding: 0.85em var(--explorer-space-4);
+  padding: 0.75em var(--explorer-space-4);
   transition: 0.15s;
 }
 
