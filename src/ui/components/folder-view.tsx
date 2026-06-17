@@ -9,6 +9,7 @@ import { cn } from "./primitives/cn";
 import { Link } from "./primitives/link";
 
 const LONG_FOLDER_NAME_LENGTH = 20;
+const TRESH_FOR_SM = 9;
 
 interface FolderButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
@@ -54,6 +55,7 @@ export function FolderButtons(props: {
           : folder.folderNotePath;
         const linkText = folder.displayName;
         const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
+        const isTightName = linkText.length > TRESH_FOR_SM;
         const linkCreatesFolderNote =
           !isMissing ||
           shouldCreateMissingFolderNote(actions.settings, "explicit");
@@ -63,6 +65,7 @@ export function FolderButtons(props: {
             key={folderNotePath}
             className={cn(
               "explorer-folder-card",
+              isTightName && "explorer-folder-card--medium-name",
               isLongName && "explorer-folder-card--long-name",
             )}
             interactive

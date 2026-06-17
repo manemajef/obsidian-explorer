@@ -41,6 +41,11 @@
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--explorer-space-3);
   }
+  .explorer-folder-grid[data-variant="mobile"]
+    .explorer-folder-card--medium-name
+    .explorer-folder-card__link {
+    letter-spacing: -0.04em;
+  }
 
   .explorer-folder-grid[data-variant="mobile"]::after {
     content: none;
@@ -53,6 +58,7 @@
   .explorer-folder-grid[data-variant="mobile"]
     .explorer-folder-card--long-name {
     grid-column: span 3;
+    letter-spacing: 0;
   }
 }
 
@@ -78,8 +84,10 @@
       var(--explorer-control-size),
       calc(2.3em + var(--explorer-space-4))
     );
-    padding: var(--explorer-space-2) 0.5em;
-    max-width: none;
+
+    padding: var(--explorer-space-2) var(--explorer-space-3);
+    /* max-width: 180px; */
+    /* min-width: 95px; */
   }
 }
 
