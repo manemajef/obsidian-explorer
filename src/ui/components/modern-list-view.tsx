@@ -71,7 +71,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
         >
           <Stack
             className="explorer-modern-list__content"
-            gap={isMobile ? 1 : 0}
+            gap={isMobile && !file.hasTags ? 1 : 0}
           >
             <Group className="explorer-modern-list__primary" gap={2}>
               <div className="explorer-modern-list__title-slot">
@@ -87,6 +87,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                   actions={actions}
                   className="explorer-modern-list__title"
                   weight={isMobile ? "semibold" : "medium"}
+                  density="tight"
                 />
               </div>
 
