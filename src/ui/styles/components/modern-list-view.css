@@ -35,7 +35,7 @@
 .explorer-modern-list[data-variant="mobile"]
   .explorer-modern-list__shell:first-child
   .explorer-modern-list__row {
-  padding-top: var(--explorer-space-3);
+  padding-top: var(--explorer-space-4);
 }
 
 .explorer-modern-list[data-variant="desktop"]
