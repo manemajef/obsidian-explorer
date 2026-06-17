@@ -12,6 +12,7 @@
   --explorer-space-5: 1.5em;
   --explorer-space-6: 2em;
   --explorer-mobile-space: 0;
+  --explorer-break-height: var(--explorer-space-4);
 
   /* Radius scale */
   --explorer-radius-sm: 4px;
@@ -168,9 +169,12 @@
   --explorer-control-size: 44px;
   --explorer-icon-size: calc(var(--icon-l) * 0.5 + var(--icon-size) * 0.5);
   --explorer-button-pad: 0px;
-  --explorer-icon-pad: calc((var(--view-header-height) - var(--icon-l)) / 2);
+  --explorer-icon-pad: calc((var(--touch-size-m) - var(--icon-l)) / 2);
   --explorer-mobile-space: var(var(--explorer-space-1));
-  --explorer-panel-radius: var(--setting-items-radius);
+  --explorer-panel-radius: calc(var(--touch-radius-xs) * 0.9);
+  --explorer-break-height: calc(var(--explorer-space-4) + 0.2em);
+
+  /* --explorer-panel-radius: var(--menu-radius); */
   /* --explorer-panel-shadow: var(--raised-shadow); */
 }
 
@@ -182,12 +186,12 @@
   );
   --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-panel-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-  --explorer-folder-button-bg: color-mix(
+  /* --explorer-folder-button-bg: color-mix(
     in srgb,
     var(--interactive-normal) 70%,
     transparent 30%
-  );
-  --explorer-folder-button-border: var(--explorer-panel-border);
+  ); */
+  /* --explorer-folder-button-border: var(--explorer-panel-border);
   --explorer-folder-button-shadow: var(--explorer-panel-shadow);
-  --explorer-folder-button-shadow-hover: var(--explorer-folder-button-shadow);
+  --explorer-folder-button-shadow-hover: var(--explorer-folder-button-shadow); */
 }
