@@ -11,8 +11,6 @@ import type { ExplorerLocation } from "./navigation/folder-notes";
 export type ExplorerModel = {
   app: App;
   sourcePath: string;
-  viewType: string;
-  isEditMode: boolean;
   location: ExplorerLocation;
   folder: TFolder;
   session: ExplorerSession;
@@ -32,21 +30,11 @@ export async function buildExplorerModel(input: {
   session: ExplorerSession;
   sourcePath: string;
   sourceFolder?: TFolder;
-  viewType: string;
-  isEditMode: boolean;
   settings: BlockSettings;
   pluginSettings: PluginSettings;
 }): Promise<ExplorerModel | null> {
-  const {
-    app,
-    session,
-    sourcePath,
-    sourceFolder,
-    viewType,
-    isEditMode,
-    settings,
-    pluginSettings,
-  } = input;
+  const { app, session, sourcePath, sourceFolder, settings, pluginSettings } =
+    input;
   const sourceFile = app.vault.getAbstractFileByPath(sourcePath);
   if (!sourceFolder && (!(sourceFile instanceof TFile) || !sourceFile.parent))
     return null;
@@ -65,8 +53,6 @@ export async function buildExplorerModel(input: {
   return {
     app,
     sourcePath,
-    viewType,
-    isEditMode,
     location: {
       folder,
       path: sourcePath,

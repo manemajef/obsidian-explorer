@@ -2,7 +2,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import {
   App,
-  MarkdownView,
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
   TAbstractFile,
@@ -29,8 +28,6 @@ export type ExplorerMount = {
   container: HTMLElement;
   sourcePath: string;
   sourceFolder?: TFolder;
-  viewType?: string;
-  isEditMode?: boolean;
   getBlockDefaults: () => BlockSettings;
   getPluginSettings: () => PluginSettings;
   savePluginSettings: () => void | Promise<void>;
@@ -57,23 +54,6 @@ function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   return isRtl() ? "rtl" : "ltr";
 }
 
-function getMarkdownViewForContainer(
-  app: App,
-  container: HTMLElement,
-): MarkdownView | null {
-  for (const leaf of app.workspace.getLeavesOfType("markdown")) {
-    const view = leaf.view;
-    if (
-      view instanceof MarkdownView &&
-      view.containerEl.contains(container)
-    ) {
-      return view;
-    }
-  }
-
-  return null;
-}
-
 export async function renderExplorerBlock(
   app: App,
   container: HTMLElement,
@@ -87,13 +67,10 @@ export async function renderExplorerBlock(
   removeFolderNoteFile?: (file: TFile) => void | Promise<void>,
 ): Promise<void> {
   const child = new MarkdownRenderChild(container);
-  const view = getMarkdownViewForContainer(app, container);
   const cleanup = await mountExplorer({
     app,
     container,
     sourcePath: ctx.sourcePath,
-    viewType: view?.getViewType(),
-    isEditMode: view?.getMode() === "source",
     getBlockDefaults,
     getPluginSettings,
     savePluginSettings,
@@ -121,8 +98,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     app,
     container,
     sourceFolder,
-    viewType = "unknown",
-    isEditMode = false,
     getBlockDefaults,
     getPluginSettings,
     savePluginSettings,
@@ -249,8 +224,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       session,
       sourcePath,
       sourceFolder,
-      viewType,
-      isEditMode,
       settings: effectiveSettings,
       pluginSettings,
     });
