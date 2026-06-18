@@ -29,7 +29,7 @@
     explorer-scale-in 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.explorer-action-bar-host.explorer-container {
+.explorer-action-bar-host {
   animation: none;
   box-sizing: border-box;
   margin-block: var(--size-2-2) var(--size-4-2);
@@ -45,7 +45,7 @@
   min-height: var(--explorer-control-size);
 }
 
-.explorer-action-bar-host.explorer-container:empty {
+.explorer-action-bar-host:empty {
   /* Hide when empty to prevent flash */
   display: none;
 }
