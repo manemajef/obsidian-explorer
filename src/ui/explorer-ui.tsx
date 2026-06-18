@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { createPortal } from "react-dom";
-import { Platform, TFile, TFolder } from "obsidian";
+import { TFile, TFolder } from "obsidian";
 import { shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
 import { ExplorerFileNode } from "../explorer/lib/nodes";
@@ -22,7 +21,6 @@ interface ExplorerUIProps {
   onRefresh: () => void;
   onSaveFolderNote?: () => void | Promise<void>;
   onRemoveFolderNoteFile?: (file: TFile) => void | Promise<void>;
-  actionBarSlot?: HTMLElement | null;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
@@ -33,7 +31,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     onRefresh,
     onSaveFolderNote,
     onRemoveFolderNoteFile,
-    actionBarSlot,
   } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
@@ -111,15 +108,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const showFolders =
     settings.showFolders && model.folders.length > 0 && !searchMode;
   const showNotes = shouldDisplayNotes(settings);
-  const isCardsView = settings.view === "cards";
   const compactActionBar = settings.compactActionBar;
-
-  const filesGapSize =
-    compactActionBar && !showFolders
-      ? 4
-      : isCardsView || Platform.isMobile
-        ? 6
-        : 4;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -177,12 +166,9 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
   return (
     <>
-      {/* <div className="tmp-conditional-margin-top" /> */}
-
-      {actionBarSlot ? createPortal(actionsBar, actionBarSlot) : null}
+      <div className="explorer-action-bar-host">{actionsBar}</div>
       {showFolders && (
         <>
-          {/* {!Platform.isMobile && <Divider size="xs" />} */}
           <FolderButtons
             folders={model.folders}
             actions={actions}
@@ -193,7 +179,6 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
       {showNotes && (
         <div className="explorer-files-container" ref={listContainerRef}>
-          {/* <Gap size={filesGapSize} /> */}
           {model.folders.length > 0 && model.settings.showFolders && (
             <Divider />
           )}
