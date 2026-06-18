@@ -25,6 +25,24 @@ type NoteMetadataWithActionsProps = NoteMetadataProps & {
 
 type NotePreviewLines = 1 | 2 | 3;
 
+const getLocalDate = (date: number) =>
+  new Intl.DateTimeFormat("default", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(date);
+
+const resolveDateFormat = (model: ExplorerModel, file: ExplorerFileNode) => {
+  const date = getNoteDate(file, model);
+  if (date === null) return null;
+  if (model.pluginSettings.datesFormat === "local") return getLocalDate(date);
+  if (model.pluginSettings.datesFormat === "relative") return diffDays(date);
+  const now = new Date();
+  if ((now.getTime() - date) / (1000 * 60 * 60 * 24) <= 7)
+    return diffDays(date);
+  return getLocalDate(date);
+};
+
 function getParentFolder(file: ExplorerFileNode, model: ExplorerModel) {
   const parentFolder = file.parentExplorerFolder;
   return parentFolder && parentFolder !== model.folder ? parentFolder : null;
@@ -45,7 +63,7 @@ export function NoteDate({
   className,
   size,
 }: NoteMetadataProps): React.JSX.Element | null {
-  const date = getNoteDate(file, model);
+  const date = resolveDateFormat(model, file);
 
   if (date == null) return null;
 
@@ -56,7 +74,7 @@ export function NoteDate({
       size={size}
       className={cn("explorer-metadata-date", className)}
     >
-      {diffDays(date)}
+      {date}
     </Text>
   );
 }
@@ -243,12 +261,7 @@ export function NoteFolderDatePreview({
       data-has-preview={showNotePreview || undefined}
     >
       {showFolder && actions && (
-        <NoteFolder
-          file={file}
-          model={model}
-          actions={actions}
-          size={size}
-        />
+        <NoteFolder file={file} model={model} actions={actions} size={size} />
       )}
       {showFolder && (showDate || showNotePreview) && (
         <NoteMetadataSeparator size={size} />

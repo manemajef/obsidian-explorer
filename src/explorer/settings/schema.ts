@@ -1,3 +1,4 @@
+import { title } from "process";
 import {
   booleanField,
   defineBlockSchema,
@@ -43,6 +44,7 @@ export const SETTING_SECTIONS = [
     title: "Visibility",
     description: "Control which elements appear in Explorer views.",
   },
+
   {
     id: "appearance",
     title: "Appearance",
@@ -335,6 +337,21 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "visibility",
       visibleWhen: { key: "showTitlebarActions", value: true },
+    },
+  }),
+  datesFormat: enumField({
+    label: "Choose date format",
+    description: "When set to auto, it uses local format and natural language",
+    defaultValue: "auto",
+    options: ["auto", "local", "relative"],
+    optionLabels: {
+      auto: "Auto",
+      local: "Local date format",
+      relative: "Relative time",
+    },
+    ui: {
+      surfaces: ["plugin"],
+      section: "visibility",
     },
   }),
 
