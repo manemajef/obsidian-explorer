@@ -2,6 +2,7 @@ import { App, MarkdownView } from "obsidian";
 import { isHTMLElement } from "../../utils";
 
 const ACTION_BAR_SLOT_ATTR = "data-explorer-action-bar-slot";
+const ACTION_BAR_LINE_METRICS_ATTR = "data-explorer-action-bar-line-metrics";
 
 type ActionBarPlacement = {
   parent: HTMLElement;
@@ -83,10 +84,15 @@ function placeActionBarSlot(
   // Place after inline-title, before metadata-container
   const inlineTitle = getDirectChild(container, ".inline-title");
   const metadata = getDirectChild(container, ".metadata-container");
+  const lineMetricsSource = inlineTitle ?? metadata;
+  syncActionBarLineMetrics(host, container, lineMetricsSource);
 
   // If we have inline-title, place after it
   if (inlineTitle) {
-    if (host.parentElement === container && host.previousElementSibling === inlineTitle) {
+    if (
+      host.parentElement === container &&
+      host.previousElementSibling === inlineTitle
+    ) {
       return; // Already in correct position
     }
     inlineTitle.after(host);
@@ -95,7 +101,10 @@ function placeActionBarSlot(
 
   // Otherwise, place before metadata if it exists
   if (metadata) {
-    if (host.parentElement === container && host.nextElementSibling === metadata) {
+    if (
+      host.parentElement === container &&
+      host.nextElementSibling === metadata
+    ) {
       return; // Already in correct position
     }
     metadata.before(host);
@@ -107,6 +116,31 @@ function placeActionBarSlot(
     return;
   }
   container.prepend(host);
+}
+
+function syncActionBarLineMetrics(
+  host: HTMLElement,
+  container: HTMLElement,
+  source: HTMLElement | null,
+): void {
+  if (!container.matches(".cm-sizer") || !source) {
+    clearActionBarLineMetrics(host);
+    return;
+  }
+
+  const width = source.getBoundingClientRect().width;
+  if (width <= 0) {
+    clearActionBarLineMetrics(host);
+    return;
+  }
+
+  host.style.setProperty("--explorer-action-bar-line-width", `${width}px`);
+  host.setAttr(ACTION_BAR_LINE_METRICS_ATTR, "");
+}
+
+function clearActionBarLineMetrics(host: HTMLElement): void {
+  host.style.removeProperty("--explorer-action-bar-line-width");
+  host.removeAttribute(ACTION_BAR_LINE_METRICS_ATTR);
 }
 
 function findActionBarPlacement(
