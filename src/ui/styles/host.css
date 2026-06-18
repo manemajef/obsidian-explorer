@@ -24,9 +24,15 @@
   scroll-margin-top: 10em;
   cursor: default;
   margin-bottom: 2em;
-  animation:
-    explorer-fade-in 0.25s ease-out both,
-    explorer-scale-in 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Reserve vertical space before React fills the container so content below
+   the block doesn't jump down when the explorer mounts. The placeholder is
+   invisible (opacity 0 from the animation backwards-fill) so the exact height
+   doesn't need to be perfect — it just needs to be in the ballpark. */
+.explorer-container.explorer-navigating {
+  min-height: var(--explorer-nav-placeholder-height, 200px);
+  animation: explorer-fade-in 0.35s ease-out both;
 }
 
 .explorer-action-bar-host {

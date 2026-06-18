@@ -2,6 +2,7 @@ import { App, TFile, TFolder } from "obsidian";
 import { openHomePage, resolveHomePagePath } from "./homepage";
 import { PluginSettings } from "../settings";
 import { openVirtualFolderNote } from "./virtual-folder-note";
+import { markNavigationPending } from "./navigation-pending";
 import {
   FOLDERNOTE_TEMPLATE,
   createFolderNoteFileWithConfirmation,
@@ -141,6 +142,7 @@ async function openExplorerPage(
   sourcePath: string,
   newLeaf: boolean,
 ): Promise<void> {
+  markNavigationPending();
   await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
 }
 

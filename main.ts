@@ -23,6 +23,7 @@ import { registerFileExplorerFolderNoteBehavior } from "./src/explorer/integrati
 import { registerExplorerCommands } from "./src/explorer/integration/commands";
 import { registerFolderNoteRenameSync } from "./src/explorer/integration/folder-note-rename-sync";
 import { registerExplorerReadingMode } from "./src/explorer/integration/reading-mode";
+import { registerWorkspaceDecorations } from "./src/explorer/integration/workspace-decorations";
 import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
@@ -115,6 +116,7 @@ export default class ExplorerPlugin extends Plugin {
     registerHomePageNewTabs(this, () => this.settings);
     registerFolderNoteRenameSync(this, () => this.settings);
     registerExplorerReadingMode(this, () => this.settings);
+    registerWorkspaceDecorations(this, this.app);
   }
 
   onunload() {

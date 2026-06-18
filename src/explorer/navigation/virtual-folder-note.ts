@@ -1,4 +1,5 @@
 import { App, TFolder } from "obsidian";
+import { markNavigationPending } from "./navigation-pending";
 
 export const VIRTUAL_FOLDER_NOTE_VIEW_TYPE = "explorer-virtual-folder-note";
 
@@ -7,6 +8,7 @@ export async function openVirtualFolderNote(
   folder: TFolder,
   newLeaf = false,
 ): Promise<void> {
+  markNavigationPending();
   const leaf = app.workspace.getLeaf(newLeaf);
   await leaf.setViewState({
     type: VIRTUAL_FOLDER_NOTE_VIEW_TYPE,

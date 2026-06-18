@@ -182,6 +182,8 @@ export class VirtualFolderNoteView extends ItemView {
       container: explorerContainer,
       sourcePath: this.sourcePath,
       sourceFolder: folder,
+      viewType: this.getViewType(),
+      isEditMode: false,
       getBlockDefaults: this.host.getBlockDefaults,
       getPluginSettings: this.host.getPluginSettings,
       savePluginSettings: this.host.savePluginSettings,

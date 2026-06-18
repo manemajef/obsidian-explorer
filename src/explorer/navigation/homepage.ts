@@ -1,5 +1,6 @@
 import { App, Notice, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { PluginSettings } from "../settings";
+import { markNavigationPending } from "./navigation-pending";
 
 const HOME_PAGE_TEMPLATE =
   '```explorer\nview: "cards"\nsortBy: "edited"\ndepth: 10\npageSize: 21\n```\n';
@@ -61,6 +62,7 @@ export async function openHomePage(
   sourcePath = "",
   newLeaf = false,
 ): Promise<void> {
+  markNavigationPending();
   await useHomePageFile(app, settings, async (file) => {
     await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
   });

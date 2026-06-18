@@ -21,6 +21,7 @@
   width: 100%;
   min-width: 0;
   margin-bottom: var(--explorer-mobile-space);
+  margin-top: var(--explorer-space-4);
 }
 
 .explorer-toolbar-item,

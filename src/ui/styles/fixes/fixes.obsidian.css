@@ -7,6 +7,35 @@
  * core/themes) distorts our circular controls' hover backgrounds into
  * superellipses; force plain round corners inside the explorer. */
 
+/* Classes land on .workspace-leaf so selectors work regardless of whether the
+   leaf is in reading mode (.markdown-preview-view) or live preview (.cm-editor). */
+
+/* When an explorer block is present, the metadata-container's default bottom
+   margin creates a double-gap before the block. Collapse it. */
+.workspace-leaf.explorer-has-block .metadata-container {
+  margin-bottom: 1em;
+}
+
+/* When the explorer block is the last content, Obsidian's scroll-padding on the
+   sizer / cm-content creates a large empty area below it. Trim it.
+   !important is required because Obsidian sets these as inline styles via JS. */
+.workspace-leaf.explorer-block-is-last .markdown-preview-sizer {
+  padding-bottom: 2em !important;
+  min-height: 0 !important;
+}
+
+.workspace-leaf.explorer-block-is-last .cm-content.cm-lineWrapping {
+  padding-bottom: 2em !important;
+}
+
+/* Hide the redundant view-header title on folder notes — the inline-title or
+   virtual-folder-note view already shows it. */
+/* .workspace-leaf.explorer-is-foldernote
+  .view-header-title-container
+  .view-header-title {
+  opacity: 0;
+} */
+
 /* Obsidian gives buttons a background and an --input-shadow box-shadow
  * (visible on bare toolbar-group items, esp. mobile light). Glass controls
  * win this back through the higher-specificity glass recipe. */
