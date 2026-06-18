@@ -12,7 +12,7 @@ import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { LoadMorePagination } from "./components/load-more-pagination";
 import { ActionsBar } from "./components/actions-bar";
-import { Divider, Gap } from "./components/primitives/layout";
+import { Divider } from "./components/primitives/layout";
 
 interface ExplorerUIProps {
   model: ExplorerModel;
@@ -187,8 +187,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
 
           {(showLoadMore || classicPagination) && (
             <>
-              <Gap size={paginationGapSize} />
-              <Divider />
+              <Divider size={paginationGapSize} />
               {showLoadMore ? (
                 <LoadMorePagination
                   canLoadMore={canLoadMore}

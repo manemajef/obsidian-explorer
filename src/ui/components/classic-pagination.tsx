@@ -2,7 +2,7 @@ import React from "react";
 import { Platform } from "obsidian";
 import { Button, ButtonGroup } from "./primitives/button";
 import { Icon } from "./primitives/icon";
-import { Divider, Gap, Group } from "./primitives/layout";
+import { Divider, Group } from "./primitives/layout";
 
 function PageNav(props: {
   icon: "chevron-left" | "chevron-right";
@@ -75,8 +75,7 @@ export function ClassicPagination(
 
   return (
     <>
-      {/* <Gap size={4} /> */}
-      <Divider size="sm" />
+      <Divider size={4} />
       <Group justify="center">
         <ButtonGroup className="explorer-paging">
           <PageNav

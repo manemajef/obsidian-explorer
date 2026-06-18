@@ -32,24 +32,19 @@
   max-height: var(--explorer-gap-max-size);
 }
 
-/* Sized Divider: content+display turn the <br> into a plain block spacer
- * of fixed height instead of a line break. Unsized <br> stays native. */
-.explorer-divider[data-size] {
+/* Divider turns <br> into a block-flow spacer. Omitted size is the dynamic md
+ * break; custom sizes use the same numeric spacing scale as Gap. */
+.explorer-divider {
   content: "";
   display: block;
 }
 
-.explorer-divider[data-size="sm"] {
-  height: (--explorer-space-4);
-}
-.explorer-divider[data-size="xs"] {
-  height: var(--explorer-space-1);
-}
 .explorer-divider[data-size="md"] {
   height: var(--explorer-break-height);
 }
-.explorer-divider[data-size="lg"] {
-  height: var(--explorer-space-6);
+
+.explorer-divider[data-custom-size] {
+  height: var(--explorer-divider-size);
 }
 
 .explorer-separator {
