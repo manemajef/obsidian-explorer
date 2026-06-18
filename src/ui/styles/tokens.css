@@ -57,26 +57,16 @@
     0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(0, 0, 0, 0.03);
   --explorer-panel-radius: var(--explorer-radius-lg);
-  /* optional panels are glassy */
-  /* --explorer-panel-shadow: var(var(--explorer-glass-shadow)); */
-  /* --explorer-panel-border: var(var(--explorer-glass-border)); */
+
   /* Folder buttons — interactive controls with panel-like dominance. */
   --explorer-folder-button-bg: var(--explorer-panel-bg);
   --explorer-folder-button-border: var(--explorer-panel-border);
-  /* --explorer-folder-button-radius: var(--radius-xl); */
   --explorer-folder-button-radius: var(--pill-radius);
-
-  /* --explorer-folder-button-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.04); */
 
   --explorer-folder-button-shadow:
     0 1px 0px rgba(0, 0, 0, 0.01), 0 3px 3px rgba(0, 0, 0, 0.025),
     var(--shadow-edges);
 
-  /* --explorer-folder-button-shadow-hover:
-    0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.06); */
   --explorer-folder-button-shadow-hover:
     0 1px 0px rgba(0, 0, 0, 0.03), 0 3px 3px rgba(0, 0, 0, 0.045),
     var(--shadow-edges);
@@ -97,12 +87,6 @@
 }
 
 .theme-dark .explorer-container {
-  /* --explorer-panel-bg: color-mix(
-    in srgb,
-    var(--background-primary-alt) 70%,
-    transparent
-  ); */
-
   /* PANEL */
   --explorer-panel-bg: color-mix(
     in srgb,
@@ -114,15 +98,9 @@
   --explorer-panel-shadow: var(--background-modifier-box-shadow);
 
   /* FOLDER BUTTON */
-  --explorer-folder-button-bg: color-mix(
-    in srgb,
-    var(--interactive-normal) 80%,
-    transparent 20%
-  );
   --explorer-folder-button-bg: var(--explorer-panel-bg);
 
   --explorer-folder-button-border: 1px solid transparent;
-  /* --explorer-folder-button-border: 1px solid rgba(255, 255, 255, 0.05); */
 
   /* Tuned from Obsidian's old dark input shadow because current --input-shadow
    * can resolve to none in the host. */
@@ -130,12 +108,6 @@
   --explorer-folder-button-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 5px rgba(0, 0, 0, 0.14),
     0 8px 18px rgba(0, 0, 0, 0.1);
-
-  /* stylelint-disable-next-line declaration-block-no-duplicate-custom-properties */
-  /* --explorer-folder-button-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.14),
-    inset -1px 0 1px rgba(255, 255, 255, 0.06), 0 2px 5px rgba(0, 0, 0, 0.14),
-    0 8px 18px rgba(0, 0, 0, 0.1); */
 
   --explorer-folder-button-shadow-hover:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -173,9 +145,6 @@
   --explorer-mobile-space: var(var(--explorer-space-1));
   --explorer-panel-radius: calc(var(--touch-radius-xs) * 0.9);
   --explorer-break-height: calc(var(--explorer-space-4) + 0.2em);
-
-  /* --explorer-panel-radius: var(--menu-radius); */
-  /* --explorer-panel-shadow: var(--raised-shadow); */
 }
 
 .theme-dark.is-mobile .explorer-container {
@@ -186,12 +155,4 @@
   );
   --explorer-panel-border: 1px solid rgba(255, 255, 255, 0.055);
   --explorer-panel-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-  /* --explorer-folder-button-bg: color-mix(
-    in srgb,
-    var(--interactive-normal) 70%,
-    transparent 30%
-  ); */
-  /* --explorer-folder-button-border: var(--explorer-panel-border);
-  --explorer-folder-button-shadow: var(--explorer-panel-shadow);
-  --explorer-folder-button-shadow-hover: var(--explorer-folder-button-shadow); */
 }

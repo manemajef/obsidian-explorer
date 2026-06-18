@@ -9,12 +9,6 @@ import { getPreviewForNote, truncatePreview } from "./get-preview";
 
 export type ExplorerNode = ExplorerFileNode | ExplorerFolderNode;
 
-export interface ExplorerNodeFactory {
-  app: App;
-  createFileNode(file: TFile): ExplorerFileNode;
-  createFolderNode(folder: TFolder): ExplorerFolderNode;
-}
-
 export class ExplorerFileNode {
   readonly kind = "file";
   private cachedFrontmatter: Record<string, unknown> | undefined;
@@ -190,7 +184,6 @@ export class ExplorerFolderNode {
   constructor(
     readonly app: App,
     readonly folder: TFolder,
-    private readonly nodeFactory?: ExplorerNodeFactory,
   ) {}
 
   get path(): string {
@@ -215,10 +208,7 @@ export class ExplorerFolderNode {
 
   get folderNoteNode(): ExplorerFileNode | null {
     const folderNote = this.folderNote;
-    return folderNote
-      ? (this.nodeFactory?.createFileNode(folderNote) ??
-          new ExplorerFileNode(this.app, folderNote))
-      : null;
+    return folderNote ? new ExplorerFileNode(this.app, folderNote) : null;
   }
 
   get hasFolderNote(): boolean {

@@ -168,10 +168,6 @@ export class VirtualFolderNoteView extends ItemView {
       cls: "virtual-folder-title-container",
     });
     titleContainer.createDiv({ cls: "inline-title", text: folder.name });
-    // titleContainer.createDiv({
-    //   cls: "virtual-folder-warning",
-    //   text: "Save folder note",
-    // });
 
     const explorerContainer = section.createDiv();
     section.createDiv({

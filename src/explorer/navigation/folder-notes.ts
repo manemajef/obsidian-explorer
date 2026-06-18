@@ -4,7 +4,6 @@ import { PluginSettings } from "../settings";
 import { openVirtualFolderNote } from "./virtual-folder-note";
 import { markNavigationPending } from "./navigation-pending";
 import {
-  FOLDERNOTE_TEMPLATE,
   createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
   isFolderNote,
@@ -90,50 +89,16 @@ export async function openFolderNote(
     return;
   }
   if (shouldCreateMissingFolderNote(settings, intent)) {
-    await createAndOpenFolderNote(
-      app,
-      folder,
-      settings,
-      sourcePath,
-      newLeaf,
-      savePluginSettings,
-    );
-    return;
-  }
-  await openVirtualFolderNote(app, folder, newLeaf);
-}
-
-export async function createAndOpenFolderNote(
-  app: App,
-  folder: TFolder,
-  settings: PluginSettings,
-  sourcePath = "",
-  newLeaf = false,
-  savePluginSettings?: SavePluginSettings,
-  content = FOLDERNOTE_TEMPLATE,
-): Promise<void> {
-  if (folder.isRoot()) {
-    await openHomePage(app, settings, sourcePath, newLeaf);
-    return;
-  }
-
-  const tryCreateNew = async (): Promise<void> => {
     const created = await createFolderNoteFileWithConfirmation(
       app,
       folder,
       settings,
       savePluginSettings,
-      content,
     );
     if (created) await openExplorerPage(app, created, sourcePath, newLeaf);
-  };
-
-  const existing = getFolderNoteForFolder(app, folder);
-  if (existing) {
-    await openExplorerPage(app, existing, sourcePath, newLeaf);
-  } else {
-    await tryCreateNew();
+    return;
   }
+  await openVirtualFolderNote(app, folder, newLeaf);
 }
 
 async function openExplorerPage(

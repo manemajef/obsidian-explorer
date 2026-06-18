@@ -1,9 +1,7 @@
-import { App, MarkdownView, Plugin } from "obsidian";
-import { isFolderNote } from "../lib/folder-note";
+import { App, Plugin } from "obsidian";
 
 const HAS_BLOCK = "explorer-has-block";
 const BLOCK_IS_LAST = "explorer-block-is-last";
-const IS_FOLDERNOTE = "explorer-is-foldernote";
 
 export function registerWorkspaceDecorations(plugin: Plugin, app: App): void {
   let framePending = false;
@@ -64,14 +62,6 @@ function applyDecorations(app: App): void {
       hasBlock && !!sizer && isExplorerLastContent(sizer),
     );
 
-    // Suppress the redundant view-header title when the note is a folder note
-    // with an explorer block (the inline-title / virtual title already shows it).
-    // const file =
-    //   leaf.view instanceof MarkdownView ? leaf.view.file : null;
-    // leafEl.classList.toggle(
-    //   IS_FOLDERNOTE,
-    //   hasBlock && !!file && isFolderNote(file),
-    // );
   }
 }
 
@@ -97,6 +87,6 @@ function clearDecorations(app: App): void {
     const leafEl =
       leaf.view.containerEl.closest<HTMLElement>(".workspace-leaf") ??
       leaf.view.containerEl;
-    leafEl.classList.remove(HAS_BLOCK, BLOCK_IS_LAST, IS_FOLDERNOTE);
+    leafEl.classList.remove(HAS_BLOCK, BLOCK_IS_LAST);
   }
 }

@@ -3,7 +3,6 @@ import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
 import { moveIntoFolder } from "./vault/move";
 import {
   canGoToParentFolderNote,
-  createAndOpenFolderNote,
   goToParentFolderNote,
   type MissingFolderNoteIntent,
   openFolderNote,
@@ -84,14 +83,7 @@ export class ExplorerActions {
   }
 
   async createFolderNote(folder: ExplorerFolderNode): Promise<void> {
-    await createAndOpenFolderNote(
-      this.app,
-      folder.folder,
-      this.settings,
-      this.sourcePath,
-      false,
-      this.savePluginSettings,
-    );
+    await this.openFolder(folder, false, "save");
   }
 
   async createFolder(): Promise<void> {

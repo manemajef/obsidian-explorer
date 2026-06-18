@@ -120,7 +120,6 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                 />
               </div>
 
-              {/* <Gap size={4} /> */}
               {!file.hasTags && <Gap size={4} />}
               {file.hasTags && !TAGS_LOW && <Gap size={2} />}
               {!isMobile && TAGS_LOW && (

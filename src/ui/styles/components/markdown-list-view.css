@@ -1,7 +1,6 @@
 /* ===== Markdown list ===== */
 
 .explorer-markdown-list {
-  /* margin-top: 0.5em; */
   border-radius: var(--explorer-radius-md);
 }
 

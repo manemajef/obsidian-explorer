@@ -72,7 +72,6 @@ export function registerExplorerTitlebarActions(
       label: "Go to homepage",
       isVisible: () =>
         areTitlebarActionsEnabled() &&
-        // deps.getSettings().showHomePageInTitlebar === true &&
         canGoToHomePage(app, deps.getSettings()) &&
         (hasExplorerView(
           app,

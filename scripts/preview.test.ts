@@ -38,6 +38,12 @@ ignored code
     ).toBe("first item, second item, third item");
   });
 
+  it("sanitizes inline math without rendering it", () => {
+    expect(
+      buildPreviewText("Formula $\\frac{a}{b} + x_1$ stays readable."),
+    ).toBe("Formula a/b + x 1 stays readable.");
+  });
+
   it("truncates at a word boundary when possible", () => {
     expect(truncatePreview("alpha beta gamma delta", 12)).toBe("alpha beta...");
   });

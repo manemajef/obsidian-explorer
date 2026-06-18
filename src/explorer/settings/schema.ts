@@ -1,4 +1,3 @@
-import { title } from "process";
 import {
   booleanField,
   defineBlockSchema,
@@ -251,7 +250,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
-      // visibleWhen: { key: "createFolderNoteOnNewFolder", value: true },
     },
     legacy: {
       oldDefault: "create",
@@ -270,19 +268,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   }),
 
   // HOMEPAGE
-  showHomePageInTitlebar: booleanField({
-    label: "Show homepage button in titlebar",
-    description:
-      "Show a home button in the note titlebar to quickly navigate to the homepage.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "homepage",
-      // visibleWhen: { key: "useHomePage", value: true },
-      visibleWhen: () => false,
-    },
-  }),
-
   homePageName: textField({
     label: "Homepage name",
     description: "Root note name. Leave empty to use the vault name.",
@@ -376,9 +361,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
 });
-
-////////////////////// block settings //////////////////////
-////////////////////// block settings //////////////////////
 
 export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
   view: enumField({

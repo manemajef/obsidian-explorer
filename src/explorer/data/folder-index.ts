@@ -1,4 +1,4 @@
-import { TFile, TFolder } from "obsidian";
+import { App, TFile, TFolder } from "obsidian";
 import { BlockSettings } from "../settings";
 import { getFolderNoteForFolder } from "../lib/folder-note";
 import { filterDisplayedFiles, shouldIndexFile } from "../lib/listing";
@@ -6,7 +6,6 @@ import {
   ExplorerFileNode,
   ExplorerFolderNode,
   type ExplorerNode,
-  type ExplorerNodeFactory,
 } from "../lib/nodes";
 
 const WALK_BUDGET_MS = 16;
@@ -21,7 +20,7 @@ export class FolderIndex {
   private readonly excludedFolderPaths: string[];
 
   constructor(
-    private nodeFactory: ExplorerNodeFactory,
+    private app: App,
     folder: TFolder,
     excludedFolders: readonly string[] = [],
   ) {
@@ -36,23 +35,16 @@ export class FolderIndex {
     depth: number,
     includeNestedFolderNotes: boolean,
   ): Promise<void> {
-    // if loading not just direct children of folder, use BFS to list the depth levels
     this.loadImmediate();
     if (depth > 0) {
-      this.nestedFiles = await this.walkFolder(
-        depth,
-        false,
-        includeNestedFolderNotes,
-        false,
-      );
+      this.nestedFiles = await this.walkFiles(depth, includeNestedFolderNotes);
     }
   }
 
   async getAllContent(
     onChunk?: (chunk: ExplorerFileNode[]) => void,
   ): Promise<ExplorerFileNode[]> {
-    // load all sub files without depth limit; onChunk receives nodes as they're discovered
-    return this.walkFolder(null, false, true, true, onChunk);
+    return this.walkFiles(Infinity, true, onChunk);
   }
 
   getFilesToDisplay(settings: BlockSettings): ExplorerFileNode[] {
@@ -63,7 +55,6 @@ export class FolderIndex {
   }
 
   private loadImmediate(): void {
-    // Load direct children of folder immediately.
     this.children = [];
     this.files = [];
     this.folders = [];
@@ -71,29 +62,26 @@ export class FolderIndex {
 
     for (const child of this.folder.children) {
       if (child instanceof TFile && shouldIndexFile(child)) {
-        const fileNode = this.nodeFactory.createFileNode(child);
+        const fileNode = new ExplorerFileNode(this.app, child);
         this.children.push(fileNode);
         this.files.push(fileNode);
       } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
-        const folderNote = getFolderNoteForFolder(this.nodeFactory.app, child);
-        const folderNode = this.nodeFactory.createFolderNode(child);
+        const folderNote = getFolderNoteForFolder(this.app, child);
+        const folderNode = new ExplorerFolderNode(this.app, child);
         this.children.push(folderNode);
         this.folders.push(folderNode);
         if (folderNote) {
-          this.folderNotes.push(this.nodeFactory.createFileNode(folderNote));
+          this.folderNotes.push(new ExplorerFileNode(this.app, folderNote));
         }
       }
     }
 
-    this.nestedFiles = [...this.files]; // direct files are a subset of nestedfiles
+    this.nestedFiles = [...this.files];
   }
 
-  private async walkFolder(
-    // BFS loading sub folders content
-    depth: number | null, // null means no depth limit
-    includeFolderNotesAtFirstLevel: boolean,
+  private async walkFiles(
+    depth: number,
     includeFolderNotes: boolean,
-    yieldToBrowser: boolean,
     onChunk?: (chunk: ExplorerFileNode[]) => void,
   ): Promise<ExplorerFileNode[]> {
     const all: ExplorerFileNode[] = [];
@@ -104,7 +92,7 @@ export class FolderIndex {
     ];
 
     const collect = (file: TFile): void => {
-      const node = this.nodeFactory.createFileNode(file);
+      const node = new ExplorerFileNode(this.app, file);
       all.push(node);
       pending.push(node);
     };
@@ -116,27 +104,20 @@ export class FolderIndex {
         if (child instanceof TFile && shouldIndexFile(child)) {
           collect(child);
         } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
-          const includeFolderNote =
-            current.depth === 0
-              ? includeFolderNotesAtFirstLevel
-              : includeFolderNotes;
-          if (includeFolderNote) {
-            const folderNote = getFolderNoteForFolder(
-              this.nodeFactory.app,
-              child,
-            );
+          if (includeFolderNotes && current.depth > 0) {
+            const folderNote = getFolderNoteForFolder(this.app, child);
             if (folderNote) collect(folderNote);
           }
-          if (depth === null || current.depth < depth) {
+          if (current.depth < depth) {
             queue.push({ folder: child, depth: current.depth + 1 });
           }
         }
 
         if (
-          yieldToBrowser &&
+          onChunk &&
           window.performance.now() - sliceStart >= WALK_BUDGET_MS
         ) {
-          if (onChunk && pending.length > 0) {
+          if (pending.length > 0) {
             onChunk(pending);
             pending = [];
           }

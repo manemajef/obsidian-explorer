@@ -4,95 +4,6 @@ const DEFAULT_PREVIEW_LENGTH = 500;
 const SOURCE_READ_LIMIT = 8000;
 type PreviewSegmentKind = "heading" | "paragraph" | "listItem";
 
-type PreviewSegment = {
-  breakBefore: boolean;
-  kind: PreviewSegmentKind;
-  text: string;
-};
-const LATEX_COMMANDS: Record<string, string> = {
-  alpha: "alpha",
-  beta: "beta",
-  cdot: "*",
-  cos: "cos",
-  delta: "delta",
-  Delta: "Delta",
-  div: "/",
-  dots: "...",
-  gamma: "gamma",
-  Gamma: "Gamma",
-  ge: ">=",
-  infty: "infinity",
-  int: "int",
-  lambda: "lambda",
-  Lambda: "Lambda",
-  le: "<=",
-  left: "",
-  log: "log",
-  max: "max",
-  min: "min",
-  neq: "!=",
-  pi: "pi",
-  pm: "+/-",
-  right: "",
-  sin: "sin",
-  sqrt: "sqrt",
-  sum: "sum",
-  theta: "theta",
-  Theta: "Theta",
-  times: "*",
-};
-
-const SUPERSCRIPT_CHARS: Record<string, string> = {
-  "+": "⁺",
-  "-": "⁻",
-  "0": "⁰",
-  "1": "¹",
-  "2": "²",
-  "3": "³",
-  "4": "⁴",
-  "5": "⁵",
-  "6": "⁶",
-  "7": "⁷",
-  "8": "⁸",
-  "9": "⁹",
-  "=": "⁼",
-  i: "ⁱ",
-  n: "ⁿ",
-};
-
-const SUBSCRIPT_CHARS: Record<string, string> = {
-  "+": "₊",
-  "-": "₋",
-  "0": "₀",
-  "1": "₁",
-  "2": "₂",
-  "3": "₃",
-  "4": "₄",
-  "5": "₅",
-  "6": "₆",
-  "7": "₇",
-  "8": "₈",
-  "9": "₉",
-  "=": "₌",
-  a: "ₐ",
-  e: "ₑ",
-  h: "ₕ",
-  i: "ᵢ",
-  j: "ⱼ",
-  k: "ₖ",
-  l: "ₗ",
-  m: "ₘ",
-  n: "ₙ",
-  o: "ₒ",
-  p: "ₚ",
-  r: "ᵣ",
-  s: "ₛ",
-  t: "ₜ",
-  u: "ᵤ",
-  v: "ᵥ",
-  x: "ₓ",
-};
-
 export async function getPreviewForNote(
   app: App,
   file: TFile,
@@ -120,40 +31,32 @@ export function truncatePreview(
 }
 
 export function buildPreviewText(content: string): string {
-  const preview = serializePreviewSegments(readPreviewSegments(content));
-  return truncatePreview(preview, DEFAULT_PREVIEW_LENGTH) ?? "";
-}
-
-function readPreviewSegments(content: string): PreviewSegment[] {
-  const segments: PreviewSegment[] = [];
+  let preview = "";
+  let previousKind: PreviewSegmentKind | null = null;
   let breakBefore = false;
 
   for (const line of stripBlocks(content).split(/\r?\n/)) {
     if (!line.trim()) {
-      breakBefore = segments.length > 0;
+      breakBefore = preview.length > 0;
       continue;
     }
 
-    const segment = parsePreviewSegment(line, breakBefore);
-    if (segment) {
-      segments.push(segment);
-      breakBefore = false;
+    const kind = getPreviewSegmentKind(line);
+    const text = cleanLine(line);
+    if (!isReadablePreviewLine(text)) {
+      continue;
     }
+
+    preview += preview
+      ? `${previewSeparator(previousKind, kind, breakBefore, preview)}${text}`
+      : text;
+    previousKind = kind;
+    breakBefore = false;
   }
 
-  return segments;
-}
-
-function parsePreviewSegment(
-  line: string,
-  breakBefore: boolean,
-): PreviewSegment | null {
-  const kind = getPreviewSegmentKind(line);
-  const text = cleanLine(line);
-
-  if (!isReadablePreviewLine(text)) return null;
-
-  return { breakBefore, kind, text };
+  return (
+    truncatePreview(normalizeWhitespace(preview), DEFAULT_PREVIEW_LENGTH) ?? ""
+  );
 }
 
 function getPreviewSegmentKind(line: string): PreviewSegmentKind {
@@ -161,47 +64,23 @@ function getPreviewSegmentKind(line: string): PreviewSegmentKind {
   return /^\s*(?:[-*+]|\d+[.)])\s+/.test(line) ? "listItem" : "paragraph";
 }
 
-function serializePreviewSegments(segments: PreviewSegment[]): string {
-  let preview: PreviewSegment | null = null;
-
-  for (const segment of segments) {
-    if (!preview) {
-      preview = segment;
-      continue;
-    }
-
-    preview = joinPreviewSegments(preview, segment);
-  }
-
-  return normalizeWhitespace(preview?.text ?? "");
-}
-
-function joinPreviewSegments(
-  previous: PreviewSegment,
-  segment: PreviewSegment,
-): PreviewSegment {
-  return {
-    breakBefore: false,
-    kind: segment.kind,
-    text: `${previous.text}${previewSeparator(previous, segment)}${segment.text}`,
-  };
-}
-
 function previewSeparator(
-  previous: PreviewSegment,
-  segment: PreviewSegment,
+  previousKind: PreviewSegmentKind | null,
+  kind: PreviewSegmentKind,
+  breakBefore: boolean,
+  previousText: string,
 ): string {
-  if (previous.kind === "heading" && segment.kind === "paragraph") return ": ";
-  if (previous.kind === "listItem" && segment.kind === "listItem") return ", ";
+  if (previousKind === "heading" && kind === "paragraph") return ": ";
+  if (previousKind === "listItem" && kind === "listItem") return ", ";
   if (
-    previous.kind === "paragraph" &&
-    segment.kind === "paragraph" &&
-    !segment.breakBefore
+    previousKind === "paragraph" &&
+    kind === "paragraph" &&
+    !breakBefore
   ) {
     return " ";
   }
 
-  return sentenceSeparator(previous.text);
+  return sentenceSeparator(previousText);
 }
 
 function sentenceSeparator(text: string): string {
@@ -240,7 +119,7 @@ function cleanLine(line: string): string {
         .replace(/https?:\/\/\S+/g, " ")
         .replace(/`([^`]+)`/g, "$1")
         .replace(/\$([^$\n]+)\$/g, (_match, math: string) =>
-          processInlineMath(math),
+          cleanInlineMath(math),
         )
         .replace(/<[^>]+>/g, " ")
         .replace(/\^\[[^\]]*]/g, " ")
@@ -256,71 +135,20 @@ function cleanLine(line: string): string {
   );
 }
 
-function processInlineMath(source: string): string {
-  let math = source
-    .replace(
-      /\\frac\s*{([^{}]+)}\s*{([^{}]+)}/g,
-      (_match: string, top: string, bottom: string) => {
-        return `${formatFractionPart(top)}/${formatFractionPart(bottom)}`;
-      },
-    )
-    .replace(/\\(?:left|right)\s*/g, "")
-    .replace(/\\[a-zA-Z]+/g, (command) => {
-      const name = command.slice(1);
-      const replacement = LATEX_COMMANDS[name] ?? name;
-      return /[a-zA-Z]/.test(replacement) ? ` ${replacement} ` : replacement;
-    })
-    .replace(/\\./g, (match) => match.slice(1));
-
-  math = replaceMathScript(math, "^", SUPERSCRIPT_CHARS);
-  math = replaceMathScript(math, "_", SUBSCRIPT_CHARS);
-
+function cleanInlineMath(source: string): string {
+  // ponytail: sanitize inline math, use a real renderer if previews need faithful formulas.
   return normalizeWhitespace(
-    math
-      .replace(/[{}$]/g, "")
+    source
+      .replace(/\\frac\s*{([^{}]+)}\s*{([^{}]+)}/g, "$1/$2")
+      .replace(/\\[a-zA-Z]+/g, " ")
+      .replace(/\\./g, " ")
+      .replace(/[{}$^_]/g, " ")
       .replace(/\s*([+\-*=<>])\s*/g, " $1 ")
       .replace(/<\s+=/g, "<=")
       .replace(/>\s+=/g, ">=")
       .replace(/\s*\/\s*/g, "/")
       .replace(/\s*,\s*/g, ", "),
   );
-}
-
-function formatFractionPart(value: string): string {
-  const cleaned = cleanMathGroup(value);
-  return /[+\-*/=<> ]/.test(cleaned) ? `(${cleaned})` : cleaned;
-}
-
-function replaceMathScript(
-  input: string,
-  marker: "^" | "_",
-  alphabet: Record<string, string>,
-): string {
-  const escapedMarker = marker === "^" ? "\\^" : "_";
-  const pattern = new RegExp(`${escapedMarker}(?:\\{([^{}]+)}|([^\\s{}]))`, "g");
-
-  return input.replace(pattern, (_match, group: string, char: string) => {
-    const value = group ?? char ?? "";
-    const mapped = toScript(value, alphabet);
-    return mapped ?? markerText(marker, cleanMathGroup(value));
-  });
-}
-
-function toScript(
-  value: string,
-  alphabet: Record<string, string>,
-): string | undefined {
-  const chars = [...value];
-  const mapped = chars.map((char) => alphabet[char]);
-  return mapped.every(Boolean) ? mapped.join("") : undefined;
-}
-
-function markerText(marker: "^" | "_", value: string): string {
-  return marker === "^" ? `^${value}` : `_${value}`;
-}
-
-function cleanMathGroup(value: string): string {
-  return processInlineMath(value).replace(/^\((.*)\)$/, "$1");
 }
 
 function isReadablePreviewLine(line: string): boolean {
@@ -357,7 +185,9 @@ function decodeBasicHtmlEntities(text: string): string {
         lower.slice(isHex ? 2 : 1),
         isHex ? 16 : 10,
       );
-      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : match;
+      return Number.isFinite(codePoint)
+        ? String.fromCodePoint(codePoint)
+        : match;
     }
 
     return namedEntities[lower] ?? match;

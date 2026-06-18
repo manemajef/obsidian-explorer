@@ -3,8 +3,6 @@
 @keyframes explorer-fade-in {
   from {
     opacity: 0;
-    /* transform: translateY(4px);
-    transform: scale(0.99); */
   }
   to {
     opacity: 1;
@@ -44,7 +42,6 @@
   min-block-size: var(--explorer-control-size);
   max-width: 100%;
   transform-origin: top center;
-  /* padding-bottom: calc(var(--explorer-space-4) + 0.2em); */
   padding-bottom: var(--explorer-break-height);
 
   /* Prevent layout shift by reserving min height */

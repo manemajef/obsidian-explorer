@@ -182,17 +182,12 @@ export function ActionsBar(props: {
         {leadAction}
         <Spacer minWidth=".5em" />
         <ToolbarGroup>
-          {/* <Gap inline size=".5em" /> */}
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
         </ToolbarGroup>
-        {/* <Gap inline size="1em" /> */}
-        {/* <Spacer minWidth=".5em" maxWidth="1em" />
-
-        <ToolbarItem icon="search" onClick={onSearchToggle} /> */}
       </Toolbar>
     );
   }
@@ -203,7 +198,6 @@ export function ActionsBar(props: {
         {leadAction}
         <Spacer minWidth=".8em" />
         <ToolbarGroup>
-          {/* <Gap inline size=".5em" /> */}
           <ToolbarGroupItem icon={SETTINGS_ICON} onClick={onOpenSettings} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="folder-plus" onClick={onNewFolder} />
@@ -211,7 +205,6 @@ export function ActionsBar(props: {
           <ToolbarGroupItem icon="file-plus" onClick={onNewNote} />
           <Gap inline size=".5em" />
           <ToolbarGroupItem icon="search" onClick={onSearchToggle} />
-          {/* <Gap inline size=".5em" /> */}
         </ToolbarGroup>
       </Toolbar>
     );

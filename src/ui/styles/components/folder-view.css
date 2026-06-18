@@ -71,8 +71,6 @@
   min-width: 0;
   max-width: 220px;
   max-height: 70px;
-  /* padding: 0.85em calc(var(--explorer-space-6) * 0.9); */
-  /* padding: 0.85em var(--explorer-space-6); */
   padding: 0.75em var(--explorer-space-4);
   transition: 0.15s;
 }
@@ -86,17 +84,8 @@
     );
 
     padding: var(--explorer-space-2) var(--explorer-space-3);
-    /* max-width: 180px; */
-    /* min-width: 95px; */
   }
 }
-
-/* @media (width >= 800px) {
-  .explorer-folder-grid[data-variant="mobile"] .explorer-folder-card {
-    height: max(var(--explorer-control-size), 4.6em);
-    padding: 1.15em 1.5em;
-  }
-} */
 
 .explorer-folder-card > * {
   min-width: 0;

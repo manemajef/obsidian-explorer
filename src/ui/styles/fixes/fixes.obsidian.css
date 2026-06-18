@@ -28,14 +28,6 @@
   padding-bottom: 2em !important;
 }
 
-/* Hide the redundant view-header title on folder notes — the inline-title or
-   virtual-folder-note view already shows it. */
-/* .workspace-leaf.explorer-is-foldernote
-  .view-header-title-container
-  .view-header-title {
-  opacity: 0;
-} */
-
 /* Obsidian gives buttons a background and an --input-shadow box-shadow
  * (visible on bare toolbar-group items, esp. mobile light). Glass controls
  * win this back through the higher-specificity glass recipe. */

@@ -24,7 +24,6 @@
   background-color: transparent;
   border: none;
   color: var(--text-normal);
-  /* cursor: pointer; */
   gap: var(--explorer-space-1);
 }
 

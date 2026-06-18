@@ -1,10 +1,6 @@
-import { App, TFile, TFolder } from "obsidian";
+import { App, TFolder } from "obsidian";
 import { FolderIndex } from "./folder-index";
-import {
-  ExplorerFileNode,
-  ExplorerFolderNode,
-  type ExplorerNodeFactory,
-} from "../lib/nodes";
+import { ExplorerFolderNode } from "../lib/nodes";
 
 export type IndexOptions = {
   depth: number;
@@ -12,17 +8,13 @@ export type IndexOptions = {
   excludedFolders: readonly string[];
 };
 
-export class ExplorerSession implements ExplorerNodeFactory {
+export class ExplorerSession {
   private readonly indexes = new Map<string, FolderIndex>();
 
   constructor(readonly app: App) {}
 
-  createFileNode(file: TFile): ExplorerFileNode {
-    return new ExplorerFileNode(this.app, file);
-  }
-
   createFolderNode(folder: TFolder): ExplorerFolderNode {
-    return new ExplorerFolderNode(this.app, folder, this);
+    return new ExplorerFolderNode(this.app, folder);
   }
 
   async getIndex(folder: TFolder, options: IndexOptions): Promise<FolderIndex> {
@@ -30,7 +22,7 @@ export class ExplorerSession implements ExplorerNodeFactory {
     const cached = this.indexes.get(key);
     if (cached) return cached;
 
-    const index = new FolderIndex(this, folder, options.excludedFolders);
+    const index = new FolderIndex(this.app, folder, options.excludedFolders);
     await index.loadToDepth(options.depth, options.displayNestedFolderNotes);
     this.indexes.set(key, index);
     return index;
@@ -56,11 +48,11 @@ export class ExplorerSession implements ExplorerNodeFactory {
   }
 
   private getIndexKey(folder: TFolder, options: IndexOptions): string {
-    return JSON.stringify({
-      path: folder.path,
-      depth: options.depth,
-      displayNestedFolderNotes: options.displayNestedFolderNotes,
-      excludedFolders: [...options.excludedFolders],
-    });
+    return [
+      folder.path,
+      options.depth,
+      options.displayNestedFolderNotes ? 1 : 0,
+      ...options.excludedFolders,
+    ].join("\0");
   }
 }

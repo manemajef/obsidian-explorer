@@ -3,9 +3,6 @@ import { BlockSettings, DisplayedNotes } from "../settings";
 import { isFolderNote } from "./folder-note";
 import { ExplorerFileNode } from "./nodes";
 
-// const EXCLUDED_EXTENSIONS = [
-//   "png", "jpeg", "jpg"
-// ];
 const DEFAULT_DISPLAY_EXTENSIONS = [
   "md",
   "pdf",
@@ -20,8 +17,6 @@ const DEFAULT_DISPLAY_EXTENSIONS = [
 export type ExplorerListing = ExplorerFileNode[];
 
 export function buildExplorerListing(input: {
-  // prepare listing for ui:
-  // //apply visibility rules, remove source file, sort according to block setting, if a query exists apply to filter
   files: ExplorerFileNode[];
   settings: BlockSettings;
   sourcePath: string;
@@ -34,42 +29,32 @@ export function buildExplorerListing(input: {
     settings.displayedNotes,
   );
   const sortedFiles = sortFiles(visibleFiles, sortBy);
-  const queriedFiles = query
-    ? // if query === "" then ignore and just return sorted files
-      filterFiles(sortedFiles, query)
-    : sortedFiles;
+  const queriedFiles = query ? filterFiles(sortedFiles, query) : sortedFiles;
 
   return queriedFiles;
 }
 
 export function shouldIndexFile(file: TFile): boolean {
-  return !isFolderNote(file) && !isExcludedExplorerFile(file);
-}
-
-function isExcludedExplorerFile(file: { extension: string }): boolean {
-  // return EXCLUDED_EXTENSIONS.includes(file.extension.toLowerCase());
-  return false;
+  return !isFolderNote(file);
 }
 
 export function filterDisplayedFiles(
   files: ExplorerFileNode[],
   displayedNotes: DisplayedNotes,
 ): ExplorerFileNode[] {
-  const visibleFiles = files.filter((file) => !isExcludedExplorerFile(file));
-
   switch (displayedNotes) {
     case "none":
       return [];
     case "markdown":
-      return visibleFiles.filter(
+      return files.filter(
         (file) => file.isMarkdown && !(file.isFolderNote && !file.isPinned),
       );
     case "supported":
-      return visibleFiles.filter((file) =>
+      return files.filter((file) =>
         DEFAULT_DISPLAY_EXTENSIONS.includes(file.extension.toLowerCase()),
       );
     case "all":
-      return visibleFiles;
+      return files;
   }
 }
 
