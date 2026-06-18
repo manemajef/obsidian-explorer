@@ -6,7 +6,16 @@ import { ExplorerFileNode } from "./nodes";
 // const EXCLUDED_EXTENSIONS = [
 //   "png", "jpeg", "jpg"
 // ];
-const DEFAULT_DISPLAY_EXTENSIONS = ["md", "pdf", "base"];
+const DEFAULT_DISPLAY_EXTENSIONS = [
+  "md",
+  "pdf",
+  "base",
+  "canva",
+  "jpeg",
+  "jpg",
+  "png",
+  "svg",
+];
 
 export type ExplorerListing = ExplorerFileNode[];
 
