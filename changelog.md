@@ -2,25 +2,27 @@
 
 ## 1.4.6 (19-06-2026)
 
-This release focuses on polishing UI appearance and transitions, better date formats, and performance
+This release focuses on UI polish, smoother transitions, date display options, and performance.
 
-**Dates format**:
+**Date formats**:
 
 - You can now choose between:
-  - **Local date format**: (e.g. `27/7/2026` or `7/27/2026` for Americans)
-  - **Relative time format**: (e.g. `4 days ago`)
-  - **Auto** (default): Relative for last week, local for the rest.
+  - **Local date format**: Uses your locale, such as `27/7/2026` or `7/27/2026`.
+  - **Relative time**: Shows values such as `4 days ago`.
+  - **Auto** (default): Uses relative time for recent dates and local dates for older ones.
 
-**Change in folder buttons appearance**
+**Folder button appearance**
 
-- Folder buttons now appear smaller, more rounded, and less distracting
+- Folder buttons are now smaller, more rounded, and less distracting.
 
-**Images are now listed as `supported files`**
+**Supported files**
 
-**Breaking changes**:
+- Images are now included when `Supported files` is selected.
 
-- The feature where the Action bar was rendered under inline title was temporarily deprecated due to obsidian's API constraints.
-- The settings option to `open folder notes in reading mode` is now on by default
+**Compatibility changes**:
+
+- Rendering the action bar under the inline title is temporarily disabled because of Obsidian API constraints.
+- `Always open folder notes in reading mode` is now on by default for new installs. Existing users keep their previous setting.
 
 ## 1.4.5 (16-06-2026)
 
