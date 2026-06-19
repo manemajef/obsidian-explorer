@@ -61,8 +61,8 @@
   /* Folder buttons — interactive controls with panel-like dominance. */
   --explorer-folder-button-bg: var(--explorer-panel-bg);
   --explorer-folder-button-border: var(--explorer-panel-border);
-  --explorer-folder-button-radius: var(--pill-radius);
-
+  /* --explorer-folder-button-radius: var(--pill-radius); */
+  --explorer-folder-button-radius: 14px;
   --explorer-folder-button-shadow:
     0 1px 0px rgba(0, 0, 0, 0.01), 0 3px 3px rgba(0, 0, 0, 0.025),
     var(--shadow-edges);
@@ -141,6 +141,8 @@
   --explorer-control-size: 44px;
   --explorer-icon-size: calc(var(--icon-l) * 0.5 + var(--icon-size) * 0.5);
   --explorer-button-pad: 0px;
+  --explorer-folder-button-radius: var(--pill-radius);
+
   --explorer-icon-pad: calc((var(--touch-size-m) - var(--icon-l)) / 2);
   --explorer-mobile-space: var(var(--explorer-space-1));
   --explorer-panel-radius: calc(var(--touch-radius-xs) * 0.9);
