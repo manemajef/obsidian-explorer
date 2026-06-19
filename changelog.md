@@ -1,5 +1,21 @@
 # Explorer changelog
+## 1.4.6 (19-06-2026)
+This release focuses on polishing UI appearance and transitions, better date formats,  and performance
 
+**Dates format**:
+- You can now choose between:
+	- **Local date format**:  (e.g. `27/7/2026` or `7/27/2026` for Americans)  
+	- **Relative time format**: (e.g. `4 days ago`) 		
+	- **Auto** (default): Relative for last week, local for the rest.
+
+**Change in folder buttons appearance** 
+ - Folder buttons now appear smaller, more rounded, and less distracting 
+
+**Images are now listed as `supported files`** 
+
+**Breaking changes**: 
+- The feature where the Action bar was rendered under inline title was temporarily deprecated due to obsidian's API constraints. 
+- 
 ## 1.4.5 (16-06-2026)
 
 Improve UI for folder buttons

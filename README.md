@@ -12,7 +12,9 @@ Available in the [Obsidian community plugin store](https://community.obsidian.md
 
 <!-- ![alt text](./assets/explorer-main.png) -->
 
-![alt text](./assets/for-exp.png)
+<!-- ![alt text](./assets/for-exp.png) -->
+
+![main pic](./assets/main-pic.png)
 
 Explorer works best when folders act like notebooks, projects, classes, or
 topic groups. It integrates with existing Markdown folder notes (Markdown files

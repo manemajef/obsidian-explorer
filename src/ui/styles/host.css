@@ -37,6 +37,7 @@
   animation: none;
   box-sizing: border-box;
   margin-block: var(--size-2-2) var(--size-4-2);
+  margin-top: 1em;
   margin-inline: 0;
   width: 100%;
   min-block-size: var(--explorer-control-size);
