@@ -29,6 +29,7 @@ export function registerWorkspaceDecorations(plugin: Plugin, app: App): void {
       subtree: true,
     });
     plugin.registerEvent(app.workspace.on("active-leaf-change", refresh));
+    plugin.registerEvent(app.workspace.on("layout-change", refresh));
     refresh();
   };
 
@@ -57,11 +58,27 @@ function applyDecorations(app: App): void {
     // "Is last" is DOM-based so only reliable in reading mode (full tree in DOM).
     // In live preview CM virtualises lines, so we skip it there.
     const sizer = viewEl.querySelector<HTMLElement>(".markdown-preview-sizer");
-    leafEl.classList.toggle(
-      BLOCK_IS_LAST,
-      hasBlock && !!sizer && isExplorerLastContent(sizer),
-    );
+    const blockIsLast = hasBlock && !!sizer && isExplorerLastContent(sizer);
+    leafEl.classList.toggle(BLOCK_IS_LAST, blockIsLast);
+    applyLastBlockSpacingFix(viewEl, blockIsLast);
   }
+}
+
+function applyLastBlockSpacingFix(viewEl: HTMLElement, enabled: boolean): void {
+  const previewSizer = viewEl.querySelector<HTMLElement>(
+    ".markdown-preview-sizer",
+  );
+  const cmContent = viewEl.querySelector<HTMLElement>(
+    ".cm-content.cm-lineWrapping",
+  );
+
+  previewSizer?.setCssProps({
+    "padding-bottom": enabled ? "2em" : "",
+    "min-height": enabled ? "0" : "",
+  });
+  cmContent?.setCssProps({
+    "padding-bottom": enabled ? "2em" : "",
+  });
 }
 
 function isExplorerLastContent(sizer: HTMLElement): boolean {
@@ -83,6 +100,7 @@ function isExplorerLastContent(sizer: HTMLElement): boolean {
 
 function clearDecorations(app: App): void {
   for (const leaf of app.workspace.getLeavesOfType("markdown")) {
+    applyLastBlockSpacingFix(leaf.view.containerEl, false);
     const leafEl =
       leaf.view.containerEl.closest<HTMLElement>(".workspace-leaf") ??
       leaf.view.containerEl;

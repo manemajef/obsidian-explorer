@@ -17,14 +17,15 @@
 }
 
 /* When the explorer block is the last content, Obsidian sets inline spacing
-   that creates a large empty area below it. This is the one stable override. */
+   that creates a large empty area below it. The integration layer applies the
+   same values inline through setCssProps. */
 .workspace-leaf.explorer-block-is-last .markdown-preview-sizer {
-  padding-bottom: 2em !important;
-  min-height: 0 !important;
+  padding-bottom: 2em;
+  min-height: 0;
 }
 
 .workspace-leaf.explorer-block-is-last .cm-content.cm-lineWrapping {
-  padding-bottom: 2em !important;
+  padding-bottom: 2em;
 }
 
 /* Obsidian gives buttons a background and an --input-shadow box-shadow
