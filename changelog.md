@@ -1,21 +1,27 @@
 # Explorer changelog
+
 ## 1.4.6 (19-06-2026)
-This release focuses on polishing UI appearance and transitions, better date formats,  and performance
+
+This release focuses on polishing UI appearance and transitions, better date formats, and performance
 
 **Dates format**:
+
 - You can now choose between:
-	- **Local date format**:  (e.g. `27/7/2026` or `7/27/2026` for Americans)  
-	- **Relative time format**: (e.g. `4 days ago`) 		
-	- **Auto** (default): Relative for last week, local for the rest.
+  - **Local date format**: (e.g. `27/7/2026` or `7/27/2026` for Americans)
+  - **Relative time format**: (e.g. `4 days ago`)
+  - **Auto** (default): Relative for last week, local for the rest.
 
-**Change in folder buttons appearance** 
- - Folder buttons now appear smaller, more rounded, and less distracting 
+**Change in folder buttons appearance**
 
-**Images are now listed as `supported files`** 
+- Folder buttons now appear smaller, more rounded, and less distracting
 
-**Breaking changes**: 
-- The feature where the Action bar was rendered under inline title was temporarily deprecated due to obsidian's API constraints. 
-- 
+**Images are now listed as `supported files`**
+
+**Breaking changes**:
+
+- The feature where the Action bar was rendered under inline title was temporarily deprecated due to obsidian's API constraints.
+- The settings option to `open folder notes in reading mode` is now on by default
+
 ## 1.4.5 (16-06-2026)
 
 Improve UI for folder buttons
@@ -46,7 +52,7 @@ This release focuses on polishing Explorer's controls and visual surfaces.
   dark-mode visibility.
 - Note cards, modern lists, panels, and toolbar controls now share a more  
   consistent surface style, spacing, shadow, and corner treatment.
-- Modern list tags are shown in the main row, beside the note title area, so  
+- Modern list tags are shown in the main row, beside the note title area, so
   rows stay more compact and easier to scan.
 - Markdown list view is cleaner and no longer shows extension badges in that
   compact list style.
