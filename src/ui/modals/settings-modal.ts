@@ -1,4 +1,4 @@
-import { App, Modal, Setting } from "obsidian";
+import { App, Modal, Setting, TFolder } from "obsidian";
 import {
   BlockSettingKey,
   BlockSettings,
@@ -23,6 +23,7 @@ export class ExplorerSettingsModal extends Modal {
     private readonly sourcePath: string,
     onSettingsChange: (settings: BlockSettings) => void,
     private readonly conversion?: FolderNoteConversionAction,
+    private readonly sourceFolder?: TFolder,
   ) {
     super(app);
     this.settings = { ...settings };
@@ -57,7 +58,11 @@ export class ExplorerSettingsModal extends Modal {
       surface: "block",
       onChange: (k, v) => this.updateSetting(k, v),
       fieldRefs,
-      context: { app: this.app, sourcePath: this.sourcePath },
+      context: {
+        app: this.app,
+        sourcePath: this.sourcePath,
+        sourceFolder: this.sourceFolder,
+      },
     });
 
     this.renderConversion(contentEl);

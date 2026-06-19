@@ -1,7 +1,7 @@
 import { App, Plugin } from "obsidian";
 
 const HAS_BLOCK = "explorer-has-block";
-const BLOCK_IS_LAST = "explorer-block-is-last";
+// const BLOCK_IS_LAST = "explorer-block-is-last";
 
 export function registerWorkspaceDecorations(plugin: Plugin, app: App): void {
   let framePending = false;
@@ -54,56 +54,15 @@ function applyDecorations(app: App): void {
 
     const hasBlock = viewEl.querySelector(".explorer-container") !== null;
     leafEl.classList.toggle(HAS_BLOCK, hasBlock);
-
-    // "Is last" is DOM-based so only reliable in reading mode (full tree in DOM).
-    // In live preview CM virtualises lines, so we skip it there.
-    const sizer = viewEl.querySelector<HTMLElement>(".markdown-preview-sizer");
-    const blockIsLast = hasBlock && !!sizer && isExplorerLastContent(sizer);
-    leafEl.classList.toggle(BLOCK_IS_LAST, blockIsLast);
-    applyLastBlockSpacingFix(viewEl, blockIsLast);
+    // const sizer = viewEl.querySelector<HTMLElement>(".markdown-preview-sizer");
   }
-}
-
-function applyLastBlockSpacingFix(viewEl: HTMLElement, enabled: boolean): void {
-  const previewSizer = viewEl.querySelector<HTMLElement>(
-    ".markdown-preview-sizer",
-  );
-  const cmContent = viewEl.querySelector<HTMLElement>(
-    ".cm-content.cm-lineWrapping",
-  );
-
-  previewSizer?.setCssProps({
-    "padding-bottom": enabled ? "2em" : "",
-    "min-height": enabled ? "0" : "",
-  });
-  cmContent?.setCssProps({
-    "padding-bottom": enabled ? "2em" : "",
-  });
-}
-
-function isExplorerLastContent(sizer: HTMLElement): boolean {
-  const explorer = sizer.querySelector(".explorer-container");
-  if (!explorer) return false;
-
-  let block: Element = explorer;
-  while (block.parentElement && block.parentElement !== sizer) {
-    block = block.parentElement;
-  }
-
-  let next = block.nextElementSibling;
-  while (next) {
-    if (next.textContent?.trim()) return false;
-    next = next.nextElementSibling;
-  }
-  return true;
 }
 
 function clearDecorations(app: App): void {
   for (const leaf of app.workspace.getLeavesOfType("markdown")) {
-    applyLastBlockSpacingFix(leaf.view.containerEl, false);
     const leafEl =
       leaf.view.containerEl.closest<HTMLElement>(".workspace-leaf") ??
       leaf.view.containerEl;
-    leafEl.classList.remove(HAS_BLOCK, BLOCK_IS_LAST);
+    leafEl.classList.remove(HAS_BLOCK);
   }
 }

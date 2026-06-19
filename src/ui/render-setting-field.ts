@@ -4,6 +4,7 @@ import {
   SearchComponent,
   Setting,
   TFile,
+  TFolder,
 } from "obsidian";
 import {
   BLOCK_SETTING_GROUPS,
@@ -27,6 +28,7 @@ function formatDepthOption(depth: number): string {
 type SettingFieldContext = {
   app: App;
   sourcePath: string;
+  sourceFolder?: TFolder;
 };
 
 type FolderPickerControlOptions = {
@@ -376,10 +378,12 @@ export function renderFolderPickerControl(
 
 function getDescendantFolderPaths(context: SettingFieldContext): string[] {
   const file = context.app.vault.getAbstractFileByPath(context.sourcePath);
-  if (!(file instanceof TFile) || !file.parent) return [];
+  const folder =
+    context.sourceFolder ?? (file instanceof TFile ? file.parent : null);
+  if (!folder) return [];
 
-  const parentPath = file.parent.path;
-  const prefix = file.parent.isRoot() ? "" : `${parentPath}/`;
+  const parentPath = folder.path;
+  const prefix = folder.isRoot() ? "" : `${parentPath}/`;
   return getAllVaultFolders(context.app.vault.getRoot())
     .map((folder) => folder.path)
     .filter(

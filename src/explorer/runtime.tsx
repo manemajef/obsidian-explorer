@@ -203,6 +203,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
         });
       },
       conversion,
+      sourceFolder,
     ).open();
   };
 
