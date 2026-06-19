@@ -209,10 +209,10 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "foldernotes",
     },
-    legacy: {
-      preserveOldDefault: true,
-      oldDefault: false,
-    },
+    // legacy: {
+    //   preserveOldDefault: true,
+    //   oldDefault: false,
+    // },
   }),
   syncFolderNotes: booleanField({
     label: "Sync folder notes on rename",
