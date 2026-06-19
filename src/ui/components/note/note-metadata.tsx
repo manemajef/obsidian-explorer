@@ -165,6 +165,7 @@ export function NotePreview({
   size?: TextSize;
 }): React.JSX.Element | null {
   const effectiveMaxChar = maxChar ?? 100;
+  if (!file.isMarkdown) return null;
   const { isLoading, preview, hasPreview } = useNotePreview(file, {
     maxChar: effectiveMaxChar,
   });
