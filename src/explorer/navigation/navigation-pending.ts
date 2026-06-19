@@ -1,11 +1,11 @@
 let pending = false;
-let timer: ReturnType<typeof setTimeout> | null = null;
+let timer: number | null = null;
 
 export function markNavigationPending(): void {
   pending = true;
-  if (timer !== null) clearTimeout(timer);
+  if (timer !== null) window.clearTimeout(timer);
   // Safety valve: clear if mountExplorer is never called (note without explorer block)
-  timer = setTimeout(() => {
+  timer = window.setTimeout(() => {
     pending = false;
     timer = null;
   }, 2000);
@@ -13,7 +13,7 @@ export function markNavigationPending(): void {
 
 export function consumeNavigationPending(): boolean {
   if (timer !== null) {
-    clearTimeout(timer);
+    window.clearTimeout(timer);
     timer = null;
   }
   const had = pending;

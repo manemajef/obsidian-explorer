@@ -37,6 +37,7 @@ export function registerExplorerReadingMode(
       const hasExplorerBlock = content.includes("```explorer");
 
       if (!getSettings().forceReadingMode && hasExplorerBlock) {
+        delete leaf._explorerViewForcedPreview;
         window.setTimeout(() => {
           if (view.editor) {
             view.editor.blur();

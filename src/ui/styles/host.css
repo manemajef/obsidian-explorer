@@ -24,6 +24,10 @@
   margin-bottom: 2em;
 }
 
+.explorer-container:empty {
+  min-height: var(--explorer-nav-placeholder-height, 200px);
+}
+
 /* Reserve vertical space before React fills the container so content below
    the block doesn't jump down when the explorer mounts. The placeholder is
    invisible (opacity 0 from the animation backwards-fill) so the exact height

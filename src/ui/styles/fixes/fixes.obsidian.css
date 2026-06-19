@@ -16,9 +16,8 @@
   margin-bottom: 1em;
 }
 
-/* When the explorer block is the last content, Obsidian's scroll-padding on the
-   sizer / cm-content creates a large empty area below it. Trim it.
-   !important is required because Obsidian sets these as inline styles via JS. */
+/* When the explorer block is the last content, Obsidian sets inline spacing
+   that creates a large empty area below it. This is the one stable override. */
 .workspace-leaf.explorer-block-is-last .markdown-preview-sizer {
   padding-bottom: 2em !important;
   min-height: 0 !important;

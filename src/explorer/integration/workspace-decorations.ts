@@ -8,7 +8,7 @@ export function registerWorkspaceDecorations(plugin: Plugin, app: App): void {
   const refresh = (): void => {
     if (framePending) return;
     framePending = true;
-    requestAnimationFrame(() => {
+    app.workspace.containerEl.win.requestAnimationFrame(() => {
       framePending = false;
       applyDecorations(app);
     });
@@ -61,7 +61,6 @@ function applyDecorations(app: App): void {
       BLOCK_IS_LAST,
       hasBlock && !!sizer && isExplorerLastContent(sizer),
     );
-
   }
 }
 

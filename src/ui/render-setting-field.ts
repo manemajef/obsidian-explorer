@@ -208,7 +208,6 @@ export function renderSettingField(
       slider
         .setLimits(field.min, field.max, field.step ?? 1)
         .setValue(settings[key] as number)
-        .setDynamicTooltip()
         .onChange((value) => {
           onChange(key, value as BlockSettings[typeof key]);
         });

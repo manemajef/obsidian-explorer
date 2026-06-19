@@ -110,7 +110,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     // Added before render() so the placeholder height is in the DOM before
     // content below the block has a chance to render.
     container.addClass("explorer-navigating");
-    setTimeout(() => container.removeClass("explorer-navigating"), 500);
+    window.setTimeout(() => container.removeClass("explorer-navigating"), 500);
   }
 
   const reactRoot = createRoot(container);
