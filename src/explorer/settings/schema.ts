@@ -204,10 +204,14 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     label: "Always open folder notes in reading mode",
     description:
       "Open folder notes in reading mode even when the default mode is editing.",
-    defaultValue: false,
+    defaultValue: true,
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
+    },
+    legacy: {
+      preserveOldDefault: true,
+      oldDefault: false,
     },
   }),
   syncFolderNotes: booleanField({
