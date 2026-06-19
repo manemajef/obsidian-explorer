@@ -103,9 +103,11 @@ export function CardsView(props: {
                     className="explorer-file-card__ext"
                     filled={false}
                   />
-                  <div className="explorer-file-card__pin-slot">
-                    <Pin file={file} actions={actions} placement="card" />
-                  </div>
+                  {file.isPinned && (
+                    <div className="explorer-file-card__pin-slot">
+                      <Pin file={file} actions={actions} placement="card" />
+                    </div>
+                  )}
                 </Group>
               </Group>
               <Spacer />
