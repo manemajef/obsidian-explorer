@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.4.7 (19-06-2026)
+
+- Bug fixes
+
 ## 1.4.6 (19-06-2026)
 
 This release focuses on UI polish, smoother transitions, date display options, and performance.
