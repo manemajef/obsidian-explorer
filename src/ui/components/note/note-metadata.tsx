@@ -23,7 +23,7 @@ type NoteMetadataWithActionsProps = NoteMetadataProps & {
   actions: ExplorerActions;
 };
 
-type NotePreviewLines = 1 | 2 | 3;
+type NotePreviewLines = 1 | 2 | 3 | 4;
 
 const getLocalDate = (date: number) =>
   new Intl.DateTimeFormat("default", {

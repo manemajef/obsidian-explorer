@@ -14,6 +14,7 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
+const USE_3LINES = false;
 
 interface NoteCardProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
@@ -117,7 +118,23 @@ export function CardsView(props: {
                     file={file}
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
-                    lines={compact ? 2 : 3}
+                    lines={
+                      USE_3LINES
+                        ? compact
+                          ? file.hasTags
+                            ? 2
+                            : 3
+                          : file.hasTags
+                            ? 3
+                            : 4
+                        : compact
+                          ? file.hasTags
+                            ? 1
+                            : 2
+                          : file.hasTags
+                            ? 2
+                            : 3
+                    }
                   />
                 </div>
               )}
