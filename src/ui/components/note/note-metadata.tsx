@@ -181,6 +181,7 @@ function PreviewText({
       color={METADATA_COLOR}
       size={size}
       className={cn("explorer-metadata-preview", className)}
+      dir="auto"
       data-lines={lines}
       data-loading={isLoading || undefined}
     >
