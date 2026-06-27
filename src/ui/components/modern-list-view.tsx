@@ -5,7 +5,7 @@ import { ExplorerFileNode } from "../../explorer/lib/nodes";
 import { ExplorerModel } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
-import { NoteFolderDatePreview } from "./note/note-metadata";
+import { NoteDatePreview, NoteFolderDatePreview } from "./note/note-metadata";
 import {
   NoteExtensionBadge,
   NoteTags,
@@ -109,15 +109,22 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
 
             <Group className="explorer-modern-list__secondary" gap={2}>
               <div className="explorer-modern-list__metadata">
-                <NoteFolderDatePreview
-                  file={file}
-                  model={model}
-                  actions={actions}
-                  maxChar={isMobile ? 120 : 120}
-                  folder={!isMobile}
-                  date
-                  preview={model.settings.showPreviews}
-                />
+                {isMobile ? (
+                  <NoteDatePreview
+                    file={file}
+                    model={model}
+                    maxChar={120}
+                    showPreview={model.settings.showPreviews}
+                  />
+                ) : (
+                  <NoteFolderDatePreview
+                    file={file}
+                    model={model}
+                    actions={actions}
+                    maxChar={120}
+                    showPreview={model.settings.showPreviews}
+                  />
+                )}
               </div>
 
               {!file.hasTags && <Gap size={4} />}

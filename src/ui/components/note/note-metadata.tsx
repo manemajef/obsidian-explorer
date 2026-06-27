@@ -5,11 +5,12 @@ import { ExplorerActions } from "src/explorer/actions";
 import { diffDays } from "src/utils";
 import { cn } from "../primitives/cn";
 import { Icon } from "../primitives/icon";
-import { Group } from "../primitives/layout";
+import { Group, Spacer } from "../primitives/layout";
 import { Text, type TextSize } from "../primitives/text";
 import { useNotePreview } from "./use-note-preview";
 
 const METADATA_COLOR = "muted";
+const DEFAULT_PREVIEW_MAX_CHAR = 100;
 
 type NoteMetadataProps = {
   file: ExplorerFileNode;
@@ -24,6 +25,9 @@ type NoteMetadataWithActionsProps = NoteMetadataProps & {
 };
 
 type NotePreviewLines = 1 | 2 | 3 | 4;
+type FolderDateSeparator = "dot" | "spacer";
+type MetadataItem = React.JSX.Element | null | false;
+type NotePreviewState = ReturnType<typeof useNotePreview>;
 
 const getLocalDate = (date: number) =>
   new Intl.DateTimeFormat("default", {
@@ -108,46 +112,86 @@ export function NoteFolder({
 }
 
 function NoteMetadataSeparator({
-  separator,
   size,
 }: {
-  separator?: "dot" | "line";
   size?: TextSize;
 }): React.JSX.Element {
-  if (!separator || separator === "dot")
-    return (
-      <Text
-        as="span"
-        variant="metadata"
-        color={METADATA_COLOR}
-        size={size}
-        aria-hidden="true"
-        className="explorer-metadata-separator--dot"
-      />
-    );
   return (
-    <span className="explorer-metadata-separator" aria-hidden="true"></span>
+    <Text
+      as="span"
+      variant="metadata"
+      color={METADATA_COLOR}
+      size={size}
+      aria-hidden="true"
+      className="explorer-metadata-separator--dot"
+    />
   );
 }
 
-export function NoteFolderDate({
-  file,
-  model,
-  actions,
+function NoteMetadataRow({
   className,
+  items,
+  previewVisible,
   size,
-}: NoteMetadataWithActionsProps): React.JSX.Element | null {
+}: {
+  className: string;
+  items: MetadataItem[];
+  previewVisible?: boolean;
+  size?: TextSize;
+}): React.JSX.Element | null {
+  const visibleItems = items.filter(Boolean);
+  if (visibleItems.length === 0) return null;
+
   return (
-    <NoteFolderDatePreview
-      file={file}
-      model={model}
-      actions={actions}
-      className={cn("explorer-metadata-folder-time-row", className)}
+    <Group
+      className={className}
+      gap={0}
+      data-has-preview={previewVisible || undefined}
+    >
+      {visibleItems.map((item, index) => (
+        <React.Fragment key={index}>
+          {index > 0 && <NoteMetadataSeparator size={size} />}
+          {item}
+        </React.Fragment>
+      ))}
+    </Group>
+  );
+}
+
+function PreviewText({
+  className,
+  maxChar,
+  previewState,
+  lines = 1,
+  size,
+}: {
+  className?: string;
+  maxChar: number;
+  previewState: NotePreviewState;
+  lines?: NotePreviewLines;
+  size?: TextSize;
+}): React.JSX.Element | null {
+  const { isLoading, preview, hasPreview } = previewState;
+
+  if (!isLoading && !hasPreview) return null;
+
+  return (
+    <Text
+      variant="metadata"
+      color={METADATA_COLOR}
       size={size}
-      folder
-      date
-      preview={false}
-    />
+      className={cn("explorer-metadata-preview", className)}
+      data-lines={lines}
+      data-loading={isLoading || undefined}
+    >
+      {isLoading ? (
+        <span className="explorer-preview-placeholder">
+          {"W".repeat(maxChar)}
+        </span>
+      ) : (
+        preview
+      )}
+    </Text>
   );
 }
 
@@ -164,31 +208,58 @@ export function NotePreview({
   lines?: NotePreviewLines;
   size?: TextSize;
 }): React.JSX.Element | null {
-  const effectiveMaxChar = maxChar ?? 100;
   if (!file.isMarkdown) return null;
-  const { isLoading, preview, hasPreview } = useNotePreview(file, {
-    maxChar: effectiveMaxChar,
-  });
-
-  if (!isLoading && !hasPreview) return null;
+  const effectiveMaxChar = maxChar ?? DEFAULT_PREVIEW_MAX_CHAR;
+  const previewState = useNotePreview(file, { maxChar: effectiveMaxChar });
 
   return (
-    <Text
-      variant="metadata"
-      color={METADATA_COLOR}
+    <PreviewText
+      className={className}
+      maxChar={effectiveMaxChar}
+      previewState={previewState}
+      lines={lines}
       size={size}
-      className={cn("explorer-metadata-preview", className)}
-      data-lines={lines}
-      data-loading={isLoading || undefined}
-    >
-      {isLoading ? (
-        <span className="explorer-preview-placeholder">
-          {"W".repeat(effectiveMaxChar)}
-        </span>
-      ) : (
-        preview
-      )}
-    </Text>
+    />
+  );
+}
+
+export function NoteFolderDate({
+  file,
+  model,
+  actions,
+  className,
+  separator = "dot",
+  size,
+}: NoteMetadataWithActionsProps & {
+  separator?: FolderDateSeparator;
+}): React.JSX.Element | null {
+  const folder = getParentFolder(file, model) ? (
+    <NoteFolder file={file} model={model} actions={actions} size={size} />
+  ) : null;
+  const date = getNoteDate(file, model) != null ? (
+    <NoteDate file={file} model={model} size={size} />
+  ) : null;
+
+  if (separator === "spacer" && folder && date) {
+    return (
+      <Group
+        className={cn("explorer-metadata-folder-time-row", className)}
+        gap={0}
+        justify="between"
+      >
+        {folder}
+        <Spacer />
+        {date}
+      </Group>
+    );
+  }
+
+  return (
+    <NoteMetadataRow
+      className={cn("explorer-metadata-folder-time-row", className)}
+      size={size}
+      items={[folder, date]}
+    />
   );
 }
 
@@ -205,17 +276,32 @@ export function NoteDatePreview({
   showPreview?: boolean;
   previewLines?: NotePreviewLines;
 }): React.JSX.Element | null {
-  return (
-    <NoteFolderDatePreview
-      file={file}
-      model={model}
-      className={cn("explorer-metadata-date-preview-row", className)}
-      maxChar={maxChar}
+  const effectiveMaxChar = maxChar ?? DEFAULT_PREVIEW_MAX_CHAR;
+  const previewEnabled = showPreview && file.isMarkdown;
+  const previewState = useNotePreview(file, {
+    maxChar: effectiveMaxChar,
+    enabled: previewEnabled,
+  });
+  const date = getNoteDate(file, model) != null ? (
+    <NoteDate file={file} model={model} size={size} />
+  ) : null;
+  const showNotePreview =
+    previewEnabled && (previewState.isLoading || previewState.hasPreview);
+  const preview = showNotePreview ? (
+    <PreviewText
+      maxChar={effectiveMaxChar}
+      previewState={previewState}
+      lines={previewLines}
       size={size}
-      folder={false}
-      date
-      preview={showPreview}
-      previewLines={previewLines}
+    />
+  ) : null;
+
+  return (
+    <NoteMetadataRow
+      className={cn("explorer-metadata-date-preview-row", className)}
+      size={size}
+      previewVisible={showNotePreview}
+      items={[date, preview]}
     />
   );
 }
@@ -226,67 +312,43 @@ export function NoteFolderDatePreview({
   actions,
   className,
   maxChar,
-  folder = true,
-  date = true,
-  preview = true,
+  showPreview = true,
   previewLines = 1,
   size,
-}: NoteMetadataProps & {
-  actions?: ExplorerActions;
+}: NoteMetadataWithActionsProps & {
   maxChar?: number;
-  folder?: boolean;
-  date?: boolean;
-  preview?: boolean;
+  showPreview?: boolean;
   previewLines?: NotePreviewLines;
 }): React.JSX.Element | null {
-  const effectiveMaxChar = maxChar ?? 100;
-  const showFolder =
-    folder && actions != null && getParentFolder(file, model) != null;
-  const showDate = date && getNoteDate(file, model) != null;
-  const {
-    isLoading,
-    preview: previewText,
-    hasPreview,
-  } = useNotePreview(file, {
+  const effectiveMaxChar = maxChar ?? DEFAULT_PREVIEW_MAX_CHAR;
+  const previewEnabled = showPreview && file.isMarkdown;
+  const previewState = useNotePreview(file, {
     maxChar: effectiveMaxChar,
-    enabled: preview,
+    enabled: previewEnabled,
   });
-  const showNotePreview = preview && (isLoading || hasPreview);
-
-  if (!showFolder && !showDate && !showNotePreview) return null;
+  const folder = getParentFolder(file, model) ? (
+    <NoteFolder file={file} model={model} actions={actions} size={size} />
+  ) : null;
+  const date = getNoteDate(file, model) != null ? (
+    <NoteDate file={file} model={model} size={size} />
+  ) : null;
+  const showNotePreview =
+    previewEnabled && (previewState.isLoading || previewState.hasPreview);
+  const preview = showNotePreview ? (
+    <PreviewText
+      maxChar={effectiveMaxChar}
+      previewState={previewState}
+      lines={previewLines}
+      size={size}
+    />
+  ) : null;
 
   return (
-    <Group
+    <NoteMetadataRow
       className={cn("explorer-metadata-folder-date-preview-row", className)}
-      gap={0}
-      data-has-preview={showNotePreview || undefined}
-    >
-      {showFolder && actions && (
-        <NoteFolder file={file} model={model} actions={actions} size={size} />
-      )}
-      {showFolder && (showDate || showNotePreview) && (
-        <NoteMetadataSeparator size={size} />
-      )}
-      {showDate && <NoteDate file={file} model={model} size={size} />}
-      {showDate && showNotePreview && <NoteMetadataSeparator size={size} />}
-      {showNotePreview && (
-        <Text
-          variant="metadata"
-          color="muted"
-          size={size}
-          className="explorer-metadata-preview"
-          data-lines={previewLines}
-          data-loading={isLoading || undefined}
-        >
-          {isLoading ? (
-            <span className="explorer-preview-placeholder">
-              {"W".repeat(effectiveMaxChar)}
-            </span>
-          ) : (
-            previewText
-          )}
-        </Text>
-      )}
-    </Group>
+      size={size}
+      previewVisible={showNotePreview}
+      items={[folder, date, preview]}
+    />
   );
 }

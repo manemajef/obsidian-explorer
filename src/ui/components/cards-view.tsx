@@ -152,7 +152,12 @@ export function CardsView(props: {
               )}
               <Spacer />
               <div className="explorer-file-card__metadata">
-                <NoteFolderDate file={file} model={model} actions={actions} />
+                <NoteFolderDate
+                  file={file}
+                  model={model}
+                  actions={actions}
+                  // separator="spacer"
+                />
               </div>
             </NoteCard>
           );
