@@ -32,6 +32,7 @@
   padding: var(--explorer-space-2);
   padding-bottom: var(--explorer-space-1);
   margin: 0 1px;
+  max-width: 320px;
   transition: box-shadow var(--anim-duration-fast) ease-in-out;
 }
 .explorer-file-card__title {

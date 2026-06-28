@@ -31,6 +31,7 @@ function NoteCard({
       className={cn("explorer-note-card", className)}
       data-interactive={interactive || undefined}
       {...rest}
+      dir="auto"
     >
       {children}
     </div>
