@@ -1,10 +1,14 @@
 import { App, Notice, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
-import { PluginSettings } from "../settings";
+import { BlockSettings, PluginSettings } from "../settings";
 import { markNavigationPending } from "./navigation-pending";
-
-const HOME_PAGE_TEMPLATE =
-  '```explorer\nview: "cards"\nsortBy: "edited"\ndepth: 10\npageSize: 21\n```\n';
+import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "./virtual-folder-note";
 const NEW_TAB_DEFAULT_PAGE_PLUGIN_ID = "new-tab-default-page";
+const HOME_PAGE_OVERRIDES: Partial<BlockSettings> = {
+  view: "cards",
+  sortBy: "edited",
+  depth: 10,
+  pageSize: 21,
+};
 
 type AppWithCommunityPlugins = App & {
   plugins?: {
@@ -63,9 +67,21 @@ export async function openHomePage(
   newLeaf = false,
 ): Promise<void> {
   markNavigationPending();
-  await useHomePageFile(app, settings, async (file) => {
-    await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
-  });
+  await useHomePageFile(
+    app,
+    settings,
+    async (file) => {
+      await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
+    },
+    async (homePath, homeTitle) => {
+      await openVirtualHomePage(
+        app,
+        app.workspace.getLeaf(newLeaf),
+        homePath,
+        homeTitle,
+      );
+    },
+  );
 }
 
 async function openHomePageInEmptyLeaf(
@@ -75,16 +91,25 @@ async function openHomePageInEmptyLeaf(
 ): Promise<void> {
   if (!isEmptyLeaf(leaf)) return;
 
-  await useHomePageFile(app, settings, async (file) => {
-    if (!isEmptyLeaf(leaf)) return;
-    await leaf.openFile(file);
-  });
+  await useHomePageFile(
+    app,
+    settings,
+    async (file) => {
+      if (!isEmptyLeaf(leaf)) return;
+      await leaf.openFile(file);
+    },
+    async (homePath, homeTitle) => {
+      if (!isEmptyLeaf(leaf)) return;
+      await openVirtualHomePage(app, leaf, homePath, homeTitle);
+    },
+  );
 }
 
 async function useHomePageFile(
   app: App,
   settings: PluginSettings,
   openFile: (file: TFile) => Promise<void>,
+  openVirtual: (homePath: string, homeTitle: string) => Promise<void>,
 ): Promise<void> {
   const configuredName = settings.homePageName.trim();
   if (
@@ -108,16 +133,31 @@ async function useHomePageFile(
     return;
   }
 
-  try {
-    const created = await app.vault.create(homePath, HOME_PAGE_TEMPLATE);
-    await openFile(created);
-  } catch (err) {
-    new Notice(`Failed to create homepage: ${err}`);
-  }
+  await openVirtual(homePath, homePath.replace(/\.md$/i, ""));
 }
 
 function isEmptyLeaf(leaf: WorkspaceLeaf): boolean {
   return leaf.getViewState().type === "empty";
+}
+
+async function openVirtualHomePage(
+  app: App,
+  leaf: WorkspaceLeaf,
+  homePath: string,
+  homeTitle: string,
+): Promise<void> {
+  markNavigationPending();
+  await leaf.setViewState({
+    type: VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
+    active: true,
+    state: {
+      folderPath: app.vault.getRoot().path,
+      sourcePath: homePath,
+      title: homeTitle,
+      initialOverrides: HOME_PAGE_OVERRIDES,
+    },
+  });
+  app.workspace.setActiveLeaf(leaf, { focus: true });
 }
 
 export function resolveHomePagePath(
