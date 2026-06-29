@@ -1,5 +1,22 @@
 # Explorer changelog
 
+## 1.4.8 (30-06-2026)
+
+### New
+
+- Rename folders directly from a folder overview, even when it is not backed by a Markdown file.
+- Toolbar items now show helpful popovers.
+- The homepage can now open without a backing Markdown file.
+  - If the homepage note is missing, Explorer shows the homepage view without creating an empty file. A Markdown file is created only when you edit the homepage.
+
+### Fixes
+
+- Cards and modern list rows are easier to drag into folders.
+- Opening a new tab from the homepage no longer opens another homepage instance.
+- Fixed previews for mixed-language content, such as `EN` + `AR`.
+- Cards now have a max width for more consistent layouts.
+- Transitions are slightly smoother.
+
 ## 1.4.7 (19-06-2026)
 
 - Bug fixes
@@ -58,9 +75,9 @@ This release focuses on polishing Explorer's controls and visual surfaces.
   dark-mode visibility.
 - Note cards, modern lists, panels, and toolbar controls now share a more  
   consistent surface style, spacing, shadow, and corner treatment.
-- Modern list tags are shown in the main row, beside the note title area, so
+- Modern list tags are shown in the main row, beside the note title area, so  
   rows stay more compact and easier to scan.
-- Markdown list view is cleaner and no longer shows extension badges in that
+- Markdown list view is cleaner and no longer shows extension badges in that  
   compact list style.
 - Metadata, previews, separators, and links have more consistent sizing and  
   muted text color across card and list views.
