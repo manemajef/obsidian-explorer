@@ -1,5 +1,6 @@
 import {
   App,
+  normalizePath,
   ItemView,
   Notice,
   TAbstractFile,
@@ -7,7 +8,7 @@ import {
   TFolder,
   WorkspaceLeaf,
 } from "obsidian";
-import type { ViewStateResult } from "obsidian";
+import type { IconName, ViewStateResult } from "obsidian";
 import {
   BlockSettings,
   PluginSettings,
@@ -23,6 +24,7 @@ import {
 import { mountExplorer } from "../runtime";
 import { formatExplorerBlock } from "../vault/block-update";
 import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
+import { getHomePageInlineTitleConfig } from "../navigation/homepage";
 import { isHTMLElement } from "../../utils";
 import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
 
@@ -50,6 +52,11 @@ type VirtualFolderNoteState = {
   initialOverrides?: Partial<BlockSettings>;
 };
 
+type InlineTitle = {
+  text: string;
+  onSave?: (nextTitle: string) => Promise<boolean | void>;
+};
+
 export class VirtualFolderNoteView extends ItemView {
   private state: VirtualFolderNoteState = { folderPath: "" };
   private cleanupExplorer: (() => void) | null = null;
@@ -61,7 +68,7 @@ export class VirtualFolderNoteView extends ItemView {
   ) {
     super(leaf);
     this.navigation = true;
-    this.icon = "folder";
+    this.icon = this.getIcon();
   }
 
   get folder(): TFolder | null {
@@ -79,6 +86,10 @@ export class VirtualFolderNoteView extends ItemView {
     return VIRTUAL_FOLDER_NOTE_VIEW_TYPE;
   }
 
+  getIcon(): IconName {
+    return this.isHomePage() ? "home" : "folder";
+  }
+
   getDisplayText(): string {
     return this.getTitle(this.folder);
   }
@@ -90,6 +101,7 @@ export class VirtualFolderNoteView extends ItemView {
   async setState(state: unknown, result: ViewStateResult): Promise<void> {
     void result;
     this.state = this.normalizeState(state);
+    this.icon = this.getIcon();
     await this.render();
     this.queueHeaderTitleUpdate();
   }
@@ -191,10 +203,14 @@ export class VirtualFolderNoteView extends ItemView {
     const titleContainer = section.createDiv({
       cls: "virtual-folder-title-container",
     });
-    titleContainer.createDiv({
+    const inlineTitle = this.getInlineTitle(folder);
+    const title = titleContainer.createDiv({
       cls: "inline-title",
-      text: this.getTitle(folder),
+      text: inlineTitle.text,
     });
+    if (inlineTitle.onSave) {
+      this.makeInlineTitleEditable(title, inlineTitle.text, inlineTitle.onSave);
+    }
 
     const explorerContainer = section.createDiv();
     section.createDiv({
@@ -329,6 +345,116 @@ export class VirtualFolderNoteView extends ItemView {
 
   private getTitle(folder: TFolder | null): string {
     return this.state.title || folder?.name || "Folder note";
+  }
+
+  private isHomePage(): boolean {
+    return Boolean(this.state.title && this.state.sourcePath);
+  }
+
+  private getInlineTitle(folder: TFolder): InlineTitle {
+    if (this.isHomePage()) {
+      const title = getHomePageInlineTitleConfig({
+        app: this.app,
+        leaf: this.leaf,
+        settings: this.host.getPluginSettings(),
+        saveSettings: this.host.savePluginSettings,
+        updateVirtualState: (state) => {
+          this.state = { ...this.state, ...state };
+          this.icon = this.getIcon();
+          void this.render().then(() => this.queueHeaderTitleUpdate());
+        },
+      });
+      return {
+        text: title.value,
+        onSave: title.onSave,
+      };
+    }
+
+    if (folder.isRoot() || !this.host.getPluginSettings().syncFolderNotes) {
+      return { text: this.getTitle(folder) };
+    }
+
+    return {
+      text: this.getTitle(folder),
+      onSave: (nextTitle) => this.renameFolderFromTitle(nextTitle, folder),
+    };
+  }
+
+  private makeInlineTitleEditable(
+    title: HTMLElement,
+    savedTitle: string,
+    onSave: (nextTitle: string) => Promise<boolean | void>,
+  ): void {
+    let cancelled = false;
+    title.setAttr("contenteditable", "true");
+    title.setAttr("spellcheck", "false");
+    title.setAttr("role", "textbox");
+    title.setAttr("aria-label", "Title");
+
+    title.addEventListener("focus", () => {
+      cancelled = false;
+    });
+    title.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        title.blur();
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelled = true;
+        title.setText(savedTitle);
+        title.blur();
+      }
+    });
+    title.addEventListener("blur", () => {
+      if (cancelled) return;
+      void this.saveInlineTitle(title, savedTitle, onSave);
+    });
+  }
+
+  private async saveInlineTitle(
+    title: HTMLElement,
+    savedTitle: string,
+    onSave: (nextTitle: string) => Promise<boolean | void>,
+  ): Promise<void> {
+    const nextTitle = (title.textContent ?? "").trim();
+    if (nextTitle === savedTitle) return;
+    try {
+      if ((await onSave(nextTitle)) === false) title.setText(savedTitle);
+    } catch (error) {
+      title.setText(savedTitle);
+      new Notice(`Could not update title: ${error}`);
+    }
+  }
+
+  private async renameFolderFromTitle(
+    nextName: string,
+    folder: TFolder,
+  ): Promise<boolean> {
+    if (nextName === folder.name) return true;
+
+    const parent = folder.parent;
+    if (
+      !parent ||
+      !nextName ||
+      nextName.includes("/") ||
+      nextName.includes("\\")
+    ) {
+      if (!nextName) new Notice("Folder name cannot be empty.");
+      else new Notice("Folder name cannot contain slashes.");
+      return false;
+    }
+
+    const destinationPath = normalizePath(`${parent.path}/${nextName}`);
+    try {
+      await this.app.fileManager.renameFile(folder, destinationPath);
+      return true;
+    } catch (error) {
+      new Notice(`Could not rename folder: ${error}`);
+      return false;
+    }
   }
 
   private updateHeaderTitle(folder: TFolder | null): void {

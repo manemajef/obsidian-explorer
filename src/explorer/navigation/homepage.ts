@@ -2,6 +2,12 @@ import { App, Notice, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { BlockSettings, PluginSettings } from "../settings";
 import { markNavigationPending } from "./navigation-pending";
 import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "./virtual-folder-note";
+
+type HomePageInlineTitleConfig = {
+  value: string;
+  onSave: (nextTitle: string) => Promise<boolean | void>;
+};
+
 const NEW_TAB_DEFAULT_PAGE_PLUGIN_ID = "new-tab-default-page";
 const HOME_PAGE_OVERRIDES: Partial<BlockSettings> = {
   view: "cards",
@@ -21,6 +27,19 @@ export function isHomePageNewTabManagedElsewhere(app: App): boolean {
   return (
     pluginManager?.enabledPlugins?.has(NEW_TAB_DEFAULT_PAGE_PLUGIN_ID) ?? false
   );
+}
+
+export function getHomePageInlineTitleConfig(input: {
+  app: App;
+  leaf: WorkspaceLeaf;
+  settings: PluginSettings;
+  saveSettings: () => void | Promise<void>;
+  updateVirtualState: (state: { sourcePath: string; title: string }) => void;
+}): HomePageInlineTitleConfig {
+  return {
+    value: resolveHomePageTitle(input.app, input.settings),
+    onSave: async (nextTitle) => saveHomePageTitle(input, nextTitle),
+  };
 }
 
 export function registerHomePageNewTabs(
@@ -175,6 +194,43 @@ export function resolveHomePagePath(
   return basename && !basename.includes("/") && !basename.includes("\\")
     ? `${basename}.md`
     : null;
+}
+
+function resolveHomePageTitle(app: App, settings: PluginSettings): string {
+  return resolveHomePagePath(app, settings)?.replace(/\.md$/i, "") ?? "";
+}
+
+async function saveHomePageTitle(
+  input: Parameters<typeof getHomePageInlineTitleConfig>[0],
+  nextTitle: string,
+): Promise<boolean> {
+  const basename = nextTitle.replace(/\.md$/i, "").trim();
+  if (!basename) {
+    new Notice("Homepage name cannot be empty.");
+    return false;
+  }
+  if (basename.includes("/") || basename.includes("\\")) {
+    new Notice("Homepage name must be a root note name, not a path.");
+    return false;
+  }
+
+  const sourcePath = `${basename}.md`;
+  const existing = input.app.vault.getAbstractFileByPath(sourcePath);
+  if (existing && !(existing instanceof TFile)) {
+    new Notice(`Homepage path is not a note: ${sourcePath}`);
+    return false;
+  }
+
+  input.settings.homePageName = basename;
+  await input.saveSettings();
+
+  if (existing instanceof TFile) {
+    await input.leaf.openFile(existing);
+    return true;
+  }
+
+  input.updateVirtualState({ sourcePath, title: basename });
+  return true;
 }
 
 export function resolveHomePageNoteInboxPath(
