@@ -1,4 +1,12 @@
-import { App, Notice, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import {
+  App,
+  MarkdownView,
+  Notice,
+  Plugin,
+  TFile,
+  TFolder,
+  WorkspaceLeaf,
+} from "obsidian";
 import { BlockSettings, PluginSettings } from "../settings";
 import { markNavigationPending } from "./navigation-pending";
 import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "./virtual-folder-note";
@@ -50,11 +58,16 @@ export function registerHomePageNewTabs(
 
   workspace.onLayoutReady(() => {
     const knownLeaves = new WeakSet<WorkspaceLeaf>();
-    const openInEmptyLeaf = (leaf: WorkspaceLeaf): void => {
+    let activeLeaf = workspace.getMostRecentLeaf();
+    const openInEmptyLeaf = (
+      leaf: WorkspaceLeaf,
+      previousLeaf = activeLeaf,
+    ): void => {
       const settings = getSettings();
       if (
         !settings.openHomePageInNewTabs ||
-        isHomePageNewTabManagedElsewhere(plugin.app)
+        isHomePageNewTabManagedElsewhere(plugin.app) ||
+        activeViewIsHomePage(plugin.app, settings, previousLeaf)
       ) {
         return;
       }
@@ -68,9 +81,11 @@ export function registerHomePageNewTabs(
 
     plugin.registerEvent(
       workspace.on("active-leaf-change", (leaf) => {
+        const previousLeaf = activeLeaf;
+        activeLeaf = leaf;
         if (!leaf || knownLeaves.has(leaf)) return;
         knownLeaves.add(leaf);
-        void Promise.resolve().then(() => openInEmptyLeaf(leaf));
+        void Promise.resolve().then(() => openInEmptyLeaf(leaf, previousLeaf));
       }),
     );
 
@@ -160,6 +175,27 @@ function isEmptyLeaf(leaf: WorkspaceLeaf): boolean {
   return leaf.getViewState().type === "empty";
 }
 
+function activeViewIsHomePage(
+  app: App,
+  settings: PluginSettings,
+  leaf: WorkspaceLeaf | null,
+): boolean {
+  const homePath = resolveHomePagePath(app, settings);
+  if (!homePath || !leaf) return false;
+
+  const view = leaf.view;
+  if (view instanceof MarkdownView) {
+    return view.file?.path === homePath;
+  }
+
+  const viewState = leaf.getViewState();
+  return (
+    viewState.type === VIRTUAL_FOLDER_NOTE_VIEW_TYPE &&
+    isRecord(viewState.state) &&
+    viewState.state.sourcePath === homePath
+  );
+}
+
 async function openVirtualHomePage(
   app: App,
   leaf: WorkspaceLeaf,
@@ -198,6 +234,10 @@ export function resolveHomePagePath(
 
 function resolveHomePageTitle(app: App, settings: PluginSettings): string {
   return resolveHomePagePath(app, settings)?.replace(/\.md$/i, "") ?? "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 async function saveHomePageTitle(
