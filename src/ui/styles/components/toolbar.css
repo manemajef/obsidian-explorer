@@ -1,14 +1,14 @@
-/* ===== Actions bar ===== */
-/* Owns layouts, control sizing, and density/fit modes for the Actions Bar (Toolbar). */
+/* ===== Toolbar ===== */
+/* Owns layouts, control sizing, and density/fit modes for the Explorer toolbar. */
 
-.explorer-actions__start,
-.explorer-actions__end {
+.explorer-toolbar__start,
+.explorer-toolbar__end {
   min-width: 0;
   display: flex;
   align-items: center;
 }
 
-.explorer-actions--search {
+.explorer-toolbar--search {
   justify-content: center;
 }
 
@@ -26,6 +26,7 @@
 
 .explorer-toolbar-item,
 .explorer-toolbar-group-item {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;

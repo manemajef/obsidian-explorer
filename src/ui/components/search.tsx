@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
-import { ToolbarItem } from "./actions-bar";
+import { ToolbarItem } from "./toolbar";
 
 export function Search(props: {
   searchMode: boolean;
@@ -18,7 +18,9 @@ export function Search(props: {
   }, [searchMode]);
 
   if (!searchMode) {
-    return <ToolbarItem icon="search" onClick={onSearchToggle} />;
+    return (
+      <ToolbarItem icon="search" popover="Search" onClick={onSearchToggle} />
+    );
   }
 
   return (
@@ -47,6 +49,7 @@ export function Search(props: {
         <ToolbarItem
           icon="x"
           className="explorer-search__cancel"
+          popover="Close search"
           onClick={onSearchToggle}
         />
       </div>

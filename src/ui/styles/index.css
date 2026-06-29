@@ -21,7 +21,7 @@
 @import "./components/cards-view.css";
 @import "./components/folder-view.css";
 @import "./components/note-metadata.css";
-@import "./components/actions-bar.css";
+@import "./components/toolbar.css";
 @import "./components/search.css";
 @import "./components/classic-pagination.css";
 @import "./components/load-more-pagination.css";

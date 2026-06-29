@@ -216,7 +216,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     const direction = resolveDirection(effectiveSettings);
     container.setAttribute("dir", direction);
     container.toggleClass(
-      "explorer-compact-action-bar",
+      "explorer-compact-toolbar",
       effectiveSettings.compactActionBar,
     );
 

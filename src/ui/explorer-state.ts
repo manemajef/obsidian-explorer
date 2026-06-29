@@ -138,7 +138,7 @@ function useSearchState(model: ExplorerModel, metadataTick: number) {
       setDebouncedQuery("");
       window.setTimeout(() => {
         activeDocument
-          .getElementById(prev ? "explorer-actions" : "explorer-searchbar")
+          .getElementById(prev ? "explorer-toolbar" : "explorer-searchbar")
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 50);
       return !prev;

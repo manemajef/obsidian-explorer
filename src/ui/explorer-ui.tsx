@@ -11,7 +11,7 @@ import { ClassicPagination } from "./components/classic-pagination";
 import { FolderButtons } from "./components/folder-view";
 import { ListView } from "./components/list-view";
 import { LoadMorePagination } from "./components/load-more-pagination";
-import { ActionsBar } from "./components/actions-bar";
+import { ExplorerToolbar } from "./components/toolbar";
 import { Divider } from "./components/primitives/layout";
 
 interface ExplorerUIProps {
@@ -108,7 +108,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const showFolders =
     settings.showFolders && model.folders.length > 0 && !searchMode;
   const showNotes = shouldDisplayNotes(settings);
-  const compactActionBar = settings.compactActionBar;
+  const compactToolbar = settings.compactActionBar;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -141,8 +141,8 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       ? explorerState
       : null;
   const paginationGapSize = showLoadMore ? 6 : 4;
-  const actionsBar = (
-    <ActionsBar
+  const toolbar = (
+    <ExplorerToolbar
       app={app}
       parentDropFolder={model.folder.parent}
       onMoveIntoFolder={onMoveIntoFolder}
@@ -160,13 +160,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       searchMode={searchMode}
       searchQuery={searchQuery}
       onSearchInput={setSearchQuery}
-      compactActionBar={compactActionBar}
+      compactToolbar={compactToolbar}
     />
   );
 
   return (
     <>
-      <div className="explorer-action-bar-host">{actionsBar}</div>
+      <div className="explorer-toolbar-host">{toolbar}</div>
       {showFolders && (
         <>
           <FolderButtons

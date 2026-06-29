@@ -569,8 +569,8 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
   }),
   compactActionBar: booleanField({
-    label: "Compact action bar",
-    description: "Use plain, tighter action bar controls.",
+    label: "Compact toolbar",
+    description: "Use plain, tighter toolbar controls.",
     defaultValue: false,
     blockKey: "compactActionBar",
     ui: {

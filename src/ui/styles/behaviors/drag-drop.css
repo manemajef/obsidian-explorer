@@ -10,6 +10,6 @@
   background-color: var(--background-modifier-hover);
 }
 
-.explorer-container .explorer-parent-action.is-drop-target {
+.explorer-container .explorer-parent-toolbar-item.is-drop-target {
   color: var(--text-normal);
 }
