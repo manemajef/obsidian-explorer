@@ -3,7 +3,7 @@ import { ExplorerActions } from "../../../explorer/actions";
 import { ExplorerFileNode } from "../../../explorer/lib/nodes";
 import { ExplorerModel } from "../../../explorer/model";
 import { cn } from "../primitives/cn";
-import { Badge } from "../primitives/badge";
+import { Badge, type BadgeVariant } from "../primitives/badge";
 import { Icon } from "../primitives/icon";
 import { Link, type LinkProps } from "../primitives/link";
 import { TagList, type TagOverflow, type TagSize } from "../primitives/tags";
@@ -41,16 +41,16 @@ export function NoteTitle({
 export function NoteExtensionBadge({
   file,
   className,
-  filled = true,
+  variant = "filled",
 }: {
   file: ExplorerFileNode;
   className?: string;
-  filled?: boolean;
+  variant?: BadgeVariant;
 }): React.JSX.Element | null {
   if (!file.extensionLabel) return null;
 
   return (
-    <Badge variant={filled ? "filled" : "plain"} className={className}>
+    <Badge variant={variant} className={className}>
       {file.isFolderNote ? "folder" : file.extensionLabel}
     </Badge>
   );

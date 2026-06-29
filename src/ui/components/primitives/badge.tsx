@@ -1,7 +1,7 @@
 import React, { type HTMLAttributes } from "react";
 import { cn } from "./cn";
 
-export type BadgeVariant = "plain" | "filled";
+export type BadgeVariant = "plain" | "filled" | "bordered";
 export type BadgeSize = "sm" | "md";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

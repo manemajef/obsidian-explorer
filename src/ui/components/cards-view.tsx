@@ -103,7 +103,7 @@ export function CardsView(props: {
                   <NoteExtensionBadge
                     file={file}
                     className="explorer-file-card__ext"
-                    filled={false}
+                    variant="bordered"
                   />
                   {file.isPinned && (
                     <div className="explorer-file-card__pin-slot">

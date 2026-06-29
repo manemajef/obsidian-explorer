@@ -23,7 +23,13 @@
   opacity: 0.7;
 }
 
+.explorer-badge[data-variant="bordered"] {
+  border: 1px solid var(--background-modifier-border);
+  opacity: 0.8;
+}
+
 .explorer-badge[data-variant="plain"]:hover,
-.explorer-badge[data-variant="filled"]:hover {
+.explorer-badge[data-variant="filled"]:hover,
+.explorer-badge[data-variant="bordered"]:hover {
   opacity: 1;
 }

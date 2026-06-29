@@ -43,15 +43,6 @@
   opacity: 0.8;
 }
 
-.explorer-file-card__ext {
-  opacity: 0.8;
-}
-
-.explorer-file-card__ext:hover,
-.explorer-file-card__ext:focus-visible {
-  opacity: 1;
-}
-
 .explorer-file-card__pin-slot {
   display: flex;
   flex-wrap: wrap;
