@@ -2,6 +2,9 @@
 
 .explorer-modern-list[data-variant="desktop"] {
   margin-top: var(--explorer-space-4);
+  /* max-width: calc(var(--max-width) * 0.9); */
+  /* max-width: 36em; */
+  /* margin-inline: auto; */
 }
 
 .explorer-modern-list[data-variant="mobile"] {

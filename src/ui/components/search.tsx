@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Platform } from "obsidian";
 import { ToolbarItem } from "./toolbar";
+const searchPopover = "Search inside folder";
 
 export function Search(props: {
   searchMode: boolean;
@@ -19,7 +20,11 @@ export function Search(props: {
 
   if (!searchMode) {
     return (
-      <ToolbarItem icon="search" popover="Search" onClick={onSearchToggle} />
+      <ToolbarItem
+        icon="search"
+        popover={searchPopover}
+        onClick={onSearchToggle}
+      />
     );
   }
 

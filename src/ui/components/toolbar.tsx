@@ -15,6 +15,12 @@ import { Gap, Group, Spacer } from "./primitives/layout";
 import { Icon } from "./primitives/icon";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
 
+const settingsPopover = "Customise view";
+const newFilePopover = "New note";
+const newFolderPopover = "New folder";
+const goToParentPopover = "Go to parent folder";
+const searchPopover = "Search inside folder";
+
 /* Toolbar components */
 export interface ToolbarProps extends HTMLAttributes<HTMLDivElement> {
   density?: "compact";
@@ -196,13 +202,13 @@ export function ExplorerToolbar(props: {
         parentDropFolder,
         onMoveIntoFolder,
       )}
-      popover="Go to parent folder"
+      popover={goToParentPopover}
       onClick={() => onGoToParent(false)}
     />
   ) : (
     <ToolbarItem
       icon={SETTINGS_ICON}
-      popover="Open settings"
+      popover={settingsPopover}
       onClick={onOpenSettings}
     />
   );
@@ -233,19 +239,19 @@ export function ExplorerToolbar(props: {
         <ToolbarGroup>
           <ToolbarGroupItem
             icon="folder-plus"
-            popover="New folder"
+            popover={newFolderPopover}
             onClick={onNewFolder}
           />
           <Gap inline size=".5em" />
           <ToolbarGroupItem
             icon="file-plus"
-            popover="New page"
+            popover={newFilePopover}
             onClick={onNewNote}
           />
           <Gap inline size=".5em" />
           <ToolbarGroupItem
             icon="search"
-            popover="Search"
+            popover={searchPopover}
             onClick={onSearchToggle}
           />
         </ToolbarGroup>
@@ -261,32 +267,32 @@ export function ExplorerToolbar(props: {
         <ToolbarGroup>
           <ToolbarGroupItem
             icon={SETTINGS_ICON}
-            popover="Open settings"
+            popover={settingsPopover}
             onClick={onOpenSettings}
           />
           <Gap inline size=".5em" />
           <ToolbarGroupItem
             icon="folder-plus"
-            popover="New folder"
+            popover={newFolderPopover}
             onClick={onNewFolder}
           />
           <Gap inline size=".5em" />
           <ToolbarGroupItem
             icon="file-plus"
-            popover="New page"
+            popover={newFilePopover}
             onClick={onNewNote}
           />
           <Gap inline size=".5em" />
           <ToolbarGroupItem
             icon="search"
-            popover="Search"
+            popover={searchPopover}
             onClick={onSearchToggle}
           />
         </ToolbarGroup>
       </Toolbar>
     );
   }
-
+  const DEV = false;
   return (
     <Toolbar {...toolbarProps}>
       <Group gap={2} className="explorer-toolbar__start">
@@ -294,24 +300,32 @@ export function ExplorerToolbar(props: {
       </Group>
 
       <Spacer />
-
+      {DEV && (
+        <>
+          <ToolbarGroup>
+            <ToolbarGroupItem icon="arrow-up-down" />
+            <ToolbarGroupItem icon="layout-grid" />
+          </ToolbarGroup>
+          <Spacer maxWidth="1em" minWidth=".5em" />
+        </>
+      )}
       <Group className="explorer-toolbar__end">
         <ToolbarGroup>
           {canGoToParent && (
             <ToolbarGroupItem
               icon={SETTINGS_ICON}
-              popover="Open settings"
+              popover={settingsPopover}
               onClick={onOpenSettings}
             />
           )}
           <ToolbarGroupItem
             icon="folder-plus"
-            popover="New folder"
+            popover={newFolderPopover}
             onClick={onNewFolder}
           />
           <ToolbarGroupItem
             icon="file-plus-2"
-            popover="New page"
+            popover={newFilePopover}
             onClick={onNewNote}
           />
           {onSaveFolderNote && !isMobile && USE_PEN && (
