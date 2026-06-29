@@ -14,7 +14,7 @@ import {
   NoteTitle,
   Pin,
 } from "./note/note-parts";
-const USE_3LINES = false;
+// const USE_3LINES = false;
 
 interface NoteCardProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
