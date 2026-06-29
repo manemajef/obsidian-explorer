@@ -1,6 +1,7 @@
 import { App, Plugin } from "obsidian";
 
 const HAS_BLOCK = "explorer-has-block";
+const RAW_EXPLORER_CODE_BLOCK = "explorer-raw-code-block";
 // const BLOCK_IS_LAST = "explorer-block-is-last";
 
 export function registerWorkspaceDecorations(plugin: Plugin, app: App): void {
@@ -54,6 +55,12 @@ function applyDecorations(app: App): void {
 
     const hasBlock = viewEl.querySelector(".explorer-container") !== null;
     leafEl.classList.toggle(HAS_BLOCK, hasBlock);
+    viewEl
+      .querySelectorAll<HTMLElement>(`.${RAW_EXPLORER_CODE_BLOCK}`)
+      .forEach((el) => el.classList.remove(RAW_EXPLORER_CODE_BLOCK));
+    viewEl.querySelectorAll("pre > code.language-explorer").forEach((code) => {
+      code.parentElement?.classList.add(RAW_EXPLORER_CODE_BLOCK);
+    });
     // const sizer = viewEl.querySelector<HTMLElement>(".markdown-preview-sizer");
   }
 }
@@ -64,5 +71,8 @@ function clearDecorations(app: App): void {
       leaf.view.containerEl.closest<HTMLElement>(".workspace-leaf") ??
       leaf.view.containerEl;
     leafEl.classList.remove(HAS_BLOCK);
+    leaf.view.containerEl
+      .querySelectorAll<HTMLElement>(`.${RAW_EXPLORER_CODE_BLOCK}`)
+      .forEach((el) => el.classList.remove(RAW_EXPLORER_CODE_BLOCK));
   }
 }

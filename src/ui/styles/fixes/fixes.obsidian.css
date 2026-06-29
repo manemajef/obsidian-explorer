@@ -19,7 +19,7 @@
 /* Before Obsidian runs the code-block processor, it can briefly paint the raw
  * explorer fence. Keep that intermediate frame blank but reserve similar
  * vertical space so the processed view does not push following content down. */
-.markdown-preview-view pre:has(> code.language-explorer) {
+.markdown-preview-view pre.explorer-raw-code-block {
   min-height: var(--explorer-nav-placeholder-height, 200px);
   background: transparent;
   border: 0;
