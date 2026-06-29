@@ -26,6 +26,7 @@ export function NoteTitle({
       draggable={false}
       variant="title"
       {...linkProps}
+      data-explorer-drag-image="title"
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();

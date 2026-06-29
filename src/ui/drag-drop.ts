@@ -8,7 +8,8 @@ const FOLDER_NOTE_DRAG_TYPE = "application/x-obsidian-explorer-folder-note";
 const ACTIVE_DRAG_CLASS = "explorer-drag-active";
 const DRAGGING_CLASS = "is-dragging";
 const DROP_TARGET_CLASS = "is-drop-target";
-const DRAG_IMAGE_SELECTOR = ".explorer-list-note-title";
+const DRAG_IMAGE_CLASS = "explorer-drag-image";
+const DRAG_IMAGE_SELECTOR = '[data-explorer-drag-image="title"]';
 let draggedItem: { path: string; fromFolderNote: boolean } | null = null;
 
 export type MoveIntoFolder = (
@@ -122,7 +123,23 @@ function setTitleDragImage<T extends HTMLElement>(event: DragEvent<T>): void {
   if (!isHTMLElement(title)) return;
 
   const rect = title.getBoundingClientRect();
-  event.dataTransfer.setDragImage(title, 0, event.clientY - rect.top);
+  const dragImage = title.cloneNode(true);
+  if (!isHTMLElement(dragImage)) return;
+
+  dragImage.classList.add(DRAG_IMAGE_CLASS);
+  event.currentTarget.ownerDocument.body.appendChild(dragImage);
+  event.dataTransfer.setDragImage(
+    dragImage,
+    clamp(event.clientX - rect.left, 0, rect.width),
+    clamp(event.clientY - rect.top, 0, rect.height),
+  );
+  event.currentTarget.ownerDocument.defaultView?.setTimeout(() => {
+    dragImage.remove();
+  });
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 
 function isControl(target: EventTarget): boolean {

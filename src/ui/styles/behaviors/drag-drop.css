@@ -13,3 +13,18 @@
 .explorer-container .explorer-parent-toolbar-item.is-drop-target {
   color: var(--text-normal);
 }
+
+.explorer-drag-image {
+  position: fixed;
+  inset-inline-start: -10000px;
+  inset-block-start: -10000px;
+  display: inline-flex;
+  align-items: center;
+  max-width: min(320px, 80vw);
+  padding: 4px 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background-color: var(--background-primary-alt);
+  box-shadow: var(--shadow-s);
+  /* color: var(--text-normal); */
+}
