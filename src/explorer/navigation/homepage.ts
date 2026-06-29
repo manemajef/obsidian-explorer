@@ -66,11 +66,11 @@ export async function openHomePage(
   sourcePath = "",
   newLeaf = false,
 ): Promise<void> {
-  markNavigationPending();
   await useHomePageFile(
     app,
     settings,
     async (file) => {
+      markNavigationPending(file.path);
       await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
     },
     async (homePath, homeTitle) => {
@@ -96,6 +96,7 @@ async function openHomePageInEmptyLeaf(
     settings,
     async (file) => {
       if (!isEmptyLeaf(leaf)) return;
+      markNavigationPending(file.path);
       await leaf.openFile(file);
     },
     async (homePath, homeTitle) => {
@@ -146,7 +147,7 @@ async function openVirtualHomePage(
   homePath: string,
   homeTitle: string,
 ): Promise<void> {
-  markNavigationPending();
+  markNavigationPending(homePath);
   await leaf.setViewState({
     type: VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
     active: true,

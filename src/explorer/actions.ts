@@ -10,6 +10,7 @@ import {
 } from "./navigation/folder-notes";
 import { resolveHomePageNoteInboxPath } from "./navigation/homepage";
 import { openVirtualFolderNote } from "./navigation/virtual-folder-note";
+import { markNavigationPending } from "./navigation/navigation-pending";
 import { type SavePluginSettings } from "./lib/folder-note";
 import { promptAndRenameFile, promptAndRenameFolder } from "./vault/edit";
 import type { PluginSettings } from "./settings";
@@ -56,7 +57,15 @@ export class ExplorerActions {
   }
 
   async openFile(file: ExplorerFileNode, newLeaf = false): Promise<void> {
-    await this.app.workspace.openLinkText(file.path, this.sourcePath, newLeaf);
+    if (file.isFolderNote) markNavigationPending(file.path);
+    await this.app.workspace.openLinkText(
+      file.path,
+      this.sourcePath,
+      newLeaf,
+      file.isFolderNote && this.settings.forceReadingMode
+        ? { state: { mode: "preview" } }
+        : undefined,
+    );
   }
 
   async openFolder(

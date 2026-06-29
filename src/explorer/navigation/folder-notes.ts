@@ -85,7 +85,13 @@ export async function openFolderNote(
 
   const existing = getFolderNoteForFolder(app, folder);
   if (existing) {
-    await openExplorerPage(app, existing, sourcePath, newLeaf);
+    await openExplorerPage(
+      app,
+      existing,
+      sourcePath,
+      newLeaf,
+      settings.forceReadingMode,
+    );
     return;
   }
   if (shouldCreateMissingFolderNote(settings, intent)) {
@@ -95,7 +101,15 @@ export async function openFolderNote(
       settings,
       savePluginSettings,
     );
-    if (created) await openExplorerPage(app, created, sourcePath, newLeaf);
+    if (created) {
+      await openExplorerPage(
+        app,
+        created,
+        sourcePath,
+        newLeaf,
+        settings.forceReadingMode,
+      );
+    }
     return;
   }
   await openVirtualFolderNote(app, folder, newLeaf);
@@ -106,9 +120,15 @@ async function openExplorerPage(
   file: TFile,
   sourcePath: string,
   newLeaf: boolean,
+  forceReadingMode = false,
 ): Promise<void> {
-  markNavigationPending();
-  await app.workspace.openLinkText(file.path, sourcePath, newLeaf);
+  markNavigationPending(file.path);
+  await app.workspace.openLinkText(
+    file.path,
+    sourcePath,
+    newLeaf,
+    forceReadingMode ? { state: { mode: "preview" } } : undefined,
+  );
 }
 
 function getNavigationParent(location: ExplorerLocation): TFolder | null {

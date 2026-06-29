@@ -106,11 +106,18 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     replaceExplorerBlock,
   } = input;
   container.addClass("explorer-container");
-  if (consumeNavigationPending()) {
+  let clearNavigationPlaceholder: (() => void) | null = null;
+  if (consumeNavigationPending(input.sourcePath)) {
     // Added before render() so the placeholder height is in the DOM before
     // content below the block has a chance to render.
     container.addClass("explorer-navigating");
-    window.setTimeout(() => container.removeClass("explorer-navigating"), 500);
+    clearNavigationPlaceholder = () => {
+      const win = container.ownerDocument.defaultView ?? window;
+      win.requestAnimationFrame(() =>
+        container.removeClass("explorer-navigating"),
+      );
+      clearNavigationPlaceholder = null;
+    };
   }
 
   const reactRoot = createRoot(container);
@@ -230,6 +237,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     });
     if (!model) {
       reactRoot.render(<p>No active file or folder</p>);
+      clearNavigationPlaceholder?.();
       return;
     }
 
@@ -244,6 +252,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
         onRemoveFolderNoteFile={input.removeFolderNoteFile}
       />,
     );
+    clearNavigationPlaceholder?.();
   };
 
   await render();
