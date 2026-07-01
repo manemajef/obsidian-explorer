@@ -16,10 +16,13 @@ export function isRtl(text?: string): boolean {
 export function diffDays(timestamp: number): string {
   const now = Date.now();
   const diffMs = now - timestamp;
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 1) return "Now";
+  if (diffMins < 60) return `${diffMins} minutes ago`;
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (days === 0) return "Today";
+  if (days === 0) return `${Math.floor(diffMins / 60)} hours ago`;
   if (days === 1) return "Yesterday";
+  if (days === 7) return "One week ago";
   if (days < 7) return `${days} days ago`;
   if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
   if (days < 365) return `${Math.floor(days / 30)} months ago`;

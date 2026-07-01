@@ -237,9 +237,10 @@ export function NoteFolderDate({
   const folder = getParentFolder(file, model) ? (
     <NoteFolder file={file} model={model} actions={actions} size={size} />
   ) : null;
-  const date = getNoteDate(file, model) != null ? (
-    <NoteDate file={file} model={model} size={size} />
-  ) : null;
+  const date =
+    getNoteDate(file, model) != null ? (
+      <NoteDate file={file} model={model} size={size} />
+    ) : null;
 
   if (separator === "spacer" && folder && date) {
     return (
@@ -283,9 +284,10 @@ export function NoteDatePreview({
     maxChar: effectiveMaxChar,
     enabled: previewEnabled,
   });
-  const date = getNoteDate(file, model) != null ? (
-    <NoteDate file={file} model={model} size={size} />
-  ) : null;
+  const date =
+    getNoteDate(file, model) != null ? (
+      <NoteDate file={file} model={model} size={size} />
+    ) : null;
   const showNotePreview =
     previewEnabled && (previewState.isLoading || previewState.hasPreview);
   const preview = showNotePreview ? (
@@ -330,9 +332,10 @@ export function NoteFolderDatePreview({
   const folder = getParentFolder(file, model) ? (
     <NoteFolder file={file} model={model} actions={actions} size={size} />
   ) : null;
-  const date = getNoteDate(file, model) != null ? (
-    <NoteDate file={file} model={model} size={size} />
-  ) : null;
+  const date =
+    getNoteDate(file, model) != null ? (
+      <NoteDate file={file} model={model} size={size} />
+    ) : null;
   const showNotePreview =
     previewEnabled && (previewState.isLoading || previewState.hasPreview);
   const preview = showNotePreview ? (
