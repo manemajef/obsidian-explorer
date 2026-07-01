@@ -127,7 +127,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           .onChange((value) => {
             void this.updatePluginSetting(
               key,
-              value as PluginGlobalSettings[typeof key],
+              value,
             );
           });
       });
@@ -146,7 +146,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           .onChange((value) => {
             void this.updatePluginSetting(
               key,
-              value as PluginGlobalSettings[typeof key],
+              value,
             );
           });
       });
@@ -165,7 +165,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
         .onChange((value) => {
           void this.updatePluginSetting(
             key,
-            value as PluginGlobalSettings[typeof key],
+            value,
           );
         });
     });
@@ -196,7 +196,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
       onChange: (paths) => {
         void this.updatePluginSetting(
           key,
-          paths as PluginGlobalSettings[typeof key],
+          paths,
         );
       },
     });

@@ -50,9 +50,7 @@ export function createDefaultBlockSettings(): BlockSettings {
   >;
   for (const key of BLOCK_SETTING_KEYS) {
     const value = BLOCK_SETTINGS_SCHEMA[key].defaultValue;
-    defaults[key] = (
-      Array.isArray(value) ? [...value] : value
-    ) as BlockSettings[typeof key];
+    defaults[key] = Array.isArray(value) ? [...value] : value;
   }
   return defaults as BlockSettings;
 }
@@ -138,20 +136,14 @@ export function isPluginSettingVisible(
   key: PluginSettingKey,
   settings: PluginSettings,
 ): boolean {
-  return isSettingVisible(
-    PLUGIN_SETTINGS_SCHEMA[key],
-    settings as unknown as Record<string, unknown>,
-  );
+  return isSettingVisible(PLUGIN_SETTINGS_SCHEMA[key], settings);
 }
 
 export function isBlockSettingVisible(
   key: BlockSettingKey,
   settings: BlockSettings,
 ): boolean {
-  return isSettingVisible(
-    BLOCK_SETTINGS_SCHEMA[key],
-    settings as unknown as Record<string, unknown>,
-  );
+  return isSettingVisible(BLOCK_SETTINGS_SCHEMA[key], settings);
 }
 
 export function getEnumOptionLabel<K extends BlockSettingKey>(

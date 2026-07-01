@@ -143,11 +143,11 @@ type DefinedPluginSchema<T extends Record<string, AnySettingField>> = {
 export function defineBlockSchema<T extends Record<string, BlockField>>(
   schema: T,
 ): DefinedBlockSchema<T> {
-  return schema as DefinedBlockSchema<T>;
+  return schema;
 }
 
 export function definePluginSchema<T extends Record<string, AnySettingField>>(
   schema: T,
 ): DefinedPluginSchema<T> {
-  return schema as DefinedPluginSchema<T>;
+  return schema;
 }
