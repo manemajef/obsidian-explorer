@@ -16,6 +16,8 @@ type HomePageInlineTitleConfig = {
   onSave: (nextTitle: string) => Promise<boolean | void>;
 };
 
+const SMART_NEWTAB = false;
+
 const NEW_TAB_DEFAULT_PAGE_PLUGIN_ID = "new-tab-default-page";
 const HOME_PAGE_OVERRIDES: Partial<BlockSettings> = {
   view: "cards",
@@ -67,7 +69,8 @@ export function registerHomePageNewTabs(
       if (
         !settings.openHomePageInNewTabs ||
         isHomePageNewTabManagedElsewhere(plugin.app) ||
-        activeViewIsHomePage(plugin.app, settings, previousLeaf)
+        (SMART_NEWTAB &&
+          activeViewIsHomePage(plugin.app, settings, previousLeaf))
       ) {
         return;
       }
