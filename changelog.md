@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.4.10 (01-06-2026)
+
+- Minor bug fixes
+
 ## 1.4.9 (01-06-2026)
 
 - Notes edited today will now show relative time in minutes/hours
