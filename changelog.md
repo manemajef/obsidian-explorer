@@ -1,5 +1,10 @@
 # Explorer changelog
 
+## 1.4.9 (01-06-2026)
+
+- Notes edited today will now show relative time in minutes/hours
+- Fixed UI bug on mobile so cards are always centered
+
 ## 1.4.8 (30-06-2026)
 
 ### New
