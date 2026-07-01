@@ -16,7 +16,7 @@ type HomePageInlineTitleConfig = {
   onSave: (nextTitle: string) => Promise<boolean | void>;
 };
 
-const SMART_NEWTAB = false;
+const SMART_NEWTAB = true;
 
 const NEW_TAB_DEFAULT_PAGE_PLUGIN_ID = "new-tab-default-page";
 const HOME_PAGE_OVERRIDES: Partial<BlockSettings> = {
