@@ -60,6 +60,8 @@
 .explorer-metadata-date {
   flex: 0 0 auto;
   white-space: nowrap;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .explorer-metadata-folder-time-row {
