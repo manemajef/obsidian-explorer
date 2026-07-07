@@ -3,7 +3,7 @@ import { FolderIndex } from "./folder-index";
 import { ExplorerFolderNode } from "../lib/nodes";
 
 export type IndexOptions = {
-  depth: number;
+  includeSubfolders: boolean;
   displayNestedFolderNotes: boolean;
   excludedFolders: readonly string[];
 };
@@ -23,7 +23,10 @@ export class ExplorerSession {
     if (cached) return cached;
 
     const index = new FolderIndex(this.app, folder, options.excludedFolders);
-    await index.loadToDepth(options.depth, options.displayNestedFolderNotes);
+    await index.load(
+      options.includeSubfolders,
+      options.displayNestedFolderNotes,
+    );
     this.indexes.set(key, index);
     return index;
   }
@@ -50,7 +53,7 @@ export class ExplorerSession {
   private getIndexKey(folder: TFolder, options: IndexOptions): string {
     return [
       folder.path,
-      options.depth,
+      options.includeSubfolders ? 1 : 0,
       options.displayNestedFolderNotes ? 1 : 0,
       ...options.excludedFolders,
     ].join("\0");

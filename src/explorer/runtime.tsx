@@ -182,6 +182,22 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     registerCleanup(registerRefresh(queueRefresh));
   }
 
+  const updateSettings = (newSettings: BlockSettings): void => {
+    const previousSettings = effectiveSettings;
+    const previousOverrides = blockOverrides;
+    effectiveSettings = newSettings;
+    const blockDefaults = getBlockDefaults();
+    blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
+    void (replaceExplorerBlock?.(newSettings, sourcePath) ?? Promise.resolve())
+      .then((saved) => {
+        if (saved === false) {
+          effectiveSettings = previousSettings;
+          blockOverrides = previousOverrides;
+        }
+        return render();
+      });
+  };
+
   const openSettings = (): void => {
     const conversion = input.folderNote
       ? {
@@ -193,22 +209,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       app,
       effectiveSettings,
       sourcePath,
-      (newSettings) => {
-        const previousSettings = effectiveSettings;
-        const previousOverrides = blockOverrides;
-        effectiveSettings = newSettings;
-        const blockDefaults = getBlockDefaults();
-        blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
-        void (
-          replaceExplorerBlock?.(newSettings, sourcePath) ?? Promise.resolve()
-        ).then((saved) => {
-          if (saved === false) {
-            effectiveSettings = previousSettings;
-            blockOverrides = previousOverrides;
-          }
-          return render();
-        });
-      },
+      updateSettings,
       conversion,
       sourceFolder,
     ).open();
@@ -223,8 +224,8 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     const direction = resolveDirection(effectiveSettings);
     container.setAttribute("dir", direction);
     container.toggleClass(
-      "explorer-compact-toolbar",
-      effectiveSettings.compactActionBar,
+      "explorer-disable-glass-toolbar",
+      effectiveSettings.disableGlassToolbar,
     );
 
     const model = await buildExplorerModel({
@@ -246,6 +247,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
         key={model.sourcePath}
         model={model}
         onOpenSettings={openSettings}
+        onSettingsChange={updateSettings}
         onSavePluginSettings={savePluginSettings}
         onRefresh={queueRefresh}
         onSaveFolderNote={input.onSaveFolderNote}

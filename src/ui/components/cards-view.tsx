@@ -58,6 +58,7 @@ export function CardsView(props: {
       ? "smaller"
       : "small";
   const titleDensity = compact ? "tight" : undefined;
+  const metadataSize = !isMobile && !compact ? "ui-small" : undefined;
 
   return (
     <div
@@ -120,6 +121,7 @@ export function CardsView(props: {
                     className="explorer-file-card__preview"
                     maxChar={compact ? 120 : 200}
                     lines={compact ? 2 : 3}
+                    size={metadataSize}
                   />
                 </div>
               )}
@@ -141,6 +143,7 @@ export function CardsView(props: {
                   file={file}
                   model={model}
                   actions={actions}
+                  size={metadataSize}
                   // separator="spacer"
                 />
               </div>

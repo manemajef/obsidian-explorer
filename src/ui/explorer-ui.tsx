@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { TFile, TFolder } from "obsidian";
-import { shouldDisplayNotes } from "../explorer/settings";
+import { BlockSettings, shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
 import { ExplorerFileNode } from "../explorer/lib/nodes";
 import { ExplorerActions } from "../explorer/actions";
@@ -17,6 +17,7 @@ import { Divider } from "./components/primitives/layout";
 interface ExplorerUIProps {
   model: ExplorerModel;
   onOpenSettings: () => void;
+  onSettingsChange: (settings: BlockSettings) => void;
   onSavePluginSettings: () => void | Promise<void>;
   onRefresh: () => void;
   onSaveFolderNote?: () => void | Promise<void>;
@@ -27,6 +28,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const {
     model,
     onOpenSettings,
+    onSettingsChange,
     onSavePluginSettings,
     onRefresh,
     onSaveFolderNote,
@@ -108,7 +110,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const showFolders =
     settings.showFolders && model.folders.length > 0 && !searchMode;
   const showNotes = shouldDisplayNotes(settings);
-  const compactToolbar = settings.compactActionBar;
+  const disableGlassToolbar = settings.disableGlassToolbar;
 
   const renderFiles = useCallback(
     (files: ExplorerFileNode[]) => {
@@ -144,10 +146,12 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const toolbar = (
     <ExplorerToolbar
       app={app}
+      settings={settings}
       parentDropFolder={model.folder.parent}
       onMoveIntoFolder={onMoveIntoFolder}
       canGoToParent={actions.canGoToParent(model.location)}
       onOpenSettings={onOpenSettings}
+      onSettingsChange={onSettingsChange}
       onSaveFolderNote={
         onSaveFolderNote ? () => void onSaveFolderNote() : undefined
       }
@@ -160,7 +164,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       searchMode={searchMode}
       searchQuery={searchQuery}
       onSearchInput={setSearchQuery}
-      compactToolbar={compactToolbar}
+      disableGlassToolbar={disableGlassToolbar}
     />
   );
 

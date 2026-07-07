@@ -147,6 +147,28 @@ function resolveLegacyDisplayedNotes(
   return undefined;
 }
 
+function resolveLegacyIncludeSubfolders(
+  source: Record<string, unknown>,
+): boolean | undefined {
+  const depth = source.depth;
+  if (typeof depth === "number") return depth > 0;
+  if (typeof depth === "string") {
+    const numeric = Number.parseInt(depth, 10);
+    return Number.isNaN(numeric) ? undefined : numeric > 0;
+  }
+  return undefined;
+}
+
+function resolveLegacyDisableGlassToolbar(
+  source: Record<string, unknown>,
+): boolean | undefined {
+  const compactActionBar = coerceLegacyBoolean(source.compactActionBar);
+  if (compactActionBar !== undefined) return compactActionBar;
+
+  const useGlass = coerceLegacyBoolean(source.useGlass);
+  return useGlass === undefined ? undefined : !useGlass;
+}
+
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   // NAVIGATION
   showTitlebarActions: booleanField({
@@ -159,7 +181,15 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       section: "navigation",
     },
   }),
-
+  goToParentInNewTab: booleanField({
+    label: "Go to parent folder in a new tab",
+    description: "Should Go to parent folder / Homepage open a new tab",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+    },
+  }),
   openFolderViewFromSidebar: booleanField({
     label: "Open folder views from sidebar",
     description:
@@ -235,9 +265,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     ui: {
       surfaces: ["plugin"],
       section: "foldernotes",
-    },
-    legacy: {
-      oldDefault: true,
     },
   }),
 
@@ -480,19 +507,19 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
   }),
 
-  depth: numberField({
-    label: "Subfolder depth",
-    description:
-      "Use 0 for the current folder only. Higher values include nested folders.",
-    blockKey: "depth",
-    defaultValue: 0,
-    min: 0,
-    max: 10,
-    step: 1,
+  includeSubfolders: booleanField({
+    label: "Include notes from subfolders",
+    description: "Show notes from this folder and all nested folders.",
+    blockKey: "includeSubfolders",
+    defaultValue: false,
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
       group: "listing",
+    },
+    legacy: {
+      blockKeys: ["depth"],
+      resolve: resolveLegacyIncludeSubfolders,
     },
   }),
   pageSize: numberField({
@@ -568,22 +595,31 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       group: "listing",
     },
   }),
-  compactActionBar: booleanField({
-    label: "Compact toolbar",
-    description: "Use plain, tighter toolbar controls.",
+  extendedToolbar: booleanField({
+    label: "Show sort and view menus",
+    description: "Add sort and view controls to the desktop toolbar.",
+    defaultValue: true,
+    blockKey: "extendedToolbar",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      group: "appearance",
+    },
+  }),
+
+  disableGlassToolbar: booleanField({
+    label: "Disable glass toolbar",
+    description: "Use plain, tighter toolbar controls without glass styling.",
     defaultValue: false,
-    blockKey: "compactActionBar",
+    blockKey: "disableGlassToolbar",
     ui: {
       surfaces: ["plugin", "block"],
       section: "core",
       group: "appearance",
     },
     legacy: {
-      blockKeys: ["useGlass"],
-      resolve: (source) => {
-        const useGlass = coerceLegacyBoolean(source.useGlass);
-        return useGlass === undefined ? undefined : !useGlass;
-      },
+      blockKeys: ["compactActionBar", "useGlass"],
+      resolve: resolveLegacyDisableGlassToolbar,
     },
   }),
 

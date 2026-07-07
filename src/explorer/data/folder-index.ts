@@ -31,25 +31,25 @@ export class FolderIndex {
     );
   }
 
-  async loadToDepth(
-    depth: number,
+  async load(
+    includeSubfolders: boolean,
     includeNestedFolderNotes: boolean,
   ): Promise<void> {
     this.loadImmediate();
-    if (depth > 0) {
-      this.nestedFiles = await this.walkFiles(depth, includeNestedFolderNotes);
+    if (includeSubfolders) {
+      this.nestedFiles = await this.loadSubfolderFiles(includeNestedFolderNotes);
     }
   }
 
   async getAllContent(
     onChunk?: (chunk: ExplorerFileNode[]) => void,
   ): Promise<ExplorerFileNode[]> {
-    return this.walkFiles(Infinity, true, onChunk);
+    return this.loadSubfolderFiles(true, onChunk);
   }
 
   getFilesToDisplay(settings: BlockSettings): ExplorerFileNode[] {
     return filterDisplayedFiles(
-      settings.depth > 0 ? this.nestedFiles : this.files,
+      settings.includeSubfolders ? this.nestedFiles : this.files,
       settings.displayedNotes,
     );
   }
@@ -79,17 +79,13 @@ export class FolderIndex {
     this.nestedFiles = [...this.files];
   }
 
-  private async walkFiles(
-    depth: number,
+  private async loadSubfolderFiles(
     includeFolderNotes: boolean,
     onChunk?: (chunk: ExplorerFileNode[]) => void,
   ): Promise<ExplorerFileNode[]> {
     const all: ExplorerFileNode[] = [];
     let pending: ExplorerFileNode[] = [];
     let sliceStart = window.performance.now();
-    const queue: Array<{ folder: TFolder; depth: number }> = [
-      { folder: this.folder, depth: 0 },
-    ];
 
     const collect = (file: TFile): void => {
       const node = new ExplorerFileNode(this.app, file);
@@ -97,38 +93,48 @@ export class FolderIndex {
       pending.push(node);
     };
 
-    while (queue.length > 0) {
-      const current = queue.shift()!;
+    for (const file of this.app.vault.getFiles()) {
+      if (!this.isDescendantFile(file) || this.isExcludedFile(file)) continue;
+      if (
+        shouldIndexFile(file) ||
+        (includeFolderNotes && this.isNestedFolderNote(file))
+      ) {
+        collect(file);
+      }
 
-      for (const child of current.folder.children) {
-        if (child instanceof TFile && shouldIndexFile(child)) {
-          collect(child);
-        } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
-          if (includeFolderNotes && current.depth > 0) {
-            const folderNote = getFolderNoteForFolder(this.app, child);
-            if (folderNote) collect(folderNote);
-          }
-          if (current.depth < depth) {
-            queue.push({ folder: child, depth: current.depth + 1 });
-          }
+      if (onChunk && window.performance.now() - sliceStart >= WALK_BUDGET_MS) {
+        if (pending.length > 0) {
+          onChunk(pending);
+          pending = [];
         }
-
-        if (
-          onChunk &&
-          window.performance.now() - sliceStart >= WALK_BUDGET_MS
-        ) {
-          if (pending.length > 0) {
-            onChunk(pending);
-            pending = [];
-          }
-          await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
-          sliceStart = window.performance.now();
-        }
+        await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+        sliceStart = window.performance.now();
       }
     }
 
     if (onChunk && pending.length > 0) onChunk(pending);
     return all;
+  }
+
+  private isDescendantFile(file: TFile): boolean {
+    if (this.folder.isRoot()) return true;
+    return file.path.startsWith(`${this.folder.path}/`);
+  }
+
+  private isExcludedFile(file: TFile): boolean {
+    const folderPath = file.parent?.path;
+    if (!folderPath) return false;
+    return this.excludedFolderPaths.some(
+      (excludedPath) =>
+        folderPath === excludedPath ||
+        folderPath.startsWith(`${excludedPath}/`),
+    );
+  }
+
+  private isNestedFolderNote(file: TFile): boolean {
+    const parent = file.parent;
+    if (!parent?.parent || parent.parent === this.folder) return false;
+    return getFolderNoteForFolder(this.app, parent) === file;
   }
 
   private isExcludedFolder(folder: TFolder): boolean {

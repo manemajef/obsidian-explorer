@@ -30,3 +30,9 @@
   gap: var(--size-4-2);
   margin-top: var(--size-4-4);
 }
+
+.explorer-setting--prominent {
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+  padding-inline: var(--size-4-2);
+}

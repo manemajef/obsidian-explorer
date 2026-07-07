@@ -44,7 +44,7 @@ export async function buildExplorerModel(input: {
   if (!folder) return null;
 
   const index = await session.getIndex(folder, {
-    depth: settings.depth,
+    includeSubfolders: settings.includeSubfolders,
     displayNestedFolderNotes: pluginSettings.displayNestedFolderNotes,
     excludedFolders: settings.excludedFolders,
   });

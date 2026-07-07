@@ -8,18 +8,20 @@ import React, {
   type ReactNode,
   type Ref,
 } from "react";
-import { App, Platform, setTooltip, TFolder } from "obsidian";
+import { App, Menu, Platform, setTooltip, TFolder } from "obsidian";
 import { Search } from "./search";
 import { cn } from "./primitives/cn";
 import { Gap, Group, Spacer } from "./primitives/layout";
 import { Icon } from "./primitives/icon";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
+import type { BlockSettings, SortBy } from "../../explorer/settings";
 
 const settingsPopover = "Customise view";
 const newFilePopover = "New note";
 const newFolderPopover = "New folder";
 const goToParentPopover = "Go to parent folder";
-const searchPopover = "Search inside folder";
+const sortPopover = "Sort";
+const viewPopover = "View";
 
 /* Toolbar components */
 export interface ToolbarProps extends HTMLAttributes<HTMLDivElement> {
@@ -60,6 +62,7 @@ export const ToolbarItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
   ({ icon, active, className, popover, ...rest }, ref) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     useToolbarPopover(buttonRef, popover);
+    const ariaLabel = rest["aria-label"] ?? popover;
 
     return (
       <button
@@ -73,6 +76,7 @@ export const ToolbarItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
         data-glass=""
         data-interactive=""
         {...rest}
+        aria-label={ariaLabel}
       >
         <Icon name={icon} />
       </button>
@@ -105,6 +109,7 @@ export const ToolbarGroupItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
   ({ icon, active, className, popover, ...rest }, ref) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     useToolbarPopover(buttonRef, popover);
+    const ariaLabel = rest["aria-label"] ?? popover;
 
     return (
       <button
@@ -116,6 +121,7 @@ export const ToolbarGroupItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
         className={cn("explorer-toolbar-group-item", className)}
         data-active={active || undefined}
         {...rest}
+        aria-label={ariaLabel}
       >
         <Icon name={icon} />
       </button>
@@ -124,8 +130,74 @@ export const ToolbarGroupItem = forwardRef<HTMLButtonElement, ToolbarItemProps>(
 );
 ToolbarGroupItem.displayName = "ToolbarGroupItem";
 
+export interface ToolbarGroupMenuItemProps extends ToolbarItemProps {
+  enumIcon?: boolean;
+}
+
+export const ToolbarGroupMenuItem = forwardRef<
+  HTMLButtonElement,
+  ToolbarGroupMenuItemProps
+>(({ icon, enumIcon, active, className, popover, ...rest }, ref) => {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  useToolbarPopover(buttonRef, popover);
+  const ariaLabel = rest["aria-label"] ?? popover;
+
+  return (
+    <button
+      ref={(el) => {
+        buttonRef.current = el;
+        setForwardedRef(ref, el);
+      }}
+      type="button"
+      className={cn("explorer-toolbar-group-menu-item", className)}
+      data-active={active || undefined}
+      {...rest}
+      aria-label={ariaLabel}
+    >
+      <Icon name={icon} />
+      {enumIcon && (
+        <Icon
+          name="chevrons-up-down"
+          className="explorer-toolbar-group-menu-item__enum-icon"
+        />
+      )}
+    </button>
+  );
+});
+ToolbarGroupMenuItem.displayName = "ToolbarGroupMenuItem";
+
 const SETTINGS_ICON = "settings-2";
 const TOOLTIP_DELAY_MS = 600;
+const SORT_OPTIONS: Array<{ value: SortBy; label: string }> = [
+  { value: "newest", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "edited", label: "Last edited" },
+  { value: "name", label: "Name" },
+  { value: "nameDesc", label: "Name (reverse)" },
+];
+const VIEW_OPTIONS: Array<{
+  label: string;
+  icon: string;
+  settings: Pick<BlockSettings, "view"> &
+    Partial<Pick<BlockSettings, "listStyle">>;
+}> = [
+  { label: "Cards", icon: "layout-grid", settings: { view: "cards" } },
+  {
+    label: "Markdown list",
+    icon: "list",
+    settings: { view: "list", listStyle: "markdown" },
+  },
+  {
+    label: "Modern list",
+    icon: "rows-3",
+    settings: { view: "list", listStyle: "modern" },
+  },
+  // {
+  //   label: "Plain list",
+  //   icon: "list",
+  //   settings: { view: "list", listStyle: "plain" },
+  // },
+];
 
 function useToolbarPopover(
   ref: MutableRefObject<HTMLElement | null>,
@@ -149,11 +221,129 @@ function setForwardedRef<T>(ref: Ref<T> | undefined, value: T | null): void {
   (ref as MutableRefObject<T | null>).current = value;
 }
 
+function showToolbarMenu(
+  button: HTMLButtonElement,
+  build: (menu: Menu) => void,
+): void {
+  const rect = button.getBoundingClientRect();
+  const menu = new Menu().setUseNativeMenu(true);
+  build(menu);
+  menu.showAtPosition(
+    { x: rect.left, y: rect.bottom, width: rect.width },
+    button.ownerDocument,
+  );
+}
+
+function getCurrentViewIcon(settings: BlockSettings): string {
+  if (settings.view === "cards") return "layout-grid";
+  if (settings.listStyle === "modern") return "rows-3";
+  return "list";
+}
+
+function isCurrentView(
+  settings: BlockSettings,
+  option: (typeof VIEW_OPTIONS)[number]["settings"],
+): boolean {
+  if (settings.view !== option.view) return false;
+  return settings.view === "cards" || settings.listStyle === option.listStyle;
+}
+
+function ExtendedToolbarGroup(props: {
+  settings: BlockSettings;
+  withSettings: boolean;
+  onOpenSettings: () => void;
+  onSettingsChange: (settings: BlockSettings) => void;
+}): React.JSX.Element {
+  const { settings, withSettings, onOpenSettings, onSettingsChange } = props;
+
+  return (
+    <ToolbarGroup>
+      {withSettings && (
+        <ToolbarGroupItem
+          icon={SETTINGS_ICON}
+          popover={settingsPopover}
+          onClick={onOpenSettings}
+        />
+      )}
+      <span className="explorer-toolbar__extended-menu">
+        <SortMenuButton settings={settings} onSettingsChange={onSettingsChange} />
+        <ViewMenuButton settings={settings} onSettingsChange={onSettingsChange} />
+      </span>
+    </ToolbarGroup>
+  );
+}
+
+function SortMenuButton(props: {
+  settings: BlockSettings;
+  onSettingsChange: (settings: BlockSettings) => void;
+}): React.JSX.Element {
+  const { settings, onSettingsChange } = props;
+
+  return (
+    <ToolbarGroupItem
+      icon="arrow-down-up"
+      popover={sortPopover}
+      onClick={(event) => {
+        showToolbarMenu(event.currentTarget, (menu) => {
+          for (const option of SORT_OPTIONS) {
+            menu.addItem((item) => {
+              item
+                .setTitle(option.label)
+                .setChecked(settings.sortBy === option.value)
+                .onClick(() => {
+                  onSettingsChange({
+                    ...settings,
+                    sortBy: option.value,
+                  });
+                });
+            });
+          }
+        });
+      }}
+    />
+  );
+}
+
+function ViewMenuButton(props: {
+  settings: BlockSettings;
+  onSettingsChange: (settings: BlockSettings) => void;
+}): React.JSX.Element {
+  const { settings, onSettingsChange } = props;
+
+  return (
+    <ToolbarGroupMenuItem
+      icon={getCurrentViewIcon(settings)}
+      enumIcon
+      popover={viewPopover}
+      onClick={(event) => {
+        showToolbarMenu(event.currentTarget, (menu) => {
+          for (const option of VIEW_OPTIONS) {
+            menu.addItem((item) => {
+              item
+                .setTitle(option.label)
+                .setIcon(option.icon)
+                .setChecked(isCurrentView(settings, option.settings))
+                .onClick(() => {
+                  onSettingsChange({
+                    ...settings,
+                    ...option.settings,
+                  });
+                });
+            });
+          }
+        });
+      }}
+    />
+  );
+}
+
 export function ExplorerToolbar(props: {
   app: App;
+  settings: BlockSettings;
   parentDropFolder: TFolder | null;
   onMoveIntoFolder: MoveIntoFolder;
   onOpenSettings: () => void;
+  onSettingsChange: (settings: BlockSettings) => void;
   onSaveFolderNote?: () => void;
   onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
@@ -163,13 +353,15 @@ export function ExplorerToolbar(props: {
   searchQuery: string;
   onSearchInput: (query: string) => void;
   canGoToParent: boolean;
-  compactToolbar: boolean;
+  disableGlassToolbar: boolean;
 }): React.JSX.Element {
   const {
     app,
+    settings,
     parentDropFolder,
     onMoveIntoFolder,
     onOpenSettings,
+    onSettingsChange,
     onSaveFolderNote,
     onGoToParent,
     onNewFolder,
@@ -179,21 +371,29 @@ export function ExplorerToolbar(props: {
     onSearchToggle,
     onSearchInput,
     canGoToParent,
-    compactToolbar,
+    disableGlassToolbar,
   } = props;
   const USE_PEN = false;
   const isMobile = Platform.isMobile;
+  const extendedToolbar = settings.extendedToolbar;
   const toolbarProps = {
     id: "explorer-toolbar",
     className: cn(
       "explorer-toolbar--explorer",
-      compactToolbar && "explorer-toolbar--compact",
+      disableGlassToolbar && "explorer-toolbar--compact",
     ),
-    density: compactToolbar ? ("compact" as const) : undefined,
-    fit: isMobile && !compactToolbar ? ("content" as const) : undefined,
+    density: disableGlassToolbar ? ("compact" as const) : undefined,
+    fit: isMobile && !disableGlassToolbar ? ("content" as const) : undefined,
   };
 
-  const leadAction = canGoToParent ? (
+  const settingsAction = (
+    <ToolbarItem
+      icon={SETTINGS_ICON}
+      popover={settingsPopover}
+      onClick={onOpenSettings}
+    />
+  );
+  const parentAction = (
     <ToolbarItem
       icon="undo-2"
       className="explorer-parent-toolbar-item"
@@ -204,12 +404,6 @@ export function ExplorerToolbar(props: {
       )}
       popover={goToParentPopover}
       onClick={() => onGoToParent(false)}
-    />
-  ) : (
-    <ToolbarItem
-      icon={SETTINGS_ICON}
-      popover={settingsPopover}
-      onClick={onOpenSettings}
     />
   );
 
@@ -231,89 +425,40 @@ export function ExplorerToolbar(props: {
     );
   }
 
-  if (isMobile && !canGoToParent) {
-    return (
-      <Toolbar {...toolbarProps}>
-        {leadAction}
-        <Spacer minWidth=".5em" />
-        <ToolbarGroup>
-          <ToolbarGroupItem
-            icon="folder-plus"
-            popover={newFolderPopover}
-            onClick={onNewFolder}
-          />
-          <Gap inline size=".5em" />
-          <ToolbarGroupItem
-            icon="file-plus"
-            popover={newFilePopover}
-            onClick={onNewNote}
-          />
-          <Gap inline size=".5em" />
-          <ToolbarGroupItem
-            icon="search"
-            popover={searchPopover}
-            onClick={onSearchToggle}
-          />
-        </ToolbarGroup>
-      </Toolbar>
-    );
-  }
-
-  if (isMobile) {
-    return (
-      <Toolbar {...toolbarProps}>
-        {leadAction}
-        <Spacer minWidth=".8em" />
-        <ToolbarGroup>
-          <ToolbarGroupItem
-            icon={SETTINGS_ICON}
-            popover={settingsPopover}
-            onClick={onOpenSettings}
-          />
-          <Gap inline size=".5em" />
-          <ToolbarGroupItem
-            icon="folder-plus"
-            popover={newFolderPopover}
-            onClick={onNewFolder}
-          />
-          <Gap inline size=".5em" />
-          <ToolbarGroupItem
-            icon="file-plus"
-            popover={newFilePopover}
-            onClick={onNewNote}
-          />
-          <Gap inline size=".5em" />
-          <ToolbarGroupItem
-            icon="search"
-            popover={searchPopover}
-            onClick={onSearchToggle}
-          />
-        </ToolbarGroup>
-      </Toolbar>
-    );
-  }
-  const DEV = false;
   return (
     <Toolbar {...toolbarProps}>
       <Group gap={2} className="explorer-toolbar__start">
-        {leadAction}
+        {canGoToParent && parentAction}
+        {!canGoToParent && settingsAction}
       </Group>
 
       <Spacer />
-      {DEV && (
-        <>
-          <ToolbarGroup>
-            <ToolbarGroupItem icon="arrow-up-down" />
-            <ToolbarGroupItem icon="layout-grid" />
-          </ToolbarGroup>
-          <Spacer maxWidth="1em" minWidth=".5em" />
-        </>
-      )}
+
       <Group className="explorer-toolbar__end">
+        {extendedToolbar && (
+          <span
+            className="explorer-toolbar__extended-slot"
+            data-with-settings={canGoToParent || undefined}
+          >
+            <Gap inline size=".35em" />
+            <ExtendedToolbarGroup
+              settings={settings}
+              withSettings={canGoToParent}
+              onOpenSettings={onOpenSettings}
+              onSettingsChange={onSettingsChange}
+            />
+            <Gap inline size=".6em" />
+          </span>
+        )}
         <ToolbarGroup>
           {canGoToParent && (
             <ToolbarGroupItem
               icon={SETTINGS_ICON}
+              className={
+                extendedToolbar
+                  ? "explorer-toolbar__fallback-settings"
+                  : undefined
+              }
               popover={settingsPopover}
               onClick={onOpenSettings}
             />
@@ -336,7 +481,7 @@ export function ExplorerToolbar(props: {
             />
           )}
         </ToolbarGroup>
-        <Gap inline size={compactToolbar ? ".25em" : ".6em"} />
+        <Gap inline size={disableGlassToolbar ? ".25em" : ".6em"} />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}

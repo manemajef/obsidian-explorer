@@ -47,6 +47,7 @@ export async function goToParentFolderNote(
 ): Promise<void> {
   const location = input.location;
   if (!location) return;
+  const shouldOpenNewTab = input.newLeaf ?? settings.goToParentInNewTab;
 
   const homePath = resolveHomePagePath(app, settings);
   if (homePath && location.path === homePath) return;
@@ -54,7 +55,7 @@ export async function goToParentFolderNote(
   const parent = getNavigationParent(location);
 
   if (!parent || parent.isRoot()) {
-    await openHomePage(app, settings, location.path, input.newLeaf);
+    await openHomePage(app, settings, location.path, shouldOpenNewTab);
     return;
   }
 
@@ -63,7 +64,7 @@ export async function goToParentFolderNote(
     parent,
     settings,
     location.path,
-    input.newLeaf,
+    shouldOpenNewTab,
     "navigate",
     input.savePluginSettings,
   );

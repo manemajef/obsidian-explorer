@@ -210,6 +210,8 @@ function applyLegacySettingAliases(
   const normalized = { ...source };
 
   for (const key of BLOCK_SETTING_KEYS) {
+    if (key in source) continue;
+
     const field = BLOCK_SETTINGS_SCHEMA[key] as BlockField;
     const legacy = field.legacy;
     if (!legacy) continue;

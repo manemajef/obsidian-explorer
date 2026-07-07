@@ -170,7 +170,7 @@ The homepage must be a root note name, not a nested path. If the configured home
 ```explorer
 view: "cards"
 sortBy: "edited"
-depth: 10
+includeSubfolders: true
 pageSize: 21
 ```
 ````
@@ -208,7 +208,7 @@ block-specific options inside an Explorer code block:
 ```explorer
 view: "cards"
 sortBy: "edited"
-depth: 2
+includeSubfolders: true
 pageSize: 21
 paginationStyle: "modern"
 excludedFolders: ["Archive"]
@@ -217,23 +217,24 @@ excludedFolders: ["Archive"]
 
 Supported block settings:
 
-| Setting            | Values                                                |
-| ------------------ | ----------------------------------------------------- |
-| `view`             | `cards`, `list`                                       |
-| `listStyle`        | `markdown`, `modern`, `plain`                         |
-| `compactCards`     | `true`, `false`                                       |
-| `sortBy`           | `newest`, `oldest`, `edited`, `name`, `nameDesc`      |
-| `depth`            | `0-10`                                                |
-| `paginationStyle`  | `modern`, `classic`, `none`                           |
-| `pageSize`         | `6-60`                                                |
-| `compactActionBar` | `true`, `false`                                       |
-| `showPreviews`     | `true`, `false`                                       |
-| `showFolders`      | `true`, `false`                                       |
-| `showTags`         | `true`, `false`                                       |
-| `displayedNotes`   | `supported`, `markdown`, `all`, `none`                |
-| `excludedFolders`  | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
-| `adaptToMobile`    | `true`, `false`                                       |
-| `textDirection`    | `auto`, `ltr`, `rtl`                                  |
+| Setting               | Values                                                |
+| --------------------- | ----------------------------------------------------- |
+| `view`                | `cards`, `list`                                       |
+| `listStyle`           | `markdown`, `modern`, `plain`                         |
+| `compactCards`        | `true`, `false`                                       |
+| `sortBy`              | `newest`, `oldest`, `edited`, `name`, `nameDesc`      |
+| `includeSubfolders`   | `true`, `false`                                       |
+| `paginationStyle`     | `modern`, `classic`, `none`                           |
+| `pageSize`            | `6-60`                                                |
+| `extendedToolbar`     | `true`, `false`                                       |
+| `disableGlassToolbar` | `true`, `false`                                       |
+| `showPreviews`        | `true`, `false`                                       |
+| `showFolders`         | `true`, `false`                                       |
+| `showTags`            | `true`, `false`                                       |
+| `displayedNotes`      | `supported`, `markdown`, `all`, `none`                |
+| `excludedFolders`     | Nested folder paths, e.g. `["Archive", "Drafts/Old"]` |
+| `adaptToMobile`       | `true`, `false`                                       |
+| `textDirection`       | `auto`, `ltr`, `rtl`                                  |
 
 `excludedFolders` hides selected folders and their contents from that Explorer
 block only. Plugin-only settings include missing Markdown folder-note creation
@@ -256,10 +257,10 @@ notes. It is not a vault-wide query engine and does not try to replace
 Dataview, Bases, or tag/database workflows.
 
 For folder-content views, this narrower scope is intentional. Explorer starts
-from the current folder, walks the selected subtree breadth-first up to the
-configured depth, and then applies display filters and sorting to that scoped
-set. A vault-wide query tool such as Bases has to work from the whole vault and
-then filter down. Explorer is therefore optimized for the specific case of
+from the current folder, optionally includes its subfolders, and then applies
+display filters and sorting to that scoped set. A vault-wide query tool such as
+Bases has to work from the whole vault and then filter down. Explorer is
+therefore optimized for the specific case of
 showing "what is in this folder or notebook group?" rather than answering
 global property queries.
 

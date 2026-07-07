@@ -22,7 +22,7 @@ const NEW_TAB_DEFAULT_PAGE_PLUGIN_ID = "new-tab-default-page";
 const HOME_PAGE_OVERRIDES: Partial<BlockSettings> = {
   view: "cards",
   sortBy: "edited",
-  depth: 10,
+  includeSubfolders: true,
   pageSize: 21,
 };
 

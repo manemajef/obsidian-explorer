@@ -15,6 +15,7 @@
 /* Toolbar core & items layout */
 
 .explorer-toolbar {
+  container-type: inline-size;
   direction: ltr;
   display: flex;
   align-items: center;
@@ -25,7 +26,8 @@
 }
 
 .explorer-toolbar-item,
-.explorer-toolbar-group-item {
+.explorer-toolbar-group-item,
+.explorer-toolbar-group-menu-item {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -46,19 +48,42 @@
 }
 
 .explorer-toolbar-item .explorer-icon svg,
-.explorer-toolbar-group-item .explorer-icon svg {
+.explorer-toolbar-group-item .explorer-icon svg,
+.explorer-toolbar-group-menu-item .explorer-icon svg {
   width: var(--explorer-icon-size, var(--icon-size));
   height: var(--explorer-icon-size, var(--icon-size));
 }
 
+.explorer-toolbar-group-menu-item {
+  width: auto;
+  padding-inline: var(--explorer-button-pad)
+    calc(var(--explorer-button-pad) + 2px);
+  gap: 1px;
+}
+
+.explorer-toolbar-group-menu-item > .explorer-icon:first-child {
+  width: calc(var(--explorer-control-size) - (2 * var(--explorer-button-pad)));
+  display: inline-flex;
+  justify-content: center;
+}
+
+.explorer-toolbar-group-menu-item__enum-icon svg {
+  width: var(--explorer-icon-size, var(--icon-size));
+  height: var(--explorer-icon-size, var(--icon-size));
+  transform: scale(0.7);
+}
+
 .explorer-toolbar-group-item:hover,
-.explorer-toolbar-group-item:focus-visible {
+.explorer-toolbar-group-item:focus-visible,
+.explorer-toolbar-group-menu-item:hover,
+.explorer-toolbar-group-menu-item:focus-visible {
   color: var(--text-normal);
   background-color: var(--background-modifier-hover);
 }
 
 .explorer-toolbar-item[data-active],
-.explorer-toolbar-group-item[data-active] {
+.explorer-toolbar-group-item[data-active],
+.explorer-toolbar-group-menu-item[data-active] {
   color: var(--text-normal);
 }
 
@@ -72,10 +97,39 @@
   min-width: 0;
 }
 
+.explorer-toolbar__extended-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.explorer-toolbar__extended-slot {
+  display: inline-flex;
+  align-items: center;
+}
+
+.explorer-toolbar__fallback-settings {
+  display: none;
+}
+
+@container (width < 360px) {
+  .explorer-toolbar__extended-slot {
+    display: none;
+  }
+
+  .explorer-toolbar__fallback-settings {
+    display: inline-flex;
+  }
+}
+
 /* --- fit="content": auto boxes, touch-padded icons (mobile) ------------- */
 
 .explorer-toolbar[data-fit="content"]
-  :is(.explorer-toolbar-item, .explorer-toolbar-group-item) {
+  :is(
+    .explorer-toolbar-item,
+    .explorer-toolbar-group-item,
+    .explorer-toolbar-group-menu-item
+  ) {
   width: auto;
   height: auto;
   min-width: 0;
@@ -84,9 +138,7 @@
   line-height: 0;
 }
 
-.explorer-toolbar[data-fit="content"]
-  :is(.explorer-toolbar-item, .explorer-toolbar-group-item)
-  .explorer-icon {
+.explorer-toolbar[data-fit="content"] .explorer-icon {
   padding: var(--explorer-icon-pad, 0);
   box-sizing: content-box;
 }
@@ -118,7 +170,11 @@
 }
 
 .explorer-toolbar[data-density="compact"]
-  :is(.explorer-toolbar-item, .explorer-toolbar-group-item) {
+  :is(
+    .explorer-toolbar-item,
+    .explorer-toolbar-group-item,
+    .explorer-toolbar-group-menu-item
+  ) {
   width: auto;
   height: auto;
   min-width: 0;
@@ -134,4 +190,10 @@
   min-height: 0;
   padding-inline: 0;
   gap: 2px;
+}
+
+.explorer-toolbar[data-density="compact"]
+  .explorer-toolbar-group-menu-item
+  > .explorer-icon:first-child {
+  width: auto;
 }
