@@ -399,6 +399,21 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
   }),
 
+  includeSubfolders: booleanField({
+    label: "Include notes from subfolders",
+    description: "Show notes from this folder and all nested folders.",
+    blockKey: "includeSubfolders",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      group: "listing",
+    },
+    legacy: {
+      blockKeys: ["depth"],
+      coerce: "nonzero-number",
+    },
+  }),
   sortBy: enumField({
     label: "Sort by",
     description: "How to sort files.",
@@ -442,21 +457,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
   }),
 
-  includeSubfolders: booleanField({
-    label: "Include notes from subfolders",
-    description: "Show notes from this folder and all nested folders.",
-    blockKey: "includeSubfolders",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      group: "listing",
-    },
-    legacy: {
-      blockKeys: ["depth"],
-      coerce: "nonzero-number",
-    },
-  }),
   pageSize: numberField({
     label: "Page size",
     description: "Number of items per page.",
@@ -495,7 +495,17 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       resolve: resolveLegacyPaginationStyle,
     },
   }),
-
+  extendedToolbar: booleanField({
+    label: "Extended Toolbar",
+    description: "Add sort and view controls to the toolbar.",
+    defaultValue: true,
+    blockKey: "extendedToolbar",
+    ui: {
+      surfaces: ["plugin", "block"],
+      section: "core",
+      group: "appearance",
+    },
+  }),
   showPreviews: booleanField({
     label: "Show previews",
     description: "Show note previews in cards and modern list views.",
@@ -528,17 +538,6 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
       surfaces: ["plugin", "block"],
       section: "display",
       group: "listing",
-    },
-  }),
-  extendedToolbar: booleanField({
-    label: "Show sort and view menus",
-    description: "Add sort and view controls to the desktop toolbar.",
-    defaultValue: true,
-    blockKey: "extendedToolbar",
-    ui: {
-      surfaces: ["plugin", "block"],
-      section: "core",
-      group: "appearance",
     },
   }),
 
