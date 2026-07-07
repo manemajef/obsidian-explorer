@@ -24,6 +24,21 @@
   margin-bottom: 2em;
 }
 
+.explorer-container[data-explorer-text-direction="ltr"] [dir="auto"] {
+  direction: ltr;
+}
+
+.explorer-container[data-explorer-text-direction="rtl"] [dir="auto"] {
+  direction: rtl;
+}
+
+.explorer-container[data-explorer-text-direction="ltr"]
+  .explorer-metadata-preview,
+.explorer-container[data-explorer-text-direction="rtl"]
+  .explorer-metadata-preview {
+  unicode-bidi: isolate;
+}
+
 .explorer-container:empty {
   min-height: var(--explorer-nav-placeholder-height, 200px);
 }

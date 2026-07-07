@@ -223,6 +223,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     );
     const direction = resolveDirection(effectiveSettings);
     container.setAttribute("dir", direction);
+    container.dataset.explorerTextDirection = effectiveSettings.textDirection;
     container.toggleClass(
       "explorer-disable-glass-toolbar",
       effectiveSettings.disableGlassToolbar,
