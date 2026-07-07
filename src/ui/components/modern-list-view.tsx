@@ -32,7 +32,7 @@ function ListRow({
   ...rest
 }: ListRowProps): React.JSX.Element {
   return (
-    <div className={cn("explorer-list-row-shell", shellClassName)}>
+    <div className={cn("explorer-list-row-shell", shellClassName)} dir="auto">
       <div
         className={cn("explorer-list-row", className)}
         data-interactive={interactive || undefined}
