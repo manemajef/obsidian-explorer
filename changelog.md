@@ -4,8 +4,7 @@
 
 ### New
 
-- Added toolbar menus for sorting notes and switching between card and list views directly from Explorer.
-- Added an `Extended toolbar` setting for showing or hiding the toolbar sort/view controls.
+- Added optional sort and view menus to the toolbar, toggled via the `extendedToolbar` block setting.
 - Added a `Go to parent folder in a new tab` setting for parent-folder and homepage navigation.
 
 ### Changes
