@@ -17,15 +17,18 @@ export type SettingUiMeta = {
   visibleWhen?: SettingVisibility;
 };
 
+export type LegacyValueCoercion = "nonzero-number";
+
 export type LegacySettingAlias<T> = {
   blockKeys: readonly string[];
-  resolve: (source: Record<string, unknown>) => T | undefined;
+  resolve?: (source: Record<string, unknown>) => T | undefined;
+  coerce?: LegacyValueCoercion;
 };
 
 export type DeclarativeLegacySetting<T> = {
   predecessor?: string;
   valueMap?: Record<string, T>;
-  preserveOldDefault?: boolean;
+  coerce?: LegacyValueCoercion;
   oldDefault?: T;
 };
 

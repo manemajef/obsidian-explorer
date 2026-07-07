@@ -12,7 +12,12 @@ import {
   SettingsSection,
   SettingsSurface,
 } from "./schema";
-import type { AnySettingField, BlockField } from "./types";
+import type { AnySettingField } from "./types";
+import {
+  applyLegacySettingAliases,
+  getLegacyFallback,
+  resolveLegacyPluginSetting,
+} from "./legacy";
 
 const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   (acc, key) => {
@@ -22,25 +27,10 @@ const BLOCK_KEY_TO_SETTING_KEY = BLOCK_SETTING_KEYS.reduce(
   {} as Record<string, BlockSettingKey>,
 );
 
-const LEGACY_BLOCK_KEYS = new Set(
-  BLOCK_SETTING_KEYS.flatMap((key) => {
-    const field = BLOCK_SETTINGS_SCHEMA[key] as BlockField;
-    const legacy = field.legacy;
-    if (legacy && "blockKeys" in legacy) {
-      return legacy.blockKeys;
-    }
-    return [];
-  }),
-);
-
 export function getSettingKeyForBlockKey(
   blockKey: string,
 ): BlockSettingKey | undefined {
   return BLOCK_KEY_TO_SETTING_KEY[blockKey];
-}
-
-export function isLegacySettingBlockKey(blockKey: string): boolean {
-  return LEGACY_BLOCK_KEYS.has(blockKey);
 }
 
 export function createDefaultBlockSettings(): BlockSettings {
@@ -204,48 +194,6 @@ function normalizeFolderPaths(value: unknown): string[] | undefined {
   return paths;
 }
 
-function applyLegacySettingAliases(
-  source: Record<string, unknown>,
-): Record<string, unknown> {
-  const normalized = { ...source };
-
-  for (const key of BLOCK_SETTING_KEYS) {
-    if (key in source) continue;
-
-    const field = BLOCK_SETTINGS_SCHEMA[key] as BlockField;
-    const legacy = field.legacy;
-    if (!legacy) continue;
-
-    if ("resolve" in legacy) {
-      const legacyValue = legacy.resolve(source);
-      if (legacyValue !== undefined) {
-        normalized[key] = legacyValue;
-      }
-    } else if ("predecessor" in legacy && legacy.predecessor) {
-      const predecessor = legacy.predecessor;
-      if (predecessor in source) {
-        const predValue = source[predecessor];
-        if (legacy.valueMap && predValue !== undefined) {
-          const keyStr =
-            typeof predValue === "string" ||
-            typeof predValue === "number" ||
-            typeof predValue === "boolean"
-              ? String(predValue)
-              : "";
-          const mappedValue = legacy.valueMap[keyStr];
-          if (mappedValue !== undefined) {
-            normalized[key] = mappedValue;
-          }
-        } else {
-          normalized[key] = predValue;
-        }
-      }
-    }
-  }
-
-  return normalized;
-}
-
 function coerceFieldValue<K extends BlockSettingKey>(
   key: K,
   value: unknown,
@@ -323,7 +271,11 @@ export function coerceBlockSettings(
   input: Record<string, unknown> | null | undefined,
   fallback: BlockSettings = DEFAULT_BLOCK_SETTINGS,
 ): BlockSettings {
-  const source = applyLegacySettingAliases(input ?? {});
+  const source = applyLegacySettingAliases(
+    BLOCK_SETTING_KEYS,
+    BLOCK_SETTINGS_SCHEMA,
+    input ?? {},
+  );
   const normalized = {} as Record<
     BlockSettingKey,
     BlockSettings[BlockSettingKey]
@@ -339,7 +291,11 @@ export function coerceBlockSettings(
 export function coercePartialBlockSettings(
   input: Record<string, unknown> | null | undefined,
 ): Partial<BlockSettings> {
-  const source = applyLegacySettingAliases(input ?? {});
+  const source = applyLegacySettingAliases(
+    BLOCK_SETTING_KEYS,
+    BLOCK_SETTINGS_SCHEMA,
+    input ?? {},
+  );
   const normalized: Partial<BlockSettings> = {};
 
   for (const key of BLOCK_SETTING_KEYS) {
@@ -413,47 +369,18 @@ export function normalizePluginSettings(raw: unknown): PluginSettings {
 
   for (const key of PLUGIN_SETTING_KEYS) {
     const field = PLUGIN_SETTINGS_SCHEMA[key] as AnySettingField;
-    const legacy = field.legacy;
-
-    let sourceValue: unknown = undefined;
-    let hasValue = false;
-
-    if (key in raw) {
-      sourceValue = raw[key];
-      hasValue = true;
-    } else if (key in rawBlockDefaults) {
-      sourceValue = rawBlockDefaults[key];
-      hasValue = true;
-    }
-
-    if (!hasValue && legacy && "predecessor" in legacy && legacy.predecessor) {
-      const predecessor = legacy.predecessor;
-      if (predecessor in raw) {
-        const predValue = raw[predecessor];
-        if (legacy.valueMap && predValue !== undefined) {
-          const keyStr =
-            typeof predValue === "string" ||
-            typeof predValue === "number" ||
-            typeof predValue === "boolean"
-              ? String(predValue)
-              : "";
-          sourceValue = legacy.valueMap[keyStr];
-        } else {
-          sourceValue = predValue;
-        }
-        hasValue = true;
-      }
-    }
-
-    let fallback = pluginDefaults[key];
-    if (legacy && "oldDefault" in legacy && legacy.oldDefault !== undefined) {
-      fallback = legacy.oldDefault as typeof fallback;
-    }
+    const source = resolveLegacyPluginSetting(
+      key,
+      raw,
+      rawBlockDefaults,
+      field,
+    );
+    const fallback = getLegacyFallback(field, pluginDefaults[key]);
 
     (globalSettings as Record<PluginSettingKey, unknown>)[key] =
       coercePluginSettingValue(
         key,
-        hasValue ? sourceValue : undefined,
+        source.hasValue ? source.value : undefined,
         fallback,
       );
   }

@@ -13,6 +13,12 @@ import {
   type TextSettingField,
 } from "./types";
 import { Platform } from "obsidian";
+import {
+  resolveLegacyAdaptToMobile,
+  resolveLegacyDisableGlassToolbar,
+  resolveLegacyDisplayedNotes,
+  resolveLegacyPaginationStyle,
+} from "./legacy";
 
 export type SortBy = "newest" | "oldest" | "edited" | "name" | "nameDesc";
 export type ViewMode = "cards" | "list";
@@ -103,72 +109,6 @@ export type BlockSettingsGroup = (typeof BLOCK_SETTING_GROUPS)[number]["id"];
 
 export type { SettingField, SettingsSurface } from "./types";
 
-function hasOwn(source: Record<string, unknown>, key: string): boolean {
-  return key in source;
-}
-
-function coerceLegacyBoolean(value: unknown): boolean | undefined {
-  if (typeof value === "boolean") return value;
-  if (value === "true") return true;
-  if (value === "false") return false;
-  return undefined;
-}
-
-function resolveLegacyPaginationStyle(
-  source: Record<string, unknown>,
-): PaginationStyle | undefined {
-  const usePagination = coerceLegacyBoolean(source.usePagination);
-  if (usePagination === false) return "none";
-  if (!hasOwn(source, "paginationStyle") && usePagination === true) {
-    return "modern";
-  }
-  return undefined;
-}
-
-function resolveLegacyDisplayedNotes(
-  source: Record<string, unknown>,
-): DisplayedNotes | undefined {
-  if (hasOwn(source, "displayedNotes")) return undefined;
-
-  const showNotes = coerceLegacyBoolean(source.showNotes);
-  const onlyNotes = coerceLegacyBoolean(source.onlyNotes);
-  const showUnsupportedFiles = coerceLegacyBoolean(source.showUnsupportedFiles);
-
-  if (showNotes === false) return "none";
-  if (onlyNotes === true) return "markdown";
-  if (showUnsupportedFiles === true) return "all";
-  if (
-    hasOwn(source, "showNotes") ||
-    hasOwn(source, "onlyNotes") ||
-    hasOwn(source, "showUnsupportedFiles")
-  ) {
-    return "supported";
-  }
-  return undefined;
-}
-
-function resolveLegacyIncludeSubfolders(
-  source: Record<string, unknown>,
-): boolean | undefined {
-  const depth = source.depth;
-  if (typeof depth === "number") return depth > 0;
-  if (typeof depth === "string") {
-    const numeric = Number.parseInt(depth, 10);
-    return Number.isNaN(numeric) ? undefined : numeric > 0;
-  }
-  return undefined;
-}
-
-function resolveLegacyDisableGlassToolbar(
-  source: Record<string, unknown>,
-): boolean | undefined {
-  const compactActionBar = coerceLegacyBoolean(source.compactActionBar);
-  if (compactActionBar !== undefined) return compactActionBar;
-
-  const useGlass = coerceLegacyBoolean(source.useGlass);
-  return useGlass === undefined ? undefined : !useGlass;
-}
-
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   // NAVIGATION
   showTitlebarActions: booleanField({
@@ -239,10 +179,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "foldernotes",
     },
-    // legacy: {
-    //   preserveOldDefault: true,
-    //   oldDefault: false,
-    // },
   }),
   syncFolderNotes: booleanField({
     label: "Sync folder notes on rename",
@@ -459,8 +395,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
     legacy: {
       blockKeys: ["alwaysUseModernListInMobile"],
-      resolve: (source) =>
-        coerceLegacyBoolean(source.alwaysUseModernListInMobile),
+      resolve: resolveLegacyAdaptToMobile,
     },
   }),
 
@@ -519,7 +454,7 @@ export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
     },
     legacy: {
       blockKeys: ["depth"],
-      resolve: resolveLegacyIncludeSubfolders,
+      coerce: "nonzero-number",
     },
   }),
   pageSize: numberField({

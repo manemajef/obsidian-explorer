@@ -90,25 +90,42 @@ export class FolderIndex {
     const collect = (file: TFile): void => {
       const node = new ExplorerFileNode(this.app, file);
       all.push(node);
-      pending.push(node);
+      if (onChunk) pending.push(node);
     };
 
-    for (const file of this.app.vault.getFiles()) {
-      if (!this.isDescendantFile(file) || this.isExcludedFile(file)) continue;
-      if (
-        shouldIndexFile(file) ||
-        (includeFolderNotes && this.isNestedFolderNote(file))
-      ) {
+    const visitFile = (file: TFile): void => {
+      if (this.shouldCollectFile(file, includeFolderNotes)) {
         collect(file);
       }
+    };
 
-      if (onChunk && window.performance.now() - sliceStart >= WALK_BUDGET_MS) {
-        if (pending.length > 0) {
+    const maybeYield = async (): Promise<void> => {
+      if (window.performance.now() - sliceStart >= WALK_BUDGET_MS) {
+        if (onChunk && pending.length > 0) {
           onChunk(pending);
           pending = [];
         }
         await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
         sliceStart = window.performance.now();
+      }
+    };
+
+    if (this.folder.isRoot()) {
+      for (const file of this.app.vault.getFiles()) {
+        if (this.isExcludedFile(file)) continue;
+        visitFile(file);
+        await maybeYield();
+      }
+    } else {
+      const queue = [...this.folder.children];
+      for (let index = 0; index < queue.length; index++) {
+        const child = queue[index];
+        if (child instanceof TFile) {
+          visitFile(child);
+        } else if (child instanceof TFolder && !this.isExcludedFolder(child)) {
+          queue.push(...child.children);
+        }
+        await maybeYield();
       }
     }
 
@@ -116,9 +133,14 @@ export class FolderIndex {
     return all;
   }
 
-  private isDescendantFile(file: TFile): boolean {
-    if (this.folder.isRoot()) return true;
-    return file.path.startsWith(`${this.folder.path}/`);
+  private shouldCollectFile(
+    file: TFile,
+    includeFolderNotes: boolean,
+  ): boolean {
+    return (
+      shouldIndexFile(file) ||
+      (includeFolderNotes && this.isNestedFolderNote(file))
+    );
   }
 
   private isExcludedFile(file: TFile): boolean {
