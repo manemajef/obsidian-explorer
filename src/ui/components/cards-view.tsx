@@ -138,7 +138,7 @@ export function CardsView(props: {
                 </>
               )}
               <Spacer />
-              <div className="explorer-file-card__metadata">
+              <div className="explorer-file-card__metadata" dir="auto">
                 <NoteFolderDate
                   file={file}
                   model={model}

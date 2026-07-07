@@ -46,6 +46,7 @@ export function FolderButtons(props: {
       className="explorer-folder-grid"
       data-sparse={isSparse || undefined}
       data-variant={variant}
+      dir="auto"
     >
       {folders.map((folder) => {
         const existingNote = folder.folderNote;
