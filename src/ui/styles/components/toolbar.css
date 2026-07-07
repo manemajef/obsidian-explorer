@@ -58,20 +58,25 @@
   width: auto;
   padding-inline: var(--explorer-button-pad)
     calc(var(--explorer-button-pad) + 2px);
-  gap: 1px;
+  /* gap: 1px; */
 }
 
-.explorer-toolbar-group-menu-item > .explorer-icon:first-child {
+/* .explorer-toolbar-group-menu-item > .explorer-icon:first-child {
   width: calc(var(--explorer-control-size) - (2 * var(--explorer-button-pad)));
   display: inline-flex;
   justify-content: center;
-}
-
-.explorer-toolbar-group-menu-item__enum-icon svg {
+} */
+.explorer-icon.explorer-toolbar-group-menu-item__enum-icon {
   width: var(--explorer-icon-size, var(--icon-size));
   height: var(--explorer-icon-size, var(--icon-size));
   transform: scale(0.7);
 }
+
+/* .explorer-toolbar-group-menu-item__enum-icon svg {
+  width: var(--explorer-icon-size, var(--icon-size));
+  height: var(--explorer-icon-size, var(--icon-size));
+  transform: scale(0.7);
+} */
 
 .explorer-toolbar-group-item:hover,
 .explorer-toolbar-group-item:focus-visible,
