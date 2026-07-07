@@ -1,5 +1,25 @@
 # Explorer changelog
 
+## 1.5.0 (07-07-2026)
+
+### New
+
+- Added toolbar menus for sorting notes and switching between card and list views directly from Explorer.
+- Added an `Extended toolbar` setting for showing or hiding the toolbar sort/view controls.
+- Added a `Go to parent folder in a new tab` setting for parent-folder and homepage navigation.
+
+### Changes
+
+- Replaced numeric `depth` with a simpler `includeSubfolders` block setting.
+  - Existing non-zero `depth` values migrate to `includeSubfolders: true`.
+  - Explorer now either shows the current folder only, or includes all nested folders.
+
+### Fixes
+
+- Improved mixed RTL/LTR rendering for filenames, metadata, and previews.
+- The `Text direction` block setting now forces RTL/LTR consistently, even in places that use automatic text direction by default.
+- Subfolder listings handle excluded folders and root-folder views more reliably.
+
 ## 1.4.10 (01-06-2026)
 
 - Minor bug fixes
