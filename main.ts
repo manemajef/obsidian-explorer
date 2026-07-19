@@ -28,6 +28,7 @@ import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
 import { registerExplorerDevCodeBlock } from "./src/explorer/dev-registration";
+import { ExplorerApi } from "./src/explorer/api";
 
 type ExplorerRefresh = () => void;
 
@@ -37,9 +38,15 @@ export default class ExplorerPlugin extends Plugin {
   private explorerRefreshers = new Set<ExplorerRefresh>();
   private refreshFileExplorerFolderNotes: (() => void) | null = null;
   private refreshTitlebarActions: () => void = () => {};
+  private explorerApi: ExplorerApi;
 
   async onload() {
     await this.loadSettings();
+    this.explorerApi = new ExplorerApi({
+      app: this.app,
+      getSettings: () => this.settings,
+      saveSettings: () => this.saveSettings(),
+    });
     this.folderDataStore = new FolderDataStore(
       this.app.vault.adapter,
       normalizePath(`${this.manifest.dir}/folder-data.json`),
@@ -51,6 +58,7 @@ export default class ExplorerPlugin extends Plugin {
       VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
       (leaf) =>
         new VirtualFolderNoteView(leaf, {
+          explorerApi: this.explorerApi,
           getBlockDefaults: () => this.settings.defaultBlockSettings,
           getPluginSettings: () => this.settings,
           savePluginSettings: () => this.saveSettings(),
@@ -72,13 +80,12 @@ export default class ExplorerPlugin extends Plugin {
 
     registerFolderDataSync(this, this.folderDataStore);
 
-    registerExplorerCommands(this, {
+    registerExplorerCommands(this, this.explorerApi, {
       getSettings: () => this.settings,
-      saveSettings: () => this.saveSettings(),
     });
     this.refreshTitlebarActions = registerExplorerTitlebarActions(this, {
+      explorerApi: this.explorerApi,
       getSettings: () => this.settings,
-      saveSettings: () => this.saveSettings(),
     });
 
     this.refreshFileExplorerFolderNotes =
@@ -91,6 +98,7 @@ export default class ExplorerPlugin extends Plugin {
       "explorer",
       async (source, el, ctx) => {
         await renderExplorerBlock(
+          this.explorerApi,
           this.app,
           el,
           ctx,

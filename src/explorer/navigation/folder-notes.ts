@@ -1,12 +1,11 @@
 import { App, TFile, TFolder } from "obsidian";
-import { openHomePage, resolveHomePagePath } from "./homepage";
+import { openHomePage } from "./homepage";
 import { PluginSettings } from "../settings";
 import { openVirtualFolderNote } from "./virtual-folder-note";
 import { markNavigationPending } from "./navigation-pending";
 import {
   createFolderNoteFileWithConfirmation,
   getFolderNoteForFolder,
-  isFolderNote,
   type SavePluginSettings,
 } from "../lib/folder-note";
 
@@ -22,53 +21,6 @@ export type ExplorerLocation = {
   path: string;
   file: TFile | null;
 };
-
-export function canGoToParentFolderNote(
-  app: App,
-  settings: PluginSettings,
-  location: ExplorerLocation | null,
-): boolean {
-  if (!location) return false;
-
-  const homePath = resolveHomePagePath(app, settings);
-  if (homePath && location.path === homePath) return false;
-  const parent = getNavigationParent(location);
-  return Boolean(parent && !parent.isRoot()) || settings.useHomePage;
-}
-
-export async function goToParentFolderNote(
-  app: App,
-  settings: PluginSettings,
-  input: {
-    location: ExplorerLocation | null;
-    newLeaf?: boolean;
-    savePluginSettings?: SavePluginSettings;
-  },
-): Promise<void> {
-  const location = input.location;
-  if (!location) return;
-  const shouldOpenNewTab = input.newLeaf ?? settings.goToParentInNewTab;
-
-  const homePath = resolveHomePagePath(app, settings);
-  if (homePath && location.path === homePath) return;
-
-  const parent = getNavigationParent(location);
-
-  if (!parent || parent.isRoot()) {
-    await openHomePage(app, settings, location.path, shouldOpenNewTab);
-    return;
-  }
-
-  await openFolderNote(
-    app,
-    parent,
-    settings,
-    location.path,
-    shouldOpenNewTab,
-    "navigate",
-    input.savePluginSettings,
-  );
-}
 
 export async function openFolderNote(
   app: App,
@@ -130,13 +82,6 @@ async function openExplorerPage(
     newLeaf,
     forceReadingMode ? { state: { mode: "preview" } } : undefined,
   );
-}
-
-function getNavigationParent(location: ExplorerLocation): TFolder | null {
-  // A folder note (real or virtual) steps up to the folder's parent; a plain
-  // note inside a folder steps up to its own containing folder.
-  const representsFolder = !location.file || isFolderNote(location.file);
-  return representsFolder ? location.folder.parent : location.folder;
 }
 
 export function shouldCreateMissingFolderNote(

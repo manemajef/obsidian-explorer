@@ -27,10 +27,12 @@ import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note
 import { getHomePageInlineTitleConfig } from "../navigation/homepage";
 import { isHTMLElement } from "../../utils";
 import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
+import type { ExplorerApi } from "../api";
 
 export { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
 
 export type VirtualFolderNoteHost = {
+  explorerApi: ExplorerApi;
   getBlockDefaults: () => BlockSettings;
   getPluginSettings: () => PluginSettings;
   savePluginSettings: () => void | Promise<void>;
@@ -217,6 +219,7 @@ export class VirtualFolderNoteView extends ItemView {
       cls: "virtual-folder-margin-bottom",
     });
     this.cleanupExplorer = await mountExplorer({
+      explorerApi: this.host.explorerApi,
       app: this.app,
       container: explorerContainer,
       sourcePath: this.sourcePath,

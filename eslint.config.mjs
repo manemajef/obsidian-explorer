@@ -32,6 +32,7 @@ export default defineConfig([
     // Contracts + core layers: framework-free, no upward imports.
     files: [
       "src/explorer/model.ts",
+      "src/explorer/api.ts",
       "src/explorer/actions.ts",
       "src/explorer/lib/**/*.{ts,tsx}",
       "src/explorer/data/**/*.{ts,tsx}",
@@ -57,6 +58,26 @@ export default defineConfig([
               ],
               message:
                 "Core layers must not import upward into the runtime root or the integration (host) layer.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: [
+      "src/ui/**/*.{ts,tsx}",
+      "src/explorer/integration/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/navigation/parent"],
+              message:
+                "Parent navigation is public through ExplorerApi.at(location), not the navigation implementation.",
             },
           ],
         },

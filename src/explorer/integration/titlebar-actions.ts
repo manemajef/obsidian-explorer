@@ -1,20 +1,17 @@
 import { App, Platform, Plugin, setIcon, type WorkspaceLeaf } from "obsidian";
 import { type PluginSettings } from "../settings";
-import {
-  canGoToParentFolderNote,
-  goToParentFolderNote,
-} from "../navigation/folder-notes";
 import { openHomePage, resolveHomePagePath } from "../navigation/homepage";
 import { isHTMLElement } from "../../utils";
-import { getActiveExplorerLocation } from "./commands";
+import { getActiveExplorerLocation } from "./active-location";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
 import { hasExplorerView } from "./active-view";
+import type { ExplorerApi } from "../api";
 
 const IS_HIDE_HOME = true;
 
 type TitlebarActionDeps = {
+  explorerApi: ExplorerApi;
   getSettings: () => PluginSettings;
-  saveSettings: () => void | Promise<void>;
 };
 
 type TitlebarAction = {
@@ -54,16 +51,13 @@ export function registerExplorerTitlebarActions(
           app,
           activeLeaf ?? app.workspace.getMostRecentLeaf(),
         ) &&
-        canGoToParentFolderNote(
-          app,
-          deps.getSettings(),
-          getActiveExplorerLocation(app),
-        ),
+        deps.explorerApi
+          .at(getActiveExplorerLocation(app))
+          .canGoToParent(),
       run: async () => {
-        await goToParentFolderNote(app, deps.getSettings(), {
-          location: getActiveExplorerLocation(app),
-          savePluginSettings: deps.saveSettings,
-        });
+        await deps.explorerApi
+          .at(getActiveExplorerLocation(app))
+          .goToParent();
       },
     },
     {

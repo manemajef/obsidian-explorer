@@ -13,9 +13,11 @@ import { ListView } from "./components/list-view";
 import { LoadMorePagination } from "./components/load-more-pagination";
 import { ExplorerToolbar } from "./components/toolbar";
 import { Divider } from "./components/primitives/layout";
+import type { Explorer } from "../explorer/api";
 
 interface ExplorerUIProps {
   model: ExplorerModel;
+  explorer: Explorer;
   onOpenSettings: () => void;
   onSettingsChange: (settings: BlockSettings) => void;
   onSavePluginSettings: () => void | Promise<void>;
@@ -27,6 +29,7 @@ interface ExplorerUIProps {
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
   const {
     model,
+    explorer,
     onOpenSettings,
     onSettingsChange,
     onSavePluginSettings,
@@ -149,15 +152,13 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       settings={settings}
       parentDropFolder={model.folder.parent}
       onMoveIntoFolder={onMoveIntoFolder}
-      canGoToParent={actions.canGoToParent(model.location)}
+      canGoToParent={explorer.canGoToParent()}
       onOpenSettings={onOpenSettings}
       onSettingsChange={onSettingsChange}
       onSaveFolderNote={
         onSaveFolderNote ? () => void onSaveFolderNote() : undefined
       }
-      onGoToParent={(newLeaf) =>
-        void actions.goToParent(model.location, newLeaf)
-      }
+      onGoToParent={(newLeaf) => void explorer.goToParent(newLeaf)}
       onNewFolder={() => void actions.createFolder()}
       onNewNote={() => void actions.createNote()}
       onSearchToggle={toggleSearch}

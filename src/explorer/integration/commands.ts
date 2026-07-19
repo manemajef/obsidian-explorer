@@ -1,28 +1,28 @@
-import { App, Editor, MarkdownView, Plugin, TFile, TFolder } from "obsidian";
+import { App, Editor, MarkdownView, Plugin, TFile } from "obsidian";
 import type { PluginSettings } from "../settings";
 import { openHomePage } from "../navigation/homepage";
-import {
-  canGoToParentFolderNote,
-  goToParentFolderNote,
-  type ExplorerLocation,
-} from "../navigation/folder-notes";
 import { promptAndCreateFolder } from "../vault/create";
 import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
 import { togglePin } from "../vault/edit";
 import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
+import type { ExplorerApi } from "../api";
+import {
+  getActiveExplorerFolder,
+  getActiveExplorerLocation,
+} from "./active-location";
 
 type CommandDeps = {
   getSettings: () => PluginSettings;
-  saveSettings: () => void | Promise<void>;
 };
 
 export function registerExplorerCommands(
   plugin: Plugin,
+  explorerApi: ExplorerApi,
   deps: CommandDeps,
 ): void {
   const { app } = plugin;
-  const { getSettings, saveSettings } = deps;
+  const { getSettings } = deps;
 
   plugin.addCommand({
     id: "insetrt-code-block",
@@ -91,15 +91,13 @@ export function registerExplorerCommands(
     checkCallback: (checking: boolean) => {
       const location = getActiveExplorerLocation(app);
 
-      if (!canGoToParentFolderNote(app, getSettings(), location)) {
+      const explorer = explorerApi.at(location);
+      if (!explorer.canGoToParent()) {
         return false;
       }
 
       if (!checking) {
-        void goToParentFolderNote(app, getSettings(), {
-          location,
-          savePluginSettings: saveSettings,
-        });
+        void explorer.goToParent();
       }
 
       return true;
@@ -141,23 +139,6 @@ export function registerExplorerCommands(
       return true;
     },
   });
-}
-
-export function getActiveExplorerLocation(app: App): ExplorerLocation | null {
-  const virtualView = getActiveVirtualFolderNote(app);
-  const virtualFolder = virtualView?.folder;
-  if (virtualView && virtualFolder) {
-    return { folder: virtualFolder, path: virtualView.sourcePath, file: null };
-  }
-  const activeFile = app.workspace.getActiveFile();
-  if (!activeFile?.parent) return null;
-  return { folder: activeFile.parent, path: activeFile.path, file: activeFile };
-}
-
-export function getActiveExplorerFolder(app: App): TFolder | null {
-  const virtualView = getActiveVirtualFolderNote(app);
-  if (virtualView?.folder) return virtualView.folder;
-  return app.workspace.getActiveFile()?.parent ?? null;
 }
 
 async function insertExplorerCodeBlock(

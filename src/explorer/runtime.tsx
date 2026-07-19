@@ -22,8 +22,10 @@ import { buildExplorerModel } from "./model";
 import { updateExplorerBlock } from "./vault/block-update";
 import { ExplorerSession } from "./data/session";
 import { consumeNavigationPending } from "./navigation/navigation-pending";
+import type { ExplorerApi } from "./api";
 
 export type ExplorerMount = {
+  explorerApi: ExplorerApi;
   app: App;
   container: HTMLElement;
   sourcePath: string;
@@ -55,6 +57,7 @@ function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
 }
 
 export async function renderExplorerBlock(
+  explorerApi: ExplorerApi,
   app: App,
   container: HTMLElement,
   ctx: MarkdownPostProcessorContext,
@@ -68,6 +71,7 @@ export async function renderExplorerBlock(
 ): Promise<void> {
   const child = new MarkdownRenderChild(container);
   const cleanup = await mountExplorer({
+    explorerApi,
     app,
     container,
     sourcePath: ctx.sourcePath,
@@ -247,6 +251,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       <ExplorerUI
         key={model.sourcePath}
         model={model}
+        explorer={input.explorerApi.at(model.location)}
         onOpenSettings={openSettings}
         onSettingsChange={updateSettings}
         onSavePluginSettings={savePluginSettings}

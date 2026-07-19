@@ -2,11 +2,8 @@ import { App, TAbstractFile, TFile, TFolder } from "obsidian";
 import { promptAndCreateFolder, promptAndCreateNote } from "./vault/create";
 import { moveIntoFolder } from "./vault/move";
 import {
-  canGoToParentFolderNote,
-  goToParentFolderNote,
   type MissingFolderNoteIntent,
   openFolderNote,
-  type ExplorerLocation,
 } from "./navigation/folder-notes";
 import { resolveHomePageNoteInboxPath } from "./navigation/homepage";
 import { openVirtualFolderNote } from "./navigation/virtual-folder-note";
@@ -39,21 +36,6 @@ export class ExplorerActions {
 
   createFolderNode(folder: TFolder): ExplorerFolderNode {
     return this.session.createFolderNode(folder);
-  }
-
-  canGoToParent(location: ExplorerLocation | null): boolean {
-    return canGoToParentFolderNote(this.app, this.settings, location);
-  }
-
-  async goToParent(
-    location: ExplorerLocation | null,
-    newLeaf?: boolean,
-  ): Promise<void> {
-    await goToParentFolderNote(this.app, this.settings, {
-      location,
-      newLeaf,
-      savePluginSettings: this.savePluginSettings,
-    });
   }
 
   async openFile(file: ExplorerFileNode, newLeaf = false): Promise<void> {
