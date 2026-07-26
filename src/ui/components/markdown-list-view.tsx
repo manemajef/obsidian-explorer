@@ -1,6 +1,6 @@
 import React from "react";
-import { ExplorerActions } from "../../explorer/actions";
-import { ExplorerFileNode } from "../../explorer/lib/nodes";
+import type { Explorer } from "../../explorer/api";
+import { ExplorerFileNode } from "../../explorer/model";
 import { ExplorerModel } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
@@ -12,14 +12,14 @@ const showTags = false;
 export type MarkdownListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
-  actions: ExplorerActions;
+  explorer: Explorer;
   contextMenu: ContextMenuConfig;
 };
 
 export function MarkdownListView(
   props: MarkdownListViewProps,
 ): React.JSX.Element {
-  const { files, model, actions, contextMenu } = props;
+  const { files, model, explorer, contextMenu } = props;
   const useBullet = model.settings.listStyle === "markdown";
 
   return (
@@ -33,7 +33,7 @@ export function MarkdownListView(
           className="explorer-markdown-list__item"
           data-list-style={model.settings.listStyle}
           data-pinned={file.isPinned || undefined}
-          {...fileInteractionProps<HTMLLIElement>(file, actions, contextMenu, {
+          {...fileInteractionProps<HTMLLIElement>(file, explorer, contextMenu, {
             openOnClick: false,
           })}
           dir="auto"
@@ -43,7 +43,12 @@ export function MarkdownListView(
               className="explorer-markdown-list__pin"
               data-bullets={useBullet || undefined}
             >
-              <Pin file={file} actions={actions} placement="inline" />
+              <Pin
+                file={file}
+                explorer={explorer}
+                onChanged={contextMenu.onChanged}
+                placement="inline"
+              />
             </span>
           ) : (
             useBullet && <span className="list-bullet" />
@@ -60,7 +65,9 @@ export function MarkdownListView(
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                void actions.openFile(file, event.ctrlKey || event.metaKey);
+                void explorer.openFile(file.file, {
+                  newLeaf: event.ctrlKey || event.metaKey,
+                });
               }}
             >
               {file.displayName}

@@ -1,6 +1,5 @@
 import { App, TFolder } from "obsidian";
 import { FolderIndex } from "./folder-index";
-import { ExplorerFolderNode } from "../lib/nodes";
 
 export type IndexOptions = {
   includeSubfolders: boolean;
@@ -12,10 +11,6 @@ export class ExplorerSession {
   private readonly indexes = new Map<string, FolderIndex>();
 
   constructor(readonly app: App) {}
-
-  createFolderNode(folder: TFolder): ExplorerFolderNode {
-    return new ExplorerFolderNode(this.app, folder);
-  }
 
   async getIndex(folder: TFolder, options: IndexOptions): Promise<FolderIndex> {
     const key = this.getIndexKey(folder, options);

@@ -1,24 +1,14 @@
-import { normalizePath, Plugin, TFile } from "obsidian";
+import { normalizePath, Plugin } from "obsidian";
 import {
   normalizePluginSettings,
   parseSettings,
   PluginSettings,
 } from "./src/explorer/settings";
-import {
-  renderExplorerBlock,
-  type FolderNoteConversion,
-} from "./src/explorer/runtime";
-import { isFolderNote } from "./src/explorer/lib/folder-note";
-import {
-  removeFolderNoteFile,
-  removeFolderNoteFileByReadingBlock,
-} from "./src/explorer/integration/folder-note-conversion";
+import { renderExplorerBlock } from "./src/explorer/runtime";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
-import { registerHomePageNewTabs } from "./src/explorer/navigation/homepage";
-import {
-  VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
-  VirtualFolderNoteView,
-} from "./src/explorer/integration/virtual-folder-note-view";
+import { registerHomePageNewTabs } from "./src/explorer/integration/homepage-new-tabs";
+import { VirtualFolderNoteView } from "./src/explorer/integration/virtual-folder-note-view";
+import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "./src/explorer/operations/open-file-free-folder-page";
 import { registerFileExplorerFolderNoteBehavior } from "./src/explorer/integration/file-explorer-folder-notes";
 import { registerExplorerCommands } from "./src/explorer/integration/commands";
 import { registerFolderNoteRenameSync } from "./src/explorer/integration/folder-note-rename-sync";
@@ -42,16 +32,18 @@ export default class ExplorerPlugin extends Plugin {
 
   async onload() {
     await this.loadSettings();
-    this.explorerApi = new ExplorerApi({
-      app: this.app,
-      getSettings: () => this.settings,
-      saveSettings: () => this.saveSettings(),
-    });
     this.folderDataStore = new FolderDataStore(
       this.app.vault.adapter,
       normalizePath(`${this.manifest.dir}/folder-data.json`),
     );
     await this.folderDataStore.load();
+    this.explorerApi = new ExplorerApi({
+      app: this.app,
+      folderDataStore: this.folderDataStore,
+      getBlockDefaults: () => this.settings.defaultBlockSettings,
+      getSettings: () => this.settings,
+      saveSettings: () => this.saveSettings(),
+    });
     this.addSettingTab(new ExplorerSettingsTab(this.app, this));
 
     this.registerView(
@@ -64,17 +56,7 @@ export default class ExplorerPlugin extends Plugin {
           savePluginSettings: () => this.saveSettings(),
           registerRefresh: (refresh) => this.registerExplorerRefresh(refresh),
           refreshTitlebarActions: () => this.refreshTitlebarActions(),
-          getFolderData: (path) => this.folderDataStore.get(path),
-          setFolderData: (path, overrides) =>
-            this.folderDataStore.set(path, overrides),
-          deleteFolderData: (path) => this.folderDataStore.delete(path),
-          removeFolderNoteFile: (file) =>
-            removeFolderNoteFileByReadingBlock(
-              this.app,
-              this.folderDataStore,
-              file,
-              this.settings.defaultBlockSettings,
-            ),
+          folderDataStore: this.folderDataStore,
         }),
     );
 
@@ -92,6 +74,7 @@ export default class ExplorerPlugin extends Plugin {
       registerFileExplorerFolderNoteBehavior(this, {
         app: this.app,
         getSettings: () => this.settings,
+        explorerApi: this.explorerApi,
       });
 
     this.registerMarkdownCodeBlockProcessor(
@@ -104,17 +87,8 @@ export default class ExplorerPlugin extends Plugin {
           ctx,
           () => this.settings.defaultBlockSettings,
           () => this.settings,
-          () => this.saveSettings(),
           parseSettings(source),
           (refresh) => this.registerExplorerRefresh(refresh),
-          this.buildFolderNoteConversion(ctx.sourcePath),
-          (file) =>
-            removeFolderNoteFileByReadingBlock(
-              this.app,
-              this.folderDataStore,
-              file,
-              this.settings.defaultBlockSettings,
-            ),
         );
       },
     );
@@ -139,25 +113,6 @@ export default class ExplorerPlugin extends Plugin {
     await this.saveData(this.settings);
     this.refreshFileExplorerFolderNotes?.();
     this.refreshTitlebarActions();
-  }
-
-  private buildFolderNoteConversion(
-    sourcePath: string,
-  ): FolderNoteConversion | undefined {
-    const file = this.app.vault.getAbstractFileByPath(sourcePath);
-    if (!(file instanceof TFile) || !isFolderNote(file)) return undefined;
-
-    return {
-      isFile: true,
-      convert: (settings) =>
-        removeFolderNoteFile(
-          this.app,
-          this.folderDataStore,
-          file,
-          settings,
-          this.settings.defaultBlockSettings,
-        ),
-    };
   }
 
   refreshExplorerBlocks(): void {

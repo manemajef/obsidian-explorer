@@ -4,11 +4,11 @@
  * a semantic component; semantic components stay app-ignorant.
  */
 import type { HTMLAttributes, MouseEvent } from "react";
-import { ExplorerActions } from "../../explorer/actions";
+import type { Explorer } from "../../explorer/api";
 import {
   ExplorerFileNode,
   ExplorerFolderNode,
-} from "../../explorer/lib/nodes";
+} from "../../explorer/model";
 import { draggableProps, folderDropProps } from "../drag-drop";
 import {
   isInteractiveTouchTarget,
@@ -32,7 +32,7 @@ type InteractionProps<T extends HTMLElement> = Pick<
 
 export function fileInteractionProps<T extends HTMLElement = HTMLDivElement>(
   file: ExplorerFileNode,
-  actions: ExplorerActions,
+  explorer: Explorer,
   contextMenu: ContextMenuConfig,
   options: { openOnClick?: boolean } = {},
 ): InteractionProps<T> {
@@ -40,17 +40,23 @@ export function fileInteractionProps<T extends HTMLElement = HTMLDivElement>(
   return {
     ...draggableProps<T>(file.dragSource, file.dragFromFolderNote),
     ...folderDropProps<T>(
-      actions.app,
+      contextMenu.app,
       file.dropTargetFolder,
       (sourcePath, folder, fromFolderNote) =>
-        actions.movePathIntoFolder(sourcePath, folder, fromFolderNote),
+        void explorer
+          .movePathIntoFolder(sourcePath, folder, fromFolderNote)
+          .then((changed) => {
+            if (changed) contextMenu.onChanged();
+          }),
     ),
     onContextMenuCapture: (event) =>
       showFileContextMenu(event, contextMenu, file),
     ...(openOnClick && {
       onClick: (event: MouseEvent<T>) => {
         if (isInteractiveTouchTarget(event.target)) return;
-        void actions.openFile(file, event.ctrlKey || event.metaKey);
+        void explorer.openFile(file.file, {
+          newLeaf: event.ctrlKey || event.metaKey,
+        });
       },
     }),
   };
@@ -60,22 +66,28 @@ export function folderInteractionProps<
   T extends HTMLElement = HTMLDivElement,
 >(
   folder: ExplorerFolderNode,
-  actions: ExplorerActions,
+  explorer: Explorer,
   contextMenu: ContextMenuConfig,
 ): InteractionProps<T> {
   return {
     ...draggableProps<T>(folder.folder),
     ...folderDropProps<T>(
-      actions.app,
+      contextMenu.app,
       folder.folder,
       (sourcePath, target, fromFolderNote) =>
-        actions.movePathIntoFolder(sourcePath, target, fromFolderNote),
+        void explorer
+          .movePathIntoFolder(sourcePath, target, fromFolderNote)
+          .then((changed) => {
+            if (changed) contextMenu.onChanged();
+          }),
     ),
     onContextMenuCapture: (event) =>
       showFolderContextMenu(event, contextMenu, folder),
     onClick: (event: MouseEvent<T>) => {
       if (isInteractiveTouchTarget(event.target)) return;
-      void actions.openFolder(folder, event.ctrlKey || event.metaKey);
+      void contextMenu.explorer.openFolder(folder.folder, {
+        newLeaf: event.ctrlKey || event.metaKey,
+      });
     },
   };
 }

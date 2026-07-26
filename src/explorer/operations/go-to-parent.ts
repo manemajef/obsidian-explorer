@@ -2,12 +2,14 @@ import type { App } from "obsidian";
 import {
   resolveParentDestination,
   resolveParentNewLeaf,
-} from "../lib/parent-navigation";
-import type { SavePluginSettings } from "../lib/folder-note";
-import type { ExplorerLocation } from "./folder-notes";
-import { openFolderNote } from "./folder-notes";
-import { openHomePage, resolveHomePagePath } from "./homepage";
+} from "../domain/parent-navigation";
+import type { ExplorerLocation } from "../domain/explorer-location";
+import { resolveHomePagePath } from "../domain/homepage";
+import { openFolderPage } from "./open-folder-page";
+import { openHomePage } from "./open-homepage";
 import type { PluginSettings } from "../settings";
+
+type SavePluginSettings = () => void | Promise<void>;
 
 export function canNavigateToParent(
   app: App,
@@ -47,13 +49,12 @@ export async function navigateToParent(input: {
     return;
   }
 
-  await openFolderNote(
+  await openFolderPage(
     input.app,
     destination.folder,
     input.settings,
     input.location.path,
-    newLeaf,
-    "navigate",
+    { newLeaf, intent: "navigate" },
     input.savePluginSettings,
   );
 }

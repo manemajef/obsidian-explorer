@@ -344,7 +344,7 @@ export function ExplorerToolbar(props: {
   onMoveIntoFolder: MoveIntoFolder;
   onOpenSettings: () => void;
   onSettingsChange: (settings: BlockSettings) => void;
-  onSaveFolderNote?: () => void;
+  onAddMarkdownBacking?: () => void;
   onGoToParent: (newLeaf: boolean) => void;
   onNewFolder: () => void;
   onNewNote: () => void;
@@ -362,7 +362,7 @@ export function ExplorerToolbar(props: {
     onMoveIntoFolder,
     onOpenSettings,
     onSettingsChange,
-    onSaveFolderNote,
+    onAddMarkdownBacking,
     onGoToParent,
     onNewFolder,
     onNewNote,
@@ -473,11 +473,11 @@ export function ExplorerToolbar(props: {
             popover={newFilePopover}
             onClick={onNewNote}
           />
-          {onSaveFolderNote && !isMobile && USE_PEN && (
+          {onAddMarkdownBacking && !isMobile && USE_PEN && (
             <ToolbarGroupItem
               icon="pen-line"
               popover="Save folder note as Markdown"
-              onClick={onSaveFolderNote}
+              onClick={onAddMarkdownBacking}
             />
           )}
         </ToolbarGroup>

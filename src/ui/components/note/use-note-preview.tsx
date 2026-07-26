@@ -1,4 +1,4 @@
-import { ExplorerFileNode } from "src/explorer/lib/nodes";
+import { ExplorerFileNode } from "src/explorer/model";
 import React from "react";
 const { useEffect, useState, useRef } = React;
 

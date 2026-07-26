@@ -7,7 +7,7 @@ import {
 } from "../../explorer/settings";
 import { renderSettingFields } from "../render-setting-field";
 
-export type FolderNoteConversionAction = {
+export type MarkdownBackingAction = {
   isFile: boolean;
   run: () => void | Promise<void>;
 };
@@ -22,7 +22,7 @@ export class ExplorerSettingsModal extends Modal {
     settings: BlockSettings,
     private readonly sourcePath: string,
     onSettingsChange: (settings: BlockSettings) => void,
-    private readonly conversion?: FolderNoteConversionAction,
+    private readonly backingAction?: MarkdownBackingAction,
     private readonly sourceFolder?: TFolder,
   ) {
     super(app);
@@ -65,7 +65,7 @@ export class ExplorerSettingsModal extends Modal {
       },
     });
 
-    this.renderConversion(contentEl);
+    this.renderBackingAction(contentEl);
 
     new Setting(contentEl).addButton((button) => {
       button
@@ -75,9 +75,9 @@ export class ExplorerSettingsModal extends Modal {
     });
   }
 
-  private renderConversion(contentEl: HTMLElement): void {
-    if (!this.conversion) return;
-    const { isFile } = this.conversion;
+  private renderBackingAction(contentEl: HTMLElement): void {
+    if (!this.backingAction) return;
+    const { isFile } = this.backingAction;
 
     new Setting(contentEl)
       .setName(isFile ? "Markdown file" : "No file")
@@ -90,7 +90,7 @@ export class ExplorerSettingsModal extends Modal {
         button
           .setButtonText(isFile ? "Remove file" : "Add file")
           .onClick(async () => {
-            await this.conversion?.run();
+            await this.backingAction?.run();
             this.close();
           });
       });

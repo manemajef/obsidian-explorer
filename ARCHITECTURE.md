@@ -12,20 +12,21 @@ This document is the architecture contract. Some of it is enforced by
 1. `main.ts` composes the plugin-wide services and host registrations.
    `src/explorer/runtime.tsx` composes each mounted Explorer, and
    `src/ui/explorer-ui.tsx` composes its rendered UI.
-2. The mounted UI reads data from `ExplorerModel`. Shared user intentions cross
-   through a location-bound `Explorer`; mounted-only behavior that has not been
-   migrated yet remains in `ExplorerActions`. Do not make view components reach
-   around those contracts.
+2. The mounted UI reads data from `ExplorerModel`. Every rendered UI mutation
+   or navigation request crosses through a location-bound `Explorer`. Do not
+   make view components reach around those contracts.
 3. Backend core code is framework-free. React belongs in `src/ui/`,
    `src/explorer/runtime.tsx`, or `src/explorer/integration/`.
 4. Lower backend layers do not import upward into roots or host integration.
 5. Files are sorted by role, not by convenience. If a file starts doing two
    different jobs, split it.
 6. Host registration lives in `integration/`. Domain decisions live below it.
-7. New UI data goes into `model.ts`. Shared user intentions go through the
-   bound `Explorer`; behavior local to one mounted Explorer stays in
-   `actions.ts` until another real surface needs it.
+7. New UI data goes into `model.ts`. User intentions go through the bound
+   `Explorer`; mounted refresh remains a presentation concern driven by
+   operation results.
 8. UI structure and styling rules are governed by `STYLING.md`.
+9. Raw user-vault mutations belong only in `vault/`. Operations own prompts,
+   policy, notices, rollback sequencing, and post-success presentation.
 
 ## Current Shape
 
@@ -39,11 +40,10 @@ flowchart TD
   Model["ExplorerModel<br/>read contract"]
   Bound["Explorer<br/>location-bound shared behavior"]
   UI["explorer-ui.tsx<br/>UI composition"]
-  Actions["ExplorerActions<br/>mounted-only behavior"]
-  Navigation["navigation/<br/>user-facing flows"]
-  Vault["vault/<br/>vault writes"]
-  Data["data/<br/>sessions, indexes, stores"]
-  Lib["lib/<br/>shared domain helpers and nodes"]
+  Operations["operations/<br/>complete intentions"]
+  Domain["domain/<br/>decisions and transforms"]
+  Vault["vault/<br/>role-specific user-vault effects"]
+  Data["data/<br/>sessions, indexes, stores, read nodes"]
   Settings["settings/<br/>schema, defaults, resolution"]
   Modals["ui/modals/<br/>host dialogs"]
 
@@ -58,27 +58,28 @@ flowchart TD
   Runtime --> UI
   Model --> UI
   Bound --> UI
-  UI --> Actions
-  Bound --> Navigation
-  Actions --> Navigation
-  Actions --> Vault
-  Actions --> Modals
+  Bound --> Operations
+  Operations --> Domain
+  Operations --> Vault
+  Operations --> Data
   Model --> Data
-  Navigation --> Lib
-  Navigation --> Settings
-  Vault --> Lib
+  Integration -->|"registered host actions"| Operations
+  Vault --> Domain
   Vault --> Settings
-  Data --> Lib
+  Data --> Domain
+  Data --> Vault
   Data --> Settings
-  Lib -. "current node mutation route" .-> Vault
-  Vault -. "current prompt route" .-> Modals
-  UI -. "current drag/drop route" .-> Vault
+  Operations --> Settings
+  Operations -. "prompt adapters" .-> Modals
 ```
 
-The bound API currently owns parent navigation, the first migrated shared
-behavior. Other operations still use `ExplorerActions` or direct integration
-calls while their caller sets are audited. Do not treat those transitional
-routes as precedent for adding another route to parent navigation.
+The bound API is the only public behavior surface for rendered UI and ordinary
+user-action integrations. It owns file and folder opening, creation, moves,
+renames, deletion, homepage and parent navigation, desired-state pinning, and
+Markdown backing changes. Internal intention modules sequence policy, prompts,
+vault effects, and workspace presentation. Boolean change results let mounted
+UI invalidate its model without injecting React refresh callbacks into the
+plugin-wide API.
 
 ## Backend Layers
 
@@ -97,7 +98,8 @@ src/explorer/runtime.tsx
 src/explorer/api.ts
   Plugin-owned public behavior façade. `ExplorerApi.at(location)` returns an
   `Explorer` bound to one explicit location; it never stores a mutable current
-  location.
+  location. Public request vocabulary is re-exported here rather than owned by
+  an internal operation module.
 
 src/explorer/integration/
   Obsidian-facing registration: commands, views, host event listeners, and DOM
@@ -106,58 +108,73 @@ src/explorer/integration/
   stays here rather than entering the core API.
 
 src/explorer/model.ts
-  Data contract the UI reads.
+  Data contract the UI reads, including derived display facts and the public
+  read-node types implemented in `data/explorer-nodes.ts`. It does not expose
+  behavior implementations.
 
-src/explorer/actions.ts
-  Transitional mounted-only UI behavior. Shared behavior belongs on the bound
-  `Explorer`; keep remaining methods thin and migrate them only when a second
-  surface needs the same intention.
+src/explorer/operations/
+  Complete user- or host-triggered intentions. Operations own prompts, policy,
+  notices, rollback sequencing, workspace presentation, and translation of
+  typed low-level results. Registered host actions such as reading-mode block
+  insertion and folder-note rename synchronization enter here from
+  `integration/`. Prompt implementations remain in `src/ui/modals/` as an
+  intentional user-interaction adapter edge; operations do not otherwise
+  depend on rendered UI.
 
-src/explorer/navigation/
-  User-facing flows that compose lower-level operations, such as opening folder
-  notes, home pages, or virtual folder notes.
+src/explorer/domain/
+  Dependency-light types, decisions, transforms, and effect ordering. This
+  layer has no React, UI adapters, stateful data, operations, integration, or
+  composition-root imports. `folder-page.ts`, `folder-page-opening.ts`,
+  `markdown-backing-transition.ts`, `folder-rename.ts`, and
+  `move-confirmation.ts` make policy and ordering testable without the host UI.
 
 src/explorer/vault/
-  Vault writes: create, rename, move, and modify files or blocks.
+  The only low-level owner of user-vault mutations. Role-specific primitives
+  create, rename, move, delete, and modify files, folders, frontmatter, and
+  file content. They return typed outcomes or throw; they do not open modals,
+  emit policy notices, register events, or present workspace leaves.
+  `entry-creation.ts`, `entry-deletion.ts`, `entry-move.ts`,
+  `entry-rename.ts`, and `pin-frontmatter.ts` identify their stored effect.
+  `folder-note-file.ts` is the single low-level owner of conventional and
+  explicit Markdown folder-note lookup, path resolution, creation/update,
+  and Explorer-block reading. `entry-deletion.ts` owns the sole
+  `FileManager.promptForDeletion()` call because that host API is Obsidian's
+  deletion policy.
 
 src/explorer/data/
-  Stateful runtime data: session caches, indexes, and persistent data stores.
+  Stateful runtime data: session caches, indexes, transient navigation state,
+  persistent data stores, and cached read nodes. UI consumes those nodes
+  through the `model.ts` read contract rather than importing `data/` directly.
+  `FolderDataStore.adapter.write()` persists plugin-private JSON; it is not a
+  user-vault mutation and is intentionally outside the vault boundary.
 
 src/explorer/settings/
   Dependency-light settings schema, defaults, migrations, and resolution.
 
-src/explorer/lib/
-  Shared domain helpers and node types. This layer has no React, host
-  registration, session store, navigation flow, or composition-root imports.
-  Some existing node and folder-note helpers still cross into vault writes or
-  UI prompts; those exceptions are listed below rather than presented as the
-  desired dependency direction.
 ```
 
-## Known Transitional Exceptions
+## Intentional Edges
 
-The repository is not a perfectly acyclic layer graph yet. These current paths
-are real and should be reduced when their behavior is next changed:
+- Operations import the concrete prompt modals in `src/ui/modals/`. This is the
+  explicit user-interaction adapter edge; policy and result handling stay in
+  operations, while raw effects stay in `vault/`.
+- `operations/update-explorer-block.ts` accepts a rendered section context from
+  the mounted runtime because it is the complete mounted edit intention.
+- `integration/commands.ts` uses `Editor.replaceRange()` for live-editor block
+  insertion. This is intentionally not a Vault/FileManager mutation; its
+  reading-mode counterpart calls the shared file-content operation.
 
-- `lib/nodes.ts` calls `vault/edit.ts` for node mutation.
-- `lib/folder-note.ts`, `vault/create.ts`, and `vault/edit.ts` open prompt
-  modals from `src/ui/modals/`.
-- `actions.ts` opens confirmation UI directly.
-- `src/ui/drag-drop.ts` imports the pure move predicate from `vault/move.ts`.
-- Several integrations still call homepage, folder creation, virtual-folder,
-  and pin behavior directly. Parent navigation is the only operation migrated
-  to `ExplorerApi` so far.
-
-Do not expand these exceptions casually. Prefer moving complete shared user
-intentions behind `ExplorerApi`, keeping pure predicates below the caller, and
-injecting prompts at a composition boundary when those areas are revised.
+Homepage ownership is deliberately split: read decisions are in
+`domain/homepage.ts`, opening policy in `operations/open-homepage.ts`,
+inline-title mutation in `operations/rename-homepage.ts`, and new-tab host
+registration in `integration/homepage-new-tabs.ts`.
 
 ## UI Layers
 
 ```txt
 src/ui/explorer-ui.tsx
   UI composition root. Chooses which rendered regions appear and passes the
-  model, bound Explorer behavior, mounted actions, files, and context-menu
+  model, bound Explorer behavior, files, refresh callback, and context-menu
   wiring down.
 
 src/ui/explorer-state.ts
@@ -192,6 +209,8 @@ instance; they do not construct their own API.
 ```ts
 this.explorerApi = new ExplorerApi({
   app: this.app,
+  folderDataStore: this.folderDataStore,
+  getBlockDefaults: () => this.settings.defaultBlockSettings,
   getSettings: () => this.settings,
   saveSettings: () => this.saveSettings(),
 });
@@ -211,7 +230,13 @@ The UI calls the intention without repeating that location:
 ```ts
 const canGoUp = explorer.canGoToParent();
 await explorer.goToParent(false);
+await explorer.openFolder(folder, { newLeaf: false });
 ```
+
+`ExplorerLocation.file` is the source Markdown file for the mounted Explorer,
+not the optional backing of the target folder page. It may be an ordinary note;
+parent navigation uses that fact to distinguish “open this note's containing
+folder” from “step above this folder page.”
 
 ### Keep host discovery outside the API
 
@@ -230,34 +255,41 @@ if (explorer.canGoToParent()) {
 Passing `false` is an explicit same-leaf request. Omitting the argument uses the
 plugin's `goToParentInNewTab` setting.
 
-### Choose between `Explorer` and `ExplorerActions`
+### Use one behavior surface
 
 ```ts
-// Shared by toolbar, command palette, and titlebar: bound Explorer API.
 await explorer.goToParent();
-
-// Local to the mounted UI today: keep it on ExplorerActions.
-await actions.renameFile(file);
+await explorer.openFile(file);
+await explorer.openFolder(folder);
+await explorer.createFolder();
+await explorer.createNote();
+await explorer.movePathIntoFolder(sourcePath, folder, fromFolderNote);
+await explorer.renameFile(file);
+await explorer.renameFolder(folder);
+await explorer.deleteFile(file);
+await explorer.deleteFolder(folder);
+await explorer.openHomePage();
+await explorer.setPinned(file, true);
+await explorer.addMarkdownBacking(settings);
+await explorer.removeMarkdownBacking(folder, settings);
 ```
 
-Move an operation to `ExplorerApi` only when multiple surfaces share the same
-user intention or the current access path is ambiguous. Do not add one-use
-helpers to the façade.
+The API remains a concrete intention vocabulary, not a generic dispatch method,
+settings bag, or service locator. UI refreshes after successful boolean change
+results; the API does not own mounted presentation state.
 
 ## Where Changes Go
 
-- Pure transform, predicate, domain getter, or type helper: `src/explorer/lib/`.
+- Pure transform, predicate, domain getter, or type helper: `src/explorer/domain/`.
 - Settings schema or migration logic: `src/explorer/settings/`.
 - Vault write: `src/explorer/vault/`.
 - Session cache, index, or persistent data store: `src/explorer/data/`.
-- User-facing flow that composes lower layers: `src/explorer/navigation/`.
+- User-facing flow that composes lower layers: `src/explorer/operations/`.
 - Obsidian command, view, event listener, or host DOM hook:
   `src/explorer/integration/`.
 - Data the UI needs to read: add it to `ExplorerModel`.
-- Shared behavior used by UI and host integrations: add it to `ExplorerApi` and
-  expose it on the location-bound `Explorer`.
-- Mounted-only UI behavior: keep it in `ExplorerActions` until it has another
-  real caller.
+- UI or user-action integration behavior: add it to `ExplorerApi` and expose it
+  on the location-bound `Explorer`.
 - Rendered UI region: `src/ui/components/*.tsx`.
 - Shared note UI: `src/ui/components/note/`.
 - App-ignorant UI primitive: `src/ui/components/primitives/`.
@@ -266,8 +298,11 @@ helpers to the façade.
 
 - A view or host integration imports an implementation route for behavior that
   is already exposed on the bound `Explorer`.
+- A rendered UI module imports `operations/`, `vault/`, `data/`, or
+  `integration/` rather than using a read contract or the bound `Explorer`.
 - A core backend file imports React.
-- A `lib/` file imports `data/`, `navigation/`, `integration/`, or `runtime`.
+- A `domain/` file imports `data/`, `operations/`, `integration/`, `runtime`,
+  or UI.
 - A file both registers host behavior and implements domain logic.
 - A UI primitive imports from `src/explorer/`.
 - A change needs a clever filename because the folder does not explain the role.
@@ -286,7 +321,13 @@ npm run build
 
 - core backend files cannot import React;
 - core backend files cannot import upward into `runtime` or `integration`;
-- `lib/` cannot import React, runtime, integration, navigation, or session data;
-- UI and integration files cannot import the internal parent-navigation flow;
+- `domain/` cannot import React, runtime, integration, operations, UI, or
+  stateful data;
+- data and vault files cannot import operations, integration, runtime, React,
+  or UI implementations;
+- UI cannot import operations, vault, data, or integration implementations;
+- Vault/FileManager mutation member calls are forbidden outside
+  `src/explorer/vault/`; plugin-private `adapter.write()` and live-editor
+  `Editor.replaceRange()` are intentionally distinct APIs;
 - UI primitives cannot import explorer modules;
 - feature UI cannot use inline `style` props.

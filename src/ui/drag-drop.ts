@@ -1,6 +1,6 @@
 import type { DragEvent, HTMLAttributes } from "react";
 import { App, Platform, TAbstractFile, TFolder } from "obsidian";
-import { canMoveIntoFolder } from "../explorer/vault/move";
+import { canMoveIntoFolder } from "../explorer/domain/move-target";
 import { isElement, isHTMLElement } from "../utils";
 
 const EXPLORER_DRAG_TYPE = "application/x-obsidian-explorer-path";
@@ -68,7 +68,7 @@ export function folderDropProps<T extends HTMLElement>(
   return {
     onDragOverCapture: (event) => {
       const source = getDraggedSource(app);
-      if (!source || !canMoveIntoFolder(source, target)) {
+      if (!source || !canDropIntoFolder(source, target)) {
         event.currentTarget.classList.remove(DROP_TARGET_CLASS);
         return;
       }
@@ -93,7 +93,7 @@ export function folderDropProps<T extends HTMLElement>(
       const source = sourcePath
         ? app.vault.getAbstractFileByPath(sourcePath)
         : null;
-      if (!source || !sourcePath || !canMoveIntoFolder(source, target)) return;
+      if (!source || !sourcePath || !canDropIntoFolder(source, target)) return;
 
       event.preventDefault();
       event.stopPropagation();
@@ -106,6 +106,20 @@ export function folderDropProps<T extends HTMLElement>(
       void onMoveIntoFolder(sourcePath, target, fromFolderNote);
     },
   };
+}
+
+function canDropIntoFolder(
+  source: TAbstractFile,
+  target: TFolder,
+): boolean {
+  return canMoveIntoFolder(
+    {
+      path: source.path,
+      parent: source.parent,
+      isFolder: source instanceof TFolder,
+    },
+    target,
+  );
 }
 
 function getDraggedSource(app: App): TAbstractFile | null {

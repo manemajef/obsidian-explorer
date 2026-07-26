@@ -1,7 +1,7 @@
 import React from "react";
-import { ExplorerFileNode } from "src/explorer/lib/nodes";
+import { ExplorerFileNode } from "src/explorer/model";
 import { ExplorerModel } from "src/explorer/model";
-import { ExplorerActions } from "src/explorer/actions";
+import type { Explorer } from "src/explorer/api";
 import { diffDays } from "src/utils";
 import { cn } from "../primitives/cn";
 import { Icon } from "../primitives/icon";
@@ -20,8 +20,8 @@ type NoteMetadataProps = {
   size?: TextSize;
 };
 
-type NoteMetadataWithActionsProps = NoteMetadataProps & {
-  actions: ExplorerActions;
+type NoteMetadataWithExplorerProps = NoteMetadataProps & {
+  explorer: Explorer;
 };
 
 type NotePreviewLines = 1 | 2 | 3 | 4;
@@ -86,10 +86,10 @@ export function NoteDate({
 export function NoteFolder({
   file,
   model,
-  actions,
+  explorer,
   className,
   size,
-}: NoteMetadataWithActionsProps): React.JSX.Element | null {
+}: NoteMetadataWithExplorerProps): React.JSX.Element | null {
   const parentFolder = getParentFolder(file, model);
   if (!parentFolder) return null;
 
@@ -102,7 +102,9 @@ export function NoteFolder({
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        void actions.openFolder(parentFolder, e.ctrlKey || e.metaKey);
+        void explorer.openFolder(parentFolder, {
+          newLeaf: e.ctrlKey || e.metaKey,
+        });
       }}
     >
       <Icon name="folder-closed" className="explorer-metadata-folder-icon" />
@@ -227,15 +229,20 @@ export function NotePreview({
 export function NoteFolderDate({
   file,
   model,
-  actions,
+  explorer,
   className,
   separator = "dot",
   size,
-}: NoteMetadataWithActionsProps & {
+}: NoteMetadataWithExplorerProps & {
   separator?: FolderDateSeparator;
 }): React.JSX.Element | null {
   const folder = getParentFolder(file, model) ? (
-    <NoteFolder file={file} model={model} actions={actions} size={size} />
+    <NoteFolder
+      file={file}
+      model={model}
+      explorer={explorer}
+      size={size}
+    />
   ) : null;
   const date =
     getNoteDate(file, model) != null ? (
@@ -312,13 +319,13 @@ export function NoteDatePreview({
 export function NoteFolderDatePreview({
   file,
   model,
-  actions,
+  explorer,
   className,
   maxChar,
   showPreview = true,
   previewLines = 1,
   size,
-}: NoteMetadataWithActionsProps & {
+}: NoteMetadataWithExplorerProps & {
   maxChar?: number;
   showPreview?: boolean;
   previewLines?: NotePreviewLines;
@@ -330,7 +337,12 @@ export function NoteFolderDatePreview({
     enabled: previewEnabled,
   });
   const folder = getParentFolder(file, model) ? (
-    <NoteFolder file={file} model={model} actions={actions} size={size} />
+    <NoteFolder
+      file={file}
+      model={model}
+      explorer={explorer}
+      size={size}
+    />
   ) : null;
   const date =
     getNoteDate(file, model) != null ? (

@@ -1,12 +1,13 @@
 import { App, Keymap, Plugin, TFolder } from "obsidian";
-import { getFolderNoteForFolder, isFolderNote } from "../lib/folder-note";
+import { isFolderNote } from "../domain/folder-note";
 import type { PluginSettings } from "../settings";
-import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
+import type { ExplorerApi } from "../api";
 import { isHTMLElement } from "../../utils";
 
 type FileExplorerFolderNoteBehaviorOptions = {
   app: App;
   getSettings: () => PluginSettings;
+  explorerApi: ExplorerApi;
 };
 
 type FileExplorerItem = {
@@ -29,7 +30,7 @@ export function registerFileExplorerFolderNoteBehavior(
   plugin: Plugin,
   options: FileExplorerFolderNoteBehaviorOptions,
 ): () => void {
-  const { app, getSettings } = options;
+  const { app, getSettings, explorerApi } = options;
   const doc = app.workspace.containerEl.ownerDocument;
   let observer: MutationObserver | null = null;
 
@@ -56,7 +57,12 @@ export function registerFileExplorerFolderNoteBehavior(
       doc,
       "click",
       (evt) => {
-        void handleFileExplorerFolderClick(app, getSettings(), evt);
+        void handleFileExplorerFolderClick(
+          app,
+          explorerApi,
+          getSettings(),
+          evt,
+        );
       },
       true,
     );
@@ -65,7 +71,12 @@ export function registerFileExplorerFolderNoteBehavior(
       "auxclick",
       (evt) => {
         if (evt.button !== 2) {
-          void handleFileExplorerFolderClick(app, getSettings(), evt);
+          void handleFileExplorerFolderClick(
+            app,
+            explorerApi,
+            getSettings(),
+            evt,
+          );
         }
       },
       true,
@@ -163,6 +174,7 @@ function clearNativeFolderNoteMarks(doc: Document): void {
 
 async function handleFileExplorerFolderClick(
   app: App,
+  explorerApi: ExplorerApi,
   settings: PluginSettings,
   evt: MouseEvent,
 ): Promise<void> {
@@ -172,17 +184,14 @@ async function handleFileExplorerFolderClick(
   const folder = getClickedFolder(app, evt);
   if (!folder || folder.isRoot()) return;
 
-  const folderNote = getFolderNoteForFolder(app, folder);
   evt.preventDefault();
   evt.stopImmediatePropagation();
 
   const newLeaf = evt.button === 1 || Boolean(Keymap.isModEvent(evt));
-  if (folderNote) {
-    await app.workspace.openLinkText(folderNote.path, "", newLeaf);
-    return;
-  }
-
-  await openVirtualFolderNote(app, folder, newLeaf);
+  await explorerApi.at(null).openFolder(folder, {
+    newLeaf,
+    intent: "sidebar",
+  });
 }
 
 function getClickedFolder(app: App, evt: MouseEvent): TFolder | null {

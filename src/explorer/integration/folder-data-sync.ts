@@ -1,12 +1,12 @@
 import { Plugin, TFile, TFolder } from "obsidian";
 import { FolderDataStore } from "../data/folder-data-store";
-import { isFolderNote } from "../lib/folder-note";
+import { isFolderNote } from "../domain/folder-note";
 
 /**
- * Keeps the virtual folder-note data store aligned with the vault. Folder
+ * Keeps the file-free folder-page data store aligned with the vault. Folder
  * renames/moves rewrite stored keys (including descendants, which never fire
  * their own events), deletions drop them, and a newly created Markdown folder
- * note clears any now-redundant virtual entry for its folder.
+ * note clears any now-redundant file-free entry for its folder.
  */
 export function registerFolderDataSync(
   plugin: Plugin,

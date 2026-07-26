@@ -1,18 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExplorerModel } from "../explorer/model";
-import { buildExplorerListing } from "../explorer/lib/listing";
-import { ExplorerFileNode } from "../explorer/lib/nodes";
+import { buildExplorerListing } from "../explorer/domain/listing";
+import { ExplorerFileNode } from "../explorer/model";
 import { Platform } from "obsidian";
 
 type PaginationKind = "classic" | "load-more" | "none";
 
 export function useExplorerState(model: ExplorerModel) {
   const { settings } = model;
-  const [metadataTick, setMetadataTick] = useState(0);
-  const refreshMetadata = useCallback(
-    () => setMetadataTick((tick) => tick + 1),
-    [],
-  );
 
   const sourceFiles = useMemo(
     // When folder buttons are hidden, folder notes join the file listing.
@@ -33,9 +28,9 @@ export function useExplorerState(model: ExplorerModel) {
         query: "",
         sortBy: settings.sortBy,
       }),
-    [sourceFiles, settings, model.sourcePath, settings.sortBy, metadataTick],
+    [sourceFiles, settings, model.sourcePath, settings.sortBy],
   );
-  const search = useSearchState(model, metadataTick);
+  const search = useSearchState(model);
   const paginationKind: PaginationKind = search.mode
     ? "load-more"
     : settings.paginationStyle === "modern" || Platform.isMobile
@@ -62,13 +57,12 @@ export function useExplorerState(model: ExplorerModel) {
     isSearchLoading: search.isLoading,
     toggleSearch: search.toggle,
     setSearchQuery: search.setQuery,
-    refreshMetadata,
     ...pagination,
     visibleFiles: pagination.visibleFiles,
   };
 }
 
-function useSearchState(model: ExplorerModel, metadataTick: number) {
+function useSearchState(model: ExplorerModel) {
   const activeDocument = (window as Window & { activeDocument: Document })
     .activeDocument;
   const [mode, setMode] = useState(false);
@@ -130,7 +124,7 @@ function useSearchState(model: ExplorerModel, metadataTick: number) {
         query: debouncedQuery,
         sortBy: "edited",
       }),
-    [model, allFiles, debouncedQuery, metadataTick],
+    [model, allFiles, debouncedQuery],
   );
   const toggle = useCallback(() => {
     setMode((prev) => {

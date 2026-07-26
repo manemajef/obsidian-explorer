@@ -1,8 +1,6 @@
 import { App, MarkdownView, type WorkspaceLeaf } from "obsidian";
-import {
-  VIRTUAL_FOLDER_NOTE_VIEW_TYPE,
-  VirtualFolderNoteView,
-} from "./virtual-folder-note-view";
+import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../operations/open-file-free-folder-page";
+import { VirtualFolderNoteView } from "./virtual-folder-note-view";
 
 export const MARKDOWN_WITH_EXPLORER_VIEW_TYPE =
   "markdown-with-explorer-codeblock";

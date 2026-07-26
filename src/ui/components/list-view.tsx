@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { ExplorerActions } from "../../explorer/actions";
-import { ExplorerFileNode } from "../../explorer/lib/nodes";
+import type { Explorer } from "../../explorer/api";
+import { ExplorerFileNode } from "../../explorer/model";
 import { ExplorerModel } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { MarkdownListView } from "./markdown-list-view";
@@ -10,7 +10,7 @@ import { ModernListView } from "./modern-list-view";
 type ListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
-  actions: ExplorerActions;
+  explorer: Explorer;
   contextMenu: ContextMenuConfig;
 };
 

@@ -1,11 +1,10 @@
 import { App, getAllTags, TAbstractFile, TFile, TFolder } from "obsidian";
+import { isFolderNote } from "../domain/folder-note";
 import {
   getFolderNoteForFolder,
   getFolderNotePath,
-  isFolderNote,
-} from "./folder-note";
-import { togglePin } from "../vault/edit";
-import { getPreviewForNote, truncatePreview } from "./get-preview";
+} from "../vault/folder-note-file";
+import { getPreviewForNote, truncatePreview } from "../domain/get-preview";
 
 export type ExplorerNode = ExplorerFileNode | ExplorerFolderNode;
 
@@ -143,38 +142,10 @@ export class ExplorerFileNode {
     return this.properties[key] as T | undefined;
   }
 
-  async setProperty(key: string, value: unknown): Promise<void> {
-    await this.app.fileManager.processFrontMatter(
-      this.file,
-      (frontmatter: Record<string, unknown>) => {
-        if (value === undefined || value === null) {
-          delete frontmatter[key];
-        } else {
-          frontmatter[key] = value;
-        }
-      },
-    );
-  }
-
   get isPinned(): boolean {
     if (this.cachedIsPinned !== undefined) return this.cachedIsPinned;
     this.cachedIsPinned = this.frontmatter?.pin === true;
     return this.cachedIsPinned;
-  }
-
-  async togglePin(): Promise<void> {
-    this.setCachedPin(await togglePin(this.app, this.file));
-  }
-
-  private setCachedPin(isPinned: boolean): void {
-    this.cachedIsPinned = isPinned;
-    const frontmatter = { ...(this.frontmatter ?? {}) };
-    if (isPinned) {
-      frontmatter["pin"] = true;
-    } else {
-      delete frontmatter["pin"];
-    }
-    this.cachedFrontmatter = frontmatter;
   }
 }
 

@@ -1,16 +1,11 @@
 import { App, Editor, MarkdownView, Plugin, TFile } from "obsidian";
 import type { PluginSettings } from "../settings";
-import { openHomePage } from "../navigation/homepage";
-import { promptAndCreateFolder } from "../vault/create";
-import { openVirtualFolderNote } from "../navigation/virtual-folder-note";
-import { togglePin } from "../vault/edit";
-import { FOLDERNOTE_TEMPLATE } from "../lib/folder-note";
+import { FOLDERNOTE_TEMPLATE } from "../domain/folder-note";
+import { isPinned } from "../domain/pin";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
 import type { ExplorerApi } from "../api";
-import {
-  getActiveExplorerFolder,
-  getActiveExplorerLocation,
-} from "./active-location";
+import { getActiveExplorerLocation } from "./active-location";
+import { appendExplorerCodeBlockToFile } from "../operations/insert-explorer-block";
 
 type CommandDeps = {
   getSettings: () => PluginSettings;
@@ -47,21 +42,14 @@ export function registerExplorerCommands(
     id: "create-folder-in-current-folder",
     name: "Create folder in current note folder",
     checkCallback: (checking: boolean) => {
-      const basePath = getActiveExplorerFolder(app)?.path;
+      const location = getActiveExplorerLocation(app);
 
-      if (!basePath) {
+      if (!location) {
         return false;
       }
 
       if (!checking) {
-        const createFolderNote = getSettings().createFolderNoteOnNewFolder;
-        void promptAndCreateFolder(app, basePath, createFolderNote).then(
-          (folder) => {
-            if (folder && !createFolderNote) {
-              void openVirtualFolderNote(app, folder);
-            }
-          },
-        );
+        void explorerApi.at(location).createFolder();
       }
 
       return true;
@@ -77,8 +65,9 @@ export function registerExplorerCommands(
       }
 
       if (!checking) {
-        const location = getActiveExplorerLocation(app);
-        void openHomePage(app, getSettings(), location?.path ?? "");
+        void explorerApi
+          .at(getActiveExplorerLocation(app))
+          .openHomePage();
       }
 
       return true;
@@ -115,7 +104,9 @@ export function registerExplorerCommands(
       }
 
       if (!checking) {
-        void virtualView.materialize();
+        void explorerApi
+          .at(getActiveExplorerLocation(app))
+          .addMarkdownBacking();
       }
 
       return true;
@@ -133,7 +124,9 @@ export function registerExplorerCommands(
       }
 
       if (!checking) {
-        void togglePin(app, activeFile);
+        void explorerApi
+          .at(getActiveExplorerLocation(app))
+          .setPinned(activeFile, !isPinned(app, activeFile));
       }
 
       return true;
@@ -159,13 +152,4 @@ async function insertExplorerCodeBlock(
 
 function insertExplorerCodeBlockAtCursor(editor: Editor): void {
   editor.replaceRange(FOLDERNOTE_TEMPLATE, editor.getCursor());
-}
-
-async function appendExplorerCodeBlockToFile(
-  app: App,
-  file: TFile,
-): Promise<void> {
-  const content = await app.vault.read(file);
-  const separator = content.length === 0 || content.endsWith("\n") ? "" : "\n";
-  await app.vault.modify(file, `${content}${separator}${FOLDERNOTE_TEMPLATE}`);
 }

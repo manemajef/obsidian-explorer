@@ -1,6 +1,6 @@
 import React from "react";
-import { ExplorerActions } from "../../../explorer/actions";
-import { ExplorerFileNode } from "../../../explorer/lib/nodes";
+import type { Explorer } from "../../../explorer/api";
+import { ExplorerFileNode } from "../../../explorer/model";
 import { ExplorerModel } from "../../../explorer/model";
 import { cn } from "../primitives/cn";
 import { Badge, type BadgeVariant } from "../primitives/badge";
@@ -10,13 +10,13 @@ import { TagList, type TagOverflow, type TagSize } from "../primitives/tags";
 
 export function NoteTitle({
   file,
-  actions,
+  explorer,
   className,
   text = file.displayName,
   ...linkProps
 }: {
   file: ExplorerFileNode;
-  actions: ExplorerActions;
+  explorer: Explorer;
   text?: string;
 } & Omit<LinkProps, "path" | "onClick">): React.JSX.Element {
   return (
@@ -30,7 +30,9 @@ export function NoteTitle({
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        void actions.openFile(file, event.ctrlKey || event.metaKey);
+        void explorer.openFile(file.file, {
+          newLeaf: event.ctrlKey || event.metaKey,
+        });
       }}
     >
       {text}
@@ -85,14 +87,16 @@ export function NoteTags({
 
 export function Pin(props: {
   file: ExplorerFileNode;
-  actions: ExplorerActions;
+  explorer: Explorer;
+  onChanged: () => void;
   className?: string;
   placement?: "inline" | "row-leading" | "card";
   reserveSpace?: boolean;
 }): React.JSX.Element {
   const {
     file,
-    actions,
+    explorer,
+    onChanged,
     className,
     placement = "inline",
     reserveSpace = true,
@@ -105,7 +109,11 @@ export function Pin(props: {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          void actions.togglePin(file);
+          void explorer
+            .setPinned(file.file, false)
+            .then((changed) => {
+              if (changed) onChanged();
+            });
         }}
       >
         <Icon name="pin" />

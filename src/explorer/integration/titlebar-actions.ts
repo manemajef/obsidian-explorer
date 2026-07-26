@@ -1,6 +1,6 @@
 import { App, Platform, Plugin, setIcon, type WorkspaceLeaf } from "obsidian";
 import { type PluginSettings } from "../settings";
-import { openHomePage, resolveHomePagePath } from "../navigation/homepage";
+import { resolveHomePagePath } from "../domain/homepage";
 import { isHTMLElement } from "../../utils";
 import { getActiveExplorerLocation } from "./active-location";
 import { getActiveVirtualFolderNote } from "./virtual-folder-note-view";
@@ -51,13 +51,9 @@ export function registerExplorerTitlebarActions(
           app,
           activeLeaf ?? app.workspace.getMostRecentLeaf(),
         ) &&
-        deps.explorerApi
-          .at(getActiveExplorerLocation(app))
-          .canGoToParent(),
+        deps.explorerApi.at(getActiveExplorerLocation(app)).canGoToParent(),
       run: async () => {
-        await deps.explorerApi
-          .at(getActiveExplorerLocation(app))
-          .goToParent();
+        await deps.explorerApi.at(getActiveExplorerLocation(app)).goToParent();
       },
     },
     {
@@ -73,12 +69,9 @@ export function registerExplorerTitlebarActions(
         ) ||
           (!Platform.isMobile && !IS_HIDE_HOME)),
       run: async () => {
-        await openHomePage(
-          app,
-          deps.getSettings(),
-          getActiveExplorerLocation(app)?.path ?? "",
-          false,
-        );
+        await deps.explorerApi
+          .at(getActiveExplorerLocation(app))
+          .openHomePage(false);
       },
     },
     {
@@ -87,7 +80,9 @@ export function registerExplorerTitlebarActions(
       label: "Save folder note as Markdown",
       isVisible: () => Boolean(getActiveVirtualFolderNote(app)?.folder),
       run: async () => {
-        await getActiveVirtualFolderNote(app)?.materialize();
+        await deps.explorerApi
+          .at(getActiveExplorerLocation(app))
+          .addMarkdownBacking();
       },
     },
   ];

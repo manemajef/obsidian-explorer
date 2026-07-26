@@ -26,3 +26,8 @@ DEV.md
 PLAN.md
 __pycache__/
 tmp/
+
+# Local agent workspace
+_agent/*
+!_agent/
+!_agent/README.md

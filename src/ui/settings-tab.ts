@@ -17,7 +17,7 @@ import {
   renderFolderPickerControl,
   renderSettingFields,
 } from "./render-setting-field";
-import { isHomePageNewTabManagedElsewhere } from "../explorer/navigation/homepage";
+import { isHomePageNewTabManagedElsewhere } from "../explorer/domain/homepage-capability";
 import { getAllVaultFolders } from "../utils";
 
 // Global plugin defaults UI (Obsidian settings tab).

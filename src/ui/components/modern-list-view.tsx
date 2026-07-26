@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { ExplorerActions } from "../../explorer/actions";
-import { ExplorerFileNode } from "../../explorer/lib/nodes";
+import type { Explorer } from "../../explorer/api";
+import { ExplorerFileNode } from "../../explorer/model";
 import { ExplorerModel } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
@@ -48,12 +48,12 @@ function ListRow({
 export type ModernListViewProps = {
   model: ExplorerModel;
   files: ExplorerFileNode[];
-  actions: ExplorerActions;
+  explorer: Explorer;
   contextMenu: ContextMenuConfig;
 };
 
 export function ModernListView(props: ModernListViewProps): React.JSX.Element {
-  const { files, model, actions, contextMenu } = props;
+  const { files, model, explorer, contextMenu } = props;
   const variant = Platform.isMobile ? "mobile" : "desktop";
   const isMobile = variant === "mobile";
 
@@ -67,7 +67,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
           interactive={isMobile}
           last={i >= files.length - 1}
           data-pinned={file.isPinned || undefined}
-          {...fileInteractionProps(file, actions, contextMenu)}
+          {...fileInteractionProps(file, explorer, contextMenu)}
         >
           <Stack
             className="explorer-modern-list__content"
@@ -77,14 +77,15 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
               <div className="explorer-modern-list__title-slot">
                 <Pin
                   file={file}
-                  actions={actions}
+                  explorer={explorer}
+                  onChanged={contextMenu.onChanged}
                   className="explorer-modern-list__pin"
                   placement="row-leading"
                   reserveSpace={false}
                 />
                 <NoteTitle
                   file={file}
-                  actions={actions}
+                  explorer={explorer}
                   className="explorer-modern-list__title"
                   weight={isMobile ? "semibold" : "medium"}
                   density="tight"
@@ -120,7 +121,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
                   <NoteFolderDatePreview
                     file={file}
                     model={model}
-                    actions={actions}
+                    explorer={contextMenu.explorer}
                     maxChar={120}
                     showPreview={model.settings.showPreviews}
                   />

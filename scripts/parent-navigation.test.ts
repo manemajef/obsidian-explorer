@@ -4,7 +4,7 @@ import {
   type ParentLocation,
   resolveParentDestination,
   resolveParentNewLeaf,
-} from "../src/explorer/lib/parent-navigation";
+} from "../src/explorer/domain/parent-navigation";
 
 class TestFolder implements ParentFolder<TestFolder> {
   constructor(

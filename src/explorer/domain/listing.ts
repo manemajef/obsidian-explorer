@@ -1,7 +1,6 @@
 import { TFile } from "obsidian";
 import { BlockSettings, DisplayedNotes } from "../settings";
 import { isFolderNote } from "./folder-note";
-import { ExplorerFileNode } from "./nodes";
 
 const DEFAULT_DISPLAY_EXTENSIONS = [
   "md",
@@ -14,15 +13,27 @@ const DEFAULT_DISPLAY_EXTENSIONS = [
   "svg",
 ];
 
-export type ExplorerListing = ExplorerFileNode[];
+export type ExplorerListingFile = {
+  file: TFile;
+  path: string;
+  name: string;
+  basename: string;
+  extension: string;
+  isMarkdown: boolean;
+  isFolderNote: boolean;
+  isPinned: boolean;
+  tags: string[];
+};
 
-export function buildExplorerListing(input: {
-  files: ExplorerFileNode[];
+export type ExplorerListing<T extends ExplorerListingFile> = T[];
+
+export function buildExplorerListing<T extends ExplorerListingFile>(input: {
+  files: T[];
   settings: BlockSettings;
   sourcePath: string;
   query: string;
   sortBy: BlockSettings["sortBy"];
-}): ExplorerListing {
+}): ExplorerListing<T> {
   const { files, settings, sourcePath, query, sortBy } = input;
   const visibleFiles = filterDisplayedFiles(
     files.filter((file) => file.path !== sourcePath),
@@ -38,10 +49,10 @@ export function shouldIndexFile(file: TFile): boolean {
   return !isFolderNote(file);
 }
 
-export function filterDisplayedFiles(
-  files: ExplorerFileNode[],
+export function filterDisplayedFiles<T extends ExplorerListingFile>(
+  files: T[],
   displayedNotes: DisplayedNotes,
-): ExplorerFileNode[] {
+): T[] {
   switch (displayedNotes) {
     case "none":
       return [];
@@ -58,17 +69,17 @@ export function filterDisplayedFiles(
   }
 }
 
-function sortFiles(
-  files: ExplorerFileNode[],
+function sortFiles<T extends ExplorerListingFile>(
+  files: T[],
   sortBy: "newest" | "oldest" | "edited" | "name" | "nameDesc",
-): ExplorerFileNode[] {
-  const pinned: ExplorerFileNode[] = [];
-  const rest: ExplorerFileNode[] = [];
+): T[] {
+  const pinned: T[] = [];
+  const rest: T[] = [];
   for (const file of files) {
     (file.isPinned ? pinned : rest).push(file);
   }
 
-  const compareFn = (a: ExplorerFileNode, b: ExplorerFileNode) => {
+  const compareFn = (a: T, b: T) => {
     switch (sortBy) {
       case "newest":
         return b.file.stat.ctime - a.file.stat.ctime;
@@ -90,10 +101,10 @@ function sortFiles(
   return [...pinned, ...rest];
 }
 
-function filterFiles(
-  files: ExplorerFileNode[],
+function filterFiles<T extends ExplorerListingFile>(
+  files: T[],
   query: string,
-): ExplorerFileNode[] {
+): T[] {
   const q = query.trim().toLowerCase();
   if (!q) return files;
 
@@ -124,7 +135,7 @@ function sortQueryResultByRank<T>(
     .map((entry) => entry.item);
 }
 
-function getTokenRank(file: ExplorerFileNode, token: string): number {
+function getTokenRank(file: ExplorerListingFile, token: string): number {
   if (token.startsWith("#")) {
     return rankTagToken(file, token.slice(1));
   }
@@ -136,7 +147,7 @@ function getTokenRank(file: ExplorerFileNode, token: string): number {
   return rankGeneralToken(file, token);
 }
 
-function rankTagToken(file: ExplorerFileNode, tagQuery: string): number {
+function rankTagToken(file: ExplorerListingFile, tagQuery: string): number {
   const fileTags = file.tags.map((tag) => tag.toLowerCase());
   let minRank = Infinity;
 
@@ -149,7 +160,7 @@ function rankTagToken(file: ExplorerFileNode, tagQuery: string): number {
   return minRank;
 }
 
-function rankGeneralToken(file: ExplorerFileNode, token: string): number {
+function rankGeneralToken(file: ExplorerListingFile, token: string): number {
   const fileBaseName = file.basename.toLowerCase();
   const filePath = file.path.toLowerCase();
 

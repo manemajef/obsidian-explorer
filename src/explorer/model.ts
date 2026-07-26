@@ -4,22 +4,29 @@ import {
   ExplorerFileNode,
   ExplorerFolderNode,
   type ExplorerNode,
-} from "./lib/nodes";
+} from "./data/explorer-nodes";
+import { resolveFolderPageBacking } from "./domain/folder-page";
+import type { ExplorerLocation } from "./domain/explorer-location";
 import { ExplorerSession } from "./data/session";
-import type { ExplorerLocation } from "./navigation/folder-notes";
+
+export {
+  ExplorerFileNode,
+  ExplorerFolderNode,
+  type ExplorerNode,
+} from "./data/explorer-nodes";
 
 export type ExplorerModel = {
   app: App;
   sourcePath: string;
   location: ExplorerLocation;
   folder: TFolder;
-  session: ExplorerSession;
   settings: BlockSettings;
   pluginSettings: PluginSettings;
   children: ExplorerNode[];
   folders: ExplorerFolderNode[];
   files: ExplorerFileNode[];
   folderNotes: ExplorerFileNode[];
+  missingFolderLinkCreatesMarkdown: boolean;
   loadAllFiles: (
     onChunk?: (chunk: ExplorerFileNode[]) => void,
   ) => Promise<ExplorerFileNode[]>;
@@ -59,13 +66,18 @@ export async function buildExplorerModel(input: {
       file: sourceFile instanceof TFile ? sourceFile : null,
     },
     folder,
-    session,
     settings,
     pluginSettings,
     children: index.children,
     folders: index.folders.sort((a, b) => a.name.localeCompare(b.name)),
     files: index.getFilesToDisplay(settings),
     folderNotes: index.folderNotes,
+    missingFolderLinkCreatesMarkdown:
+      resolveFolderPageBacking({
+        existing: null,
+        missingBehavior: pluginSettings.missingFolderNoteBehavior,
+        intent: "explicit",
+      }).kind === "create-markdown",
     loadAllFiles: async (onChunk) => {
       if (allFiles) return allFiles;
       allFiles = await index.getAllContent(onChunk);

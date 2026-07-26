@@ -8,7 +8,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Persists per-folder block-setting overrides for *virtual* folder notes, so a
+ * Persists per-folder block-setting overrides for file-free folder pages, so a
  * folder can carry custom Explorer settings without a Markdown folder note on
  * disk. Keyed by folder path; a folder keeps an entry only while it has at
  * least one non-default override. Backed by a single JSON file in the plugin

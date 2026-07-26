@@ -1,12 +1,12 @@
 import { App, TFile, TFolder } from "obsidian";
 import { BlockSettings } from "../settings";
-import { getFolderNoteForFolder } from "../lib/folder-note";
-import { filterDisplayedFiles, shouldIndexFile } from "../lib/listing";
+import { getFolderNoteForFolder } from "../vault/folder-note-file";
+import { filterDisplayedFiles, shouldIndexFile } from "../domain/listing";
 import {
   ExplorerFileNode,
   ExplorerFolderNode,
   type ExplorerNode,
-} from "../lib/nodes";
+} from "./explorer-nodes";
 
 const WALK_BUDGET_MS = 16;
 

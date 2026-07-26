@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { TFile, TFolder } from "obsidian";
 import { BlockSettings, shouldDisplayNotes } from "../explorer/settings";
 import { ExplorerModel } from "../explorer/model";
-import { ExplorerFileNode } from "../explorer/lib/nodes";
-import { ExplorerActions } from "../explorer/actions";
+import { ExplorerFileNode } from "../explorer/model";
 import { useExplorerState } from "./explorer-state";
 import type { ContextMenuConfig } from "./context-menu";
 import { CardsView } from "./components/cards-view";
@@ -20,10 +18,7 @@ interface ExplorerUIProps {
   explorer: Explorer;
   onOpenSettings: () => void;
   onSettingsChange: (settings: BlockSettings) => void;
-  onSavePluginSettings: () => void | Promise<void>;
   onRefresh: () => void;
-  onSaveFolderNote?: () => void | Promise<void>;
-  onRemoveFolderNoteFile?: (file: TFile) => void | Promise<void>;
 }
 
 export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
@@ -32,10 +27,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     explorer,
     onOpenSettings,
     onSettingsChange,
-    onSavePluginSettings,
     onRefresh,
-    onSaveFolderNote,
-    onRemoveFolderNoteFile,
   } = props;
   const { app, settings } = model;
   const explorerState = useExplorerState(model);
@@ -71,43 +63,31 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
     canLoadMore,
     loadMore,
     paginationKind,
-    refreshMetadata,
   } = explorerState;
 
-  const actions = useMemo(
-    () =>
-      new ExplorerActions(
-        app,
-        model.session,
-        model.sourcePath,
-        model.folder,
-        model.pluginSettings,
-        onSavePluginSettings,
-        onRefresh,
-        refreshMetadata,
-        onRemoveFolderNoteFile,
-      ),
-    [
-      app,
-      model.session,
-      model.sourcePath,
-      model.folder,
-      model.pluginSettings,
-      onSavePluginSettings,
-      onRefresh,
-      refreshMetadata,
-      onRemoveFolderNoteFile,
-    ],
-  );
   const onMoveIntoFolder = useCallback(
-    (sourcePath: string, folder: TFolder, fromFolderNote: boolean) => {
-      void actions.movePathIntoFolder(sourcePath, folder, fromFolderNote);
+    (
+      sourcePath: string,
+      folder: Parameters<Explorer["movePathIntoFolder"]>[1],
+      fromFolderNote: boolean,
+    ) => {
+      void explorer
+        .movePathIntoFolder(sourcePath, folder, fromFolderNote)
+        .then((changed) => {
+          if (changed) onRefresh();
+        });
     },
-    [actions],
+    [explorer, onRefresh],
   );
   const contextMenu: ContextMenuConfig = useMemo(
-    () => ({ actions }),
-    [actions],
+    () => ({
+      app,
+      sourcePath: model.sourcePath,
+      currentFolder: model.folder,
+      explorer,
+      onChanged: onRefresh,
+    }),
+    [app, explorer, model.folder, model.sourcePath, onRefresh],
   );
 
   const showFolders =
@@ -122,7 +102,7 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
           <CardsView
             model={model}
             files={files}
-            actions={actions}
+            explorer={explorer}
             contextMenu={contextMenu}
           />
         );
@@ -132,12 +112,12 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         <ListView
           model={model}
           files={files}
-          actions={actions}
+          explorer={explorer}
           contextMenu={contextMenu}
         />
       );
     },
-    [actions, contextMenu, model, settings.view],
+    [contextMenu, explorer, model, settings.view],
   );
 
   const showLoadMore = paginationKind === "load-more" && canLoadMore;
@@ -155,12 +135,14 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
       canGoToParent={explorer.canGoToParent()}
       onOpenSettings={onOpenSettings}
       onSettingsChange={onSettingsChange}
-      onSaveFolderNote={
-        onSaveFolderNote ? () => void onSaveFolderNote() : undefined
+      onAddMarkdownBacking={
+        model.location.file === null
+          ? () => void explorer.addMarkdownBacking(settings)
+          : undefined
       }
       onGoToParent={(newLeaf) => void explorer.goToParent(newLeaf)}
-      onNewFolder={() => void actions.createFolder()}
-      onNewNote={() => void actions.createNote()}
+      onNewFolder={() => void explorer.createFolder()}
+      onNewNote={() => void explorer.createNote()}
       onSearchToggle={toggleSearch}
       searchMode={searchMode}
       searchQuery={searchQuery}
@@ -176,8 +158,11 @@ export function ExplorerUI(props: ExplorerUIProps): React.JSX.Element {
         <>
           <FolderButtons
             folders={model.folders}
-            actions={actions}
+            explorer={explorer}
             contextMenu={contextMenu}
+            missingFolderLinkCreatesMarkdown={
+              model.missingFolderLinkCreatesMarkdown
+            }
           />
         </>
       )}

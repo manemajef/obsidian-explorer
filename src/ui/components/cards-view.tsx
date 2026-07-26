@@ -1,8 +1,8 @@
 import React from "react";
 import { Platform } from "obsidian";
 import { ExplorerModel } from "../../explorer/model";
-import { ExplorerFileNode } from "../../explorer/lib/nodes";
-import { ExplorerActions } from "../../explorer/actions";
+import { ExplorerFileNode } from "../../explorer/model";
+import type { Explorer } from "../../explorer/api";
 import type { ContextMenuConfig } from "../context-menu";
 import { fileInteractionProps } from "./interactions";
 import { cn } from "./primitives/cn";
@@ -41,10 +41,10 @@ function NoteCard({
 export function CardsView(props: {
   model: ExplorerModel;
   files: ExplorerFileNode[];
-  actions: ExplorerActions;
+  explorer: Explorer;
   contextMenu: ContextMenuConfig;
 }): React.JSX.Element {
-  const { model, files, actions, contextMenu } = props;
+  const { model, files, explorer, contextMenu } = props;
   const isMobile = Platform.isMobile;
 
   let compact = model.settings.compactCards;
@@ -75,13 +75,13 @@ export function CardsView(props: {
               key={file.path}
               className="explorer-file-card"
               interactive
-              {...fileInteractionProps(file, actions, contextMenu)}
+              {...fileInteractionProps(file, explorer, contextMenu)}
             >
               <Group align="start" className="explorer-file-card__header">
                 <Group align="start" minWidth={0}>
                   <NoteTitle
                     file={file}
-                    actions={actions}
+                    explorer={explorer}
                     className="explorer-file-card__title"
                     variant="title"
                     density={titleDensity}
@@ -108,7 +108,12 @@ export function CardsView(props: {
                   />
                   {file.isPinned && (
                     <div className="explorer-file-card__pin-slot">
-                      <Pin file={file} actions={actions} placement="card" />
+                      <Pin
+                        file={file}
+                        explorer={explorer}
+                        onChanged={contextMenu.onChanged}
+                        placement="card"
+                      />
                     </div>
                   )}
                 </Group>
@@ -142,7 +147,7 @@ export function CardsView(props: {
                 <NoteFolderDate
                   file={file}
                   model={model}
-                  actions={actions}
+                  explorer={contextMenu.explorer}
                   size={metadataSize}
                   // separator="spacer"
                 />

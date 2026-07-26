@@ -5,7 +5,6 @@ import {
   MarkdownPostProcessorContext,
   MarkdownRenderChild,
   TAbstractFile,
-  TFile,
   TFolder,
 } from "obsidian";
 import type { EventRef } from "obsidian";
@@ -19,10 +18,12 @@ import { isRtl } from "../utils";
 import { ExplorerUI } from "../ui/explorer-ui";
 import { ExplorerSettingsModal } from "../ui/modals/settings-modal";
 import { buildExplorerModel } from "./model";
-import { updateExplorerBlock } from "./vault/block-update";
+import { updateExplorerBlock } from "./operations/update-explorer-block";
 import { ExplorerSession } from "./data/session";
-import { consumeNavigationPending } from "./navigation/navigation-pending";
+import { consumeNavigationPending } from "./data/navigation-pending";
 import type { ExplorerApi } from "./api";
+import { isFolderNote } from "./domain/folder-note";
+import { resolveHomePagePath } from "./domain/homepage";
 
 export type ExplorerMount = {
   explorerApi: ExplorerApi;
@@ -32,21 +33,12 @@ export type ExplorerMount = {
   sourceFolder?: TFolder;
   getBlockDefaults: () => BlockSettings;
   getPluginSettings: () => PluginSettings;
-  savePluginSettings: () => void | Promise<void>;
   initialOverrides: Partial<BlockSettings>;
   registerRefresh?: (refresh: () => void) => () => void;
   replaceExplorerBlock?: (
     settings: BlockSettings,
     sourcePath: string,
   ) => Promise<boolean | void>;
-  onSaveFolderNote?: () => void | Promise<void>;
-  folderNote?: FolderNoteConversion;
-  removeFolderNoteFile?: (file: TFile) => void | Promise<void>;
-};
-
-export type FolderNoteConversion = {
-  isFile: boolean;
-  convert: (settings: BlockSettings) => void | Promise<void>;
 };
 
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
@@ -63,11 +55,8 @@ export async function renderExplorerBlock(
   ctx: MarkdownPostProcessorContext,
   getBlockDefaults: () => BlockSettings,
   getPluginSettings: () => PluginSettings,
-  savePluginSettings: () => void | Promise<void>,
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
-  folderNote?: FolderNoteConversion,
-  removeFolderNoteFile?: (file: TFile) => void | Promise<void>,
 ): Promise<void> {
   const child = new MarkdownRenderChild(container);
   const cleanup = await mountExplorer({
@@ -77,20 +66,17 @@ export async function renderExplorerBlock(
     sourcePath: ctx.sourcePath,
     getBlockDefaults,
     getPluginSettings,
-    savePluginSettings,
     initialOverrides,
     registerRefresh,
-    folderNote,
-    removeFolderNoteFile,
     replaceExplorerBlock: async (newSettings, sourcePath) => {
-      await updateExplorerBlock(
+      await updateExplorerBlock({
         app,
         container,
-        ctx,
+        context: ctx,
         sourcePath,
-        getBlockDefaults(),
-        newSettings,
-      );
+        defaultSettings: getBlockDefaults(),
+        settings: newSettings,
+      });
     },
   });
   child.register(cleanup);
@@ -104,7 +90,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     sourceFolder,
     getBlockDefaults,
     getPluginSettings,
-    savePluginSettings,
     initialOverrides,
     registerRefresh,
     replaceExplorerBlock,
@@ -202,23 +187,6 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       });
   };
 
-  const openSettings = (): void => {
-    const conversion = input.folderNote
-      ? {
-          isFile: input.folderNote.isFile,
-          run: () => input.folderNote?.convert(effectiveSettings),
-        }
-      : undefined;
-    new ExplorerSettingsModal(
-      app,
-      effectiveSettings,
-      sourcePath,
-      updateSettings,
-      conversion,
-      sourceFolder,
-    ).open();
-  };
-
   const render = async (): Promise<void> => {
     const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
@@ -247,17 +215,47 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       return;
     }
 
+    const explorer = input.explorerApi.at(model.location);
+    const sourceFile = model.location.file;
+    const isMarkdownBacking =
+      sourceFile !== null &&
+      (isFolderNote(sourceFile) ||
+        (model.folder.isRoot() &&
+          sourceFile.path === resolveHomePagePath(app, pluginSettings)));
+    const backingAction = isMarkdownBacking
+      ? {
+          isFile: true,
+          run: () =>
+            explorer.removeMarkdownBacking(
+              model.folder,
+              effectiveSettings,
+            ),
+        }
+      : sourceFolder && sourceFile === null
+        ? {
+            isFile: false,
+            run: () => explorer.addMarkdownBacking(effectiveSettings),
+          }
+        : undefined;
+    const openSettings = (): void => {
+      new ExplorerSettingsModal(
+        app,
+        effectiveSettings,
+        sourcePath,
+        updateSettings,
+        backingAction,
+        sourceFolder,
+      ).open();
+    };
+
     reactRoot.render(
       <ExplorerUI
         key={model.sourcePath}
         model={model}
-        explorer={input.explorerApi.at(model.location)}
+        explorer={explorer}
         onOpenSettings={openSettings}
         onSettingsChange={updateSettings}
-        onSavePluginSettings={savePluginSettings}
         onRefresh={queueRefresh}
-        onSaveFolderNote={input.onSaveFolderNote}
-        onRemoveFolderNoteFile={input.removeFolderNoteFile}
       />,
     );
     clearNavigationPlaceholder?.();

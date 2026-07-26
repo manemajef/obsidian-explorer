@@ -1,8 +1,7 @@
 import React from "react";
 import { Platform } from "obsidian";
-import { ExplorerFolderNode } from "../../explorer/lib/nodes";
-import { ExplorerActions } from "../../explorer/actions";
-import { shouldCreateMissingFolderNote } from "../../explorer/navigation/folder-notes";
+import type { Explorer } from "../../explorer/api";
+import { ExplorerFolderNode } from "../../explorer/model";
 import type { ContextMenuConfig } from "../context-menu";
 import { folderInteractionProps } from "./interactions";
 import { cn } from "./primitives/cn";
@@ -34,10 +33,16 @@ function FolderButton({
 
 export function FolderButtons(props: {
   folders: ExplorerFolderNode[];
-  actions: ExplorerActions;
+  explorer: Explorer;
   contextMenu: ContextMenuConfig;
+  missingFolderLinkCreatesMarkdown: boolean;
 }): React.JSX.Element {
-  const { folders, actions, contextMenu } = props;
+  const {
+    folders,
+    explorer,
+    contextMenu,
+    missingFolderLinkCreatesMarkdown,
+  } = props;
   const isSparse = folders.length < 3;
   const variant = Platform.isMobile ? "mobile" : "desktop";
 
@@ -58,8 +63,7 @@ export function FolderButtons(props: {
         const isLongName = linkText.length > LONG_FOLDER_NAME_LENGTH;
         const isTightName = linkText.length > TRESH_FOR_SM;
         const linkCreatesFolderNote =
-          !isMissing ||
-          shouldCreateMissingFolderNote(actions.settings, "explicit");
+          !isMissing || missingFolderLinkCreatesMarkdown;
 
         return (
           <FolderButton
@@ -70,7 +74,7 @@ export function FolderButtons(props: {
               isLongName && "explorer-folder-card--long-name",
             )}
             interactive
-            {...folderInteractionProps(folder, actions, contextMenu)}
+            {...folderInteractionProps(folder, explorer, contextMenu)}
           >
             <Link
               path={folderNotePath}
@@ -89,7 +93,10 @@ export function FolderButtons(props: {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                void actions.openFolderLink(folder, e.ctrlKey || e.metaKey);
+                void contextMenu.explorer.openFolder(folder.folder, {
+                  newLeaf: e.ctrlKey || e.metaKey,
+                  intent: "explicit",
+                });
               }}
               onMouseOver={
                 isMissing && !linkCreatesFolderNote

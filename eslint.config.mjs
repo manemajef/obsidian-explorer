@@ -2,6 +2,21 @@ import tsparser from "@typescript-eslint/parser";
 import { defineConfig } from "eslint/config";
 import obsidianmd from "eslint-plugin-obsidianmd";
 
+const rawVaultMutationRestrictions = [
+  {
+    selector:
+      "CallExpression[callee.type='MemberExpression'][callee.object.type='MemberExpression'][callee.object.property.name='vault'][callee.property.name=/^(create|createFolder|modify|process)$/]",
+    message:
+      "Raw user-vault writes belong in src/explorer/vault/. Call a role-specific vault primitive.",
+  },
+  {
+    selector:
+      "CallExpression[callee.type='MemberExpression'][callee.object.type='MemberExpression'][callee.object.property.name='fileManager'][callee.property.name=/^(processFrontMatter|renameFile|promptForDeletion|trashFile)$/]",
+    message:
+      "Raw FileManager mutations belong in src/explorer/vault/. Call a role-specific vault primitive.",
+  },
+];
+
 export default defineConfig([
   {
     ignores: ["main.js", "*.js.map", "node_modules/**", "dev/**"],
@@ -33,11 +48,10 @@ export default defineConfig([
     files: [
       "src/explorer/model.ts",
       "src/explorer/api.ts",
-      "src/explorer/actions.ts",
-      "src/explorer/lib/**/*.{ts,tsx}",
+      "src/explorer/domain/**/*.{ts,tsx}",
       "src/explorer/data/**/*.{ts,tsx}",
       "src/explorer/vault/**/*.{ts,tsx}",
-      "src/explorer/navigation/**/*.{ts,tsx}",
+      "src/explorer/operations/**/*.{ts,tsx}",
     ],
     rules: {
       "no-restricted-imports": [
@@ -65,19 +79,47 @@ export default defineConfig([
     },
   },
   {
+    // User-vault mutations have one low-level owner. FolderDataStore's
+    // adapter.write() persists plugin-private JSON and intentionally does not
+    // match these Vault/FileManager member restrictions. Editor.replaceRange()
+    // is likewise an active-editor operation, not a raw Vault mutation.
     files: [
+      "main.ts",
       "src/ui/**/*.{ts,tsx}",
+      "src/explorer/api.ts",
+      "src/explorer/model.ts",
+      "src/explorer/runtime.tsx",
+      "src/explorer/domain/**/*.{ts,tsx}",
+      "src/explorer/data/**/*.{ts,tsx}",
       "src/explorer/integration/**/*.{ts,tsx}",
+      "src/explorer/operations/**/*.{ts,tsx}",
+      "src/explorer/settings/**/*.{ts,tsx}",
     ],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        ...rawVaultMutationRestrictions,
+      ],
+    },
+  },
+  {
+    // Rendered UI receives read contracts and the bound Explorer. It must not
+    // reach into behavior, persistence, or host-registration implementations.
+    files: ["src/ui/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           patterns: [
             {
-              group: ["**/navigation/parent"],
+              group: [
+                "**/explorer/operations/**",
+                "**/explorer/vault/**",
+                "**/explorer/data/**",
+                "**/explorer/integration/**",
+              ],
               message:
-                "Parent navigation is public through ExplorerApi.at(location), not the navigation implementation.",
+                "UI may import ExplorerApi/model read contracts and dependency-light helpers, not operations, vault, data, or integration implementations.",
             },
           ],
         },
@@ -113,6 +155,7 @@ export default defineConfig([
     rules: {
       "no-restricted-syntax": [
         "error",
+        ...rawVaultMutationRestrictions,
         {
           selector: "JSXAttribute[name.name='style']",
           message:
@@ -122,10 +165,9 @@ export default defineConfig([
     },
   },
   {
-    // lib/ is the dependency-light bottom layer: it may only reach down to
-    // settings, vault, and the host SDK — never sideways/up into stateful or
-    // host-facing layers.
-    files: ["src/explorer/lib/**/*.{ts,tsx}"],
+    // domain/ is dependency-light: no stateful, behavioral, host-registration,
+    // composition-root, React, or UI implementation imports.
+    files: ["src/explorer/domain/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -133,17 +175,51 @@ export default defineConfig([
           patterns: [
             {
               group: ["react", "react/*", "react-dom", "react-dom/*"],
-              message: "lib/ is framework-free.",
+              message: "domain/ is framework-free.",
             },
             {
               group: [
                 "../runtime",
                 "../integration/*",
                 "../data/*",
-                "../navigation/*",
+                "../operations/*",
+                "../../ui/*",
+                "../../ui/**",
               ],
               message:
-                "lib/ is the bottom layer: no runtime, integration, data, or navigation imports.",
+                "domain/ cannot import runtime, integration, data, operations, or UI implementations.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // Stateful data and low-level vault effects may depend on domain/settings,
+    // but not on intentions, host registration, roots, React, or UI adapters.
+    files: [
+      "src/explorer/data/**/*.{ts,tsx}",
+      "src/explorer/vault/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["react", "react/*", "react-dom", "react-dom/*"],
+              message: "Backend data and vault effects are framework-free.",
+            },
+            {
+              group: [
+                "../runtime",
+                "../integration/*",
+                "../operations/*",
+                "../../ui/*",
+                "../../ui/**",
+              ],
+              message:
+                "Data and vault effects cannot import runtime, integration, operations, or UI implementations.",
             },
           ],
         },

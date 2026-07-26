@@ -1,13 +1,17 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { Menu, Platform, TAbstractFile } from "obsidian";
-import { ExplorerActions } from "../explorer/actions";
-import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/lib/nodes";
+import { App, Menu, Platform, TAbstractFile, TFolder } from "obsidian";
+import type { Explorer } from "../explorer/api";
+import { ExplorerFileNode, ExplorerFolderNode } from "../explorer/model";
 import { isElement } from "../utils";
 
 const HAPTIC_DURATION_MS = 10;
 
 export type ContextMenuConfig = {
-  actions: ExplorerActions;
+  app: App;
+  sourcePath: string;
+  currentFolder: TFolder;
+  explorer: Explorer;
+  onChanged: () => void;
 };
 
 export function showNoteContextMenu(
@@ -21,11 +25,11 @@ export function showNoteContextMenu(
   const folder = file.parentFolder;
   let hasAction = false;
 
-  if (folder && folder.path !== config.actions.currentFolderPath) {
+  if (folder && folder.path !== config.currentFolder.path) {
     addFolderNoteNavigationItems(
       menu,
       config,
-      config.actions.createFolderNode(folder),
+      folder,
       "Go to folder note",
     );
     hasAction = true;
@@ -41,7 +45,7 @@ export function showNoteContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        void config.actions.deleteFile(file);
+        runChanged(config, config.explorer.deleteFile(file.file));
       }),
   );
   menu.showAtMouseEvent(event.nativeEvent);
@@ -65,7 +69,7 @@ export function showFolderContextMenu(
         .setTitle("Create folder note")
         .setIcon("file-plus-2")
         .onClick(() => {
-          void config.actions.createFolderNote(folder);
+          void config.explorer.openFolder(folder.folder, { intent: "save" });
         }),
     );
   }
@@ -74,7 +78,10 @@ export function showFolderContextMenu(
       .setTitle("Rename folder")
       .setIcon("pencil")
       .onClick(() => {
-        void config.actions.renameFolder(folder);
+        runChanged(
+          config,
+          config.explorer.renameFolder(folder.folder),
+        );
       }),
   );
   menu.addSeparator();
@@ -85,7 +92,7 @@ export function showFolderContextMenu(
         .setIcon("file-x")
         .setWarning(true)
         .onClick(() => {
-          void config.actions.deleteFolderNote(folder);
+          void config.explorer.removeMarkdownBacking(folder.folder);
         }),
     );
   }
@@ -95,7 +102,10 @@ export function showFolderContextMenu(
       .setIcon("trash")
       .setWarning(true)
       .onClick(() => {
-        config.actions.deleteFolder(folder);
+        runChanged(
+          config,
+          config.explorer.deleteFolder(folder.folder),
+        );
       }),
   );
 
@@ -111,7 +121,7 @@ export function showFileContextMenu(
     showFolderContextMenu(
       event,
       config,
-      config.actions.createFolderNode(file.parentFolder),
+      new ExplorerFolderNode(config.app, file.parentFolder),
     );
     return;
   }
@@ -147,10 +157,10 @@ function beginMenu(
   event.stopPropagation();
   triggerHapticFeedback();
   const menu = new Menu();
-  config.actions.app.workspace.handleLinkContextMenu(
+  config.app.workspace.handleLinkContextMenu(
     menu,
     linkPath,
-    config.actions.sourcePath,
+    config.sourcePath,
   );
   menu.addSeparator();
   return menu;
@@ -165,7 +175,7 @@ function beginFileMenu(
   event.stopPropagation();
   triggerHapticFeedback();
   const menu = new Menu();
-  config.actions.app.workspace.trigger("file-menu", menu, file, "explorer");
+  config.app.workspace.trigger("file-menu", menu, file, "explorer");
   menu.addSeparator();
   return menu;
 }
@@ -173,7 +183,7 @@ function beginFileMenu(
 function addFolderNoteNavigationItems(
   menu: Menu,
   config: ContextMenuConfig,
-  folder: ExplorerFolderNode,
+  folder: TFolder,
   label: string,
 ): void {
   menu.addItem((item) =>
@@ -181,7 +191,7 @@ function addFolderNoteNavigationItems(
       .setTitle(label)
       .setIcon("folder-open")
       .onClick(() => {
-        void config.actions.openFolder(folder, false);
+        void config.explorer.openFolder(folder);
       }),
   );
   menu.addItem((item) =>
@@ -189,7 +199,7 @@ function addFolderNoteNavigationItems(
       .setTitle(`${label} in new tab`)
       .setIcon("folder-plus")
       .onClick(() => {
-        void config.actions.openFolder(folder, true);
+        void config.explorer.openFolder(folder, { newLeaf: true });
       }),
   );
 }
@@ -206,7 +216,10 @@ function addPinItem(
       .setTitle(file.isPinned ? "Unpin note" : "Pin note")
       .setIcon("pin")
       .onClick(() => {
-        void config.actions.togglePin(file);
+        runChanged(
+          config,
+          config.explorer.setPinned(file.file, !file.isPinned),
+        );
       }),
   );
   return true;
@@ -223,7 +236,16 @@ function addRenameFileItem(
       .setTitle(`Rename ${itemName}`)
       .setIcon("pencil")
       .onClick(() => {
-        void config.actions.renameFile(file);
+        runChanged(config, config.explorer.renameFile(file.file));
       }),
   );
+}
+
+function runChanged(
+  config: ContextMenuConfig,
+  operation: Promise<boolean>,
+): void {
+  void operation.then((changed) => {
+    if (changed) config.onChanged();
+  });
 }

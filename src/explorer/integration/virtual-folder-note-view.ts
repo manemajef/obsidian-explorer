@@ -1,10 +1,8 @@
 import {
   App,
-  normalizePath,
   ItemView,
   Notice,
   TAbstractFile,
-  TFile,
   TFolder,
   WorkspaceLeaf,
 } from "obsidian";
@@ -14,22 +12,14 @@ import {
   PluginSettings,
   coercePartialBlockSettings,
   getBlockSettingsOverrides,
-  resolveBlockSettings,
 } from "../settings";
-import {
-  createFolderNoteFileWithConfirmation,
-  getFolderNoteForFolder,
-  getFolderNotePath,
-} from "../lib/folder-note";
+import { getFolderNotePath } from "../vault/folder-note-file";
 import { mountExplorer } from "../runtime";
-import { formatExplorerBlock } from "../vault/block-update";
-import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
-import { getHomePageInlineTitleConfig } from "../navigation/homepage";
+import { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../operations/open-file-free-folder-page";
+import { getHomePageInlineTitleConfig } from "../operations/rename-homepage";
 import { isHTMLElement } from "../../utils";
-import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
 import type { ExplorerApi } from "../api";
-
-export { VIRTUAL_FOLDER_NOTE_VIEW_TYPE } from "../navigation/virtual-folder-note";
+import type { FolderDataStore } from "../data/folder-data-store";
 
 export type VirtualFolderNoteHost = {
   explorerApi: ExplorerApi;
@@ -38,13 +28,7 @@ export type VirtualFolderNoteHost = {
   savePluginSettings: () => void | Promise<void>;
   registerRefresh?: (refresh: () => void) => () => void;
   refreshTitlebarActions?: () => void;
-  getFolderData: (folderPath: string) => Partial<BlockSettings>;
-  setFolderData: (
-    folderPath: string,
-    overrides: Partial<BlockSettings>,
-  ) => void;
-  deleteFolderData: (folderPath: string) => void;
-  removeFolderNoteFile?: (file: TFile) => void | Promise<void>;
+  folderDataStore: FolderDataStore;
 };
 
 type VirtualFolderNoteState = {
@@ -226,118 +210,21 @@ export class VirtualFolderNoteView extends ItemView {
       sourceFolder: folder,
       getBlockDefaults: this.host.getBlockDefaults,
       getPluginSettings: this.host.getPluginSettings,
-      savePluginSettings: this.host.savePluginSettings,
       initialOverrides: {
         ...this.state.initialOverrides,
-        ...this.host.getFolderData(folder.path),
+        ...this.host.folderDataStore.get(folder.path),
       },
       registerRefresh: this.host.registerRefresh,
-      onSaveFolderNote: () => this.materialize(),
-      folderNote: { isFile: false, convert: () => this.materialize() },
-      removeFolderNoteFile: this.host.removeFolderNoteFile,
       replaceExplorerBlock: async (settings) => {
-        // Changing a per-view setting on a file-free note always persists to
+        // Changing a per-view setting on a file-free page always persists to
         // the data store — it never silently creates a file. Use the "Add file"
-        // action (materialize) to create a Markdown folder note explicitly.
-        this.host.setFolderData(
+        // action to create Markdown backing explicitly.
+        this.host.folderDataStore.set(
           folder.path,
           getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
         );
         this.host.refreshTitlebarActions?.();
       },
-    });
-  }
-
-  /**
-   * Turns a virtual folder note into a real Markdown one, carrying over any
-   * stored overrides into the block and dropping the now-redundant data row.
-   */
-  async materialize(): Promise<void> {
-    const folder = this.folder;
-    if (!folder) return;
-
-    const defaults = this.host.getBlockDefaults();
-    const settings = resolveBlockSettings(
-      defaults,
-      {
-        ...this.state.initialOverrides,
-        ...this.host.getFolderData(folder.path),
-      },
-    );
-    const file = await this.writeFolderNoteBlock(
-      folder,
-      formatExplorerBlock(settings, defaults),
-    );
-    if (!file) return;
-
-    this.host.deleteFolderData(folder.path);
-    await this.app.workspace.openLinkText(file.path, this.sourcePath, false);
-  }
-
-  private async writeFolderNoteBlock(
-    folder: TFolder,
-    content: string,
-  ): Promise<TFile | null> {
-    if (this.state.sourcePath) {
-      return this.writeExplicitVirtualNote(content);
-    }
-
-    const existing = getFolderNoteForFolder(this.app, folder);
-    if (!existing) {
-      return createFolderNoteFileWithConfirmation(
-        this.app,
-        folder,
-        this.host.getPluginSettings(),
-        this.host.savePluginSettings,
-        content,
-      );
-    }
-    await this.app.vault.modify(existing, content);
-    return existing;
-  }
-
-  private async writeExplicitVirtualNote(
-    content: string,
-  ): Promise<TFile | null> {
-    const path = this.state.sourcePath;
-    if (!path) return null;
-
-    const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof TFile) {
-      await this.app.vault.modify(existing, content);
-      return existing;
-    }
-    if (existing) {
-      new Notice(`Virtual note path is not a note: ${path}`);
-      return null;
-    }
-
-    if (!(await this.confirmVirtualNoteCreation(path))) return null;
-
-    try {
-      return await this.app.vault.create(path, content);
-    } catch (err) {
-      new Notice(`Failed to create note: ${err}`);
-      return null;
-    }
-  }
-
-  private confirmVirtualNoteCreation(path: string): Promise<boolean> {
-    const settings = this.host.getPluginSettings();
-    if (!settings.askForFolderNoteCreation) return Promise.resolve(true);
-
-    return new Promise((resolve) => {
-      new ConfirmationDialog(
-        this.app,
-        "Create Markdown note?",
-        () => resolve(true),
-        async () => {
-          settings.askForFolderNoteCreation = false;
-          await this.host.savePluginSettings();
-        },
-        `The note "${path}" doesn't exist yet. Pressing Confirm will create a new Markdown note for it.`,
-        () => resolve(false),
-      ).open();
     });
   }
 
@@ -379,7 +266,10 @@ export class VirtualFolderNoteView extends ItemView {
 
     return {
       text: this.getTitle(folder),
-      onSave: (nextTitle) => this.renameFolderFromTitle(nextTitle, folder),
+      onSave: (nextTitle) =>
+        this.host.explorerApi
+          .at({ folder, path: this.sourcePath, file: null })
+          .renameFolder(folder, nextTitle),
     };
   }
 
@@ -429,34 +319,6 @@ export class VirtualFolderNoteView extends ItemView {
     } catch (error) {
       title.setText(savedTitle);
       new Notice(`Could not update title: ${error}`);
-    }
-  }
-
-  private async renameFolderFromTitle(
-    nextName: string,
-    folder: TFolder,
-  ): Promise<boolean> {
-    if (nextName === folder.name) return true;
-
-    const parent = folder.parent;
-    if (
-      !parent ||
-      !nextName ||
-      nextName.includes("/") ||
-      nextName.includes("\\")
-    ) {
-      if (!nextName) new Notice("Folder name cannot be empty.");
-      else new Notice("Folder name cannot contain slashes.");
-      return false;
-    }
-
-    const destinationPath = normalizePath(`${parent.path}/${nextName}`);
-    try {
-      await this.app.fileManager.renameFile(folder, destinationPath);
-      return true;
-    } catch (error) {
-      new Notice(`Could not rename folder: ${error}`);
-      return false;
     }
   }
 

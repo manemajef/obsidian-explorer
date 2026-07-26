@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildPreviewText,
   truncatePreview,
-} from "../src/explorer/lib/get-preview";
+} from "../src/explorer/domain/get-preview";
 
 describe("preview parsing", () => {
   it("skips frontmatter, code blocks, tables, comments, tags, and embeds", () => {
