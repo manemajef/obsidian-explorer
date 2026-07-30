@@ -38,7 +38,7 @@ export function Search(props: {
           placeholder={
             Platform.isMobile
               ? "search"
-              : "use '#' for tags and '@' for folders"
+              : "use '#' for tags"
           }
           value={searchQuery}
           onChange={(e) => onSearchInput(e.target.value)}

@@ -56,13 +56,21 @@
 
 .explorer-toolbar-group-menu-item {
   width: auto;
-  padding-inline: var(--explorer-button-pad)
-    calc(var(--explorer-button-pad) + 2px);
+  border-radius: var(--explorer-radius-pill);
+  gap: 1px;
+  padding-inline: calc(var(--explorer-button-pad) + 1px) var(--explorer-button-pad);
 }
+
 .explorer-icon.explorer-toolbar-group-menu-item__enum-icon {
-  width: var(--explorer-icon-size, var(--icon-size));
-  height: var(--explorer-icon-size, var(--icon-size));
-  transform: scale(0.7);
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  opacity: 0.75;
+}
+
+.explorer-icon.explorer-toolbar-group-menu-item__enum-icon svg {
+  width: 12px;
+  height: 12px;
 }
 
 .explorer-toolbar-group-item:hover,

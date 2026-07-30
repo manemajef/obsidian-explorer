@@ -381,7 +381,7 @@ export function ExplorerToolbar(props: {
   } = props;
   const USE_PEN = false;
   const isMobile = Platform.isMobile;
-  const extendedToolbar = settings.extendedToolbar;
+  const extendedToolbar = settings.extendedToolbar && !isMobile && !searchMode;
   const toolbarProps = {
     id: "explorer-toolbar",
     className: cn(
