@@ -68,3 +68,25 @@
 .is-mobile .explorer-virtual-folder-note {
   padding-top: 0;
 }
+
+/* Mobile toolbar: collapse double touch-padding between main icon and dropdown chevron */
+.is-mobile
+  .explorer-toolbar
+  .explorer-toolbar-group-menu-item
+  > .explorer-icon:first-child {
+  padding-inline-end: 0;
+}
+
+.is-mobile
+  .explorer-toolbar
+  .explorer-toolbar-group-menu-item
+  .explorer-icon.explorer-toolbar-group-menu-item__enum-icon {
+  padding-inline: 0;
+  margin-inline: 0;
+  transform: translateX(-3px) scale(0.7);
+}
+
+.is-mobile .explorer-toolbar__start,
+.is-mobile .explorer-toolbar__end {
+  gap: 0.1em;
+}

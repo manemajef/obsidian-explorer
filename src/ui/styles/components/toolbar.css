@@ -63,15 +63,11 @@
 }
 
 .explorer-icon.explorer-toolbar-group-menu-item__enum-icon {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 auto;
-  opacity: 0.75;
-}
-
-.explorer-icon.explorer-toolbar-group-menu-item__enum-icon svg {
-  width: 12px;
-  height: 12px;
+  width: var(--explorer-icon-size, var(--icon-size));
+  height: var(--explorer-icon-size, var(--icon-size));
+  transform: scale(0.7) translateX(-3px);
+  margin-inline-end: 0;
+  padding-inline-end: 0;
 }
 
 .explorer-toolbar-group-item:hover,
