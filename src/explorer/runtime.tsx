@@ -112,8 +112,12 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   const reactRoot = createRoot(container);
   let blockOverrides = { ...initialOverrides };
   const session = new ExplorerSession(app);
+  const getBaseDefaults = (): BlockSettings => ({
+    ...getBlockDefaults(),
+    ...initialOverrides,
+  });
   let effectiveSettings = resolveBlockSettings(
-    getBlockDefaults(),
+    getBaseDefaults(),
     blockOverrides,
   );
   let refreshTimer: number | null = null;
@@ -175,8 +179,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     const previousSettings = effectiveSettings;
     const previousOverrides = blockOverrides;
     effectiveSettings = newSettings;
-    const blockDefaults = getBlockDefaults();
-    blockOverrides = getBlockSettingsOverrides(newSettings, blockDefaults);
+    blockOverrides = getBlockSettingsOverrides(newSettings, getBaseDefaults());
     void (replaceExplorerBlock?.(newSettings, sourcePath) ?? Promise.resolve())
       .then((saved) => {
         if (saved === false) {
@@ -190,7 +193,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   const render = async (): Promise<void> => {
     const pluginSettings = getPluginSettings();
     effectiveSettings = resolveBlockSettings(
-      getBlockDefaults(),
+      getBaseDefaults(),
       blockOverrides,
     );
     const direction = resolveDirection(effectiveSettings);

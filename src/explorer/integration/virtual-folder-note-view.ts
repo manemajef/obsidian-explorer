@@ -219,9 +219,13 @@ export class VirtualFolderNoteView extends ItemView {
         // Changing a per-view setting on a file-free page always persists to
         // the data store — it never silently creates a file. Use the "Add file"
         // action to create Markdown backing explicitly.
+        const baseDefaults = {
+          ...this.host.getBlockDefaults(),
+          ...this.state.initialOverrides,
+        };
         this.host.folderDataStore.set(
           folder.path,
-          getBlockSettingsOverrides(settings, this.host.getBlockDefaults()),
+          getBlockSettingsOverrides(settings, baseDefaults),
         );
         this.host.refreshTitlebarActions?.();
       },

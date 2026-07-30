@@ -2,7 +2,7 @@ import { App, TFile, TFolder } from "obsidian";
 import { ConfirmationDialog } from "../../ui/modals/prompt-modal";
 import type { FolderDataStore } from "../data/folder-data-store";
 import type { ExplorerLocation } from "../domain/explorer-location";
-import { resolveHomePagePath } from "../domain/homepage";
+import { HOME_PAGE_OVERRIDES, resolveHomePagePath } from "../domain/homepage";
 import { isFolderNote } from "../domain/folder-note";
 import {
   BlockSettings,
@@ -36,13 +36,16 @@ export async function removeMarkdownBacking(input: {
       file,
       input.blockDefaults,
     ));
-  const overrides = getBlockSettingsOverrides(
-    settings,
-    input.blockDefaults,
-  );
   const isHomepage =
     input.folder.isRoot() &&
     file.path === resolveHomePagePath(input.app, input.pluginSettings);
+  const baseDefaults = isHomepage
+    ? { ...input.blockDefaults, ...HOME_PAGE_OVERRIDES }
+    : input.blockDefaults;
+  const overrides = getBlockSettingsOverrides(
+    settings,
+    baseDefaults,
+  );
 
   await executeRemoveMarkdownBacking({
     confirmDelete: () => confirmRemoval(input.app, file.basename),
