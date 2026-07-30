@@ -266,8 +266,14 @@ function ExtendedToolbarGroup(props: {
         />
       )}
       <span className="explorer-toolbar__extended-menu">
-        <SortMenuButton settings={settings} onSettingsChange={onSettingsChange} />
-        <ViewMenuButton settings={settings} onSettingsChange={onSettingsChange} />
+        <SortMenuButton
+          settings={settings}
+          onSettingsChange={onSettingsChange}
+        />
+        <ViewMenuButton
+          settings={settings}
+          onSettingsChange={onSettingsChange}
+        />
       </span>
     </ToolbarGroup>
   );
@@ -481,7 +487,7 @@ export function ExplorerToolbar(props: {
             />
           )}
         </ToolbarGroup>
-        <Gap inline size={disableGlassToolbar ? ".25em" : ".6em"} />
+        <Gap inline size=".25em" />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}
