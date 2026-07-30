@@ -25,14 +25,17 @@
   border: 1px solid var(--background-modifier-border-hover);
   border-radius: var(--explorer-radius-pill);
   color: var(--text-normal);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .explorer-search__input input:focus,
 .explorer-search__input input:focus-visible {
-  outline: none;
-  border-color: var(--interactive-accent);
-  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
+  /* outline: none; */
+  box-shadow: 0 0 0 2px
+    var(--background-modifier-border-focus, var(--interactive-accent));
+  outline: 2px solid var(--interactive-normal);
 }
 
 .explorer-search__clear {
