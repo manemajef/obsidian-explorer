@@ -1,4 +1,5 @@
 import tsparser from "@typescript-eslint/parser";
+import tseslint from "typescript-eslint";
 import { defineConfig } from "eslint/config";
 import obsidianmd from "eslint-plugin-obsidianmd";
 
@@ -22,6 +23,14 @@ export default defineConfig([
     ignores: ["main.js", "*.js.map", "node_modules/**", "dev/**"],
   },
   ...obsidianmd.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked.map((config) => ({
+    ...config,
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      ...config.rules,
+      "@typescript-eslint/require-await": "off",
+    },
+  })),
   {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {

@@ -53,7 +53,7 @@ export class ConfirmationDialog extends Modal {
     this.setTitle(this.title);
 
     if (this.message) {
-      const messageEl = contentEl.createEl("div");
+      const messageEl = contentEl.createDiv();
       if (typeof this.message === "string") {
         messageEl.setText(this.message);
       } else {

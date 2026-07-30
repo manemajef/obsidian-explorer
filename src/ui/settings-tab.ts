@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import ExplorerPlugin from "../../main";
 import {
+  BLOCK_SETTINGS_SCHEMA,
   BlockSettingKey,
   BlockSettings,
   PLUGIN_SETTINGS_SCHEMA,
@@ -27,6 +28,24 @@ export class ExplorerSettingsTab extends PluginSettingTab {
   constructor(app: App, plugin: ExplorerPlugin) {
     super(app, plugin);
     this.plugin = plugin;
+  }
+
+  getSettingDefinitions() {
+    const pluginDefs = Object.entries(PLUGIN_SETTINGS_SCHEMA).map(
+      ([key, field]) => ({
+        id: key,
+        name: field.label,
+        description: field.description,
+      }),
+    );
+    const blockDefs = Object.entries(BLOCK_SETTINGS_SCHEMA).map(
+      ([key, field]) => ({
+        id: `defaultBlockSettings.${key}`,
+        name: field.label,
+        description: field.description,
+      }),
+    );
+    return [...pluginDefs, ...blockDefs];
   }
 
   display(): void {
@@ -123,7 +142,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     if (field.kind === "boolean") {
       setting.addToggle((toggle) => {
         toggle
-          .setValue(this.plugin.settings[key] as boolean)
+          .setValue(Boolean(this.plugin.settings[key]))
           .onChange((value) => {
             void this.updatePluginSetting(
               key,
@@ -142,7 +161,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
           dropdown.addOption(option, optionLabels[option] ?? option);
         }
         dropdown
-          .setValue(this.plugin.settings[key] as string)
+          .setValue(String(this.plugin.settings[key] ?? ""))
           .onChange((value) => {
             void this.updatePluginSetting(
               key,
@@ -161,7 +180,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
     setting.addText((text) => {
       text
         .setPlaceholder(field.placeholder?.(this.app.vault.getName()) ?? "")
-        .setValue(this.plugin.settings[key] as string)
+        .setValue(String(this.plugin.settings[key] ?? ""))
         .onChange((value) => {
           void this.updatePluginSetting(
             key,

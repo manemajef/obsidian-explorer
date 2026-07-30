@@ -32,7 +32,7 @@ export function registerExplorerReadingMode(
       const view = app.workspace.getActiveViewOfType(MarkdownView);
       if (!view) return;
       if (getDefaultViewMode(app.vault) === "preview") return;
-      const leaf = view.leaf as ForcedPreviewLeaf;
+      const leaf = view.leaf as unknown as ForcedPreviewLeaf;
       const content = await app.vault.cachedRead(file);
       const hasExplorerBlock = content.includes("```explorer");
 

@@ -170,7 +170,7 @@ export function renderSettingField(
 
   if (field.kind === "boolean") {
     setting.addToggle((toggle) => {
-      toggle.setValue(settings[key] as boolean).onChange((value) => {
+      toggle.setValue(Boolean(settings[key])).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
       });
     });
@@ -197,7 +197,7 @@ export function renderSettingField(
     setting.addSlider((slider) => {
       slider
         .setLimits(field.min, field.max, field.step ?? 1)
-        .setValue(settings[key] as number)
+        .setValue(Number(settings[key]))
         .onChange((value) => {
           onChange(key, value as BlockSettings[typeof key]);
         });
@@ -207,7 +207,7 @@ export function renderSettingField(
       container,
       setting,
       key,
-      settings[key] as string[],
+      Array.isArray(settings[key]) ? (settings[key] as string[]) : [],
       onChange,
       context,
       field.placeholder,
@@ -217,7 +217,7 @@ export function renderSettingField(
       for (const option of field.options) {
         dropdown.addOption(option, getEnumOptionLabel(key, option));
       }
-      dropdown.setValue(settings[key] as string).onChange((value) => {
+      dropdown.setValue(String(settings[key] ?? "")).onChange((value) => {
         onChange(key, value as BlockSettings[typeof key]);
         if (key === "paginationStyle") {
           fieldRefs.get("pageSize")?.setDisabled(value === "none");
