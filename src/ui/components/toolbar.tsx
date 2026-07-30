@@ -11,7 +11,7 @@ import React, {
 import { App, Menu, Platform, setTooltip, TFolder } from "obsidian";
 import { Search } from "./search";
 import { cn } from "./primitives/cn";
-import { Gap, Group, Spacer } from "./primitives/layout";
+import { Gap, Spacer } from "./primitives/layout";
 import { Icon } from "./primitives/icon";
 import { folderDropProps, MoveIntoFolder } from "../drag-drop";
 import type { BlockSettings, SortBy } from "../../explorer/settings";
@@ -381,7 +381,7 @@ export function ExplorerToolbar(props: {
   } = props;
   const USE_PEN = false;
   const isMobile = Platform.isMobile;
-  const extendedToolbar = settings.extendedToolbar && !isMobile && !searchMode;
+  const extendedToolbar = settings.extendedToolbar;
   const toolbarProps = {
     id: "explorer-toolbar",
     className: cn(
@@ -413,34 +413,16 @@ export function ExplorerToolbar(props: {
     />
   );
 
-  if (isMobile && searchMode) {
-    return (
-      <Toolbar
-        {...toolbarProps}
-        className={cn(toolbarProps.className, "explorer-toolbar--search")}
-      >
-        <Spacer />
-        <Search
-          searchMode={searchMode}
-          searchQuery={searchQuery}
-          onSearchToggle={onSearchToggle}
-          onSearchInput={onSearchInput}
-        />
-        <Spacer />
-      </Toolbar>
-    );
-  }
-
   return (
-    <Toolbar {...toolbarProps}>
-      <Group gap={2} className="explorer-toolbar__start">
+    <Toolbar {...toolbarProps} data-search-active={searchMode || undefined}>
+      <div className="explorer-toolbar__start">
         {canGoToParent && parentAction}
         {!canGoToParent && settingsAction}
-      </Group>
+      </div>
 
       <Spacer />
 
-      <Group className="explorer-toolbar__end">
+      <div className="explorer-toolbar__end">
         {extendedToolbar && (
           <span
             className="explorer-toolbar__extended-slot"
@@ -456,7 +438,7 @@ export function ExplorerToolbar(props: {
             <Gap inline size=".6em" />
           </span>
         )}
-        <ToolbarGroup>
+        <ToolbarGroup className="explorer-toolbar__actions-group">
           {canGoToParent && (
             <ToolbarGroupItem
               icon={SETTINGS_ICON}
@@ -487,14 +469,14 @@ export function ExplorerToolbar(props: {
             />
           )}
         </ToolbarGroup>
-        <Gap inline size=".25em" />
+        <Gap inline size=".5em" />
         <Search
           searchMode={searchMode}
           searchQuery={searchQuery}
           onSearchToggle={onSearchToggle}
           onSearchInput={onSearchInput}
         />
-      </Group>
+      </div>
     </Toolbar>
   );
 }

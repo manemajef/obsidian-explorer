@@ -17,14 +17,22 @@
 .explorer-search__input input {
   box-sizing: border-box;
   width: 100%;
-  min-width: 120px;
-  max-width: 240px;
+  min-width: 220px;
+  /* max-width: 240px; */
   padding: var(--explorer-space-5) calc(var(--explorer-control-size) + 4px)
     var(--explorer-space-5) var(--explorer-space-4);
   background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border-hover);
   border-radius: var(--explorer-radius-pill);
   color: var(--text-normal);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.explorer-search__input input:focus,
+.explorer-search__input input:focus-visible {
+  outline: none;
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
 }
 
 .explorer-search__clear {
@@ -47,15 +55,12 @@
   opacity: 1;
 }
 
-/* Full-width takeover layout (mobile search mode). */
-.explorer-toolbar--search .explorer-search {
+/* Active search mode flex takeover */
+.explorer-toolbar[data-search-active] .explorer-search {
   flex: 1 1 auto;
-  width: 90%;
+  min-width: 240px;
 }
 
-.explorer-toolbar--search .explorer-search,
-.explorer-toolbar--search .explorer-search__input,
-.explorer-toolbar--search .explorer-search__input input {
-  width: 100%;
-  height: 52px;
+.explorer-toolbar[data-search-active] .explorer-search__input input {
+  max-width: 100%;
 }
