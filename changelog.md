@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.5.2 (30-07-2026)
+
+Adress obsidian's lint warnings
+
 ## 1.5.1 (30-07-2026)
 
 ## Fixes
