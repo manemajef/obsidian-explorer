@@ -1,5 +1,15 @@
 # Explorer changelog
 
+## 1.5.3 (30-07-2026)
+
+This maintenance release improves compatibility with Obsidian's current plugin review tooling and removes the remaining source-code warnings.
+
+### Changes
+
+- Updated the Obsidian lint rules used during development and release checks.
+- Replaced native DOM construction in the folder-note confirmation with Obsidian's DOM helpers.
+- Made TypeScript library checking consistent between local builds and external analysis.
+
 ## 1.5.2 (30-07-2026)
 
 Adress obsidian's lint warnings

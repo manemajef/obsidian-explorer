@@ -94,9 +94,9 @@ function confirmFolderNoteCreation(
 }
 
 function buildCreateFolderNoteMessage(folder: TFolder): DocumentFragment {
-  const message = window.activeDocument.createDocumentFragment();
+  const message = createFragment();
   message.append("The folder ");
-  const folderNameEl = window.activeDocument.createElement("code");
+  const folderNameEl = message.createEl("code");
   folderNameEl.classList.add("explorer-dialog-folder-name");
   folderNameEl.textContent = folder.name;
   message.append(
