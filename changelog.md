@@ -1,5 +1,13 @@
 # Explorer changelog
 
+## 1.5.1 (30-07-2026)
+
+## Fixes
+
+- Fixed a bug where Homepage settings sometimes didn't persist
+- Fixed Extended Toolbar causing overflow in mobile
+- improved interactivity of toolbar on wide mobile screens (e.g. iPad)
+
 ## 1.5.0 (07-07-2026)
 
 ### New
