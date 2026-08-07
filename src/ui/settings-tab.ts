@@ -30,6 +30,10 @@ export class ExplorerSettingsTab extends PluginSettingTab {
   }
 
 
+  getSettingDefinitions(): [] {
+    return [];
+  }
+
   display(): void {
     this.render();
   }

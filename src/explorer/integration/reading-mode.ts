@@ -1,18 +1,15 @@
-import { MarkdownView, Plugin, Vault } from "obsidian";
+import { MarkdownView, Plugin, Vault, WorkspaceLeaf } from "obsidian";
 import type { PluginSettings } from "../settings";
 
-type ForcedPreviewLeaf = MarkdownView["leaf"] & {
+type ForcedPreviewLeaf = WorkspaceLeaf & {
   _explorerViewForcedPreview?: boolean;
 };
 
-type VaultWithViewModeConfig = Vault & {
-  config?: {
-    defaultViewMode?: unknown;
-  };
-};
-
 function getDefaultViewMode(vault: Vault): string {
-  const mode = (vault as VaultWithViewModeConfig).config?.defaultViewMode;
+  const customVault = vault as unknown as {
+    config?: { defaultViewMode?: string };
+  };
+  const mode = customVault.config?.defaultViewMode;
   return typeof mode === "string" ? mode : "source";
 }
 

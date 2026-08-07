@@ -44,9 +44,9 @@ export function getAllVaultFolders(root: TFolder): TFolder[] {
 }
 
 export function isElement(value: unknown): value is Element {
-  return Boolean(value && (value as Node).instanceOf?.(Element));
+  return value instanceof Element;
 }
 
 export function isHTMLElement(value: unknown): value is HTMLElement {
-  return Boolean(value && (value as Node).instanceOf?.(HTMLElement));
+  return value instanceof HTMLElement;
 }

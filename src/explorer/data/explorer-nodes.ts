@@ -109,28 +109,29 @@ export class ExplorerFileNode {
 
   get description(): string | undefined {
     const frontmatter = this.frontmatter;
-    return (frontmatter?.description || frontmatter?.desc) as
-      | string
-      | undefined;
+    if (!frontmatter) return undefined;
+    const desc = frontmatter["description"] ?? frontmatter["desc"];
+    return typeof desc === "string" ? desc : undefined;
   }
 
   get tags(): string[] {
     if (this.cachedTags) return this.cachedTags;
     const cache = this.app.metadataCache.getFileCache(this.file);
-    this.cachedTags = cache
-      ? (getAllTags(cache)?.map((tag) => tag.replace(/^#+\s*/g, "")) ?? [])
+    const rawTags = cache ? getAllTags(cache) : null;
+    this.cachedTags = rawTags
+      ? rawTags.map((tag) => tag.replace(/^#+\s*/g, ""))
       : [];
     return this.cachedTags;
   }
+
   get hasTags(): boolean {
     return this.tags.length > 0;
   }
 
   get frontmatter(): Record<string, unknown> | undefined {
     if (this.cachedFrontmatter) return this.cachedFrontmatter;
-    this.cachedFrontmatter = this.app.metadataCache.getFileCache(
-      this.file,
-    )?.frontmatter;
+    const cache = this.app.metadataCache.getFileCache(this.file);
+    this.cachedFrontmatter = (cache?.frontmatter as Record<string, unknown>) ?? undefined;
     return this.cachedFrontmatter;
   }
 
@@ -144,7 +145,7 @@ export class ExplorerFileNode {
 
   get isPinned(): boolean {
     if (this.cachedIsPinned !== undefined) return this.cachedIsPinned;
-    this.cachedIsPinned = this.frontmatter?.pin === true;
+    this.cachedIsPinned = this.frontmatter?.["pin"] === true;
     return this.cachedIsPinned;
   }
 }
