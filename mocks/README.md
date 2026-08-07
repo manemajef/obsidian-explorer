@@ -8,6 +8,14 @@ hand-written stubs. Do not edit them by hand.
 | `types/obsidian.d.ts` | `node_modules/obsidian/obsidian.d.ts` |
 | `types/react/` | `node_modules/@types/react/` |
 | `types/react-dom/` | `node_modules/@types/react-dom/` |
+| `types/csstype.d.ts` | `node_modules/csstype/index.d.ts` |
+| `types/prop-types.d.ts` | `node_modules/@types/prop-types/index.d.ts` |
+
+`csstype` and `prop-types` are here because `@types/react` imports them. Without
+them `CSSProperties` degrades to `any` and every inline style object in
+`components/primitives/layout.tsx` reports as an unsafe assignment. Both are leaf
+packages, so this set closes the import graph — verified by type-checking the
+repo with `node_modules` entirely absent.
 
 ## Why they exist
 

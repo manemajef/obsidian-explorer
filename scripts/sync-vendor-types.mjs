@@ -16,11 +16,18 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** [source in node_modules, destination in mocks/types] */
+// [source in node_modules, destination in mocks/types]
+//
+// csstype and prop-types are here because @types/react imports them: without
+// them CSSProperties degrades to `any` and every inline style object in
+// primitives/layout.tsx reports as an unsafe assignment. Both are leaf packages
+// (no external imports of their own), so this list closes the graph.
 const MIRRORS = [
   ["node_modules/obsidian/obsidian.d.ts", "mocks/types/obsidian.d.ts"],
   ["node_modules/@types/react", "mocks/types/react"],
   ["node_modules/@types/react-dom", "mocks/types/react-dom"],
+  ["node_modules/csstype/index.d.ts", "mocks/types/csstype.d.ts"],
+  ["node_modules/@types/prop-types/index.d.ts", "mocks/types/prop-types.d.ts"],
 ];
 
 async function hashTree(target) {

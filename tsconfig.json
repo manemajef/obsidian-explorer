@@ -28,7 +28,9 @@
       "react": ["./mocks/types/react"],
       "react/*": ["./mocks/types/react/*"],
       "react-dom": ["./mocks/types/react-dom"],
-      "react-dom/*": ["./mocks/types/react-dom/*"]
+      "react-dom/*": ["./mocks/types/react-dom/*"],
+      "csstype": ["./mocks/types/csstype.d.ts"],
+      "prop-types": ["./mocks/types/prop-types.d.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

@@ -131,7 +131,7 @@ export class ExplorerFileNode {
   get frontmatter(): Record<string, unknown> | undefined {
     if (this.cachedFrontmatter) return this.cachedFrontmatter;
     const cache = this.app.metadataCache.getFileCache(this.file);
-    this.cachedFrontmatter = (cache?.frontmatter as Record<string, unknown>) ?? undefined;
+    this.cachedFrontmatter = cache?.frontmatter ?? undefined;
     return this.cachedFrontmatter;
   }
 
