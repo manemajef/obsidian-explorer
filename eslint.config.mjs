@@ -19,13 +19,7 @@ const rawVaultMutationRestrictions = [
 
 export default defineConfig([
   {
-    ignores: [
-      "main.js",
-      "*.js.map",
-      "node_modules/**",
-      "dev/**",
-      "esbuild.config.mjs",
-    ],
+    ignores: ["main.js", "*.js.map", "node_modules/**", "dev/**", "esbuild.config.mjs"],
   },
   ...obsidianmd.configs.recommended,
   {
@@ -41,13 +35,6 @@ export default defineConfig([
         requestAnimationFrame: "readonly",
         HTMLElement: "readonly",
       },
-    },
-    rules: {
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-call": "warn",
-      "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
     },
   },
 
