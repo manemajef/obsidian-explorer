@@ -42,6 +42,9 @@ export default defineConfig([
         HTMLElement: "readonly",
       },
     },
+    rules: {
+      "obsidianmd/settings-tab/prefer-setting-definitions": "off",
+    },
   },
 
   // --- Architecture boundaries (see ARCHITECTURE.md) ---------------------
