@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.5.6 (07-08-2026)
+
+This release focuses on internal improvement and better allingment with obsidian's required settings search support.
+
 ## 1.5.5 (07-08-2026)
 
 - Fix Obsidian 1.13+ setting tab compatibility and linter alignment
