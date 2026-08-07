@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "build": "npm run types:check && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "types:check": "node scripts/sync-vendor-types.mjs",
+    "types:sync": "node scripts/sync-vendor-types.mjs --write",
     "test": "vitest run",
     "lint:css": "stylelint \"src/ui/styles/**/*.css\"",
     "lint": "npx eslint ."

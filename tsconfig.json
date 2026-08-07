@@ -15,8 +15,25 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
-    "lib": ["DOM", "ES2021"]
+    "lib": ["DOM", "ES2021"],
+
+    // The Obsidian community scanner lints this repo with type-aware
+    // typescript-eslint rules but without installing node_modules, so every
+    // import from "obsidian"/"react" resolves to TypeScript's error type and
+    // reports as `any`. These paths point at the checked-in declarations in
+    // mocks/types/ so the scanner's program type-checks. Keep them byte-identical
+    // to node_modules via `npm run types:check` (see mocks/README.md).
+    "paths": {
+      "obsidian": ["./mocks/types/obsidian.d.ts"],
+      "react": ["./mocks/types/react"],
+      "react/*": ["./mocks/types/react/*"],
+      "react-dom": ["./mocks/types/react-dom"],
+      "react-dom/*": ["./mocks/types/react-dom/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dev", "main.js"]
+  // mocks/ is excluded so the vendored packages' opt-in declarations
+  // (canary.d.ts, experimental.d.ts) are not pulled in as root files. The
+  // entry points still load through the "paths" mapping above.
+  "exclude": ["node_modules", "dev", "main.js", "mocks"]
 }

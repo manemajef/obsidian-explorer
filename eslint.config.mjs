@@ -19,7 +19,18 @@ const rawVaultMutationRestrictions = [
 
 export default defineConfig([
   {
-    ignores: ["main.js", "*.js.map", "node_modules/**", "dev/**", "esbuild.config.mjs"],
+    // mocks/** holds verbatim third-party .d.ts copies (see mocks/README.md);
+    // the community scanner ignores that path too, so linting it locally would
+    // only report warnings the scanner never sees.
+    ignores: [
+      "main.js",
+      "*.js.map",
+      "node_modules/**",
+      "dev/**",
+      "esbuild.config.mjs",
+      "mocks/**",
+      "scripts/sync-vendor-types.mjs",
+    ],
   },
   ...obsidianmd.configs.recommended,
   {
