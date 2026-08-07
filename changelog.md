@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.5.5 (07-08-2026)
+
+- Fix Obsidian 1.13+ setting tab compatibility and linter alignment
+
 ## 1.5.4 (07-08-2026)
 
 - Critical bug fix regarding settings
