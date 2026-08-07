@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.5.4 (07-08-2026)
+
+- Critical bug fix regarding settings
+
 ## 1.5.3 (30-07-2026)
 
 This maintenance release improves compatibility with Obsidian's current plugin review tooling and removes the remaining source-code warnings.
