@@ -17,11 +17,6 @@
     "jsx": "react-jsx",
     "lib": ["DOM", "ES2021"]
   },
-  "include": [
-    "main.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "scripts/**/*.ts",
-    "vitest.config.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dev", "main.js"]
 }
