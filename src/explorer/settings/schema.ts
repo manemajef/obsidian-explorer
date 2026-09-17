@@ -307,16 +307,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
 
-  useLinkColorInCard: booleanField({
-    label: "Use link color in card header",
-    description: "Use the theme link color for card titles.",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "appearance",
-      visibleWhen: () => false,
-    },
-  }),
 });
 
 export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
