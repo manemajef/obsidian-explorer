@@ -317,16 +317,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       visibleWhen: () => false,
     },
   }),
-  isDev: booleanField({
-    label: "is dev",
-    defaultValue: false,
-    description: "",
-    ui: {
-      surfaces: ["plugin"],
-      section: "visibility",
-      visibleWhen: () => false,
-    },
-  }),
 });
 
 export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({

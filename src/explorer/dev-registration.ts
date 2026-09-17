@@ -7,14 +7,10 @@ import {
 } from "obsidian";
 import { ExplorerDevUI } from "../ui/dev-fixtures/explorer-dev-ui";
 
-const IS_USE_DEV = true;
-
 export function registerExplorerDevCodeBlock(plugin: Plugin): void {
   plugin.registerMarkdownCodeBlockProcessor(
     "explorer-dev",
-    (_source, el, ctx) => {
-      if (IS_USE_DEV) renderExplorerDevBlock(el, ctx);
-    },
+    (_source, el, ctx) => renderExplorerDevBlock(el, ctx),
   );
 }
 

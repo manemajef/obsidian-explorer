@@ -23,6 +23,7 @@ const context = await esbuild.context({
     styles: resolve(__dirname, "src/ui/styles/index.css"),
   },
   bundle: true,
+  define: { __DEV__: prod ? "false" : "true" },
   jsx: "automatic",
   loader: {
     ".ts": "ts",

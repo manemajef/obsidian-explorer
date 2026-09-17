@@ -17,8 +17,11 @@ import { registerWorkspaceDecorations } from "./src/explorer/integration/workspa
 import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
-import { registerExplorerDevCodeBlock } from "./src/explorer/dev-registration";
 import { ExplorerApi } from "./src/explorer/api";
+
+// Replaced at bundle time by esbuild: true for `npm run dev`, false for
+// production builds, so the dev fixtures never ship in a release.
+declare const __DEV__: boolean;
 
 type ExplorerRefresh = () => void;
 
@@ -93,7 +96,11 @@ export default class ExplorerPlugin extends Plugin {
       },
     );
 
-    if (this.settings.isDev) registerExplorerDevCodeBlock(this);
+    if (__DEV__) {
+      void import("./src/explorer/dev-registration").then((dev) =>
+        dev.registerExplorerDevCodeBlock(this),
+      );
+    }
 
     registerHomePageNewTabs(this, () => this.settings);
     registerFolderNoteRenameSync(this, () => this.settings);
