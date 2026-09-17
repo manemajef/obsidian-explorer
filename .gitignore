@@ -1,6 +1,6 @@
 # Build artifacts
 main.js
-styles.css 
+styles.css
 *.js.map
 
 # Dependencies
@@ -10,22 +10,25 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# IDE files
+# IDE / tool files
 .idea/
 .vscode/
 *.swp
 *.swo
-.context/*
+.claude/
 .context
-dev/
-assets/unused/
-data.json
-folder-data.json 
-DEV.md
 
+# Local dev workspace
+dev/
+DEV.md
 PLAN.md
-__pycache__/
 tmp/
+__pycache__/
+assets/unused/
+
+# Plugin runtime data
+data.json
+folder-data.json
 
 # Local agent workspace
 _agent/*

@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-`main.ts` is the Obsidian plugin entry point. Backend behavior lives in `src/explorer/`: keep host registrations in `integration/`, user flows in `navigation/`, vault writes in `vault/`, stateful data in `data/`, and dependency-light logic in `lib/` or `settings/`. `src/explorer/runtime.tsx` composes the backend. React UI lives under `src/ui/`, with feature components in `components/`, app-agnostic primitives in `components/primitives/`, and CSS in `styles/`. Read `ARCHITECTURE.md` and `STYLING.md` before moving code across these boundaries. Tests currently live in `scripts/*.test.ts`; screenshots and README media live in `assets/`. Do not edit generated `main.js` or `styles.css` directly.
+`main.ts` is the Obsidian plugin entry point. Backend behavior lives in `src/explorer/`: keep host registrations in `integration/`, user-facing flows in `operations/`, vault writes in `vault/`, stateful data in `data/`, dependency-light decisions and transforms in `domain/`, and settings schema and normalization in `settings/`. `src/explorer/runtime.tsx` composes the backend. React UI lives under `src/ui/`, with feature components in `components/`, app-agnostic primitives in `components/primitives/`, and CSS in `styles/`. Read `ARCHITECTURE.md` and `STYLING.md` before moving code across these boundaries. Tests currently live in `scripts/*.test.ts`; screenshots and README media live in `assets/`. Do not edit generated `main.js` or `styles.css` directly.
 
 ## Build, Test, and Development Commands
 

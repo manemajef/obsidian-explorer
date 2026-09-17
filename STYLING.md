@@ -88,6 +88,3 @@ conceptual difference → new component.
 **Enforcement (run on every change):** `npm run lint` (style-prop ban,
 primitives/ app-ignorance), `npm run lint:css` (theme/platform quarantine,
 specificity caps), `npm run build`.
-
-The full rationale lives in `dev/The UI Bible.md`; the old-system →
-new-system value mapping in `dev/UI System/token-audit.md`.
