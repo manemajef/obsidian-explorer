@@ -4,7 +4,10 @@ import {
   parseSettings,
   PluginSettings,
 } from "./src/explorer/settings";
-import { renderExplorerBlock } from "./src/explorer/runtime";
+import {
+  disposeAllExplorerBlocks,
+  renderExplorerBlock,
+} from "./src/explorer/runtime";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import { registerHomePageNewTabs } from "./src/explorer/integration/homepage-new-tabs";
 import { VirtualFolderNoteView } from "./src/explorer/integration/virtual-folder-note-view";
@@ -106,6 +109,7 @@ export default class ExplorerPlugin extends Plugin {
     registerFolderNoteRenameSync(this, () => this.settings);
     registerExplorerReadingMode(this, () => this.settings);
     registerWorkspaceDecorations(this, this.app);
+    this.register(disposeAllExplorerBlocks);
   }
 
   onunload() {

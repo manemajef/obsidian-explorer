@@ -24,6 +24,7 @@ import { consumeNavigationPending } from "./data/navigation-pending";
 import type { ExplorerApi } from "./api";
 import { isFolderNote } from "./domain/folder-note";
 import { resolveHomePagePath } from "./domain/homepage";
+import { resolveExplorerMountKey } from "./domain/explorer-mount-key";
 
 export type ExplorerMount = {
   explorerApi: ExplorerApi;
@@ -41,11 +42,74 @@ export type ExplorerMount = {
   ) => Promise<boolean | void>;
 };
 
+export type ExplorerMountHandle = {
+  host: HTMLElement;
+  adoptContainer: (container: HTMLElement) => void;
+  cleanup: () => void;
+};
+
+type LiveBlock = {
+  handle: ExplorerMountHandle;
+  target: {
+    container: HTMLElement;
+    context: MarkdownPostProcessorContext;
+  };
+  releaseTimer: number | null;
+};
+
+const BLOCK_REUSE_WINDOW_MS = 250;
+const liveBlocks = new Map<string, LiveBlock>();
+
 function resolveDirection(settings: BlockSettings): "rtl" | "ltr" {
   if (settings.textDirection && settings.textDirection !== "auto") {
     return settings.textDirection;
   }
   return isRtl() ? "rtl" : "ltr";
+}
+
+function getBlockKey(
+  context: MarkdownPostProcessorContext,
+  container: HTMLElement,
+  initialOverrides: Partial<BlockSettings>,
+): string | null {
+  const section = context.getSectionInfo(container);
+  return resolveExplorerMountKey({
+    docId: context.docId,
+    sourcePath: context.sourcePath,
+    lineStart: section?.lineStart ?? null,
+    lineEnd: section?.lineEnd ?? null,
+    blockConfig: JSON.stringify(initialOverrides),
+  });
+}
+
+function scheduleBlockRelease(key: string, container: HTMLElement): void {
+  const live = liveBlocks.get(key);
+  if (!live || live.target.container !== container) return;
+
+  const ownerWindow = container.ownerDocument.defaultView;
+  if (!ownerWindow) {
+    disposeLiveBlock(key);
+    return;
+  }
+  if (live.releaseTimer !== null) {
+    ownerWindow.clearTimeout(live.releaseTimer);
+  }
+  live.releaseTimer = ownerWindow.setTimeout(() => {
+    const current = liveBlocks.get(key);
+    if (!current || current.target.container !== container) return;
+    disposeLiveBlock(key);
+  }, BLOCK_REUSE_WINDOW_MS);
+}
+
+function disposeLiveBlock(key: string): void {
+  const live = liveBlocks.get(key);
+  if (!live) return;
+  liveBlocks.delete(key);
+  live.handle.cleanup();
+}
+
+export function disposeAllExplorerBlocks(): void {
+  for (const key of Array.from(liveBlocks.keys())) disposeLiveBlock(key);
 }
 
 export async function renderExplorerBlock(
@@ -58,8 +122,38 @@ export async function renderExplorerBlock(
   initialOverrides: Partial<BlockSettings>,
   registerRefresh?: (refresh: () => void) => () => void,
 ): Promise<void> {
+  const key = getBlockKey(ctx, container, initialOverrides);
   const child = new MarkdownRenderChild(container);
-  const cleanup = await mountExplorer({
+  const existing = key === null ? undefined : liveBlocks.get(key);
+
+  if (key !== null && existing) {
+    const ownerWindow = container.ownerDocument.defaultView;
+    if (existing.releaseTimer !== null && ownerWindow) {
+      ownerWindow.clearTimeout(existing.releaseTimer);
+      existing.releaseTimer = null;
+    }
+    existing.target.container = container;
+    existing.target.context = ctx;
+    existing.handle.adoptContainer(container);
+    child.register(() => scheduleBlockRelease(key, container));
+    ctx.addChild(child);
+    return;
+  }
+
+  const target = { container, context: ctx };
+  let cleanup: (() => void) | null = null;
+  let unloaded = false;
+  child.register(() => {
+    unloaded = true;
+    if (key === null) {
+      cleanup?.();
+      return;
+    }
+    scheduleBlockRelease(key, container);
+  });
+  ctx.addChild(child);
+
+  const handle = await mountExplorerBlock({
     explorerApi,
     app,
     container,
@@ -71,22 +165,35 @@ export async function renderExplorerBlock(
     replaceExplorerBlock: async (newSettings, sourcePath) => {
       await updateExplorerBlock({
         app,
-        container,
-        context: ctx,
+        container: target.container,
+        context: target.context,
         sourcePath,
         defaultSettings: getBlockDefaults(),
         settings: newSettings,
       });
     },
   });
-  child.register(cleanup);
-  ctx.addChild(child);
+
+  if (unloaded) {
+    handle.cleanup();
+    return;
+  }
+  if (key === null) {
+    cleanup = handle.cleanup;
+    return;
+  }
+  liveBlocks.set(key, { handle, target, releaseTimer: null });
 }
 
 export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
+  return (await mountExplorerBlock(input)).cleanup;
+}
+
+async function mountExplorerBlock(
+  input: ExplorerMount,
+): Promise<ExplorerMountHandle> {
   const {
     app,
-    container,
     sourceFolder,
     getBlockDefaults,
     getPluginSettings,
@@ -94,7 +201,9 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     registerRefresh,
     replaceExplorerBlock,
   } = input;
+  let container = input.container;
   container.addClass("explorer-container");
+  const host = container.createDiv({ cls: "explorer-mount-host" });
   let clearNavigationPlaceholder: (() => void) | null = null;
   if (consumeNavigationPending(input.sourcePath)) {
     // Added before render() so the placeholder height is in the DOM before
@@ -109,7 +218,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
     };
   }
 
-  const reactRoot = createRoot(container);
+  const reactRoot = createRoot(host);
   let blockOverrides = { ...initialOverrides };
   const session = new ExplorerSession(app);
   const getBaseDefaults = (): BlockSettings => ({
@@ -190,12 +299,7 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       });
   };
 
-  const render = async (): Promise<void> => {
-    const pluginSettings = getPluginSettings();
-    effectiveSettings = resolveBlockSettings(
-      getBaseDefaults(),
-      blockOverrides,
-    );
+  const applyContainerState = (): void => {
     const direction = resolveDirection(effectiveSettings);
     container.setAttribute("dir", direction);
     container.dataset.explorerTextDirection = effectiveSettings.textDirection;
@@ -203,6 +307,15 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
       "explorer-disable-glass-toolbar",
       effectiveSettings.disableGlassToolbar,
     );
+  };
+
+  const render = async (): Promise<void> => {
+    const pluginSettings = getPluginSettings();
+    effectiveSettings = resolveBlockSettings(
+      getBaseDefaults(),
+      blockOverrides,
+    );
+    applyContainerState();
 
     const model = await buildExplorerModel({
       app,
@@ -265,7 +378,18 @@ export async function mountExplorer(input: ExplorerMount): Promise<() => void> {
   };
 
   await render();
-  return () => {
-    for (const cleanup of cleanupCallbacks.splice(0)) cleanup();
+  return {
+    host,
+    adoptContainer: (nextContainer) => {
+      if (nextContainer === container) return;
+      container = nextContainer;
+      container.addClass("explorer-container");
+      container.appendChild(host);
+      applyContainerState();
+    },
+    cleanup: () => {
+      for (const cleanup of cleanupCallbacks.splice(0)) cleanup();
+      host.remove();
+    },
   };
 }

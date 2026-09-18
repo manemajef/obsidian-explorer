@@ -18,6 +18,12 @@
   }
 }
 
+/* React stays mounted here while Obsidian replaces the surrounding rendered
+   code-block container. display: contents preserves the existing layout. */
+.explorer-mount-host {
+  display: contents;
+}
+
 .explorer-container {
   scroll-margin-top: 10em;
   cursor: default;
@@ -39,7 +45,9 @@
   unicode-bidi: isolate;
 }
 
-.explorer-container:empty {
+.explorer-container:empty,
+.explorer-mount-host:empty {
+  display: block;
   min-height: var(--explorer-nav-placeholder-height, 200px);
 }
 
