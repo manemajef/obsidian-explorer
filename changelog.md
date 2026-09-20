@@ -1,5 +1,9 @@
 # Explorer changelog
 
+## 1.5.7 (21-09-2026)
+
+Optimize navigation transitions and fix flickering
+
 ## 1.5.6 (07-08-2026)
 
 This release focuses on internal improvement and better allingment with obsidian's required settings search support.
