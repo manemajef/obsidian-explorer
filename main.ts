@@ -1,13 +1,8 @@
 import { normalizePath, Plugin } from "obsidian";
 import {
   normalizePluginSettings,
-  parseSettings,
   PluginSettings,
 } from "./src/explorer/settings";
-import {
-  disposeAllExplorerBlocks,
-  renderExplorerBlock,
-} from "./src/explorer/runtime";
 import { ExplorerSettingsTab } from "./src/ui/settings-tab";
 import { registerHomePageNewTabs } from "./src/explorer/integration/homepage-new-tabs";
 import { VirtualFolderNoteView } from "./src/explorer/integration/virtual-folder-note-view";
@@ -20,6 +15,7 @@ import { registerWorkspaceDecorations } from "./src/explorer/integration/workspa
 import { FolderDataStore } from "./src/explorer/data/folder-data-store";
 import { registerFolderDataSync } from "./src/explorer/integration/folder-data-sync";
 import { registerExplorerTitlebarActions } from "./src/explorer/integration/titlebar-actions";
+import { registerExplorerCodeBlocks } from "./src/explorer/integration/explorer-code-blocks";
 import { ExplorerApi } from "./src/explorer/api";
 
 // Replaced at bundle time by esbuild: true for `npm run dev`, false for
@@ -83,21 +79,12 @@ export default class ExplorerPlugin extends Plugin {
         explorerApi: this.explorerApi,
       });
 
-    this.registerMarkdownCodeBlockProcessor(
-      "explorer",
-      async (source, el, ctx) => {
-        await renderExplorerBlock(
-          this.explorerApi,
-          this.app,
-          el,
-          ctx,
-          () => this.settings.defaultBlockSettings,
-          () => this.settings,
-          parseSettings(source),
-          (refresh) => this.registerExplorerRefresh(refresh),
-        );
-      },
-    );
+    registerExplorerCodeBlocks(this, {
+      explorerApi: this.explorerApi,
+      getBlockDefaults: () => this.settings.defaultBlockSettings,
+      getPluginSettings: () => this.settings,
+      registerRefresh: (refresh) => this.registerExplorerRefresh(refresh),
+    });
 
     if (__DEV__) {
       void import("./src/explorer/dev-registration").then((dev) =>
@@ -109,7 +96,6 @@ export default class ExplorerPlugin extends Plugin {
     registerFolderNoteRenameSync(this, () => this.settings);
     registerExplorerReadingMode(this, () => this.settings);
     registerWorkspaceDecorations(this, this.app);
-    this.register(disposeAllExplorerBlocks);
   }
 
   onunload() {

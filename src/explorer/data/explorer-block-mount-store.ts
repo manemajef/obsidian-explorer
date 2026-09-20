@@ -5,31 +5,34 @@ export type ExplorerBlockTarget = {
   context: MarkdownPostProcessorContext;
 };
 
-export type ExplorerBlockMountLease = {
-  host: HTMLElement;
-  target: ExplorerBlockTarget;
-};
-
-type StoredMount = ExplorerBlockMountLease & {
-  key: string | null;
-  cleanup: (() => void) | null;
-  disposed: boolean;
+export class ExplorerBlockMountLease {
+  cleanup: (() => void) | null = null;
+  disposed = false;
   releaseTimer: {
     ownerWindow: Window;
     id: number;
   } | null;
-};
+
+  constructor(
+    readonly key: string | null,
+    readonly host: HTMLElement,
+    public target: ExplorerBlockTarget,
+  ) {
+    this.releaseTimer = null;
+  }
+}
 
 const RELEASE_DELAY_MS = 250;
 
 export class ExplorerBlockMountStore {
-  private readonly mounts = new Map<string, StoredMount>();
+  private readonly mounts = new Set<ExplorerBlockMountLease>();
+  private readonly mountsByKey = new Map<string, ExplorerBlockMountLease>();
 
   acquire(
     key: string | null,
     target: ExplorerBlockTarget,
   ): { lease: ExplorerBlockMountLease; created: boolean } {
-    const existing = key === null ? undefined : this.mounts.get(key);
+    const existing = key === null ? undefined : this.mountsByKey.get(key);
     if (existing) {
       this.cancelRelease(existing);
       existing.target = target;
@@ -37,15 +40,13 @@ export class ExplorerBlockMountStore {
       return { lease: existing, created: false };
     }
 
-    const mount: StoredMount = {
+    const mount = new ExplorerBlockMountLease(
       key,
-      host: target.container.createDiv(),
+      target.container.createDiv(),
       target,
-      cleanup: null,
-      disposed: false,
-      releaseTimer: null,
-    };
-    if (key !== null) this.mounts.set(key, mount);
+    );
+    this.mounts.add(mount);
+    if (key !== null) this.mountsByKey.set(key, mount);
     return { lease: mount, created: true };
   }
 
@@ -53,65 +54,63 @@ export class ExplorerBlockMountStore {
     lease: ExplorerBlockMountLease,
     cleanup: () => void,
   ): void {
-    const mount = this.asStoredMount(lease);
-    if (mount.disposed) {
+    if (lease.disposed) {
       cleanup();
       return;
     }
-    mount.cleanup = cleanup;
+    lease.cleanup = cleanup;
   }
 
   release(lease: ExplorerBlockMountLease, container: HTMLElement): void {
-    const mount = this.asStoredMount(lease);
-    if (mount.disposed || mount.target.container !== container) return;
-    if (mount.key === null) {
-      this.disposeMount(mount);
+    if (lease.disposed || lease.target.container !== container) return;
+    if (lease.key === null) {
+      this.disposeMount(lease);
       return;
     }
 
     const ownerWindow = container.ownerDocument.defaultView;
     if (!ownerWindow) {
-      this.disposeMount(mount);
+      this.disposeMount(lease);
       return;
     }
-    this.cancelRelease(mount);
-    mount.releaseTimer = {
+    this.cancelRelease(lease);
+    lease.releaseTimer = {
       ownerWindow,
       id: ownerWindow.setTimeout(
-        () => this.disposeMount(mount),
+        () => this.disposeMount(lease),
         RELEASE_DELAY_MS,
       ),
     };
   }
 
   discard(lease: ExplorerBlockMountLease): void {
-    this.disposeMount(this.asStoredMount(lease));
+    this.disposeMount(lease);
   }
 
   disposeAll = (): void => {
-    for (const mount of Array.from(this.mounts.values())) {
+    for (const mount of Array.from(this.mounts)) {
       this.disposeMount(mount);
     }
   };
 
-  private cancelRelease(mount: StoredMount): void {
+  private cancelRelease(mount: ExplorerBlockMountLease): void {
     if (!mount.releaseTimer) return;
     mount.releaseTimer.ownerWindow.clearTimeout(mount.releaseTimer.id);
     mount.releaseTimer = null;
   }
 
-  private disposeMount(mount: StoredMount): void {
+  private disposeMount(mount: ExplorerBlockMountLease): void {
     if (mount.disposed) return;
     mount.disposed = true;
     this.cancelRelease(mount);
-    if (mount.key !== null && this.mounts.get(mount.key) === mount) {
-      this.mounts.delete(mount.key);
+    this.mounts.delete(mount);
+    if (
+      mount.key !== null &&
+      this.mountsByKey.get(mount.key) === mount
+    ) {
+      this.mountsByKey.delete(mount.key);
     }
     mount.cleanup?.();
     mount.host.remove();
-  }
-
-  private asStoredMount(lease: ExplorerBlockMountLease): StoredMount {
-    return lease as StoredMount;
   }
 }
