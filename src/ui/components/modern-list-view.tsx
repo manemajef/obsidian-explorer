@@ -32,7 +32,7 @@ function ListRow({
   ...rest
 }: ListRowProps): React.JSX.Element {
   return (
-    <div className={cn("explorer-list-row-shell", shellClassName)} dir="auto">
+    <div className={cn("explorer-list-row-shell", shellClassName)}>
       <div
         className={cn("explorer-list-row", className)}
         data-interactive={interactive || undefined}
@@ -58,7 +58,7 @@ export function ModernListView(props: ModernListViewProps): React.JSX.Element {
   const isMobile = variant === "mobile";
 
   return (
-    <Stack className="explorer-modern-list" data-variant={variant}>
+    <Stack className="explorer-modern-list" data-variant={variant} dir="auto">
       {files.map((file, i) => (
         <ListRow
           key={file.path}

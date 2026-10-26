@@ -23,10 +23,7 @@ export function MarkdownListView(
   const useBullet = model.settings.listStyle === "markdown";
 
   return (
-    <div
-      className="explorer-markdown-list"
-      // dir="auto"
-    >
+    <div className="explorer-markdown-list" dir="auto">
       {files.map((file) => (
         <li
           key={file.path}
@@ -36,7 +33,6 @@ export function MarkdownListView(
           {...fileInteractionProps<HTMLLIElement>(file, explorer, contextMenu, {
             openOnClick: false,
           })}
-          dir="auto"
         >
           {file.isPinned ? (
             <span
