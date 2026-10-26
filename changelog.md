@@ -1,5 +1,13 @@
 # Explorer changelog
 
+## 1.5.8 (26-10-2026)
+
+- Fixed folder-name clicks sometimes failing to open folder pages from the sidebar.
+- Simplified sidebar settings: Use folder pages in sidebar now controls both opening folder pages and hiding their Markdown files.
+- Improved mixed RTL/LTR lists with one consistent direction across all items.
+- Fixed the brief outline flash when dragging onto folders and refined the drag preview.
+- Reordered settings for easier navigation.
+
 ## 1.5.7 (21-09-2026)
 
 Optimize navigation transitions and fix flickering
