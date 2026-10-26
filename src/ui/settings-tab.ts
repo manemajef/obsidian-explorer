@@ -216,7 +216,7 @@ export class ExplorerSettingsTab extends PluginSettingTab {
 
     this.plugin.refreshExplorerBlocks();
 
-    if (key === "useHomePage" || key === "hideFolderNotesInFileExplorer") {
+    if (key === "useHomePage") {
       this.render();
     }
   }

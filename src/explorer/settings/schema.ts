@@ -131,9 +131,9 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
   openFolderViewFromSidebar: booleanField({
-    label: "Open folder views from sidebar",
+    label: "Use folder pages in sidebar",
     description:
-      "Open Explorer folder views when clicking folder names in the Obsidian sidebar.",
+      "Open folder pages when clicking folder names and hide their Markdown folder-note files in the Obsidian sidebar.",
     defaultValue: true,
     ui: {
       surfaces: ["plugin"],
@@ -270,19 +270,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     },
   }),
 
-  hideFolderNotesInFileExplorer: booleanField({
-    label: "Hide folder-note files in Obsidian sidebar",
-    description:
-      "Hide Markdown folder-note files from Obsidian's built-in file tree.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "visibility",
-    },
-    legacy: {
-      oldDefault: true,
-    },
-  }),
   showTitlearActionsOnMobile: booleanField({
     label: "Show title bar actions in mobile",
     description:

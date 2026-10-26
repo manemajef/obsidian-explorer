@@ -22,7 +22,7 @@ that share the folder's name) and with Obsidian's built-in file explorer.
 
 > **Note**
 >
-> Explorer works best as a main-pane navigator when **Use homepage** and **Open folder views from sidebar** are enabled.
+> Explorer works best as a main-pane navigator when **Use homepage** and **Use folder pages in sidebar** are enabled.
 
 ## Highlights
 
@@ -141,9 +141,9 @@ Existing users upgrading from older versions retain their existing behavior by d
 
 ### Obsidian sidebar
 
-Explorer can hide Markdown folder-note files from Obsidian's built-in sidebar file tree to reduce clutter.
+**Use folder pages in sidebar** is enabled by default. Clicking a folder name opens the corresponding folder overview, using the Markdown folder note if one exists and a file-free overview otherwise. Markdown folder-note files are hidden from the sidebar to avoid duplicate entries.
 
-Additionally, you can enable **Open folder views from sidebar**. When enabled, clicking a folder name in the Obsidian sidebar will open the corresponding folder overview, using the Markdown folder note if one exists and a file-free overview otherwise.
+Disable this setting to show folder-note files and keep normal folder-name expansion and collapse behavior.
 
 This redirection only handles clicks on the folder name itself. Clicking the collapse/expand arrow or row whitespace retains Obsidian's normal sidebar behavior.
 

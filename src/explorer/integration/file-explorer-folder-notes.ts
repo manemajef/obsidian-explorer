@@ -35,7 +35,7 @@ export function registerFileExplorerFolderNoteBehavior(
   let observer: MutationObserver | null = null;
 
   const refresh = (): void => {
-    const shouldHide = getSettings().hideFolderNotesInFileExplorer;
+    const shouldHide = getSettings().openFolderViewFromSidebar;
     doc.body.classList.toggle(HIDE_BODY_CLASS, shouldHide);
     markAllNativeFolderNoteItems(app, doc);
   };
