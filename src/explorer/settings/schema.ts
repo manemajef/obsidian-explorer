@@ -274,10 +274,13 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
     label: "Hide folder-note files in Obsidian sidebar",
     description:
       "Hide Markdown folder-note files from Obsidian's built-in file tree.",
-    defaultValue: false,
+    defaultValue: true,
     ui: {
       surfaces: ["plugin"],
       section: "visibility",
+    },
+    legacy: {
+      oldDefault: true,
     },
   }),
   showTitlearActionsOnMobile: booleanField({
@@ -306,7 +309,6 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       section: "visibility",
     },
   }),
-
 });
 
 export const BLOCK_SETTINGS_SCHEMA = defineBlockSchema({
