@@ -111,25 +111,6 @@ export type { SettingField, SettingsSurface } from "./types";
 
 export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
   // NAVIGATION
-  showTitlebarActions: booleanField({
-    label: "Show titlebar actions",
-    description:
-      "Show Explorer navigation buttons in the active note titlebar.",
-    defaultValue: true,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-    },
-  }),
-  goToParentInNewTab: booleanField({
-    label: "Go to parent folder in a new tab",
-    description: "Should Go to parent folder / Homepage open a new tab",
-    defaultValue: false,
-    ui: {
-      surfaces: ["plugin"],
-      section: "navigation",
-    },
-  }),
   openFolderViewFromSidebar: booleanField({
     label: "Use folder pages in sidebar",
     description:
@@ -166,6 +147,25 @@ export const PLUGIN_SETTINGS_SCHEMA = definePluginSchema({
       surfaces: ["plugin"],
       section: "navigation",
       visibleWhen: { key: "useHomePage", value: true },
+    },
+  }),
+  showTitlebarActions: booleanField({
+    label: "Show titlebar actions",
+    description:
+      "Show Explorer navigation buttons in the active note titlebar.",
+    defaultValue: true,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
+    },
+  }),
+  goToParentInNewTab: booleanField({
+    label: "Go to parent folder in a new tab",
+    description: "Should Go to parent folder / Homepage open a new tab",
+    defaultValue: false,
+    ui: {
+      surfaces: ["plugin"],
+      section: "navigation",
     },
   }),
 
