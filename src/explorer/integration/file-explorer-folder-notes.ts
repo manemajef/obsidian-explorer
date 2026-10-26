@@ -178,8 +178,7 @@ async function handleFileExplorerFolderClick(
   settings: PluginSettings,
   evt: MouseEvent,
 ): Promise<void> {
-  if (evt.defaultPrevented || !settings.hideFolderNotesInFileExplorer) return;
-  if (!settings.openFolderViewFromSidebar) return;
+  if (evt.defaultPrevented || !settings.openFolderViewFromSidebar) return;
 
   const folder = getClickedFolder(app, evt);
   if (!folder || folder.isRoot()) return;
