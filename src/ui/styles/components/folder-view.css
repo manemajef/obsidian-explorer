@@ -72,7 +72,9 @@
   max-width: 220px;
   max-height: 70px;
   padding: 0.75em var(--explorer-space-4);
-  transition: 0.15s;
+  transition: 0.1s;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 @media (width < 650px) {
